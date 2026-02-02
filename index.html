@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover">
+    <title>carlOS Financeiro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Adicionado plugin typography na URL -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', '"Plus Jakarta Sans"', 'sans-serif'],
+              mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+            },
+            colors: {
+              // Mapeando 'olive' para a nova cor primária (Café Stone) para substituição global em botões antigos
+              olive: 'hsl(var(--primary))',
+              primary: 'hsl(var(--primary))',
+              
+              // Fundo aquecido (Stone-50)
+              cream: '#FAFAF9', 
+              
+              // Tons de Café Legado (podem ser usados explicitamente)
+              coffee: '#3C3633',
+              cappuccino: '#747264',
+              
+              // Acentos
+              terracotta: '#A34343',
+              
+              // Substituindo o Azul Profundo por um Stone Profundo (#1C1917) para sidebars
+              'deep-blue': '#1C1917', 
+            },
+            boxShadow: {
+              'premium': '0 20px 50px -12px rgba(0, 0, 0, 0.05)',
+            }
+          },
+        },
+      };
+    </script>
+    <style>
+      :root {
+        /* Identidade Visual: Stone / Marrom Café Profundo */
+        /* HSL para Stone-900 (#1C1917) um pouco mais quente */
+        --primary: 24 5% 15%; 
+        --primary-foreground: 60 9.1% 97.8%; /* Stone-50 Off-white */
+        
+        /* Anel de foco (Stone-400) */
+        --ring: 24 5% 64%;
+        
+        /* Fundo base aquecido */
+        --background: 30 20% 98%; 
+      }
+ 
+      .dark {
+        /* Modo escuro invertido para um Creme Suave se necessário */
+        --primary: 30 20% 98%;
+        --primary-foreground: 24 5% 15%;
+        --ring: 24 5% 64%;
+      }
+
+      @keyframes fade-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in {
+        animation: fade-in 0.6s ease-out forwards;
+      }
+      html, body {
+        max-width: 100vw;
+        width: 100%;
+        overflow-x: hidden;
+        position: relative;
+        margin: 0;
+        padding: 0;
+        -webkit-text-size-adjust: 100%;
+        touch-action: manipulation;
+        -webkit-font-smoothing: antialiased;
+        background-color: var(--background);
+        color: #1C1917; /* Stone 900 text base */
+      }
+      #root {
+        width: 100%;
+        overflow-x: hidden;
+      }
+      
+      /* Ajuste de scrollbar para combinar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #FAFAF9; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #D6D3D1; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #A8A29E; 
+      }
+
+      /* Utilitário para esconder scrollbar mantendo funcionalidade */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+
+      /* Utilitário Global: Remover setas de inputs numéricos */
+      input[type=number]::-webkit-inner-spin-button, 
+      input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; 
+        margin: 0; 
+      }
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "recharts": "https://esm.sh/recharts@^3.6.0",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.89.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react-hook-form": "https://esm.sh/react-hook-form@^7.69.0",
+    "@hookform/resolvers/": "https://esm.sh/@hookform/resolvers@^5.2.2/",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
+    "zod": "https://esm.sh/zod@^4.2.1",
+    "date-fns/": "https://esm.sh/date-fns@^4.1.0/",
+    "date-fns": "https://esm.sh/date-fns@^4.1.0",
+    "react-markdown": "https://esm.sh/react-markdown@9",
+    "react-dom": "https://esm.sh/react-dom@^19.2.3",
+    "@tanstack/react-query": "https://esm.sh/@tanstack/react-query@5.66.0",
+    "@tanstack/query-core": "https://esm.sh/@tanstack/query-core@^5.90.18",
+    "@tiptap/react": "https://esm.sh/@tiptap/react@2.11.5",
+    "@tiptap/extension-placeholder": "https://esm.sh/@tiptap/extension-placeholder@2.11.5",
+    "@tiptap/starter-kit": "https://esm.sh/@tiptap/starter-kit@2.11.5",
+    "tiptap-markdown": "https://esm.sh/tiptap-markdown@0.8.10",
+    "@tiptap/extension-typography": "https://esm.sh/@tiptap/extension-typography@2.11.5",
+    "@tiptap/pm/state": "https://esm.sh/@tiptap/pm/state@2.11.5",
+    "@tiptap/pm/view": "https://esm.sh/@tiptap/pm/view@2.11.5",
+    "@tiptap/pm/model": "https://esm.sh/@tiptap/pm/model@2.11.5",
+    "@tiptap/pm/transform": "https://esm.sh/@tiptap/pm/transform@2.11.5",
+    "@tiptap/pm/commands": "https://esm.sh/@tiptap/pm/commands@2.11.5",
+    "@tiptap/pm/history": "https://esm.sh/@tiptap/pm/history@2.11.5",
+    "@tiptap/pm/inputrules": "https://esm.sh/@tiptap/pm/inputrules@2.11.5",
+    "@tiptap/pm/keymap": "https://esm.sh/@tiptap/pm/keymap@2.11.5",
+    "@tiptap/pm/dropcursor": "https://esm.sh/@tiptap/pm/dropcursor@2.11.5",
+    "@tiptap/pm/gapcursor": "https://esm.sh/@tiptap/pm/gapcursor@2.11.5"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-cream text-coffee antialiased">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
