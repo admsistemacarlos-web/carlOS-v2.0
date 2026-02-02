@@ -26,17 +26,7 @@
     "@tiptap/extension-placeholder": "2.11.5",
     "@tiptap/starter-kit": "2.11.5",
     "tiptap-markdown": "0.8.10",
-    "@tiptap/extension-typography": "2.11.5",
-    "@tiptap/pm/state": "2.11.5",
-    "@tiptap/pm/view": "2.11.5",
-    "@tiptap/pm/model": "2.11.5",
-    "@tiptap/pm/transform": "2.11.5",
-    "@tiptap/pm/commands": "2.11.5",
-    "@tiptap/pm/history": "2.11.5",
-    "@tiptap/pm/inputrules": "2.11.5",
-    "@tiptap/pm/keymap": "2.11.5",
-    "@tiptap/pm/dropcursor": "2.11.5",
-    "@tiptap/pm/gapcursor": "2.11.5"
+    "@tiptap/extension-typography": "2.11.5"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
