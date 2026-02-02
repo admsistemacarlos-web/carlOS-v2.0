@@ -1,20 +1,60 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# carlOS
 
-# Run and deploy your AI Studio app
+Sistema Operacional de Vida Premium - LifeOS SaaS
 
-This contains everything you need to run your app locally.
+## 🌟 O que é?
 
-View your app in AI Studio: https://ai.studio/apps/drive/1DDEh3kdNmuvWcfx3VFRYlq44vEKbDGnj
+carlOS é uma plataforma completa para organizar sua vida pessoal e profissional.
 
-## Run Locally
+**Módulo Pessoal:**
+- 💰 Finanças (contas, cartões, transações)
+- 🙏 Vida Espiritual (leitura bíblica, sermões, orações)
+- 💪 Saúde & Bem-estar
+- 📚 Estudos
+- 🐾 Cuidados com Pets
+- 🍷 Catálogo de Vinhos
 
-**Prerequisites:**  Node.js
+**Módulo Profissional:**
+- 👥 CRM (gestão de clientes)
+- 🎬 Gestão de Projetos de Vídeo
+- 💵 Construtor de Orçamentos
+- 🛠️ Catálogo de Serviços
 
+## 🚀 Tecnologias
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- React + TypeScript + Vite
+- Tailwind CSS
+- Supabase (Backend)
+- TanStack Query (React Query)
+
+## ⚙️ Como Usar
+```bash
+# Instalar dependências
+npm install
+
+# Configurar .env.local com suas credenciais do Supabase
+# VITE_SUPABASE_URL=...
+# VITE_SUPABASE_ANON_KEY=...
+
+# Rodar projeto
+npm run dev
+```
+
+## 📂 Estrutura
+```
+src/
+├── modules/
+│   ├── personal/      # Módulo Pessoal
+│   └── professional/  # Módulo Profissional
+├── layouts/
+├── contexts/
+└── integrations/
+```
+
+## 👨‍💻 Autor
+
+Desenvolvido por Cadu
+
+---
+
+**Status:** Em desenvolvimento ativo
