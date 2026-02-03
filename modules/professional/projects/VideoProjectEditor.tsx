@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Save, Loader2, Calendar, Film, User, Link as LinkIcon, HardDrive, Trash2 } from 'lucide-react';
 import { useClients } from '../hooks/useClients';
 import { useCreateProject, useUpdateProject, useProject, useDeleteProject } from '../hooks/useProjects';
-import { ConfirmModal } from '../../../../shared/components/ui/ConfirmModal';
+import { ConfirmModal } from '../../../shared/components/ui/ConfirmModal';
 
 export default function VideoProjectEditor() {
   const navigate = useNavigate();
