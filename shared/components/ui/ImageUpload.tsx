@@ -1,7 +1,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Image, Loader2, Upload, X, Camera } from 'lucide-react';
-import { supabase } from '../../../../integrations/supabase/client';
+import { supabase } from '../../../integrations/supabase/client';
 
 interface ImageUploadProps {
   value?: string;
