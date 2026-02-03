@@ -1,4 +1,3 @@
-
 export type AccountType = 'checking' | 'investment' | 'cash';
 export type TransactionType = 'income' | 'expense' | 'transfer';
 export type TransactionStatus = 'pending' | 'paid';
@@ -37,13 +36,11 @@ export interface TransactionItem {
   id: string;
   transaction_id: string;
   name: string;
-  amount: number;      // Valor total do item
+  amount: number;
   quantity: number;
-  unit_price?: number; // Preço unitário (opcional)
+  unit_price?: number;
   category_id?: string;
-  item_category?: string; // Categoria específica do item (ex: Limpeza, Alimentação)
-  
-  // Relacionamento Opcional (Join)
+  item_category?: string;
   category?: Category;
 }
 
@@ -63,14 +60,14 @@ export interface Transaction {
   amount: number;
   type: TransactionType;
   status: TransactionStatus;
-  date: string; // ISO 8601 string
+  date: string;
   payment_date?: string | null;
 
   // Campos de Inteligência
-  location?: string | null; // Estabelecimento
-  tags?: string[] | null;   // Etiquetas para agrupamento
+  location?: string | null;
+  tags?: string[] | null;
 
-  // Lista de Itens Detalhados (Opcional)
+  // Lista de Itens Detalhados
   items?: TransactionItem[];
 
   // Lista de Pagamentos (Multi-meios)
@@ -81,21 +78,24 @@ export interface Transaction {
   installment_current?: number | null;
   installment_total?: number | null;
 
-  // Foreign Keys (Legacy / Single Payment Source of Truth)
+  // Foreign Keys
   account_id?: string | null;
-  destination_account_id?: string | null; // Para transferências
+  destination_account_id?: string | null;
   credit_card_id?: string | null;
   category_id?: string | null;
   bill_id?: string | null;
   user_id?: string;
   created_at?: string;
 
-  // Campos de Controle Frontend (UI)
-  is_locked?: boolean; 
+  // ✅ NOVOS CAMPOS - Soft Delete e Period Lock
+  deleted_at?: string | null;  // Quando preenchido, transação está "na lixeira"
+  is_locked?: boolean;         // Quando true, pertence a período fechado
+
+  // Campos de Controle Frontend
   is_recurring?: boolean;
 
-  // Columns
-  category: string; // Mantido para retrocompatibilidade (Categoria Geral)
+  // Categoria (texto para retrocompatibilidade)
+  category: string;
 
   // Relacionamentos (Joins)
   account?: Account;
@@ -147,6 +147,22 @@ export interface Subscription {
   service_name: string;
   amount: number;
   billing_cycle: 'monthly' | 'yearly';
+}
+
+// ✅ NOVO: Interface para fechamento de período
+export interface AccountPeriodLock {
+  id: string;
+  account_id: string;
+  user_id: string;
+  period_end_date: string;
+  confirmed_balance: number;
+  calculated_balance: number;
+  adjustment_transaction_id?: string | null;
+  locked_at: string;
+  notes?: string;
+  
+  // Relacionamento
+  account?: Account;
 }
 
 export interface CardTransactionView {

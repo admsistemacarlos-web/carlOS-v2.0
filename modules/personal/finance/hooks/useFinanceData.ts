@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../../../../integrations/supabase/client';
 import { Transaction, Account, Bill, CreditCard, Subscription } from '../types/finance.types';
@@ -49,11 +48,10 @@ export const useTransactions = (options: TransactionFilterOptions = {}) => {
     setLoading(true);
     setError(null);
     try {
-      // REVERTIDO: Removido joins problemáticos (account:accounts(name)) que causavam erro silencioso.
-      // Voltamos para o select básico seguro. O mapeamento de nomes será feito no Frontend.
       let query = supabase
         .from('transactions')
         .select('*, items:transaction_items(*), payments:transaction_payments(*)')
+        .is('deleted_at', null)  // ✅ SOFT DELETE: Ignora transações "deletadas"
         .order('date', { ascending: false });
 
       if (!options.fetchAll) {
@@ -104,25 +102,24 @@ export const useTransactions = (options: TransactionFilterOptions = {}) => {
 
       // LÓGICA ESPECIAL PARA TRANSFERÊNCIA
       if (transactionData.type === 'transfer' && transactionData.account_id && transactionData.destination_account_id) {
-        // Criamos dois registros vinculados
-        const transferId = crypto.randomUUID(); // Identificador comum para as duas pernas da transferência
+        const transferId = crypto.randomUUID();
         
         const payloadOut = {
           ...transactionData,
           user_id: user.id,
-          type: 'expense', // Saída na origem
+          type: 'expense',
           category: 'Transferência',
           description: `Saída: ${transactionData.description}`,
           tags: [...(transactionData.tags || []), `transfer_${transferId}`]
         };
         delete (payloadOut as any).destination_account_id;
-        delete (payloadOut as any).payments; // Remove payments para transferências simples
+        delete (payloadOut as any).payments;
 
         const payloadIn = {
           ...transactionData,
           user_id: user.id,
           account_id: transactionData.destination_account_id,
-          type: 'income', // Entrada no destino
+          type: 'income',
           category: 'Transferência',
           description: `Entrada: ${transactionData.description}`,
           tags: [...(transactionData.tags || []), `transfer_${transferId}`]
@@ -137,7 +134,7 @@ export const useTransactions = (options: TransactionFilterOptions = {}) => {
         return { success: true };
       }
 
-      // Lógica Normal (Receita/Despesa) - Tratada no componente, mas fallback aqui se necessário
+      // Lógica Normal (Receita/Despesa)
       const { payments, items, ...transData } = transactionData;
       const { data, error } = await supabase.from('transactions').insert([{...transData, user_id: user.id}]).select().single();
       if (error) throw error;
@@ -147,10 +144,59 @@ export const useTransactions = (options: TransactionFilterOptions = {}) => {
     } catch (err) { throw err; }
   }, [fetchTransactions]);
 
-  return { transactions, loading, error, refresh: fetchTransactions, addTransaction, deleteTransaction: async (id: string) => {
-    const { error } = await supabase.from('transactions').delete().eq('id', id);
-    if (!error) setTransactions(prev => prev.filter(t => t.id !== id));
-  }, setTransactions };
+  // ✅ SOFT DELETE com verificação de período fechado
+  const deleteTransaction = useCallback(async (id: string) => {
+    // 1. Verifica se a transação está travada (período fechado)
+    const { data: transaction, error: fetchError } = await supabase
+      .from('transactions')
+      .select('is_locked, description')
+      .eq('id', id)
+      .single();
+    
+    if (fetchError) {
+      throw new Error('Erro ao verificar transação: ' + fetchError.message);
+    }
+
+    if (transaction?.is_locked) {
+      throw new Error(
+        `A transação "${transaction.description}" pertence a um período fechado e não pode ser excluída. ` +
+        `Crie uma transação de ajuste no período atual para corrigir.`
+      );
+    }
+
+    // 2. SOFT DELETE: marca como excluída em vez de deletar
+    const { error } = await supabase
+      .from('transactions')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', id);
+    
+    if (error) throw error;
+    
+    // 3. Remove da lista local (atualização visual imediata)
+    setTransactions(prev => prev.filter(t => t.id !== id));
+  }, []);
+
+  // ✅ NOVO: Função para restaurar transação deletada
+  const restoreTransaction = useCallback(async (id: string) => {
+    const { error } = await supabase
+      .from('transactions')
+      .update({ deleted_at: null })
+      .eq('id', id);
+    
+    if (error) throw error;
+    await fetchTransactions();
+  }, [fetchTransactions]);
+
+  return { 
+    transactions, 
+    loading, 
+    error, 
+    refresh: fetchTransactions, 
+    addTransaction, 
+    deleteTransaction,
+    restoreTransaction, // ✅ Nova função exposta
+    setTransactions 
+  };
 };
 
 export const useAccounts = () => {
@@ -168,6 +214,7 @@ export const useAccounts = () => {
         
       if (accountsError) throw accountsError;
 
+      // ✅ Busca saldo calculado da view corrigida
       const { data: balanceData } = await supabase
         .from('view_account_balances')
         .select('account_id, current_balance');
@@ -251,11 +298,9 @@ export const useCategorySuggestions = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      // Busca categorias únicas de transações
       const { data: transCats } = await supabase.rpc('get_unique_transaction_categories');
       if (transCats) setCategories(transCats.map((c: any) => c.category).filter(Boolean));
 
-      // Busca categorias únicas de itens
       const { data: itemCats } = await supabase.rpc('get_unique_item_categories');
       if (itemCats) setItemCategories(itemCats.map((c: any) => c.item_category).filter(Boolean));
     };
@@ -297,6 +342,96 @@ export const useItemSuggestions = () => {
   }, []);
 
   return { suggestions };
+};
+
+// ✅ NOVO: Hook para gerenciar fechamento de período
+export const usePeriodLocks = () => {
+  const [locks, setLocks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchLocks = useCallback(async () => {
+    setLoading(true);
+    const { data } = await supabase
+      .from('account_period_locks')
+      .select('*, account:accounts(name)')
+      .order('period_end_date', { ascending: false });
+    setLocks(data || []);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchLocks(); }, [fetchLocks]);
+
+  const closePeriod = useCallback(async (
+    accountId: string, 
+    periodEndDate: string, 
+    confirmedBalance: number
+  ) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Usuário não logado");
+
+    // 1. Busca saldo calculado atual
+    const { data: balanceData } = await supabase
+      .from('view_account_balances')
+      .select('current_balance')
+      .eq('account_id', accountId)
+      .single();
+
+    const calculatedBalance = balanceData?.current_balance || 0;
+    let adjustmentTransactionId = null;
+
+    // 2. Se houver diferença, cria transação de ajuste
+    const difference = confirmedBalance - Number(calculatedBalance);
+    if (Math.abs(difference) > 0.01) {
+      const adjustmentType = difference > 0 ? 'income' : 'expense';
+      const { data: adjustment, error: adjError } = await supabase
+        .from('transactions')
+        .insert({
+          user_id: user.id,
+          account_id: accountId,
+          description: `Ajuste de reconciliação - ${periodEndDate}`,
+          amount: Math.abs(difference),
+          type: adjustmentType,
+          category: 'Ajuste',
+          date: periodEndDate,
+          status: 'paid',
+          is_locked: true
+        })
+        .select()
+        .single();
+
+      if (adjError) throw adjError;
+      adjustmentTransactionId = adjustment?.id;
+    }
+
+    // 3. Trava todas as transações até a data
+    const { error: lockError } = await supabase
+      .from('transactions')
+      .update({ is_locked: true })
+      .eq('account_id', accountId)
+      .lte('date', periodEndDate)
+      .is('deleted_at', null);
+
+    if (lockError) throw lockError;
+
+    // 4. Registra o fechamento
+    const { error: insertError } = await supabase
+      .from('account_period_locks')
+      .insert({
+        user_id: user.id,
+        account_id: accountId,
+        period_end_date: periodEndDate,
+        confirmed_balance: confirmedBalance,
+        calculated_balance: calculatedBalance,
+        adjustment_transaction_id: adjustmentTransactionId
+      });
+
+    if (insertError) throw insertError;
+
+    await fetchLocks();
+    return { success: true, adjustment: difference };
+  }, [fetchLocks]);
+
+  return { locks, loading, refresh: fetchLocks, closePeriod };
 };
 
 export const useCreditCards = useCards;
