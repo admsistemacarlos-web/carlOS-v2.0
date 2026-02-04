@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { 
@@ -24,33 +23,27 @@ interface TransactionFormData {
   type: TransactionType;
   date: string;
   category_id: string | null;
-  category_name?: string; // Campo auxiliar para salvar o nome texto
+  category_name?: string;
   location: string;
   tags: string[];
   
-  // Controle Lógico
   is_recurring: boolean;
   status: StatusType;
 
-  // Transferência
   origin_account_id: string | null;
   destination_account_id: string | null;
 
-  // Pagamento Simples (Despesa/Receita)
   payment_method: 'account' | 'credit_card';
   account_id: string | null;
   credit_card_id: string | null;
-  installments: number; // Parcelamento simples (cartão)
+  installments: number;
 
-  // Itens Detalhados
   items: { 
     name: string; 
     quantity: number; 
     unit_price: number; 
-    // subtotal calculado visualmente
   }[];
 
-  // Split Payments (Apenas Despesa Paga)
   use_split_payment: boolean;
   payments: {
     method: 'account' | 'credit_card';
@@ -142,36 +135,39 @@ const SmartCombobox = ({
           className="bg-transparent outline-none w-full text-sm text-coffee placeholder-stone-400"
           placeholder={selectedName || "Selecione..."}
           value={isOpen ? query : selectedName}
-          onChange={e => { setQuery(e.target.value); setIsOpen(true); }}
+          onChange={e => setQuery(e.target.value)}
           onFocus={() => setIsOpen(true)}
         />
-        {loading && <Loader2 size={14} className="animate-spin text-olive" />}
       </div>
 
       {isOpen && (
-        <div className="absolute top-full left-0 w-full mt-1 bg-white border border-stone-100 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto">
-          {filtered.length > 0 ? (
+        <div className="absolute z-50 mt-1 w-full bg-white border border-stone-200 rounded-xl shadow-lg max-h-60 overflow-auto">
+          {filtered.length === 0 && query.trim() ? (
+            <button
+              type="button"
+              onClick={handleCreate}
+              disabled={loading}
+              className="w-full px-4 py-3 text-left text-sm hover:bg-stone-50 flex items-center gap-2 text-olive font-medium"
+            >
+              {loading ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+              Criar "{query}"
+            </button>
+          ) : (
             filtered.map(opt => (
               <button
                 key={opt.id}
                 type="button"
-                className="w-full text-left px-4 py-2.5 text-sm hover:bg-stone-50 text-coffee transition-colors flex justify-between"
-                onClick={() => { onChange(opt.id, opt.name); setIsOpen(false); setQuery(''); }}
+                onClick={() => {
+                  onChange(opt.id, opt.name);
+                  setIsOpen(false);
+                  setQuery('');
+                }}
+                className="w-full px-4 py-3 text-left text-sm hover:bg-stone-50 flex items-center gap-2"
               >
-                {opt.name}
                 {value === opt.id && <Check size={14} className="text-olive" />}
+                <span>{opt.name}</span>
               </button>
             ))
-          ) : (
-            <div className="p-2">
-              <button 
-                type="button"
-                onClick={handleCreate}
-                className="w-full bg-olive/10 text-olive text-xs font-bold py-2 rounded-lg hover:bg-olive/20 transition-colors"
-              >
-                + Criar "{query}"
-              </button>
-            </div>
           )}
         </div>
       )}
@@ -179,38 +175,37 @@ const SmartCombobox = ({
   );
 };
 
-// --- COMPONENT 2: TAG INPUT ---
+// --- COMPONENTE 2: TAG INPUT ---
 
-const TagInput = ({ value = [], onChange }: { value: string[], onChange: (tags: string[]) => void }) => {
+const TagInput = ({ value, onChange }: { value: string[], onChange: (tags: string[]) => void }) => {
   const [input, setInput] = useState('');
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && input.trim()) {
       e.preventDefault();
-      if (input.trim()) {
-        if (!value.includes(input.trim())) {
-          onChange([...value, input.trim()]);
-        }
-        setInput('');
+      if (!value.includes(input.trim())) {
+        onChange([...value, input.trim()]);
       }
+      setInput('');
     }
   };
 
-  const removeTag = (tagToRemove: string) => {
-    onChange(value.filter(t => t !== tagToRemove));
+  const removeTag = (tag: string) => {
+    onChange(value.filter(t => t !== tag));
   };
 
   return (
-    <div className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 min-h-[46px] flex flex-wrap gap-2 items-center focus-within:ring-2 focus-within:ring-olive/20 transition-all">
-      <div className="mr-1 text-stone-400 shrink-0"><Tag size={16} /></div>
+    <div className="flex flex-wrap gap-2 bg-stone-50 border border-stone-200 rounded-xl p-3 min-h-[44px]">
       {value.map(tag => (
-        <span key={tag} className="bg-white border border-stone-200 text-stone-600 px-2 py-1 rounded-md text-xs font-bold flex items-center gap-1">
+        <span key={tag} className="inline-flex items-center gap-1 bg-olive/10 text-olive text-xs px-2 py-1 rounded-lg">
           {tag}
-          <button type="button" onClick={() => removeTag(tag)} className="hover:text-red-500"><X size={10} /></button>
+          <button type="button" onClick={() => removeTag(tag)} className="hover:text-red-500">
+            <X size={12} />
+          </button>
         </span>
       ))}
       <input 
-        className="bg-transparent outline-none text-sm text-coffee flex-1 min-w-[80px]"
+        className="flex-1 bg-transparent outline-none text-sm min-w-[120px] placeholder-stone-400"
         placeholder={value.length === 0 ? "Tags..." : ""}
         value={input}
         onChange={e => setInput(e.target.value)}
@@ -257,7 +252,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
   const { fields: itemFields, append: appendItem, remove: removeItem } = useFieldArray({ control, name: 'items' });
   const { fields: splitFields, append: appendSplit, remove: removeSplit } = useFieldArray({ control, name: 'payments' });
 
-  // Sincronizar total dos itens com o valor total (apenas se itens existirem)
+  // Sincronizar total dos itens com o valor total
   useEffect(() => {
     if (items.length > 0) {
       const total = items.reduce((acc, item) => acc + ((item.quantity || 1) * (item.unit_price || 0)), 0);
@@ -274,12 +269,14 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
         date: transactionToEdit.date.split('T')[0],
         type: transactionToEdit.type as TransactionType,
         category_id: transactionToEdit.category_id,
-        category_name: transactionToEdit.category, // Carrega o nome existente
+        category_name: transactionToEdit.category,
         location: transactionToEdit.location || '',
         tags: transactionToEdit.tags || [],
         status: transactionToEdit.status as StatusType,
         account_id: transactionToEdit.account_id,
         credit_card_id: transactionToEdit.credit_card_id,
+        origin_account_id: transactionToEdit.account_id,
+        destination_account_id: transactionToEdit.destination_account_id,
         payment_method: transactionToEdit.credit_card_id ? 'credit_card' : 'account',
         items: transactionToEdit.items || [],
         payments: transactionToEdit.payments?.map(p => ({
@@ -297,7 +294,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
     }
   }, [transactionToEdit, reset]);
 
-  // Função Bloqueio de Scroll
   const preventScroll = (e: React.WheelEvent<HTMLInputElement>) => {
     e.currentTarget.blur();
   };
@@ -310,10 +306,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
         
         if (!currentUser) throw new Error("Usuário não autenticado");
 
-        // Helper para sanitizar UUIDs (string vazia vira null para evitar erro 22P02 no PostgreSQL)
         const sanitizeUUID = (id: string | null | undefined) => (id && id.trim() !== "") ? id : null;
 
-        // Validação de Split (se aplicável)
         const amountVal = Number(data.amount);
         if (data.use_split_payment && data.type === 'expense' && data.status === 'paid') {
             const splitTotal = data.payments.reduce((acc, p) => acc + Number(p.amount), 0);
@@ -322,17 +316,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
             }
         }
 
-        // 1. Prepara o Payload Base
         const dateISO = toISOWithNoon(data.date);
         
         const payload: any = {
             description: data.description,
             amount: amountVal,
-            type: data.type, // 'expense', 'income', 'transfer'
+            type: data.type,
             date: dateISO, 
-            category: data.category_name || 'Outros', // Usa o nome salvo da Combobox
+            category: data.category_name || 'Outros',
             category_id: sanitizeUUID(data.category_id), 
-            // Se for transferência, o account_id principal deve ser a origem
             account_id: data.type === 'transfer' ? sanitizeUUID(data.origin_account_id) : sanitizeUUID(data.account_id), 
             destination_account_id: data.type === 'transfer' ? sanitizeUUID(data.destination_account_id) : null, 
             status: data.status, 
@@ -342,11 +334,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
             created_at: new Date().toISOString()
         };
 
-        // Campos específicos de pagamento
         if (!data.use_split_payment && data.type !== 'transfer') {
             if (data.payment_method === 'credit_card') {
                 payload.credit_card_id = sanitizeUUID(data.credit_card_id);
-                payload.account_id = null; // Garante que não é conta
+                payload.account_id = null;
                 payload.is_locked = false;
                 
                 const installmentsNum = Number(data.installments);
@@ -357,30 +348,23 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                 }
             } else {
                 payload.credit_card_id = null;
-                // account_id já está definido no bloco base (como account_id)
             }
         } else if (data.type === 'transfer') {
-            // Limpa campos de cartão em transferências
             payload.credit_card_id = null;
         }
 
         let transactionId = transactionToEdit?.id;
         const targetTable = data.status === 'pending' && data.type !== 'transfer' ? 'bills' : 'transactions';
 
-        // Ajuste para tabela Bills (usa due_date)
         if (targetTable === 'bills') {
             payload.due_date = dateISO;
-            payload.type = 'variable'; // Tipo padrão de conta
-            delete payload.date; // Remove date se for bill
+            payload.type = 'variable';
+            delete payload.date;
         }
 
-        // --- LÓGICA DE BIFURCAÇÃO (EDITAR vs CRIAR) ---
-        
         if (transactionToEdit && !isDuplicate) {
-            // >>> MODO EDIÇÃO (UPDATE) <<<
-            delete payload.created_at; // Não atualiza data de criação
+            delete payload.created_at;
 
-            // 1. Atualiza a transação pai
             const { error: updateError } = await supabase
                 .from(targetTable)
                 .update(payload)
@@ -388,47 +372,59 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
 
             if (updateError) throw updateError;
 
-            // 2. Limpa filhos antigos (Items e Payments) para recriar
-            if (targetTable === 'transactions') { 
+            if (data.items && data.items.length > 0) {
                 await supabase.from('transaction_items').delete().eq('transaction_id', transactionId);
-                await supabase.from('transaction_payments').delete().eq('transaction_id', transactionId);
+                const itemsPayload = data.items.map(item => ({
+                    transaction_id: transactionId,
+                    name: item.name,
+                    quantity: item.quantity,
+                    unit_price: item.unit_price,
+                    amount: item.quantity * item.unit_price,
+                    user_id: currentUser.id
+                }));
+                await supabase.from('transaction_items').insert(itemsPayload);
             }
 
+            if (data.use_split_payment && data.payments.length > 0) {
+                await supabase.from('transaction_payments').delete().eq('transaction_id', transactionId);
+                const paymentsPayload = data.payments.map(p => ({
+                    transaction_id: transactionId,
+                    amount: p.amount,
+                    payment_method: p.method,
+                    account_id: p.method === 'account' ? sanitizeUUID(p.account_id) : null,
+                    credit_card_id: p.method === 'credit_card' ? sanitizeUUID(p.credit_card_id) : null,
+                    installments: p.method === 'credit_card' ? (Number(p.installments) || 1) : 1,
+                    user_id: currentUser.id
+                }));
+                await supabase.from('transaction_payments').insert(paymentsPayload);
+            }
         } else {
-            // >>> MODO CRIAÇÃO (INSERT) <<<
-            
-            const { data: newTrans, error: insertError } = await supabase
+            const { data: newTransaction, error: insertError } = await supabase
                 .from(targetTable)
                 .insert([payload])
                 .select()
                 .single();
 
             if (insertError) throw insertError;
-            transactionId = newTrans.id;
-        }
+            transactionId = newTransaction.id;
 
-        // --- GRAVAÇÃO DOS FILHOS (Para Pagos/Transações) ---
-        if (targetTable === 'transactions' && transactionId) {
-            
-            // A. Salvar Itens (se houver)
             if (data.items && data.items.length > 0) {
                 const itemsPayload = data.items.map(item => ({
                     transaction_id: transactionId,
                     name: item.name,
-                    quantity: Number(item.quantity),
-                    unit_price: Number(item.unit_price),
-                    amount: Number(item.quantity) * Number(item.unit_price),
+                    quantity: item.quantity,
+                    unit_price: item.unit_price,
+                    amount: item.quantity * item.unit_price,
                     user_id: currentUser.id
                 }));
                 await supabase.from('transaction_items').insert(itemsPayload);
             }
 
-            // B. Salvar Pagamentos (Split)
-            if (data.use_split_payment && data.payments && data.payments.length > 0) {
+            if (data.use_split_payment && data.payments.length > 0) {
                 const paymentsPayload = data.payments.map(p => ({
                     transaction_id: transactionId,
+                    amount: p.amount,
                     payment_method: p.method,
-                    amount: Number(p.amount),
                     account_id: p.method === 'account' ? sanitizeUUID(p.account_id) : null,
                     credit_card_id: p.method === 'credit_card' ? sanitizeUUID(p.credit_card_id) : null,
                     installments: p.method === 'credit_card' ? (Number(p.installments) || 1) : 1,
@@ -438,7 +434,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
             }
         }
 
-        // --- RECORRÊNCIA ---
         if (data.is_recurring && (!transactionToEdit?.is_recurring || isDuplicate)) {
              await supabase.from('recurrence_rules').insert([{
                  user_id: currentUser.id,
@@ -494,27 +489,60 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
 
       {/* 3. CAMPOS ESPECÍFICOS POR TIPO */}
       
-      {/* MODO TRANSFERÊNCIA */}
+      {/* MODO TRANSFERÊNCIA - CORRIGIDO ✅ */}
       {type === 'transfer' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in bg-stone-50 p-4 rounded-2xl border border-stone-200">
-            <div>
-              <label className="text-xs font-bold text-red-400 uppercase block mb-2">Sai de (Origem)</label>
-              <div className="relative">
-                <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300" size={16} />
-                <select {...register('origin_account_id')} className="w-full bg-white border border-red-200 rounded-xl pl-9 pr-3 py-3 text-sm outline-none">
-                  <option value="">Selecione...</option>
-                  {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance})</option>)}
-                </select>
+          <div className="space-y-4 animate-fade-in">
+            {/* LINHA 1: Data e Valor */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Data da Transferência</label>
+                <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                    <input 
+                      type="date" 
+                      {...register('date')} 
+                      className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-10 pr-3 py-3 text-sm text-coffee outline-none focus:border-blue-500"
+                    />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Valor Total</label>
+                <div className="relative">
+                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                    <input 
+                      type="number" 
+                      step="0.01" 
+                      onWheel={preventScroll}
+                      {...register('amount')}
+                      className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-10 pr-3 py-3 text-sm font-semibold text-coffee outline-none focus:border-blue-500 placeholder-stone-300"
+                      placeholder="0.00"
+                    />
+                </div>
               </div>
             </div>
-            <div>
-              <label className="text-xs font-bold text-emerald-500 uppercase block mb-2">Entra em (Destino)</label>
-              <div className="relative">
-                <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-300" size={16} />
-                <select {...register('destination_account_id')} className="w-full bg-white border border-emerald-200 rounded-xl pl-9 pr-3 py-3 text-sm outline-none">
-                  <option value="">Selecione...</option>
-                  {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
-                </select>
+
+            {/* LINHA 2: Origem e Destino */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-stone-50 p-4 rounded-2xl border border-stone-200">
+              <div>
+                <label className="text-xs font-bold text-red-400 uppercase block mb-2">Sai de (Origem)</label>
+                <div className="relative">
+                  <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300" size={16} />
+                  <select {...register('origin_account_id')} className="w-full bg-white border border-red-200 rounded-xl pl-9 pr-3 py-3 text-sm outline-none">
+                    <option value="">Selecione...</option>
+                    {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance.toFixed(2)})</option>)}
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-emerald-500 uppercase block mb-2">Entra em (Destino)</label>
+                <div className="relative">
+                  <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-300" size={16} />
+                  <select {...register('destination_account_id')} className="w-full bg-white border border-emerald-200 rounded-xl pl-9 pr-3 py-3 text-sm outline-none">
+                    <option value="">Selecione...</option>
+                    {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance.toFixed(2)})</option>)}
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -577,40 +605,40 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
             </button>
 
             {showItems && (
-                <div className="space-y-3 bg-stone-50 p-4 rounded-2xl border border-stone-100 animate-fade-in mb-6">
+                <div className="space-y-2 bg-stone-50 p-4 rounded-xl border border-stone-200">
+                    <div className="grid grid-cols-[1fr_80px_100px_80px_40px] gap-2 text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-2">
+                        <div>Item</div>
+                        <div className="text-center">Qtd</div>
+                        <div className="text-right pr-2">Preço Unit.</div>
+                        <div className="text-right pr-2">Subtotal</div>
+                        <div></div>
+                    </div>
                     {itemFields.map((field, index) => {
-                        const qty = watch(`items.${index}.quantity`) || 0;
-                        const price = watch(`items.${index}.unit_price`) || 0;
-                        const subtotal = qty * price;
-
+                        const item = items[index];
+                        const subtotal = (item?.quantity || 0) * (item?.unit_price || 0);
+                        
                         return (
-                            <div key={field.id} className="flex gap-2 items-center bg-white p-2 rounded-xl border border-stone-200 shadow-sm flex-wrap sm:flex-nowrap">
-                                {/* Quantidade (Decimal) */}
-                                <div className="relative w-20">
-                                    <input 
-                                        {...register(`items.${index}.quantity`)}
-                                        placeholder="Qtd"
-                                        type="number"
-                                        step="0.001"
-                                        onWheel={preventScroll}
-                                        className="w-full bg-stone-50 rounded-lg p-2 text-xs text-center outline-none border border-stone-100 focus:border-olive"
-                                    />
-                                </div>
-                                
+                            <div key={field.id} className="grid grid-cols-[1fr_80px_100px_80px_40px] gap-2 items-center">
                                 <input 
                                     {...register(`items.${index}.name`)}
-                                    placeholder="Item..."
-                                    className="flex-1 bg-stone-50 rounded-lg p-2 text-xs outline-none border border-stone-100 min-w-[120px]"
+                                    placeholder="Nome do item"
+                                    className="w-full bg-white rounded-lg p-2 text-xs outline-none border border-stone-100"
                                 />
-                                
-                                <div className="relative w-24">
-                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[9px] text-stone-400">R$</span>
+
+                                <input 
+                                    {...register(`items.${index}.quantity`)}
+                                    type="number" min="1" step="1"
+                                    onWheel={preventScroll}
+                                    className="w-full bg-white rounded-lg p-2 text-xs text-center outline-none border border-stone-100"
+                                />
+
+                                <div className="relative">
+                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-stone-400">R$</span>
                                     <input 
                                         {...register(`items.${index}.unit_price`)}
-                                        placeholder="Unit."
                                         type="number" step="0.01"
                                         onWheel={preventScroll}
-                                        className="w-full bg-stone-50 rounded-lg p-2 pl-6 text-xs text-right outline-none border border-stone-100"
+                                        className="w-full bg-white rounded-lg p-2 pl-6 text-xs text-right outline-none border border-stone-100"
                                     />
                                 </div>
 
@@ -634,177 +662,212 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
         </div>
       )}
 
-      {/* 5. VALOR TOTAL (Destaque) */}
-      <div className="bg-white p-6 rounded-[2rem] border border-stone-200 shadow-sm text-center">
-        <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1 block">Valor Total</label>
-        <div className="relative inline-block w-full max-w-xs">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-stone-300">R$</span>
-            <input 
-              type="number" 
-              step="0.01" 
-              onWheel={preventScroll}
-              {...register('amount')}
-              className="w-full bg-stone-50 border border-stone-200 rounded-2xl py-4 pl-12 pr-4 text-3xl font-bold text-coffee text-center outline-none focus:ring-2 focus:ring-olive/20 placeholder-stone-200"
-              placeholder="0.00"
-            />
+      {/* 5. VALOR TOTAL (Destaque) - Apenas para Despesa/Receita */}
+      {type !== 'transfer' && (
+        <div className="bg-white p-6 rounded-[2rem] border border-stone-200 shadow-sm text-center">
+          <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1 block">Valor Total</label>
+          <div className="relative inline-block w-full max-w-xs">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-stone-300">R$</span>
+              <input 
+                type="number" 
+                step="0.01" 
+                onWheel={preventScroll}
+                {...register('amount')}
+                className="w-full bg-stone-50 border border-stone-200 rounded-2xl py-4 pl-12 pr-4 text-3xl font-bold text-coffee text-center outline-none focus:ring-2 focus:ring-olive/20 placeholder-stone-200"
+                placeholder="0.00"
+              />
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* 6. FORMA DE PAGAMENTO */}
-      {type === 'transfer' ? (
-          /* Já renderizado acima */
-          null 
-      ) : (
+      {/* 6. FORMA DE PAGAMENTO (Apenas para Despesa/Receita) */}
+      {type !== 'transfer' && (
           <div className="bg-stone-50 p-6 rounded-2xl border border-stone-200 space-y-4">
               <div className="flex justify-between items-center">
                   <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">
                     {type === 'income' ? 'Destino do Recurso' : 'Forma de Pagamento'}
                   </label>
                   
-                  {/* Status Toggles */}
                   <div className="flex gap-2">
                     <button 
                         type="button" 
                         onClick={() => setValue('status', status === 'pending' ? 'paid' : 'pending')}
-                        className={`px-3 py-1 rounded-lg border text-[10px] font-bold uppercase transition-all flex items-center gap-1 ${status === 'pending' ? 'bg-orange-50 border-orange-200 text-orange-600' : 'bg-white border-stone-200 text-stone-400'}`}
+                        className={`text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full transition-all ${status === 'paid' ? 'bg-olive/20 text-olive' : 'bg-yellow-100 text-yellow-700'}`}
                     >
-                        <Clock size={12} /> Pendente
-                    </button>
-                    <button 
-                        type="button" 
-                        onClick={() => setValue('is_recurring', !isRecurring)}
-                        className={`px-3 py-1 rounded-lg border text-[10px] font-bold uppercase transition-all flex items-center gap-1 ${isRecurring ? 'bg-blue-50 border-blue-200 text-blue-600' : 'bg-white border-stone-200 text-stone-400'}`}
-                    >
-                        <Repeat size={12} /> Repetir
+                        {status === 'paid' ? 'Pago' : 'Pendente'}
                     </button>
                   </div>
               </div>
-              
-              {/* Seletor Simples vs Split (Apenas Despesa Paga) */}
-              {type === 'expense' && status === 'paid' && (
-                  <div className="flex items-center gap-2 mb-2">
-                      <input 
-                        type="checkbox" 
-                        id="use_split" 
-                        {...register('use_split_payment')} 
-                        className="w-4 h-4 accent-olive cursor-pointer"
-                      />
-                      <label htmlFor="use_split" className="text-xs font-bold text-olive cursor-pointer flex items-center gap-1">
-                          <Split size={14} /> Dividir Pagamento (Split)
-                      </label>
-                  </div>
-              )}
 
-              {!useSplitPayment ? (
-                  /* PAGAMENTO ÚNICO */
+              {status === 'paid' && (
                   <>
-                    <div className="flex gap-2">
-                        <button 
-                        type="button" 
-                        onClick={() => setValue('payment_method', 'account')}
-                        className={`flex-1 py-3 rounded-xl text-xs font-bold uppercase transition-all border ${paymentMethod === 'account' ? 'bg-white border-olive text-olive shadow-sm' : 'bg-stone-100 border-transparent text-stone-400'}`}
-                        >
-                        Conta / Pix
-                        </button>
-                        <button 
-                        type="button" 
-                        onClick={() => setValue('payment_method', 'credit_card')}
-                        className={`flex-1 py-3 rounded-xl text-xs font-bold uppercase transition-all border ${paymentMethod === 'credit_card' ? 'bg-white border-terracotta text-terracotta shadow-sm' : 'bg-stone-100 border-transparent text-stone-400'}`}
-                        >
-                        Cartão Crédito
-                        </button>
-                    </div>
+                      <div className="flex bg-white p-1 rounded-xl">
+                          <button
+                            type="button"
+                            onClick={() => {
+                                setValue('payment_method', 'account');
+                                setValue('use_split_payment', false);
+                            }}
+                            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${paymentMethod === 'account' && !useSplitPayment ? 'bg-olive text-white' : 'text-stone-400'}`}
+                          >
+                            <Wallet size={14} /> Conta
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                                setValue('payment_method', 'credit_card');
+                                setValue('use_split_payment', false);
+                            }}
+                            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${paymentMethod === 'credit_card' && !useSplitPayment ? 'bg-olive text-white' : 'text-stone-400'}`}
+                          >
+                            <CreditCard size={14} /> Cartão
+                          </button>
+                          {type === 'expense' && (
+                            <button
+                              type="button"
+                              onClick={() => setValue('use_split_payment', true)}
+                              className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${useSplitPayment ? 'bg-olive text-white' : 'text-stone-400'}`}
+                            >
+                              <Split size={14} /> Dividir
+                            </button>
+                          )}
+                      </div>
 
-                    {paymentMethod === 'account' ? (
-                        <div className="relative animate-fade-in">
-                        <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
-                        <select {...register('account_id')} className="w-full bg-white border border-stone-200 rounded-xl pl-10 pr-3 py-3 text-sm text-coffee outline-none focus:border-olive appearance-none cursor-pointer">
-                            <option value="">Selecione a Conta...</option>
-                            {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance})</option>)}
-                        </select>
-                        </div>
-                    ) : (
-                        <div className="space-y-3 animate-fade-in">
-                            <div className="relative">
-                                <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
-                                <select {...register('credit_card_id')} className="w-full bg-white border border-stone-200 rounded-xl pl-10 pr-3 py-3 text-sm text-coffee outline-none focus:border-terracotta appearance-none cursor-pointer">
-                                    <option value="">Selecione o Cartão...</option>
-                                    {cards.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                                </select>
-                            </div>
-                            <select {...register('installments')} className="w-full bg-white border border-stone-200 rounded-xl px-3 py-3 text-sm text-coffee outline-none focus:border-terracotta">
-                                <option value="1">À vista (1x)</option>
-                                {[2,3,4,5,6,10,12].map(i => <option key={i} value={i}>{i}x</option>)}
-                            </select>
-                        </div>
-                    )}
-                  </>
-              ) : (
-                  /* SPLIT PAYMENT */
-                  <div className="space-y-3 animate-fade-in bg-white p-4 rounded-xl border border-stone-200">
-                      {splitFields.map((field, index) => {
-                          const method = watch(`payments.${index}.method`);
-                          return (
-                              <div key={field.id} className="p-3 bg-stone-50 rounded-lg border border-stone-100 space-y-2 relative">
-                                  <button type="button" onClick={() => removeSplit(index)} className="absolute top-2 right-2 text-stone-300 hover:text-red-500"><X size={14}/></button>
-                                  
-                                  <div className="flex gap-2">
-                                      <select {...register(`payments.${index}.method`)} className="bg-white border rounded text-xs p-1">
+                      {!useSplitPayment ? (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {paymentMethod === 'account' ? (
+                                  <div className="space-y-1">
+                                      <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Conta</label>
+                                      <select {...register('account_id')} className="w-full bg-white border border-stone-200 rounded-xl p-3 text-sm outline-none">
+                                          <option value="">Selecione...</option>
+                                          {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
+                                      </select>
+                                  </div>
+                              ) : (
+                                  <>
+                                      <div className="space-y-1">
+                                          <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Cartão</label>
+                                          <select {...register('credit_card_id')} className="w-full bg-white border border-stone-200 rounded-xl p-3 text-sm outline-none">
+                                              <option value="">Selecione...</option>
+                                              {cards.map(card => <option key={card.id} value={card.id}>{card.name}</option>)}
+                                          </select>
+                                      </div>
+                                      <div className="space-y-1">
+                                          <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Parcelas</label>
+                                          <select {...register('installments')} className="w-full bg-white border border-stone-200 rounded-xl p-3 text-sm outline-none">
+                                              <option value="1">À vista (1x)</option>
+                                              {[...Array(23)].map((_, i) => (
+                                                  <option key={i} value={i + 2}>{i + 2}x</option>
+                                              ))}
+                                          </select>
+                                      </div>
+                                  </>
+                              )}
+                          </div>
+                      ) : (
+                          <div className="space-y-3">
+                              {splitFields.map((field, index) => (
+                                  <div key={field.id} className="grid grid-cols-[1fr_2fr_1fr_40px] gap-2 items-end bg-white p-3 rounded-xl border border-stone-100">
+                                      <select {...register(`payments.${index}.method`)} className="bg-stone-50 border border-stone-200 rounded-lg p-2 text-xs">
                                           <option value="account">Conta</option>
                                           <option value="credit_card">Cartão</option>
                                       </select>
-                                      
-                                      {method === 'account' ? (
-                                          <select {...register(`payments.${index}.account_id`)} className="flex-1 bg-white border rounded text-xs p-1">
-                                              <option value="">Conta...</option>
-                                              {accounts.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+
+                                      {watch(`payments.${index}.method`) === 'account' ? (
+                                          <select {...register(`payments.${index}.account_id`)} className="bg-stone-50 border border-stone-200 rounded-lg p-2 text-xs">
+                                              <option value="">Selecione...</option>
+                                              {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
                                           </select>
                                       ) : (
-                                          <div className="flex-1 flex gap-1">
-                                              <select {...register(`payments.${index}.credit_card_id`)} className="flex-1 bg-white border rounded text-xs p-1">
-                                                  <option value="">Cartão...</option>
-                                                  {cards.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                                              </select>
-                                              <input type="number" placeholder="Parc." {...register(`payments.${index}.installments`)} className="w-12 bg-white border rounded text-xs p-1 text-center" onWheel={preventScroll} />
-                                          </div>
+                                          <select {...register(`payments.${index}.credit_card_id`)} className="bg-stone-50 border border-stone-200 rounded-lg p-2 text-xs">
+                                              <option value="">Selecione...</option>
+                                              {cards.map(card => <option key={card.id} value={card.id}>{card.name}</option>)}
+                                          </select>
                                       )}
-                                  </div>
-                                  
-                                  <div className="relative">
-                                      <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-stone-400">R$</span>
+
                                       <input 
-                                          type="number" step="0.01" 
                                           {...register(`payments.${index}.amount`)}
+                                          type="number" step="0.01"
                                           onWheel={preventScroll}
-                                          className="w-full pl-6 p-1 bg-white border rounded text-sm font-bold"
+                                          placeholder="R$ 0.00"
+                                          className="bg-stone-50 border border-stone-200 rounded-lg p-2 text-xs text-right"
                                       />
+
+                                      <button type="button" onClick={() => removeSplit(index)} className="p-2 text-stone-300 hover:text-red-500">
+                                          <X size={14} />
+                                      </button>
                                   </div>
-                              </div>
-                          );
-                      })}
-                      <button 
-                          type="button" 
-                          onClick={() => appendSplit({ method: 'account', amount: 0 })}
-                          className="w-full py-2 border border-dashed border-olive/30 rounded-lg text-xs font-bold text-olive hover:bg-olive/5"
-                      >
-                          + Adicionar Meio de Pagamento
-                      </button>
+                              ))}
+                              <button 
+                                  type="button"
+                                  onClick={() => appendSplit({ method: 'account', amount: 0 })}
+                                  className="w-full py-2 border border-dashed border-olive/30 rounded-xl text-[10px] font-bold text-olive uppercase tracking-widest hover:bg-olive/5"
+                              >
+                                  <Plus size={12} className="inline mr-1" /> Adicionar Meio de Pagamento
+                              </button>
+                          </div>
+                      )}
+                  </>
+              )}
+
+              {status === 'pending' && (
+                  <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">
+                          {type === 'income' ? 'Conta Destino' : 'Conta para Débito Futuro'}
+                      </label>
+                      <select {...register('account_id')} className="w-full bg-white border border-stone-200 rounded-xl p-3 text-sm outline-none">
+                          <option value="">Selecione...</option>
+                          {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
+                      </select>
                   </div>
               )}
           </div>
       )}
 
-      {/* 7. FOOTER ACTIONS */}
-      <div className="pt-6 border-t border-stone-100 flex justify-end gap-3">
-        <button 
+      {/* 7. TAGS */}
+      <div className="space-y-1">
+          <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Tags (Opcional)</label>
+          <Controller 
+              name="tags"
+              control={control}
+              render={({ field }) => <TagInput value={field.value} onChange={field.onChange} />}
+          />
+      </div>
+
+      {/* 8. RECORRÊNCIA */}
+      {type !== 'transfer' && (
+        <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 p-4 rounded-xl">
+            <input 
+                type="checkbox" 
+                {...register('is_recurring')}
+                id="is_recurring"
+                className="w-5 h-5 accent-amber-600"
+            />
+            <label htmlFor="is_recurring" className="flex items-center gap-2 text-sm font-medium text-amber-900 cursor-pointer">
+                <Repeat size={16} />
+                Marcar como recorrente (mensal)
+            </label>
+        </div>
+      )}
+
+      {/* 9. BOTÃO SUBMIT */}
+      <button 
           type="submit" 
           disabled={isSubmitting}
-          className="bg-[#3C3633] hover:bg-black text-white px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-widest shadow-xl active:scale-95 transition-all flex items-center gap-2 disabled:opacity-50 w-full justify-center md:w-auto"
-        >
-          {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-          {isRecurring ? 'Salvar Recorrência' : status === 'pending' ? 'Agendar Conta' : 'Salvar Transação'}
-        </button>
-      </div>
+          className="w-full bg-coffee text-white py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-black transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      >
+          {isSubmitting ? (
+              <>
+                  <Loader2 size={18} className="animate-spin" />
+                  Processando...
+              </>
+          ) : (
+              <>
+                  <Save size={18} />
+                  {transactionToEdit && !isDuplicate ? 'Salvar Alterações' : 'Salvar Transação'}
+              </>
+          )}
+      </button>
 
     </form>
   );
