@@ -374,6 +374,8 @@ const FinanceDashboard: React.FC = () => {
                                </div>
                              </div>
 
+                             
+
                              <div className="flex items-center gap-4">
                                <span className={`font-bold text-sm ${t.type === 'income' ? 'text-olive' : 'text-terracotta'}`}>
                                  {t.type === 'expense' ? '- ' : '+ '}

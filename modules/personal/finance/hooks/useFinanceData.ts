@@ -50,10 +50,15 @@ export const useTransactions = (options: TransactionFilterOptions = {}) => {
     setLoading(true);
     setError(null);
     try {
-      let query = supabase
-        .from('transactions')
-        .select('*, items:transaction_items(*), payments:transaction_payments(*)')
-        .is('deleted_at', null)  // ✅ SOFT DELETE: Ignora transações "deletadas"
+let query = supabase
+  .from('transactions')
+  .select(`
+    *, 
+    items:transaction_items(*), 
+    payments:transaction_payments(*),
+    account:accounts(id, name, type),
+    credit_card:credit_cards(id, name)
+  `)        .is('deleted_at', null)  // ✅ SOFT DELETE: Ignora transações "deletadas"
         .order('date', { ascending: false });
 
       if (!options.fetchAll) {
