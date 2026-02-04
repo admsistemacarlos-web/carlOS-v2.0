@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
@@ -111,10 +110,16 @@ const AccountsPage: React.FC = () => {
                   
                   {activeMenuId === acc.id && (
                     <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-xl border border-stone-100 z-10 overflow-hidden animate-fade-in">
-                      <button onClick={(e) => { e.stopPropagation(); setEditingAccountForModal(acc); }} className="w-full text-left px-4 py-3 text-xs font-bold text-coffee hover:bg-stone-50 flex items-center gap-2">
-  <Pencil size={12} /> Editar
-</button>
-                      <button onClick={(e) => { e.stopPropagation(); handleDeleteClick(acc.id); }} className="w-full text-left px-4 py-3 text-xs font-bold text-terracotta hover:bg-terracotta/5 flex items-center gap-2">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setEditingAccountForModal(acc); }} 
+                        className="w-full text-left px-4 py-3 text-xs font-bold text-coffee hover:bg-stone-50 flex items-center gap-2"
+                      >
+                        <Pencil size={12} /> Editar
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); handleDeleteClick(acc.id); }} 
+                        className="w-full text-left px-4 py-3 text-xs font-bold text-terracotta hover:bg-terracotta/5 flex items-center gap-2"
+                      >
                         <Trash2 size={12} /> Excluir
                       </button>
                     </div>
@@ -164,6 +169,19 @@ const AccountsPage: React.FC = () => {
         onCancel={() => setDeleteConfirm({ isOpen: false, accountId: null })}
       />
 
+      {/* Modal de Edição */}
+      {editingAccountForModal && (
+        <EditAccountModal
+          isOpen={true}
+          onClose={() => setEditingAccountForModal(null)}
+          account={editingAccountForModal}
+          onSuccess={() => {
+            refresh();
+            setEditingAccountForModal(null);
+          }}
+        />
+      )}
+
       {/* Botão Flutuante */}
       <button
         onClick={() => navigate('/personal/finance/transactions/new')}
@@ -172,17 +190,6 @@ const AccountsPage: React.FC = () => {
       >
         <Plus size={24} />
       </button>
-
-      {/* Modal de Edição */}
-      <EditAccountModal
-        isOpen={!!editingAccountForModal}
-        onClose={() => setEditingAccountForModal(null)}
-        account={editingAccountForModal!}
-        onSuccess={() => {
-          refresh();
-          setEditingAccountForModal(null);
-        }}
-      />
     </div>
   );
 };
