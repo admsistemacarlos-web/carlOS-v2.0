@@ -7,6 +7,7 @@ import { Plus, Landmark, MoreHorizontal, Pencil, Trash2, ArrowLeft, ArrowRight }
 import AccountForm from '../components/forms/AccountForm';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { Account } from '../types/finance.types';
+import EditAccountModal from '../components/modals/EditAccountModal';
 
 const AccountsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const AccountsPage: React.FC = () => {
   // Controle do "Modal" local
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<Account | null>(null);
+  const [editingAccountForModal, setEditingAccountForModal] = useState<Account | null>(null);
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
 
   // Controle do Modal de Confirmação
@@ -109,9 +111,9 @@ const AccountsPage: React.FC = () => {
                   
                   {activeMenuId === acc.id && (
                     <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-xl border border-stone-100 z-10 overflow-hidden animate-fade-in">
-                      <button onClick={(e) => { e.stopPropagation(); handleOpenForm(acc); }} className="w-full text-left px-4 py-3 text-xs font-bold text-coffee hover:bg-stone-50 flex items-center gap-2">
-                        <Pencil size={12} /> Editar
-                      </button>
+                      <button onClick={(e) => { e.stopPropagation(); setEditingAccountForModal(acc); }} className="w-full text-left px-4 py-3 text-xs font-bold text-coffee hover:bg-stone-50 flex items-center gap-2">
+  <Pencil size={12} /> Editar
+</button>
                       <button onClick={(e) => { e.stopPropagation(); handleDeleteClick(acc.id); }} className="w-full text-left px-4 py-3 text-xs font-bold text-terracotta hover:bg-terracotta/5 flex items-center gap-2">
                         <Trash2 size={12} /> Excluir
                       </button>
@@ -170,6 +172,17 @@ const AccountsPage: React.FC = () => {
       >
         <Plus size={24} />
       </button>
+
+      {/* Modal de Edição */}
+      <EditAccountModal
+        isOpen={!!editingAccountForModal}
+        onClose={() => setEditingAccountForModal(null)}
+        account={editingAccountForModal!}
+        onSuccess={() => {
+          refresh();
+          setEditingAccountForModal(null);
+        }}
+      />
     </div>
   );
 };

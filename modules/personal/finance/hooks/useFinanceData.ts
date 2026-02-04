@@ -28,6 +28,8 @@ function useTable<T>(tableName: string) {
     fetchData();
   }, [fetchData]);
 
+  
+
   return { data, loading, error, refetch: fetchData, setData };
 }
 
@@ -245,7 +247,24 @@ export const useAccounts = () => {
     }
   }, [fetchAccounts]);
 
-  return { accounts, loading, error, refresh: fetchAccounts, deleteAccount };
+  const updateAccount = useCallback(async (id: string, updates: Partial<Account>) => {
+  const { error } = await supabase
+    .from('accounts')
+    .update(updates)
+    .eq('id', id);
+  
+  if (error) throw error;
+  await fetchAccounts(); // Recarrega a lista
+}, [fetchAccounts]);
+
+return { 
+  accounts, 
+  loading, 
+  error, 
+  refresh: fetchAccounts,
+  deleteAccount,    // ✅ Mantenha esta linha (já existia)
+  updateAccount     // ✅ E adicione esta
+};
 };
 
 export const useCards = () => {
