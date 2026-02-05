@@ -330,8 +330,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
             status: data.status, 
             tags: data.tags || [], 
             user_id: currentUser.id,
-            location: data.location || null,
-            created_at: new Date().toISOString()
+            location: data.location || null
         };
 
         if (!data.use_split_payment && data.type !== 'transfer') {
@@ -353,27 +352,30 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
             payload.credit_card_id = null;
         }
 
-        let transactionId = transactionToEdit?.id;
-        const targetTable = data.status === 'pending' && data.type !== 'transfer' ? 'bills' : 'transactions';
+        // ╔════════════════════════════════════════════════════════════════╗
+        // ║  CORREÇÃO: LÓGICA DE EDIÇÃO vs CRIAÇÃO                         ║
+        // ╚════════════════════════════════════════════════════════════════╝
+        
+        const isEditMode = transactionToEdit && transactionToEdit.id && !isDuplicate;
 
-        if (targetTable === 'bills') {
-            payload.due_date = dateISO;
-            payload.type = 'variable';
-            delete payload.date;
-        }
-
-        if (transactionToEdit && !isDuplicate) {
-            delete payload.created_at;
+        if (isEditMode) {
+            // ══════════════════════════════════════════════════════════════
+            // MODO EDIÇÃO (UPDATE) - Sempre atualiza na tabela 'transactions'
+            // ══════════════════════════════════════════════════════════════
+            
+            const transactionId = transactionToEdit.id;
 
             const { error: updateError } = await supabase
-                .from(targetTable)
+                .from('transactions')
                 .update(payload)
                 .eq('id', transactionId);
 
             if (updateError) throw updateError;
 
+            // Atualiza os itens (deleta antigos e insere novos)
+            await supabase.from('transaction_items').delete().eq('transaction_id', transactionId);
+            
             if (data.items && data.items.length > 0) {
-                await supabase.from('transaction_items').delete().eq('transaction_id', transactionId);
                 const itemsPayload = data.items.map(item => ({
                     transaction_id: transactionId,
                     name: item.name,
@@ -385,8 +387,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                 await supabase.from('transaction_items').insert(itemsPayload);
             }
 
-            if (data.use_split_payment && data.payments.length > 0) {
-                await supabase.from('transaction_payments').delete().eq('transaction_id', transactionId);
+            // Atualiza os pagamentos (deleta antigos e insere novos)
+            await supabase.from('transaction_payments').delete().eq('transaction_id', transactionId);
+            
+            if (data.use_split_payment && data.payments && data.payments.length > 0) {
                 const paymentsPayload = data.payments.map(p => ({
                     transaction_id: transactionId,
                     amount: p.amount,
@@ -398,7 +402,24 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                 }));
                 await supabase.from('transaction_payments').insert(paymentsPayload);
             }
+
         } else {
+            // ══════════════════════════════════════════════════════════════
+            // MODO CRIAÇÃO (INSERT) - Decide a tabela baseado no status
+            // ══════════════════════════════════════════════════════════════
+            
+            const targetTable = data.status === 'pending' && data.type !== 'transfer' ? 'bills' : 'transactions';
+
+            // Ajustes específicos para tabela bills
+            if (targetTable === 'bills') {
+                payload.due_date = dateISO;
+                payload.type = 'variable';
+                delete payload.date;
+            }
+
+            // Adiciona created_at apenas na criação
+            payload.created_at = new Date().toISOString();
+
             const { data: newTransaction, error: insertError } = await supabase
                 .from(targetTable)
                 .insert([payload])
@@ -406,9 +427,11 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                 .single();
 
             if (insertError) throw insertError;
-            transactionId = newTransaction.id;
+            
+            const transactionId = newTransaction.id;
 
-            if (data.items && data.items.length > 0) {
+            // Insere os itens
+            if (targetTable === 'transactions' && data.items && data.items.length > 0) {
                 const itemsPayload = data.items.map(item => ({
                     transaction_id: transactionId,
                     name: item.name,
@@ -420,7 +443,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                 await supabase.from('transaction_items').insert(itemsPayload);
             }
 
-            if (data.use_split_payment && data.payments.length > 0) {
+            // Insere os pagamentos
+            if (targetTable === 'transactions' && data.use_split_payment && data.payments && data.payments.length > 0) {
                 const paymentsPayload = data.payments.map(p => ({
                     transaction_id: transactionId,
                     amount: p.amount,
@@ -432,19 +456,20 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                 }));
                 await supabase.from('transaction_payments').insert(paymentsPayload);
             }
-        }
 
-        if (data.is_recurring && (!transactionToEdit?.is_recurring || isDuplicate)) {
-             await supabase.from('recurrence_rules').insert([{
-                 user_id: currentUser.id,
-                 description: data.description,
-                 amount: amountVal,
-                 type: data.type,
-                 day_of_month: new Date(dateISO).getDate(),
-                 category_id: sanitizeUUID(data.category_id),
-                 account_id: sanitizeUUID(data.account_id),
-                 credit_card_id: sanitizeUUID(data.credit_card_id)
-             }]);
+            // Cria regra de recorrência se necessário
+            if (data.is_recurring) {
+                await supabase.from('recurrence_rules').insert([{
+                    user_id: currentUser.id,
+                    description: data.description,
+                    amount: amountVal,
+                    type: data.type,
+                    day_of_month: new Date(dateISO).getDate(),
+                    category_id: sanitizeUUID(data.category_id),
+                    account_id: sanitizeUUID(data.account_id),
+                    credit_card_id: sanitizeUUID(data.credit_card_id)
+                }]);
+            }
         }
 
         if (onSuccess) onSuccess();
@@ -489,7 +514,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
 
       {/* 3. CAMPOS ESPECÍFICOS POR TIPO */}
       
-      {/* MODO TRANSFERÊNCIA - CORRIGIDO ✅ */}
+      {/* MODO TRANSFERÊNCIA */}
       {type === 'transfer' ? (
           <div className="space-y-4 animate-fade-in">
             {/* LINHA 1: Data e Valor */}

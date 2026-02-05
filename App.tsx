@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { QueryClient } from '@tanstack/query-core';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'; // CORREÇÃO AQUI: Import unificado
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './shared/components/Navigation/ProtectedRoute';
 import ScrollToTop from './shared/components/Navigation/ScrollToTop';
@@ -90,6 +88,7 @@ import ClientEditorPage from './modules/professional/clients/ClientEditorPage';
 import QuotesPage from './modules/professional/quotes/QuotesPage';
 import QuoteBuilderPage from './modules/professional/quotes/QuoteBuilderPage';
 import ProposalTemplatePage from './modules/professional/quotes/ProposalTemplatePage';
+import ProposalView from './modules/professional/quotes/ProposalView';
 
 // Container: Serviços
 import ServicesPage from './modules/professional/services/ServicesPage';
@@ -219,6 +218,7 @@ const App: React.FC = () => {
                     <Route path="quotes" element={<QuotesPage />} />
                     <Route path="quotes/template" element={<ProposalTemplatePage />} />
                     <Route path="quotes/new" element={<QuoteBuilderPage />} />
+                    <Route path="quotes/:id/view" element={<ProposalView />} />
                     <Route path="quotes/:id" element={<QuoteBuilderPage />} />
 
                     {/* Módulo: Serviços */}
