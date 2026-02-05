@@ -7,9 +7,9 @@ import { useServices } from '../hooks/useServices';
 import { useClients } from '../hooks/useClients';
 import { useProposalTemplate } from '../hooks/useQuotes';
 import { 
-  Plus, Trash2, Save, FileText, Calculator, Search, Loader2, 
+  Plus, Trash2, Save, FileText, Calculator, Loader2, 
   Layers, Tag, AlertCircle, Percent, DollarSign, ChevronDown, 
-  ChevronUp, ShieldCheck, Layout 
+  ChevronUp, ShieldCheck, Layout, RefreshCw 
 } from 'lucide-react';
 
 // ----------------------------------------------------------------------
@@ -77,10 +77,10 @@ export default function QuoteBuilderPage() {
             setQuoteTitle(quote.title);
             setNotes(quote.notes || '');
             
-            // Narrative Fields
-            setIntroText(quote.introduction_text || template?.intro_default || '');
-            setStrategyText(quote.strategy_text || template?.strategy_default || '');
-            setTermsText(quote.terms_conditions || template?.terms_default || '');
+            // Narrative Fields: Usa o do banco ou fallback para vazio (não força o template na edição para não sobrescrever)
+            setIntroText(quote.introduction_text || '');
+            setStrategyText(quote.strategy_text || '');
+            setTermsText(quote.terms_conditions || '');
 
             const loadedItems = (quote.items || [])
               .sort((a: any, b: any) => (a.order_index || 0) - (b.order_index || 0))
@@ -109,11 +109,11 @@ export default function QuoteBuilderPage() {
           navigate('/professional/quotes');
         }
       } else {
-        // MODO NOVA PROPOSTA: Carrega defaults do template
+        // MODO NOVA PROPOSTA: Carrega defaults do template automaticamente
         if (template) {
-          setIntroText(template.intro_default || '');
-          setStrategyText(template.strategy_default || '');
-          setTermsText(template.terms_default || '');
+          setIntroText(template.proposal_intro_default || '');
+          setStrategyText(template.proposal_strategy_default || '');
+          setTermsText(template.proposal_terms_default || '');
         }
       }
       setInitializing(false);
@@ -195,6 +195,20 @@ export default function QuoteBuilderPage() {
 
         return [...cleanItems, discountItem];
     });
+  };
+
+  // Função para puxar o modelo manualmente
+  const handleImportTemplate = () => {
+    if (!template) {
+        alert('Nenhum modelo padrão encontrado. Configure em "Templates".');
+        return;
+    }
+    
+    if (confirm('Isso substituirá os textos atuais pelos do Modelo Padrão. Deseja continuar?')) {
+        setIntroText(template.proposal_intro_default || '');
+        setStrategyText(template.proposal_strategy_default || '');
+        setTermsText(template.proposal_terms_default || '');
+    }
   };
 
   const onSave = async () => {
@@ -381,6 +395,18 @@ export default function QuoteBuilderPage() {
             </div>
         ) : (
             <div className="space-y-6 animate-fade-in max-w-4xl mx-auto pt-4">
+                 
+                 {/* BARRA DE AÇÃO DA NARRATIVA */}
+                 <div className="flex justify-end">
+                    <button 
+                        onClick={handleImportTemplate}
+                        className="text-xs flex items-center gap-2 text-[#E09B6B] hover:text-[#E09B6B]/80 font-bold uppercase tracking-wider transition-colors"
+                        title="Preencher com os textos definidos no Modelo de Proposta"
+                    >
+                        <RefreshCw size={14} /> Importar Modelo Padrão
+                    </button>
+                 </div>
+
                  <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 shadow-sm">
                   <div className="flex items-center gap-2 mb-4 text-[#E09B6B]">
                     <Layout size={18} />
