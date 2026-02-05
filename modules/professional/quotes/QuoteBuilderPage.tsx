@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../../../integrations/supabase/client';
@@ -6,7 +5,12 @@ import { ModuleHeader } from '../../../shared/components/Navigation/ModuleHeader
 import { AgencyServiceCatalog, AgencyQuoteItem } from '../types/agency.types';
 import { useServices } from '../hooks/useServices'; 
 import { useClients } from '../hooks/useClients';
-import { Plus, Trash2, Save, FileText, Calculator, Search, Loader2, Layers, Tag, TrendingDown, TrendingUp, AlertCircle, Percent, DollarSign, X, ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
+import { useProposalTemplate } from '../hooks/useQuotes';
+import { 
+  Plus, Trash2, Save, FileText, Calculator, Search, Loader2, 
+  Layers, Tag, AlertCircle, Percent, DollarSign, ChevronDown, 
+  ChevronUp, ShieldCheck, Layout 
+} from 'lucide-react';
 
 // ----------------------------------------------------------------------
 // TYPES EXTENSION (Local)
@@ -30,10 +34,12 @@ export default function QuoteBuilderPage() {
   // --- HOOKS ---
   const { data: clients, isLoading: loadingClients } = useClients();
   const { data: servicesList, isLoading: loadingServices } = useServices();
+  const { data: template, isLoading: loadingTemplate } = useProposalTemplate();
 
   // --- STATE ---
   const [loading, setLoading] = useState(false);
-  const [initializing, setInitializing] = useState(isEditing);
+  const [initializing, setInitializing] = useState(true);
+  const [activeTab, setActiveTab] = useState<'scope' | 'narrative'>('scope');
   
   // Proposal Data
   const [selectedClientId, setSelectedClientId] = useState<string>('');
@@ -42,82 +48,94 @@ export default function QuoteBuilderPage() {
   const [quoteItems, setQuoteItems] = useState<UIQuoteItem[]>([]);
   const [notes, setNotes] = useState('');
 
-  // --- EFFECT: LOAD EXISTING DATA ---
+  // Narrative Fields
+  const [introText, setIntroText] = useState('');
+  const [strategyText, setStrategyText] = useState('');
+  const [termsText, setTermsText] = useState('');
+
+  // --- EFFECT: INITIALIZATION & DATA LOADING ---
   useEffect(() => {
-    if (!isEditing) return;
+    // Aguarda carregamento das dependências básicas
+    if (loadingServices || loadingTemplate) return;
 
-    if (loadingServices) return;
+    const initialize = async () => {
+      if (isEditing) {
+        // MODO EDIÇÃO: Carrega dados do banco
+        try {
+          const { data: quote, error } = await supabase
+            .from('agency_quotes')
+            .select(`
+              *, 
+              items:agency_quote_items(*)
+            `)
+            .eq('id', id)
+            .single();
 
-    const fetchQuote = async () => {
-      try {
-        const { data: quote, error } = await supabase
-          .from('agency_quotes')
-          .select(`
-            *, 
-            items:agency_quote_items(*)
-          `)
-          .eq('id', id)
-          .single();
+          if (error) throw error;
+          if (quote) {
+            setSelectedClientId(quote.client_id);
+            setQuoteTitle(quote.title);
+            setNotes(quote.notes || '');
+            
+            // Narrative Fields
+            setIntroText(quote.introduction_text || template?.intro_default || '');
+            setStrategyText(quote.strategy_text || template?.strategy_default || '');
+            setTermsText(quote.terms_conditions || template?.terms_default || '');
 
-        if (error) throw error;
-        if (quote) {
-          setSelectedClientId(quote.client_id);
-          setQuoteTitle(quote.title);
-          setNotes(quote.notes || '');
-          
-          const loadedItems = (quote.items || [])
-            .sort((a: any, b: any) => (a.order_index || 0) - (b.order_index || 0))
-            .map((i: any) => {
-              const catalogService = servicesList?.find(s => s.id === i.service_id);
-              const resolvedCategory = i.title === DISCOUNT_ITEM_TITLE 
-                ? 'Ajustes' 
-                : (catalogService?.category || 'Serviços Gerais');
+            const loadedItems = (quote.items || [])
+              .sort((a: any, b: any) => (a.order_index || 0) - (b.order_index || 0))
+              .map((i: any) => {
+                const catalogService = servicesList?.find(s => s.id === i.service_id);
+                const resolvedCategory = i.title === DISCOUNT_ITEM_TITLE 
+                  ? 'Ajustes' 
+                  : (catalogService?.category || 'Serviços Gerais');
 
-              return {
-                id: i.id, 
-                service_id: i.service_id,
-                title: i.title || i.service_name, 
-                description: i.description || '',
-                unit_price: i.unit_price,
-                quantity: i.quantity,
-                charge_type: i.charge_type,
-                order_index: i.order_index,
-                category: resolvedCategory 
-              };
-            });
-          setQuoteItems(loadedItems);
+                return {
+                  id: i.id, 
+                  service_id: i.service_id,
+                  title: i.title || i.service_name, 
+                  description: i.description || '',
+                  unit_price: i.unit_price,
+                  quantity: i.quantity,
+                  charge_type: i.charge_type,
+                  order_index: i.order_index,
+                  category: resolvedCategory 
+                };
+              });
+            setQuoteItems(loadedItems);
+          }
+        } catch (error) {
+          console.error('Erro ao carregar proposta:', error);
+          navigate('/professional/quotes');
         }
-      } catch (error) {
-        console.error('Erro ao carregar proposta:', error);
-        navigate('/professional/quotes');
-      } finally {
-        setInitializing(false);
+      } else {
+        // MODO NOVA PROPOSTA: Carrega defaults do template
+        if (template) {
+          setIntroText(template.intro_default || '');
+          setStrategyText(template.strategy_default || '');
+          setTermsText(template.terms_default || '');
+        }
       }
+      setInitializing(false);
     };
 
-    fetchQuote();
-  }, [id, isEditing, navigate, servicesList, loadingServices]);
+    initialize();
+  }, [id, isEditing, navigate, servicesList, template, loadingServices, loadingTemplate]);
 
   // --- HANDLERS ---
 
   const handleAddService = (service: AgencyServiceCatalog) => {
     setQuoteItems(prevItems => {
-      // 1. Verifica se o serviço já existe na lista
       const existingItemIndex = prevItems.findIndex(item => item.service_id === service.id);
 
       if (existingItemIndex >= 0) {
-        // Cenário A: Já existe -> Incrementa quantidade
         return prevItems.map((item, index) => {
           if (index === existingItemIndex) {
-            return {
-              ...item,
-              quantity: (item.quantity || 1) + 1
-            };
+            return { ...item, quantity: (item.quantity || 1) + 1 };
           }
           return item;
         });
       } else {
-        // Cenário B: Não existe -> Adiciona nova linha
         const newItem: UIQuoteItem = {
           id: crypto.randomUUID(), 
           service_id: service.id,
@@ -144,18 +162,14 @@ export default function QuoteBuilderPage() {
     setQuoteItems(prev => prev.filter(item => item.id !== itemId));
   };
 
-  // --- LOGICA DE DESCONTO GLOBAL ---
   const handleApplyGlobalDiscount = (value: number, type: 'percent' | 'fixed') => {
     setQuoteItems(prev => {
-        // 1. Calcular Subtotal (apenas itens positivos)
         const subtotal = prev
             .filter(i => i.unit_price > 0)
             .reduce((acc, i) => acc + (i.unit_price * i.quantity), 0);
 
-        // 2. Calcular valor do desconto (sempre negativo)
         let discountAmount = 0;
         
-        // Se o valor for 0, removemos o desconto
         if (!value || value === 0) {
            return prev.filter(i => i.title !== DISCOUNT_ITEM_TITLE);
         }
@@ -166,19 +180,16 @@ export default function QuoteBuilderPage() {
             discountAmount = value;
         }
 
-        // Remover item de desconto antigo, se houver
         const cleanItems = prev.filter(i => i.title !== DISCOUNT_ITEM_TITLE);
-
         if (discountAmount <= 0) return cleanItems;
 
-        // Criar novo item de desconto
         const discountItem: UIQuoteItem = {
-            id: 'global-discount-item', // ID fixo para controle local
+            id: 'global-discount-item',
             title: DISCOUNT_ITEM_TITLE,
             description: type === 'percent' ? `Desconto de ${value}% sobre o subtotal` : 'Desconto fixo aplicado',
-            unit_price: -Math.abs(discountAmount), // Garante negativo
+            unit_price: -Math.abs(discountAmount),
             quantity: 1,
-            charge_type: 'unique', // Descontos geralmente abatem no setup/total
+            charge_type: 'unique',
             category: 'Ajustes'
         };
 
@@ -197,7 +208,6 @@ export default function QuoteBuilderPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado');
 
-      // Calculate totals
       const totalOneTime = quoteItems
         .filter(i => i.charge_type === 'unique')
         .reduce((acc, item) => acc + (Number(item.unit_price) * Number(item.quantity)), 0);
@@ -213,7 +223,11 @@ export default function QuoteBuilderPage() {
         notes: notes,
         user_id: user.id,
         total_one_time: totalOneTime,
-        total_monthly: totalMonthly
+        total_monthly: totalMonthly,
+        // Narrative Fields
+        introduction_text: introText,
+        strategy_text: strategyText,
+        terms_conditions: termsText
       };
 
       let quoteId = id;
@@ -226,7 +240,6 @@ export default function QuoteBuilderPage() {
           .eq('id', id);
         if (updateError) throw updateError;
         
-        // Clean items to re-insert
         await supabase.from('agency_quote_items').delete().eq('quote_id', id);
       } else {
         const { data: newQuote, error: createError } = await supabase
@@ -242,7 +255,7 @@ export default function QuoteBuilderPage() {
       if (quoteId) {
         const itemsToInsert = quoteItems.map((item, index) => ({
           quote_id: quoteId,
-          service_id: item.service_id, // Pode ser null se for desconto criado manualmente
+          service_id: item.service_id, 
           title: item.title, 
           description: item.description,
           unit_price: item.unit_price,
@@ -265,7 +278,7 @@ export default function QuoteBuilderPage() {
     }
   };
 
-  if (initializing || loadingClients || loadingServices) {
+  if (initializing || loadingClients || loadingServices || loadingTemplate) {
     return (
       <div className="min-h-screen bg-[#191919] flex items-center justify-center">
         <Loader2 className="animate-spin text-[#E09B6B]" size={32} />
@@ -274,7 +287,7 @@ export default function QuoteBuilderPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#191919] pb-32 text-[#D4D4D4]">
+    <div className="min-h-screen bg-[#191919] pb-32 text-[#D4D4D4] animate-fade-in">
       
       <ModuleHeader 
         title={isEditing ? "Editar Proposta" : "Nova Proposta"}
@@ -282,7 +295,7 @@ export default function QuoteBuilderPage() {
         backLink="/professional/quotes"
       />
 
-      <div className="max-w-[1200px] mx-auto px-4 md:px-8 mt-6 space-y-8">
+      <div className="max-w-[1200px] mx-auto px-4 md:px-8 mt-6 space-y-6">
         
         {/* 1. HEADER FIELDS */}
         <div className="bg-[#202020] p-6 rounded-2xl border border-[#404040] shadow-sm">
@@ -315,25 +328,113 @@ export default function QuoteBuilderPage() {
           </div>
         </div>
 
-        {/* 2. CATALOG (ACCORDION STYLE) */}
-        <QuoteCatalog 
-          services={servicesList} 
-          selectedItems={quoteItems} 
-          onAddService={handleAddService} 
-        />
+        {/* 2. TABS NAVIGATION */}
+        <div className="flex border-b border-[#404040] gap-8">
+            <button 
+                onClick={() => setActiveTab('scope')}
+                className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all ${
+                    activeTab === 'scope' 
+                    ? 'text-[#E09B6B] border-b-2 border-[#E09B6B]' 
+                    : 'text-[#737373] hover:text-[#D4D4D4]'
+                }`}
+            >
+                <div className="flex items-center gap-2">
+                    <Calculator size={16} /> Escopo & Investimento
+                </div>
+            </button>
+            <button 
+                onClick={() => setActiveTab('narrative')}
+                className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all ${
+                    activeTab === 'narrative' 
+                    ? 'text-[#E09B6B] border-b-2 border-[#E09B6B]' 
+                    : 'text-[#737373] hover:text-[#D4D4D4]'
+                }`}
+            >
+                <div className="flex items-center gap-2">
+                    <FileText size={16} /> Narrativa & Termos
+                </div>
+            </button>
+        </div>
 
-        {/* 3. PROPOSAL ITEMS (WIDE CARDS) */}
-        <QuoteItemsBuilder 
-          items={quoteItems}
-          catalog={servicesList || []}
-          onUpdateItem={handleUpdateItem}
-          onRemoveItem={handleRemoveItem}
-          onApplyGlobalDiscount={handleApplyGlobalDiscount}
-          notes={notes}
-          setNotes={setNotes}
-          onSave={onSave}
-          isSaving={loading}
-        />
+        {/* 3. TAB CONTENT */}
+        {activeTab === 'scope' ? (
+            <div className="space-y-8 animate-fade-in">
+                {/* CATALOG */}
+                <QuoteCatalog 
+                  services={servicesList} 
+                  selectedItems={quoteItems} 
+                  onAddService={handleAddService} 
+                />
+
+                {/* ITEMS BUILDER */}
+                <QuoteItemsBuilder 
+                  items={quoteItems}
+                  catalog={servicesList || []}
+                  onUpdateItem={handleUpdateItem}
+                  onRemoveItem={handleRemoveItem}
+                  onApplyGlobalDiscount={handleApplyGlobalDiscount}
+                  notes={notes}
+                  setNotes={setNotes}
+                  onSave={onSave}
+                  isSaving={loading}
+                />
+            </div>
+        ) : (
+            <div className="space-y-6 animate-fade-in max-w-4xl mx-auto pt-4">
+                 <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4 text-[#E09B6B]">
+                    <Layout size={18} />
+                    <h3 className="text-sm font-bold uppercase tracking-widest">Apresentação</h3>
+                  </div>
+                  <p className="text-[#737373] text-xs mb-3">Introdução personalizada para este cliente.</p>
+                  <textarea 
+                    rows={6}
+                    value={introText}
+                    onChange={e => setIntroText(e.target.value)}
+                    className="w-full bg-[#1A1A1A] border border-[#404040] rounded-xl px-4 py-3 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none font-sans leading-relaxed"
+                  />
+                </div>
+
+                <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4 text-[#E09B6B]">
+                    <FileText size={18} />
+                    <h3 className="text-sm font-bold uppercase tracking-widest">Diagnóstico & Estratégia</h3>
+                  </div>
+                  <p className="text-[#737373] text-xs mb-3">O contexto do projeto e a solução proposta.</p>
+                  <textarea 
+                    rows={8}
+                    value={strategyText}
+                    onChange={e => setStrategyText(e.target.value)}
+                    className="w-full bg-[#1A1A1A] border border-[#404040] rounded-xl px-4 py-3 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none font-sans leading-relaxed"
+                  />
+                </div>
+
+                <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4 text-[#E09B6B]">
+                    <ShieldCheck size={18} />
+                    <h3 className="text-sm font-bold uppercase tracking-widest">Termos e Condições</h3>
+                  </div>
+                  <p className="text-[#737373] text-xs mb-3">Prazos, pagamentos e validade específicos desta proposta.</p>
+                  <textarea 
+                    rows={6}
+                    value={termsText}
+                    onChange={e => setTermsText(e.target.value)}
+                    className="w-full bg-[#1A1A1A] border border-[#404040] rounded-xl px-4 py-3 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none font-sans leading-relaxed"
+                  />
+                </div>
+
+                <div className="flex justify-end pt-4">
+                    <button 
+                    onClick={onSave}
+                    disabled={loading || quoteItems.length === 0}
+                    className="px-8 h-12 bg-[#5D4037] hover:bg-[#4E342E] text-[#FFFFFF] font-bold uppercase tracking-widest text-xs rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed border border-[#5D4037]"
+                    >
+                    {loading ? <Loader2 className="animate-spin w-4 h-4" /> : <Save className="w-4 h-4" />}
+                    {loading ? 'Salvando...' : 'Salvar Proposta'}
+                    </button>
+                </div>
+            </div>
+        )}
 
       </div>
     </div>
@@ -350,7 +451,6 @@ const QuoteCatalog: React.FC<{
   onAddService: (s: AgencyServiceCatalog) => void 
 }> = ({ services, selectedItems, onAddService }) => {
   
-  // State para controlar quais categorias estão abertas
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
   const groupedServices = useMemo(() => {
@@ -492,8 +592,6 @@ const QuoteItemsBuilder: React.FC<{
   const totalDiscount = Math.abs(items
     .filter(i => i.unit_price < 0)
     .reduce((acc, i) => acc + (i.unit_price * i.quantity), 0));
-
-  const finalTotal = subTotal - totalDiscount;
 
   const totalOneTime = items.filter(i => i.charge_type === 'unique').reduce((acc, i) => acc + (i.unit_price * i.quantity), 0);
   const totalMonthly = items.filter(i => i.charge_type === 'monthly').reduce((acc, i) => acc + (i.unit_price * i.quantity), 0);

@@ -1,4 +1,3 @@
-
 // --- ENUMS E TIPOS AUXILIARES (Mantidos) ---
 export type AgencyStatus = 'active' | 'lead' | 'churned';
 export type CrmStatus = 'novo_lead' | 'primeiro_contato' | 'proposta_enviada' | 'negociacao' | 'fechado' | 'perdido';
@@ -66,6 +65,11 @@ export interface AgencyQuote {
   status: QuoteStatus;
   valid_until?: string;
   notes?: string;
+
+  // Campos de Narrativa (Novos)
+  introduction_text?: string;
+  strategy_text?: string;
+  terms_conditions?: string;
   
   // Totais calculados no Frontend
   total_one_time?: number;
