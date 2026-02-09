@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Save, ArrowLeft, Loader2, FileText, Layout, ShieldCheck } from 'lucide-react';
-import { useProposalTemplate, useSaveTemplate } from '../hooks/useQuotes';
+import { useProposalTemplate, useSaveProposalTemplate } from '../hooks/useQuotes';
 
 export default function ProposalTemplatePage() {
   const navigate = useNavigate();
   const { data: template, isLoading } = useProposalTemplate();
-  const saveTemplate = useSaveTemplate();
+const saveTemplate = useSaveProposalTemplate();
 
   const [formData, setFormData] = useState({
     name: 'Modelo Padrão QuattroNove',
@@ -28,11 +28,11 @@ export default function ProposalTemplatePage() {
 
   const handleSave = async () => {
     try {
-      await saveTemplate.mutateAsync({
-        id: template?.id,
-        ...formData,
-        is_active: true
-      });
+    await saveTemplate.mutateAsync({
+  proposal_intro_default: formData.intro_default,
+  proposal_strategy_default: formData.strategy_default,
+  proposal_terms_default: formData.terms_default
+});
       alert("Modelo comercial atualizado com sucesso!");
     } catch (error) {
       console.error(error);
