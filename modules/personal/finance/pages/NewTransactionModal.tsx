@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useForm } from 'react-hook-form';
@@ -138,15 +137,28 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
       amount: totalItem, 
     };
 
-    setItems([...items, newItem]);
+    // Atualiza o array de itens
+    const updatedItems = [...items, newItem];
+    setItems(updatedItems);
     
+    // ✅ CORREÇÃO: Calcula e atualiza o total IMEDIATAMENTE
+    const newTotal = updatedItems.reduce((acc, item) => acc + (item.amount || 0), 0);
+    setValue('amount', parseFloat(newTotal.toFixed(2)));
+    
+    // Limpa os campos
     setNewItemName('');
     setNewItemQty(1);
     setNewItemPrice(0);
   };
 
   const handleRemoveItem = (id: string) => {
-    setItems(items.filter(i => i.id !== id));
+    // Remove o item
+    const updatedItems = items.filter(i => i.id !== id);
+    setItems(updatedItems);
+    
+    // ✅ CORREÇÃO: Recalcula o total IMEDIATAMENTE após remover
+    const newTotal = updatedItems.reduce((acc, item) => acc + (item.amount || 0), 0);
+    setValue('amount', parseFloat(newTotal.toFixed(2)));
   };
 
   const onSubmit = async (data: TransactionFormData) => {
