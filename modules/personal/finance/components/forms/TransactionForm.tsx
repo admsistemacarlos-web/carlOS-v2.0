@@ -38,6 +38,10 @@ interface TransactionFormData {
   credit_card_id: string | null;
   installments: number;
 
+  // Para Bills (contas pendentes)
+  is_installment: boolean;
+  total_installments: number;
+
   items: { 
     name: string; 
     quantity: number; 
@@ -236,7 +240,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
       payments: [],
       tags: [],
       use_split_payment: false,
-      category_name: ''
+      category_name: '',
+      installments: 1,
+      is_installment: false,
+      total_installments: 2
     }
   });
 
@@ -248,6 +255,9 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
   const items = watch('items');
   const useSplitPayment = watch('use_split_payment');
   const watchedAmount = watch('amount');
+  const installments = watch('installments');
+  const isInstallment = watch('is_installment');
+  const totalInstallments = watch('total_installments');
 
   const { fields: itemFields, append: appendItem, remove: removeItem } = useFieldArray({ control, name: 'items' });
   const { fields: splitFields, append: appendSplit, remove: removeSplit } = useFieldArray({ control, name: 'payments' });
@@ -278,6 +288,9 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
         origin_account_id: transactionToEdit.account_id,
         destination_account_id: transactionToEdit.destination_account_id,
         payment_method: transactionToEdit.credit_card_id ? 'credit_card' : 'account',
+        installments: 1,
+        is_installment: false,
+        total_installments: 2,
         items: transactionToEdit.items || [],
         payments: transactionToEdit.payments?.map(p => ({
             method: p.payment_method,
@@ -338,13 +351,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                 payload.credit_card_id = sanitizeUUID(data.credit_card_id);
                 payload.account_id = null;
                 payload.is_locked = false;
-                
-                const installmentsNum = Number(data.installments);
-                if (installmentsNum > 1) {
-                    payload.is_installment = true;
-                    payload.installment_total = installmentsNum;
-                    payload.installment_current = 1;
-                }
             } else {
                 payload.credit_card_id = null;
             }
@@ -352,17 +358,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
             payload.credit_card_id = null;
         }
 
-        // ╔════════════════════════════════════════════════════════════════╗
-        // ║  CORREÇÃO: LÓGICA DE EDIÇÃO vs CRIAÇÃO                         ║
-        // ╚════════════════════════════════════════════════════════════════╝
-        
         const isEditMode = transactionToEdit && transactionToEdit.id && !isDuplicate;
 
         if (isEditMode) {
-            // ══════════════════════════════════════════════════════════════
-            // MODO EDIÇÃO (UPDATE) - Sempre atualiza na tabela 'transactions'
-            // ══════════════════════════════════════════════════════════════
-            
+            // MODO EDIÇÃO
             const transactionId = transactionToEdit.id;
 
             const { error: updateError } = await supabase
@@ -372,7 +371,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
 
             if (updateError) throw updateError;
 
-            // Atualiza os itens (deleta antigos e insere novos)
             await supabase.from('transaction_items').delete().eq('transaction_id', transactionId);
             
             if (data.items && data.items.length > 0) {
@@ -387,7 +385,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                 await supabase.from('transaction_items').insert(itemsPayload);
             }
 
-            // Atualiza os pagamentos (deleta antigos e insere novos)
             await supabase.from('transaction_payments').delete().eq('transaction_id', transactionId);
             
             if (data.use_split_payment && data.payments && data.payments.length > 0) {
@@ -404,71 +401,174 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
             }
 
         } else {
-            // ══════════════════════════════════════════════════════════════
-            // MODO CRIAÇÃO (INSERT) - Decide a tabela baseado no status
-            // ══════════════════════════════════════════════════════════════
-            
+            // MODO CRIAÇÃO
             const targetTable = data.status === 'pending' && data.type !== 'transfer' ? 'bills' : 'transactions';
 
-            // Ajustes específicos para tabela bills
-            if (targetTable === 'bills') {
-                payload.due_date = dateISO;
-                payload.type = 'variable';
-                delete payload.date;
-            }
-
-            // Adiciona created_at apenas na criação
-            payload.created_at = new Date().toISOString();
-
-            const { data: newTransaction, error: insertError } = await supabase
-                .from(targetTable)
-                .insert([payload])
-                .select()
-                .single();
-
-            if (insertError) throw insertError;
+            // ╔══════════════════════════════════════════════════════════════╗
+            // ║  PARCELAMENTO EM CARTÃO (Transactions)                       ║
+            // ╚══════════════════════════════════════════════════════════════╝
             
-            const transactionId = newTransaction.id;
+            const installmentsNum = Number(data.installments) || 1;
+            const shouldParcelCard = (
+                targetTable === 'transactions' && 
+                data.payment_method === 'credit_card' && 
+                installmentsNum > 1
+            );
 
-            // Insere os itens
-            if (targetTable === 'transactions' && data.items && data.items.length > 0) {
-                const itemsPayload = data.items.map(item => ({
-                    transaction_id: transactionId,
-                    name: item.name,
-                    quantity: item.quantity,
-                    unit_price: item.unit_price,
-                    amount: item.quantity * item.unit_price,
-                    user_id: currentUser.id
-                }));
-                await supabase.from('transaction_items').insert(itemsPayload);
-            }
+            // ╔══════════════════════════════════════════════════════════════╗
+            // ║  PARCELAMENTO EM BILLS (Contas Pendentes)                    ║
+            // ╚══════════════════════════════════════════════════════════════╝
+            
+            const billInstallments = Number(data.total_installments) || 1;
+            const shouldParcelBill = (
+                targetTable === 'bills' && 
+                data.is_installment && 
+                billInstallments > 1
+            );
 
-            // Insere os pagamentos
-            if (targetTable === 'transactions' && data.use_split_payment && data.payments && data.payments.length > 0) {
-                const paymentsPayload = data.payments.map(p => ({
-                    transaction_id: transactionId,
-                    amount: p.amount,
-                    payment_method: p.method,
-                    account_id: p.method === 'account' ? sanitizeUUID(p.account_id) : null,
-                    credit_card_id: p.method === 'credit_card' ? sanitizeUUID(p.credit_card_id) : null,
-                    installments: p.method === 'credit_card' ? (Number(p.installments) || 1) : 1,
-                    user_id: currentUser.id
-                }));
-                await supabase.from('transaction_payments').insert(paymentsPayload);
-            }
+            if (shouldParcelCard) {
+                // CRIAR MÚLTIPLAS PARCELAS NO CARTÃO
+                const [year, month, day] = data.date.split('-').map(Number);
+                const baseDate = new Date(year, month - 1, day, 12, 0, 0);
+                
+                const rawInstallmentValue = amountVal / installmentsNum;
+                const installmentValue = Math.floor(rawInstallmentValue * 100) / 100;
+                const remainder = Number((amountVal - (installmentValue * installmentsNum)).toFixed(2));
 
-            // Cria regra de recorrência se necessário
-            if (data.is_recurring) {
-                await supabase.from('recurrence_rules').insert([{
-                    user_id: currentUser.id,
-                    description: data.description,
-                    amount: amountVal,
-                    type: data.type,
-                    day_of_month: new Date(dateISO).getDate(),
-                    category_id: sanitizeUUID(data.category_id),
-                    account_id: sanitizeUUID(data.account_id),
-                    credit_card_id: sanitizeUUID(data.credit_card_id)
-                }]);
+                const installmentsToCreate = [];
+
+                for (let i = 0; i < installmentsNum; i++) {
+                    const installmentDate = new Date(baseDate);
+                    installmentDate.setMonth(baseDate.getMonth() + i);
+
+                    const currentAmount = i === 0 
+                        ? Number((installmentValue + remainder).toFixed(2)) 
+                        : Number(installmentValue.toFixed(2));
+
+                    const installmentPayload = {
+                        ...payload,
+                        description: `${data.description} (${i + 1}/${installmentsNum})`,
+                        amount: currentAmount,
+                        date: installmentDate.toISOString(),
+                        payment_date: installmentDate.toISOString(),
+                        is_installment: true,
+                        installment_current: i + 1,
+                        installment_total: installmentsNum,
+                        created_at: new Date().toISOString()
+                    };
+
+                    installmentsToCreate.push(installmentPayload);
+                }
+
+                const { error: installmentsError } = await supabase
+                    .from('transactions')
+                    .insert(installmentsToCreate);
+
+                if (installmentsError) throw installmentsError;
+
+            } else if (shouldParcelBill) {
+                // CRIAR MÚLTIPLAS BILLS (Contas Parceladas)
+                const [year, month, day] = data.date.split('-').map(Number);
+                const baseDate = new Date(year, month - 1, day, 12, 0, 0);
+                
+                const rawInstallmentValue = amountVal / billInstallments;
+                const installmentValue = Math.floor(rawInstallmentValue * 100) / 100;
+                const remainder = Number((amountVal - (installmentValue * billInstallments)).toFixed(2));
+
+                const installmentGroupId = crypto.randomUUID();
+                const billsToCreate = [];
+
+                for (let i = 0; i < billInstallments; i++) {
+                    const installmentDate = new Date(baseDate);
+                    installmentDate.setMonth(baseDate.getMonth() + i);
+
+                    const currentAmount = i === 0 
+                        ? Number((installmentValue + remainder).toFixed(2)) 
+                        : Number(installmentValue.toFixed(2));
+
+                    const billPayload = {
+                        description: `${data.description} (${i + 1}/${billInstallments})`,
+                        amount: currentAmount,
+                        due_date: installmentDate.toISOString(),
+                        category: data.category_name || 'Outros',
+                        type: 'variable',
+                        status: 'pending',
+                        user_id: currentUser.id,
+                        is_installment: true,
+                        installment_number: i + 1,
+                        total_installments: billInstallments,
+                        installment_group_id: installmentGroupId,
+                        parent_installment_id: i === 0 ? null : undefined,
+                        created_at: new Date().toISOString()
+                    };
+
+                    billsToCreate.push(billPayload);
+                }
+
+                const { error: billsError } = await supabase
+                    .from('bills')
+                    .insert(billsToCreate);
+
+                if (billsError) throw billsError;
+
+            } else {
+                // TRANSAÇÃO/BILL ÚNICA (sem parcelamento)
+                
+                if (targetTable === 'bills') {
+                    payload.due_date = dateISO;
+                    payload.type = 'variable';
+                    delete payload.date;
+                }
+
+                payload.created_at = new Date().toISOString();
+
+                const { data: newTransaction, error: insertError } = await supabase
+                    .from(targetTable)
+                    .insert([payload])
+                    .select()
+                    .single();
+
+                if (insertError) throw insertError;
+                
+                const transactionId = newTransaction.id;
+
+                if (targetTable === 'transactions' && data.items && data.items.length > 0) {
+                    const itemsPayload = data.items.map(item => ({
+                        transaction_id: transactionId,
+                        name: item.name,
+                        quantity: item.quantity,
+                        unit_price: item.unit_price,
+                        amount: item.quantity * item.unit_price,
+                        user_id: currentUser.id
+                    }));
+                    await supabase.from('transaction_items').insert(itemsPayload);
+                }
+
+                if (targetTable === 'transactions' && data.use_split_payment && data.payments && data.payments.length > 0) {
+                    const paymentsPayload = data.payments.map(p => ({
+                        transaction_id: transactionId,
+                        amount: p.amount,
+                        payment_method: p.method,
+                        account_id: p.method === 'account' ? sanitizeUUID(p.account_id) : null,
+                        credit_card_id: p.method === 'credit_card' ? sanitizeUUID(p.credit_card_id) : null,
+                        installments: p.method === 'credit_card' ? (Number(p.installments) || 1) : 1,
+                        user_id: currentUser.id
+                    }));
+                    await supabase.from('transaction_payments').insert(paymentsPayload);
+                }
+
+                if (data.is_recurring) {
+                    await supabase.from('recurrence_rules').insert([{
+                        user_id: currentUser.id,
+                        description: data.description,
+                        amount: amountVal,
+                        type: data.type,
+                        day_of_month: new Date(dateISO).getDate(),
+                        category_id: sanitizeUUID(data.category_id),
+                        account_id: sanitizeUUID(data.account_id),
+                        credit_card_id: sanitizeUUID(data.credit_card_id)
+                    }]);
+                }
             }
         }
 
@@ -761,7 +861,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                       {!useSplitPayment ? (
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               {paymentMethod === 'account' ? (
-                                  <div className="space-y-1">
+                                  <div className="space-y-1 md:col-span-2">
                                       <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Conta</label>
                                       <select {...register('account_id')} className="w-full bg-white border border-stone-200 rounded-xl p-3 text-sm outline-none">
                                           <option value="">Selecione...</option>
@@ -786,6 +886,28 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                                               ))}
                                           </select>
                                       </div>
+                                      
+                                      {/* PREVIEW DO PARCELAMENTO CARTÃO */}
+                                      {Number(installments) > 1 && Number(watchedAmount) > 0 && (
+                                          <div className="md:col-span-2 bg-blue-50 border border-blue-200 rounded-xl p-4">
+                                              <p className="text-xs font-bold text-blue-700 mb-2">💳 Resumo do Parcelamento no Cartão</p>
+                                              <div className="flex justify-between items-center">
+                                                  <span className="text-xs text-blue-600">Valor Total:</span>
+                                                  <span className="text-sm font-bold text-blue-700">
+                                                      R$ {Number(watchedAmount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                                  </span>
+                                              </div>
+                                              <div className="flex justify-between items-center mt-1">
+                                                  <span className="text-xs text-blue-600">{installments}x de:</span>
+                                                  <span className="text-lg font-bold text-blue-700">
+                                                      R$ {(Number(watchedAmount) / Number(installments)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                                  </span>
+                                              </div>
+                                              <p className="text-[10px] text-blue-600 mt-2">
+                                                  ✓ Serão criadas {installments} transações mensais automaticamente
+                                              </p>
+                                          </div>
+                                      )}
                                   </>
                               )}
                           </div>
@@ -835,15 +957,82 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                   </>
               )}
 
+              {/* PENDENTE - Opção de Parcelamento em Bills */}
               {status === 'pending' && (
-                  <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">
-                          {type === 'income' ? 'Conta Destino' : 'Conta para Débito Futuro'}
-                      </label>
-                      <select {...register('account_id')} className="w-full bg-white border border-stone-200 rounded-xl p-3 text-sm outline-none">
-                          <option value="">Selecione...</option>
-                          {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
-                      </select>
+                  <div className="space-y-4">
+                      <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">
+                              {type === 'income' ? 'Conta Destino' : 'Conta para Débito Futuro'}
+                          </label>
+                          <select {...register('account_id')} className="w-full bg-white border border-stone-200 rounded-xl p-3 text-sm outline-none">
+                              <option value="">Selecione...</option>
+                              {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
+                          </select>
+                      </div>
+
+                      {/* CHECKBOX PARCELAR */}
+                      <div 
+                          onClick={() => setValue('is_installment', !isInstallment)}
+                          className={`flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all ${isInstallment ? 'bg-blue-50 border-2 border-blue-300' : 'bg-white border-2 border-stone-200'}`}
+                      >
+                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${isInstallment ? 'bg-blue-500 border-blue-500' : 'border-stone-300'}`}>
+                              {isInstallment && <Check size={14} className="text-white" />}
+                          </div>
+                          <div className="flex-1">
+                              <p className="text-xs font-bold text-coffee">Parcelar este Compromisso</p>
+                              <p className="text-[10px] text-stone-500">Dividir em múltiplas contas mensais</p>
+                          </div>
+                          <input type="checkbox" {...register('is_installment')} className="hidden" />
+                      </div>
+
+                      {/* CAMPO DE PARCELAS */}
+                      {isInstallment && (
+                          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-3 animate-fade-in">
+                              <div>
+                                  <label className="text-[10px] font-bold text-blue-700 uppercase tracking-widest ml-1 block mb-2">
+                                      Número de Parcelas
+                                  </label>
+                                  <input
+                                      type="number"
+                                      min="2"
+                                      max="120"
+                                      {...register('total_installments', { 
+                                          required: isInstallment,
+                                          min: 2,
+                                          max: 120 
+                                      })}
+                                      onWheel={preventScroll}
+                                      className="w-full bg-white border border-blue-200 rounded-xl py-3 px-4 text-coffee font-semibold text-sm focus:ring-2 focus:ring-blue-500/10 outline-none transition-all"
+                                      placeholder="Ex: 12"
+                                  />
+                                  <p className="text-[9px] text-blue-600 mt-1 ml-1">
+                                      Entre 2 e 120 parcelas
+                                  </p>
+                              </div>
+                              
+                              {/* PREVIEW DO PARCELAMENTO BILLS */}
+                              {Number(totalInstallments) >= 2 && Number(watchedAmount) > 0 && (
+                                  <div className="bg-white p-3 rounded-lg border border-blue-200">
+                                      <p className="text-[9px] text-blue-600 uppercase tracking-wider mb-1">📊 Resumo</p>
+                                      <div className="flex justify-between items-center">
+                                          <span className="text-xs text-coffee">Valor Total:</span>
+                                          <span className="text-sm font-bold text-coffee">
+                                              R$ {Number(watchedAmount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                          </span>
+                                      </div>
+                                      <div className="flex justify-between items-center mt-1">
+                                          <span className="text-xs text-coffee">{totalInstallments}x de:</span>
+                                          <span className="text-lg font-bold text-blue-600">
+                                              R$ {(Number(watchedAmount) / Number(totalInstallments)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                          </span>
+                                      </div>
+                                      <p className="text-[9px] text-blue-600 mt-2">
+                                          ✓ Serão criadas {totalInstallments} contas mensais automaticamente
+                                      </p>
+                                  </div>
+                              )}
+                          </div>
+                      )}
                   </div>
               )}
           </div>
@@ -860,7 +1049,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
       </div>
 
       {/* 8. RECORRÊNCIA */}
-      {type !== 'transfer' && (
+      {type !== 'transfer' && !isInstallment && (
         <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 p-4 rounded-xl">
             <input 
                 type="checkbox" 
