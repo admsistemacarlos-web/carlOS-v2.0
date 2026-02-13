@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Plus, ChevronLeft, ChevronRight, 
-  CheckCircle2, Zap, ZapOff, Frown, 
+  CheckCircle2, Zap, ZapOff, Frown, Smile,
   Scale, Activity, Calendar as CalendarIcon, Loader2,
-  Dumbbell, Footprints, Volleyball, Dribbble
+  Dumbbell, Footprints, Volleyball, Dribbble, TrendingDown, TrendingUp
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useHealth } from '../hooks/useHealth';
@@ -123,6 +122,27 @@ export default function WellnessPage() {
       .slice(-14); // Pega os últimos 14 registros de peso para o gráfico
   }, [logs]);
 
+  // --- CÁLCULO DE PERDA/GANHO TOTAL DE PESO ---
+  const weightProgress = useMemo(() => {
+    const weightsWithDates = logs
+      .filter(l => l.weight !== null && l.weight > 0)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+    if (weightsWithDates.length === 0) return null;
+    
+    const firstWeight = weightsWithDates[0].weight!;
+    const lastWeight = weightsWithDates[weightsWithDates.length - 1].weight!;
+    const difference = lastWeight - firstWeight;
+    
+    return {
+      first: firstWeight,
+      last: lastWeight,
+      difference: difference,
+      isLoss: difference < 0,
+      isGain: difference > 0
+    };
+  }, [logs]);
+
   const handleDayClick = (date: Date) => {
     const dateKey = formatDateKey(date);
     const existingLog = logsMap[dateKey];
@@ -212,9 +232,42 @@ export default function WellnessPage() {
             {/* Gráfico de Evolução de Peso */}
             {weightChartData.length > 1 && (
               <div className="bg-white rounded-[2rem] border border-stone-200 shadow-sm p-6">
-                <h3 className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-6 flex items-center gap-2">
-                  <Scale size={14} className="text-[#143d2d]" /> Evolução do Peso (Recente)
-                </h3>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                  <h3 className="text-xs font-bold text-stone-400 uppercase tracking-widest flex items-center gap-2">
+                    <Scale size={14} className="text-[#143d2d]" /> Evolução do Peso (Recente)
+                  </h3>
+                  
+                  {/* Card de Progresso Total */}
+                  {weightProgress && (
+                    <div className={`
+                      flex items-center gap-3 px-4 py-2 rounded-xl border-2
+                      ${weightProgress.isLoss 
+                        ? 'bg-emerald-50 border-emerald-200' 
+                        : weightProgress.isGain 
+                          ? 'bg-amber-50 border-amber-200' 
+                          : 'bg-stone-50 border-stone-200'
+                      }
+                    `}>
+                      {weightProgress.isLoss && <TrendingDown className="text-emerald-600" size={20} />}
+                      {weightProgress.isGain && <TrendingUp className="text-amber-600" size={20} />}
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500">
+                          Progresso Total
+                        </span>
+                        <div className="flex items-baseline gap-1">
+                          <span className={`
+                            text-xl font-bold
+                            ${weightProgress.isLoss ? 'text-emerald-600' : weightProgress.isGain ? 'text-amber-600' : 'text-stone-600'}
+                          `}>
+                            {weightProgress.isLoss ? '' : '+'}{Math.abs(weightProgress.difference).toFixed(1)}
+                          </span>
+                          <span className="text-xs font-bold text-stone-400">kg</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
                 <div className="h-[250px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={weightChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -316,8 +369,9 @@ export default function WellnessPage() {
                       {/* Conteúdo Central e Inferior */}
                       <div className="flex flex-col gap-1.5 flex-1 justify-start">
                         
-                        {/* 1. Ícones (Energético e Dor) */}
+                        {/* 1. Ícones (Energético e Dor) - AGORA SEMPRE MOSTRA */}
                         <div className="flex flex-wrap gap-1 min-h-[20px]">
+                          {/* Energético - sempre mostra se houver log */}
                           {log && (
                             log.energy_drink_consumed ? (
                               <div className="p-1 bg-yellow-100 text-yellow-600 rounded-md" title="Consumiu Energético">
@@ -330,19 +384,33 @@ export default function WellnessPage() {
                             )
                           )}
 
-                          {log?.headache && (
-                            <div className="p-1 bg-red-100 text-red-500 rounded-md" title="Teve dor de cabeça">
-                              <Frown size={12} />
-                            </div>
+                          {/* Dor de cabeça - sempre mostra se houver log */}
+                          {log && (
+                            log.headache ? (
+                              <div className="p-1 bg-red-100 text-red-500 rounded-md" title="Teve dor de cabeça">
+                                <Frown size={12} />
+                              </div>
+                            ) : (
+                              <div className="p-1 bg-stone-100 text-stone-400 rounded-md" title="Sem dor de cabeça">
+                                <Smile size={12} />
+                              </div>
+                            )
                           )}
                         </div>
 
-                        {/* 2. Treino (Na base, preenchendo a largura) */}
-                        {log?.workout_done && (
-                          <div className="flex items-center gap-1 text-[9px] font-bold text-[#143d2d] bg-[#143d2d]/5 px-1.5 py-1 rounded border border-[#143d2d]/10 w-full truncate">
-                            <span className="shrink-0">{getWorkoutIcon(log.workout_type)}</span>
-                            <span className="truncate">{log.workout_type || 'Treino'}</span>
-                          </div>
+                        {/* 2. Treino (Na base, preenchendo a largura) - AGORA SEMPRE MOSTRA */}
+                        {log && (
+                          log.workout_done ? (
+                            <div className="flex items-center gap-1 text-[9px] font-bold text-[#143d2d] bg-[#143d2d]/5 px-1.5 py-1 rounded border border-[#143d2d]/10 w-full truncate">
+                              <span className="shrink-0">{getWorkoutIcon(log.workout_type)}</span>
+                              <span className="truncate">{log.workout_type || 'Treino'}</span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1 text-[9px] font-bold text-stone-400 bg-stone-50 px-1.5 py-1 rounded border border-stone-200 w-full truncate">
+                              <CheckCircle2 size={10} />
+                              <span className="truncate">Sem treino</span>
+                            </div>
+                          )
                         )}
                       </div>
 
