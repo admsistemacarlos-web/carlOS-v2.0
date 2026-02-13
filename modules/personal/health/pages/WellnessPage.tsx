@@ -5,7 +5,7 @@ import {
   CheckCircle2, Zap, ZapOff, Frown, Smile,
   Scale, Activity, Calendar as CalendarIcon, Loader2,
   Dumbbell, Footprints, Volleyball, Dribbble, TrendingDown, TrendingUp,
-  Flame, Award, Target, BarChart3
+  Flame, Award, Target, BarChart3, AlertCircle
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useHealth } from '../hooks/useHealth';
@@ -227,11 +227,20 @@ export default function WellnessPage() {
              logDate <= monthEnd;
     }).length;
 
+    // Total de dias com dor de cabeça no mês atual
+    const headacheDaysThisMonth = logs.filter(log => {
+      const logDate = new Date(log.date);
+      return log.headache && 
+             logDate >= monthStart && 
+             logDate <= monthEnd;
+    }).length;
+
     return {
       workoutStreak,
       noHeadacheStreak,
       noEnergyDrinkStreak,
-      workoutsThisMonth
+      workoutsThisMonth,
+      headacheDaysThisMonth
     };
   }, [logs, currentDate]);
 
@@ -322,7 +331,7 @@ export default function WellnessPage() {
         ) : (
           <>
             {/* Painel de Estatísticas */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {/* Card 1: Sequência de Treinos */}
               <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4">
                 <div className="flex items-center gap-2 mb-3">
@@ -383,7 +392,25 @@ export default function WellnessPage() {
                 </p>
               </div>
 
-              {/* Card 4: Detox */}
+              {/* Card 4: Dias com Dor de Cabeça no Mês */}
+              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-2 bg-red-50 rounded-lg">
+                    <AlertCircle className="text-red-600" size={16} />
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                    Sintomas {currentDate.toLocaleDateString('pt-BR', { month: 'short' })}
+                  </span>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-bold text-red-600">
+                    {statistics.headacheDaysThisMonth}
+                  </span>
+                  <span className="text-xs font-bold text-stone-400">dias</span>
+                </div>
+              </div>
+
+              {/* Card 5: Detox */}
               <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="p-2 bg-amber-50 rounded-lg">
