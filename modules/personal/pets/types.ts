@@ -1,4 +1,3 @@
-
 export type LogCategory = 
   | 'food'        // Ração
   | 'treats'      // Petiscos
@@ -27,8 +26,9 @@ export interface PetLog {
   cost: number;
   event_date: string;
   next_due_date?: string | null;
+  done?: boolean; // Indica se o compromisso foi realizado
   value?: number | null; // Usado para peso (kg)
-  location?: string | null; // Novo campo
+  location?: string | null;
   notes?: string | null;
   created_at?: string;
   user_id?: string;
