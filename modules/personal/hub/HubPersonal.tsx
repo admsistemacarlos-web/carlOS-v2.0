@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Wallet, Dog, BookOpen, Heart, ChevronRight, Activity, 
   CheckCircle2, Dumbbell, Check,
   Zap, Frown,
-  Wine, Loader2, Scale, AlertCircle, Calendar, XCircle, Circle
+  Wine, Loader2, Scale, AlertCircle, Calendar, XCircle, Circle, Bell
 } from 'lucide-react';
 import { supabase } from '../../../integrations/supabase/client';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -32,6 +31,16 @@ const formatShortDate = (date: Date) => {
   return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit' }).format(date);
 };
 
+// Calcula quantos dias faltam para uma data
+const getDaysUntil = (dateString: string): number => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const targetDate = new Date(dateString);
+  targetDate.setHours(0, 0, 0, 0);
+  const diffTime = targetDate.getTime() - today.getTime();
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+};
+
 // --- TYPES ---
 interface OneTwoThreeTask {
   id: string;
@@ -45,6 +54,7 @@ interface PetTask {
   title: string;
   category: string;
   next_due_date: string;
+  done: boolean;
 }
 
 interface NavCardProps { 
@@ -83,8 +93,8 @@ interface BioTrackerCardProps {
   icon: React.ReactNode;
   value: boolean | null;
   onChange: (newValue: boolean | null) => void;
-  activeColorClass: string; // Ex: 'text-emerald-600 bg-emerald-50 border-emerald-200'
-  variant?: 'standard' | 'avoidance'; // Standard: Sim é bom. Avoidance: Não é bom.
+  activeColorClass: string;
+  variant?: 'standard' | 'avoidance';
 }
 
 const BioTrackerCard: React.FC<BioTrackerCardProps> = ({ 
@@ -97,34 +107,28 @@ const BioTrackerCard: React.FC<BioTrackerCardProps> = ({
 }) => {
   
   const handleClick = () => {
-    // Ciclo: Null -> True -> False -> Null
     if (value === null) onChange(true);
     else if (value === true) onChange(false);
     else onChange(null);
   };
 
-  // Definir estilo baseado no estado
   let cardStyle = "bg-white border-stone-200 text-stone-400";
   let iconStyle = "text-stone-300";
   let statusIcon = <Circle size={18} className="text-stone-200" />;
   let statusText = "Registrar";
 
   if (value === true) {
-    // TRUE: O evento aconteceu (Fiz treino, Tomei energético, Tive dor)
     cardStyle = `bg-white ${activeColorClass} shadow-sm`;
     iconStyle = "currentColor"; 
     statusIcon = <CheckCircle2 size={18} strokeWidth={2.5} />;
     statusText = "Sim";
   } else if (value === false) {
-    // FALSE: O evento NÃO aconteceu
     if (variant === 'avoidance') {
-      // Se for algo a evitar (dor, energético), "Não" é SUCESSO (Verde)
       cardStyle = "bg-emerald-50 border-emerald-200 text-emerald-600 shadow-sm";
       iconStyle = "text-emerald-600";
       statusIcon = <CheckCircle2 size={18} strokeWidth={2.5} />;
       statusText = "Não";
     } else {
-      // Padrão (Treino): "Não" é neutro/ruim
       cardStyle = "bg-stone-50 border-stone-200 text-stone-400";
       iconStyle = "text-stone-300";
       statusIcon = <XCircle size={18} />;
@@ -164,8 +168,9 @@ export default function HubPersonal() {
   const { accounts } = useAccounts();
   const totalBalance = useMemo(() => accounts.reduce((acc, curr) => acc + (curr.balance || 0), 0), [accounts]);
 
-  // 2. PET (Berry's Reminders)
+  // 2. PET (Berry's Reminders) - ATUALIZADO
   const [petTasks, setPetTasks] = useState<PetTask[]>([]);
+  const [updatingTaskId, setUpdatingTaskId] = useState<string | null>(null);
   
   useEffect(() => {
     if (!user) return;
@@ -178,15 +183,15 @@ export default function HubPersonal() {
         }
 
         if (pet) {
-          const today = new Date().toISOString();
+          const today = formatDateDB(new Date());
           const { data: tasks } = await supabase
             .from('pet_logs')
-            .select('id, title, category, next_due_date')
+            .select('id, title, category, next_due_date, done')
             .eq('pet_id', pet.id)
             .not('next_due_date', 'is', null)
             .gte('next_due_date', today)
             .order('next_due_date', { ascending: true })
-            .limit(3);
+            .limit(5);
           if (tasks) setPetTasks(tasks);
         }
       } catch (err) {
@@ -195,6 +200,77 @@ export default function HubPersonal() {
     };
     fetchBerryTasks();
   }, [user]);
+
+  // Handler para marcar tarefa como feita/não feita
+  const handleTogglePetTask = async (taskId: string, currentDone: boolean) => {
+    setUpdatingTaskId(taskId);
+    try {
+      const { error } = await supabase
+        .from('pet_logs')
+        .update({ done: !currentDone })
+        .eq('id', taskId);
+      
+      if (error) throw error;
+      
+      // Atualiza o estado local
+      setPetTasks(prev => prev.map(task => 
+        task.id === taskId ? { ...task, done: !currentDone } : task
+      ));
+    } catch (err) {
+      console.error("Erro ao atualizar tarefa", err);
+      alert("Erro ao atualizar tarefa");
+    } finally {
+      setUpdatingTaskId(null);
+    }
+  };
+
+  // Função para determinar o estilo do card baseado na urgência
+  const getPetTaskStyle = (task: PetTask) => {
+    if (task.done) {
+      return {
+        bg: 'bg-emerald-50',
+        border: 'border-emerald-200',
+        text: 'text-emerald-700',
+        icon: 'text-emerald-600',
+        badge: 'bg-emerald-100 text-emerald-700',
+        label: '✓ Feito'
+      };
+    }
+
+    const daysUntil = getDaysUntil(task.next_due_date);
+    
+    if (daysUntil === 0) {
+      // Hoje - Vermelho
+      return {
+        bg: 'bg-red-50',
+        border: 'border-red-300',
+        text: 'text-red-700',
+        icon: 'text-red-600',
+        badge: 'bg-red-100 text-red-700 animate-pulse',
+        label: '🔴 HOJE!'
+      };
+    } else if (daysUntil <= 3) {
+      // Próximos 3 dias - Amarelo
+      return {
+        bg: 'bg-amber-50',
+        border: 'border-amber-300',
+        text: 'text-amber-700',
+        icon: 'text-amber-600',
+        badge: 'bg-amber-100 text-amber-700',
+        label: `⚠️ Em ${daysUntil} dia${daysUntil > 1 ? 's' : ''}`
+      };
+    } else {
+      // Futuro - Neutro
+      return {
+        bg: 'bg-white',
+        border: 'border-stone-200',
+        text: 'text-stone-700',
+        icon: 'text-[#5F6F52]',
+        badge: 'bg-stone-100 text-stone-600',
+        label: `Em ${daysUntil} dias`
+      };
+    }
+  };
 
   // 3. ESPIRITUAL (Leitura em Progresso)
   const { getBookProgress } = useReadingProgress();
@@ -353,6 +429,9 @@ export default function HubPersonal() {
   const importantTasks = dailyTasks.filter(t => t.type === '2');
   const routineTasks = dailyTasks.filter(t => t.type === '3');
 
+  // Contar notificações urgentes (não feitas e com urgência)
+  const urgentPetTasks = petTasks.filter(task => !task.done && getDaysUntil(task.next_due_date) <= 3).length;
+
   return (
     <div className="animate-fade-in font-sans px-4 md:px-0 max-w-5xl mx-auto pb-24">
       
@@ -372,7 +451,17 @@ export default function HubPersonal() {
            <NavCard title="Saúde" icon={<Activity />} onClick={() => navigate('/personal/health')} />
            <NavCard title="Espiritual" icon={<Heart />} onClick={() => navigate('/personal/spiritual')} />
            <NavCard title="Estudos" icon={<BookOpen />} onClick={() => navigate('/personal/studies')} />
-           <NavCard title="Pet Care" icon={<Dog />} onClick={() => navigate('/personal/pet')} />
+           
+           {/* Pet Care com Badge de Notificação */}
+           <div className="relative">
+             <NavCard title="Pet Care" icon={<Dog />} onClick={() => navigate('/personal/pet')} />
+             {urgentPetTasks > 0 && (
+               <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] font-bold shadow-lg animate-pulse">
+                 {urgentPetTasks}
+               </div>
+             )}
+           </div>
+           
            <NavCard title="Sommelier" icon={<Wine size={24} />} onClick={() => navigate('/personal/sommelier')} />
         </div>
       </div>
@@ -491,37 +580,72 @@ export default function HubPersonal() {
           </div>
       </div>
 
-      {/* 5. PET REMINDERS */}
+      {/* 5. PET REMINDERS - ATUALIZADO COM SISTEMA DE CORES E TOGGLE */}
       {petTasks.length > 0 && (
         <div className="mb-8">
            <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
               <Dog size={16} /> Compromissos Pet
+              {urgentPetTasks > 0 && (
+                <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold rounded-full flex items-center gap-1">
+                  <Bell size={10} /> {urgentPetTasks} urgente{urgentPetTasks > 1 ? 's' : ''}
+                </span>
+              )}
            </h3>
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-             {petTasks.map(task => (
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+             {petTasks.map(task => {
+               const style = getPetTaskStyle(task);
+               return (
                 <div 
                   key={task.id}
-                  onClick={() => navigate('/personal/pet')}
-                  className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-[#5F6F52]/50 transition-colors"
+                  className={`${style.bg} p-4 rounded-2xl border ${style.border} shadow-sm transition-all hover:shadow-md`}
                 >
-                   <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#5F6F52]/10 flex items-center justify-center text-[#5F6F52]">
-                        <Dog size={20} />
+                   <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3 flex-1">
+                        <div className={`w-10 h-10 rounded-full ${style.bg} flex items-center justify-center ${style.icon} border ${style.border}`}>
+                          <Dog size={20} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                           <h4 className={`font-bold ${style.text} text-sm truncate`}>{task.title}</h4>
+                           <p className="text-xs text-stone-500 font-medium">
+                             {new Date(task.next_due_date).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
+                           </p>
+                        </div>
                       </div>
-                      <div>
-                         <h4 className="font-bold text-stone-700 text-sm">{task.title}</h4>
-                         <p className="text-xs text-stone-400 font-medium">
-                           {new Date(task.next_due_date).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
-                         </p>
-                      </div>
+                      
+                      {/* Toggle Button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleTogglePetTask(task.id, task.done);
+                        }}
+                        disabled={updatingTaskId === task.id}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-all flex-shrink-0 ${
+                          task.done 
+                            ? 'bg-emerald-500 text-white shadow-sm' 
+                            : 'bg-white border-2 border-stone-300 text-stone-400 hover:border-emerald-400'
+                        } ${updatingTaskId === task.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-90'}`}
+                      >
+                        {updatingTaskId === task.id ? (
+                          <Loader2 size={16} className="animate-spin" />
+                        ) : task.done ? (
+                          <Check size={16} strokeWidth={3} />
+                        ) : (
+                          <Circle size={16} strokeWidth={2} />
+                        )}
+                      </button>
                    </div>
-                   <div className="flex items-center gap-3">
-                      <span className="text-[9px] font-bold uppercase tracking-wider bg-stone-100 text-stone-500 px-2 py-1 rounded">
+                   
+                   <div className="flex items-center justify-between">
+                      <span className={`text-[9px] font-bold uppercase tracking-wider ${style.badge} px-2 py-1 rounded`}>
                         {task.category === 'medication' ? 'Remédio' : task.category === 'vaccine' ? 'Vacina' : task.category === 'hygiene' ? 'Higiene' : task.category}
+                      </span>
+                      <span className={`text-[10px] font-bold ${style.text}`}>
+                        {style.label}
                       </span>
                    </div>
                 </div>
-             ))}
+               );
+             })}
            </div>
         </div>
       )}
@@ -542,7 +666,7 @@ export default function HubPersonal() {
          </div>
       </div>
 
-      {/* 7. BIO-DATA CHECK-IN (NEW LAYOUT) */}
+      {/* 7. BIO-DATA CHECK-IN */}
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4 px-1">
             <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest flex items-center gap-2">
@@ -578,7 +702,7 @@ export default function HubPersonal() {
                 </div>
           </div>
 
-          {/* Card 2: Treino (Standard: Sim=Verde) */}
+          {/* Card 2: Treino */}
           <BioTrackerCard 
             label="Treino" 
             icon={<Dumbbell size={18} />} 
@@ -588,7 +712,7 @@ export default function HubPersonal() {
             variant="standard"
           />
 
-          {/* Card 3: Energético (Avoidance: Não=Verde, Sim=Amarelo) */}
+          {/* Card 3: Energético */}
           <BioTrackerCard 
             label="Energético" 
             icon={<Zap size={18} />} 
@@ -598,7 +722,7 @@ export default function HubPersonal() {
             variant="avoidance"
           />
 
-          {/* Card 4: Dor (Avoidance: Não=Verde, Sim=Vermelho) */}
+          {/* Card 4: Dor */}
           <BioTrackerCard 
             label="Dor" 
             icon={<Frown size={18} />} 
