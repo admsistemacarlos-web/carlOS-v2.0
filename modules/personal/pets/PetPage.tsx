@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { 
@@ -6,7 +5,7 @@ import {
   Scissors, Pill, Scale, Stethoscope, DollarSign, 
   Trash2, History, ArrowRight, CheckCircle2,
   Cookie, Layers, Sparkles, Filter, X, Pencil, Loader2, AlertTriangle, Clock, CalendarDays, MapPin, ArrowDown,
-  ReceiptText
+  ReceiptText, Check, Circle
 } from 'lucide-react';
 import { usePetData } from './hooks/usePetData';
 import { LogCategory, PetLog } from './types';
@@ -106,6 +105,7 @@ export default function PetPage() {
   const [editingLog, setEditingLog] = useState<PetLog | null>(null);
   const [deleteConfirmationId, setDeleteConfirmationId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [updatingDoneId, setUpdatingDoneId] = useState<string | null>(null);
 
   useEffect(() => {
     if (pets.length > 0 && !activePetId) {
@@ -213,6 +213,26 @@ export default function PetPage() {
         alert('Erro ao excluir registro');
     } finally {
         setIsDeleting(false);
+    }
+  };
+
+  // Handler para toggle do status "done"
+  const handleToggleDone = async (logId: string, currentDone: boolean) => {
+    if (!activePetId) return;
+    setUpdatingDoneId(logId);
+    try {
+      const logToUpdate = logs.find(l => l.id === logId);
+      if (!logToUpdate) return;
+      
+      await updateLog(logId, {
+        ...logToUpdate,
+        done: !currentDone
+      });
+    } catch (error) {
+      console.error('Erro ao atualizar status:', error);
+      alert('Erro ao atualizar status');
+    } finally {
+      setUpdatingDoneId(null);
     }
   };
 
@@ -513,9 +533,32 @@ export default function PetPage() {
                                 )}
 
                                 {log.next_due_date && (
-                                    <p className="text-[10px] text-[#5F6F52] mt-2 flex items-center gap-1 font-bold uppercase tracking-wider">
+                                    <div className="mt-2 flex items-center gap-2">
+                                      <p className="text-[10px] text-[#5F6F52] flex items-center gap-1 font-bold uppercase tracking-wider">
                                         <ArrowRight size={10} /> Próximo: {formatDateBr(log.next_due_date)}
-                                    </p>
+                                      </p>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleToggleDone(log.id, log.done || false);
+                                        }}
+                                        disabled={updatingDoneId === log.id}
+                                        className={`w-5 h-5 rounded-full flex items-center justify-center transition-all ${
+                                          log.done 
+                                            ? 'bg-emerald-500 text-white shadow-sm' 
+                                            : 'bg-white border-2 border-stone-300 text-stone-400 hover:border-emerald-400'
+                                        } ${updatingDoneId === log.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-90'}`}
+                                        title={log.done ? 'Marcar como não feito' : 'Marcar como feito'}
+                                      >
+                                        {updatingDoneId === log.id ? (
+                                          <Loader2 size={10} className="animate-spin" />
+                                        ) : log.done ? (
+                                          <Check size={12} strokeWidth={3} />
+                                        ) : (
+                                          <Circle size={10} strokeWidth={2} />
+                                        )}
+                                      </button>
+                                    </div>
                                 )}
                             </div>
 
