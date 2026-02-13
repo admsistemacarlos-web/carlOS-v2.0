@@ -14,7 +14,7 @@ import { useAccounts } from '../finance/hooks/useFinanceData';
 import { useReadingProgress } from '../spiritual/hooks/useReadingProgress';
 import { bibleBooks } from '../spiritual/data/bibleBooks';
 import { DashboardCalendar, CalendarMarkers } from '../components/DashboardCalendar';
-import { formatDateBr, getDaysUntil } from '../finance/utils/dateHelpers';
+import { getDaysUntil } from '../finance/utils/dateHelpers';
 
 // --- HELPER DATE ---
 const formatDateDB = (date: Date) => {
@@ -30,6 +30,13 @@ const formatFullDate = (date: Date) => {
 
 const formatShortDate = (date: Date) => {
   return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit' }).format(date);
+};
+
+// Formata data sem timezone (parse manual)
+const formatDateBrFromString = (dateString: string) => {
+  const [year, month, day] = dateString.split('T')[0].split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  return date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' });
 };
 
 // --- TYPES ---
@@ -159,7 +166,7 @@ export default function HubPersonal() {
   const { accounts } = useAccounts();
   const totalBalance = useMemo(() => accounts.reduce((acc, curr) => acc + (curr.balance || 0), 0), [accounts]);
 
-  // 2. PET (Berry's Reminders) - ATUALIZADO
+  // 2. PET (Berry's Reminders)
   const [petTasks, setPetTasks] = useState<PetTask[]>([]);
   const [updatingTaskId, setUpdatingTaskId] = useState<string | null>(null);
   
@@ -340,7 +347,7 @@ export default function HubPersonal() {
 
       try {
         const { data: wellnessLogs } = await supabase.from('health_wellness_logs').select('date, workout_done, headache').eq('user_id', user.id).gte('date', startOfMonth).lte('date', endOfMonth);
-        const { data: petLogs } = await supabase.from('pet_logs').select('event_date').eq('user_id', user.id).gte('event_date', startOfMonth).lte('event_date', endOfMonth);
+        const { data: petLogs } = await supabase.from('pet_logs').select('event_date').eq('user_id', user.id).gte('event_date', startOfMonth).lte('date', endOfMonth);
 
         const markers: CalendarMarkers = {};
         wellnessLogs?.forEach(log => {
@@ -571,7 +578,7 @@ export default function HubPersonal() {
           </div>
       </div>
 
-      {/* 5. PET REMINDERS - ATUALIZADO COM SISTEMA DE CORES E TOGGLE */}
+      {/* 5. PET REMINDERS - COM SISTEMA DE CORES E TOGGLE */}
       {petTasks.length > 0 && (
         <div className="mb-8">
            <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
@@ -598,7 +605,7 @@ export default function HubPersonal() {
                         <div className="flex-1 min-w-0">
                            <h4 className={`font-bold ${style.text} text-sm truncate`}>{task.title}</h4>
                            <p className="text-xs text-stone-500 font-medium">
-                             {new Date(task.next_due_date).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
+                             {formatDateBrFromString(task.next_due_date)}
                            </p>
                         </div>
                       </div>
