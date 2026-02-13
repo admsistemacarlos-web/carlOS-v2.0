@@ -4,7 +4,8 @@ import {
   ArrowLeft, Plus, ChevronLeft, ChevronRight, 
   CheckCircle2, Zap, ZapOff, Frown, Smile,
   Scale, Activity, Calendar as CalendarIcon, Loader2,
-  Dumbbell, Footprints, Volleyball, Dribbble, TrendingDown, TrendingUp
+  Dumbbell, Footprints, Volleyball, Dribbble, TrendingDown, TrendingUp,
+  Flame, Award, Target, BarChart3
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useHealth } from '../hooks/useHealth';
@@ -61,6 +62,12 @@ const formatDateKey = (date: Date) => {
 const addMonths = (date: Date, amount: number) => {
   const d = new Date(date);
   d.setMonth(d.getMonth() + amount);
+  return d;
+};
+
+const addDays = (date: Date, days: number) => {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
   return d;
 };
 
@@ -142,6 +149,91 @@ export default function WellnessPage() {
       isGain: difference > 0
     };
   }, [logs]);
+
+  // --- ESTATÍSTICAS ---
+  const statistics = useMemo(() => {
+    // Ordenar logs por data
+    const sortedLogs = [...logs].sort((a, b) => 
+      new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+
+    // Função auxiliar para calcular sequências
+    const calculateStreak = (condition: (log: WellnessLog) => boolean) => {
+      let currentStreak = 0;
+      let maxStreak = 0;
+      let lastDate: Date | null = null;
+
+      // Começar do mais recente para calcular a sequência atual
+      const reversedLogs = [...sortedLogs].reverse();
+      
+      for (const log of reversedLogs) {
+        const logDate = new Date(log.date);
+        
+        if (condition(log)) {
+          if (!lastDate || 
+              Math.abs(logDate.getTime() - lastDate.getTime()) <= 24 * 60 * 60 * 1000 * 2) {
+            currentStreak++;
+            lastDate = logDate;
+          } else {
+            break;
+          }
+        } else {
+          break;
+        }
+      }
+
+      // Calcular a maior sequência histórica
+      let tempStreak = 0;
+      let tempLastDate: Date | null = null;
+
+      for (const log of sortedLogs) {
+        const logDate = new Date(log.date);
+        
+        if (condition(log)) {
+          if (!tempLastDate || 
+              Math.abs(logDate.getTime() - tempLastDate.getTime()) <= 24 * 60 * 60 * 1000 * 2) {
+            tempStreak++;
+            tempLastDate = logDate;
+            maxStreak = Math.max(maxStreak, tempStreak);
+          } else {
+            tempStreak = 1;
+            tempLastDate = logDate;
+          }
+        } else {
+          tempStreak = 0;
+          tempLastDate = null;
+        }
+      }
+
+      return { current: currentStreak, max: maxStreak };
+    };
+
+    // Treinos
+    const workoutStreak = calculateStreak(log => log.workout_done);
+    
+    // Sem dor de cabeça
+    const noHeadacheStreak = calculateStreak(log => !log.headache);
+    
+    // Sem energético
+    const noEnergyDrinkStreak = calculateStreak(log => !log.energy_drink_consumed);
+
+    // Total de treinos no mês atual
+    const monthStart = getStartOfMonth(currentDate);
+    const monthEnd = getEndOfMonth(currentDate);
+    const workoutsThisMonth = logs.filter(log => {
+      const logDate = new Date(log.date);
+      return log.workout_done && 
+             logDate >= monthStart && 
+             logDate <= monthEnd;
+    }).length;
+
+    return {
+      workoutStreak,
+      noHeadacheStreak,
+      noEnergyDrinkStreak,
+      workoutsThisMonth
+    };
+  }, [logs, currentDate]);
 
   const handleDayClick = (date: Date) => {
     const dateKey = formatDateKey(date);
@@ -229,6 +321,90 @@ export default function WellnessPage() {
           <div className="flex justify-center py-20"><Loader2 className="animate-spin text-[#143d2d]" size={32} /></div>
         ) : (
           <>
+            {/* Painel de Estatísticas */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {/* Card 1: Sequência de Treinos */}
+              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-2 bg-emerald-50 rounded-lg">
+                    <Flame className="text-emerald-600" size={16} />
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                    Sequência Atual
+                  </span>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-bold text-emerald-600">
+                    {statistics.workoutStreak.current}
+                  </span>
+                  <span className="text-xs font-bold text-stone-400">dias</span>
+                </div>
+                <p className="text-[10px] text-stone-400 mt-1">
+                  Recorde: {statistics.workoutStreak.max} dias
+                </p>
+              </div>
+
+              {/* Card 2: Treinos no Mês */}
+              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-2 bg-blue-50 rounded-lg">
+                    <BarChart3 className="text-blue-600" size={16} />
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                    Treinos {currentDate.toLocaleDateString('pt-BR', { month: 'short' })}
+                  </span>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-bold text-blue-600">
+                    {statistics.workoutsThisMonth}
+                  </span>
+                  <span className="text-xs font-bold text-stone-400">dias</span>
+                </div>
+              </div>
+
+              {/* Card 3: Sem Dor de Cabeça */}
+              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-2 bg-purple-50 rounded-lg">
+                    <Smile className="text-purple-600" size={16} />
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                    Sem Sintomas
+                  </span>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-bold text-purple-600">
+                    {statistics.noHeadacheStreak.current}
+                  </span>
+                  <span className="text-xs font-bold text-stone-400">dias</span>
+                </div>
+                <p className="text-[10px] text-stone-400 mt-1">
+                  Recorde: {statistics.noHeadacheStreak.max} dias
+                </p>
+              </div>
+
+              {/* Card 4: Detox */}
+              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-2 bg-amber-50 rounded-lg">
+                    <ZapOff className="text-amber-600" size={16} />
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                    Detox Atual
+                  </span>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-bold text-amber-600">
+                    {statistics.noEnergyDrinkStreak.current}
+                  </span>
+                  <span className="text-xs font-bold text-stone-400">dias</span>
+                </div>
+                <p className="text-[10px] text-stone-400 mt-1">
+                  Recorde: {statistics.noEnergyDrinkStreak.max} dias
+                </p>
+              </div>
+            </div>
+
             {/* Gráfico de Evolução de Peso */}
             {weightChartData.length > 1 && (
               <div className="bg-white rounded-[2rem] border border-stone-200 shadow-sm p-6">
@@ -384,14 +560,14 @@ export default function WellnessPage() {
                             )
                           )}
 
-                          {/* Dor de cabeça - sempre mostra se houver log */}
+                          {/* Dor de cabeça - sempre mostra se houver log - CARINHA FELIZ VERDE */}
                           {log && (
                             log.headache ? (
                               <div className="p-1 bg-red-100 text-red-500 rounded-md" title="Teve dor de cabeça">
                                 <Frown size={12} />
                               </div>
                             ) : (
-                              <div className="p-1 bg-stone-100 text-stone-400 rounded-md" title="Sem dor de cabeça">
+                              <div className="p-1 bg-emerald-100 text-emerald-600 rounded-md" title="Sem dor de cabeça">
                                 <Smile size={12} />
                               </div>
                             )
