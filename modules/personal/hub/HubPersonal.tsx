@@ -14,6 +14,7 @@ import { useAccounts } from '../finance/hooks/useFinanceData';
 import { useReadingProgress } from '../spiritual/hooks/useReadingProgress';
 import { bibleBooks } from '../spiritual/data/bibleBooks';
 import { DashboardCalendar, CalendarMarkers } from '../components/DashboardCalendar';
+import { formatDateBr, getDaysUntil } from '../finance/utils/dateHelpers';
 
 // --- HELPER DATE ---
 const formatDateDB = (date: Date) => {
@@ -29,16 +30,6 @@ const formatFullDate = (date: Date) => {
 
 const formatShortDate = (date: Date) => {
   return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit' }).format(date);
-};
-
-// Calcula quantos dias faltam para uma data
-const getDaysUntil = (dateString: string): number => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const targetDate = new Date(dateString);
-  targetDate.setHours(0, 0, 0, 0);
-  const diffTime = targetDate.getTime() - today.getTime();
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 };
 
 // --- TYPES ---

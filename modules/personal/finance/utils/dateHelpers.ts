@@ -61,3 +61,26 @@ export function formatDateBr(dateString: string | null | undefined): string {
   
   return `${day}/${month}/${year}`;
 }
+
+/**
+ * Calcula quantos dias faltam entre hoje e uma data futura.
+ * Usa parse manual para evitar problemas de timezone (off-by-one).
+ * Retorna número negativo se a data já passou.
+ */
+export function getDaysUntil(dateString: string): number {
+  const today = getTodayLocal(); // YYYY-MM-DD de hoje
+  const targetDate = parseLocalDate(dateString); // Garante YYYY-MM-DD
+  
+  // Parse manual para evitar timezone
+  const [todayYear, todayMonth, todayDay] = today.split('-').map(Number);
+  const [targetYear, targetMonth, targetDay] = targetDate.split('-').map(Number);
+  
+  const todayDate = new Date(todayYear, todayMonth - 1, todayDay);
+  const targetDateObj = new Date(targetYear, targetMonth - 1, targetDay);
+  
+  todayDate.setHours(0, 0, 0, 0);
+  targetDateObj.setHours(0, 0, 0, 0);
+  
+  const diffTime = targetDateObj.getTime() - todayDate.getTime();
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+}
