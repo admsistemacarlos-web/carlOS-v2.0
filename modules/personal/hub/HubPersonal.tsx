@@ -671,8 +671,8 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
                         <div className="flex-1 min-w-0">
                            <h4 className={`font-bold ${style.text} text-sm truncate`}>{task.title}</h4>
                            <p className="text-xs text-stone-500 font-medium">
-                             {new Date(task.next_due_date).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
-                           </p>
+  {formatDateBr(task.next_due_date)}
+</p>                          
                         </div>
                       </div>
                       
