@@ -8,13 +8,18 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../../integrations/supabase/client';
 import { useAuth } from '../../../contexts/AuthContext';
+import { useCalendarEvents } from '../../../hooks/useCalendarEvents';
+import { DashboardEventsSidebar } from '../components/DashboardEventsSidebar';
+import { CategoryFilters } from '../components/CategoryFilters';
+import type { CategoryFilter } from '../../../types/calendar';
 
 // Hooks Específicos
 import { useAccounts } from '../finance/hooks/useFinanceData';
 import { useReadingProgress } from '../spiritual/hooks/useReadingProgress';
 import { bibleBooks } from '../spiritual/data/bibleBooks';
-import { DashboardCalendar, CalendarMarkers } from '../components/DashboardCalendar';
-import { getDaysUntil } from '../finance/utils/dateHelpers';
+import { DashboardCalendar } from '../components/DashboardCalendar';
+import type { CalendarMarkers } from '../../../types/calendar';
+import { formatDateBr, getDaysUntil } from '../finance/utils/dateHelpers';
 
 // --- HELPER DATE ---
 const formatDateDB = (date: Date) => {
@@ -30,13 +35,6 @@ const formatFullDate = (date: Date) => {
 
 const formatShortDate = (date: Date) => {
   return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit' }).format(date);
-};
-
-// Formata data sem timezone (parse manual)
-const formatDateBrFromString = (dateString: string) => {
-  const [year, month, day] = dateString.split('T')[0].split('-').map(Number);
-  const date = new Date(year, month - 1, day);
-  return date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' });
 };
 
 // --- TYPES ---
@@ -166,7 +164,7 @@ export default function HubPersonal() {
   const { accounts } = useAccounts();
   const totalBalance = useMemo(() => accounts.reduce((acc, curr) => acc + (curr.balance || 0), 0), [accounts]);
 
-  // 2. PET (Berry's Reminders)
+  // 2. PET (Berry's Reminders) - ATUALIZADO
   const [petTasks, setPetTasks] = useState<PetTask[]>([]);
   const [updatingTaskId, setUpdatingTaskId] = useState<string | null>(null);
   
@@ -320,7 +318,75 @@ export default function HubPersonal() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [calendarMonth, setCalendarMonth] = useState(new Date());
   const [calendarMarkers, setCalendarMarkers] = useState<CalendarMarkers>({});
+
+  const [enabledCategories, setEnabledCategories] = useState<string[]>([]);
+const [categoryFilters, setCategoryFilters] = useState<CategoryFilter[]>([
+  { category: 'workout', label: 'Treino', color: 'text-emerald-600', icon: 'Dumbbell', enabled: true },
+  { category: 'headache', label: 'Sintoma', color: 'text-red-600', icon: 'Frown', enabled: true },
+  { category: 'pet', label: 'Pet', color: 'text-purple-600', icon: 'Dog', enabled: true },
+  { category: 'bill', label: 'Contas', color: 'text-red-600', icon: 'DollarSign', enabled: true },
+  { category: 'invoice', label: 'Faturas', color: 'text-orange-600', icon: 'DollarSign', enabled: true },
+  { category: 'spiritual', label: 'Espiritual', color: 'text-purple-600', icon: 'BookOpen', enabled: true },
+  { category: 'study', label: 'Estudos', color: 'text-blue-600', icon: 'GraduationCap', enabled: true },
+  { category: 'project', label: 'Projetos', color: 'text-emerald-600', icon: 'Briefcase', enabled: true },
+  { category: 'general', label: 'Geral', color: 'text-stone-600', icon: 'Calendar', enabled: true },
+]);
   
+// Hook para buscar eventos financeiros do Supabase
+const getMonthRange = (date: Date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const startOfMonth = new Date(year, month, 1);
+  const endOfMonth = new Date(year, month + 1, 0);
+  return { startOfMonth, endOfMonth };
+};
+
+const { startOfMonth, endOfMonth } = getMonthRange(calendarMonth);
+
+const { data: financialMarkers, isLoading: isLoadingEvents } = useCalendarEvents({
+  startDate: startOfMonth,
+  endDate: endOfMonth,
+  userId: user?.id || ''
+});
+
+// Função para alternar filtros
+const handleToggleCategory = (category: string) => {
+  setCategoryFilters(prev => 
+    prev.map(f => f.category === category ? { ...f, enabled: !f.enabled } : f)
+  );
+};
+
+// Atualizar categorias habilitadas
+useEffect(() => {
+  setEnabledCategories(categoryFilters.filter(f => f.enabled).map(f => f.category));
+}, [categoryFilters]);
+
+// Combinar markers antigos (wellness/pet) com novos (financeiro)
+const combinedMarkers = useMemo(() => {
+  const combined = { ...calendarMarkers };
+  
+  if (financialMarkers) {
+    Object.keys(financialMarkers).forEach(dateKey => {
+      if (!combined[dateKey]) {
+        combined[dateKey] = {};
+      }
+      combined[dateKey] = {
+        ...combined[dateKey],
+        ...financialMarkers[dateKey]
+      };
+    });
+  }
+  
+  return combined;
+}, [calendarMarkers, financialMarkers]);
+
+// Obter eventos do dia selecionado
+const selectedDateKey = formatDateDB(selectedDate);
+const eventsOfSelectedDay = combinedMarkers[selectedDateKey]?.events || [];
+const filteredEvents = eventsOfSelectedDay.filter(event => 
+  enabledCategories.length === 0 || enabledCategories.includes(event.category)
+);
+
   const [wellnessData, setWellnessData] = useState<{
     weight: string;
     workout_done: boolean | null;
@@ -347,7 +413,7 @@ export default function HubPersonal() {
 
       try {
         const { data: wellnessLogs } = await supabase.from('health_wellness_logs').select('date, workout_done, headache').eq('user_id', user.id).gte('date', startOfMonth).lte('date', endOfMonth);
-        const { data: petLogs } = await supabase.from('pet_logs').select('event_date').eq('user_id', user.id).gte('event_date', startOfMonth).lte('date', endOfMonth);
+        const { data: petLogs } = await supabase.from('pet_logs').select('event_date').eq('user_id', user.id).gte('event_date', startOfMonth).lte('event_date', endOfMonth);
 
         const markers: CalendarMarkers = {};
         wellnessLogs?.forEach(log => {
@@ -578,7 +644,7 @@ export default function HubPersonal() {
           </div>
       </div>
 
-      {/* 5. PET REMINDERS - COM SISTEMA DE CORES E TOGGLE */}
+      {/* 5. PET REMINDERS - ATUALIZADO COM SISTEMA DE CORES E TOGGLE */}
       {petTasks.length > 0 && (
         <div className="mb-8">
            <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
@@ -605,7 +671,7 @@ export default function HubPersonal() {
                         <div className="flex-1 min-w-0">
                            <h4 className={`font-bold ${style.text} text-sm truncate`}>{task.title}</h4>
                            <p className="text-xs text-stone-500 font-medium">
-                             {formatDateBrFromString(task.next_due_date)}
+                             {new Date(task.next_due_date).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
                            </p>
                         </div>
                       </div>
@@ -648,23 +714,44 @@ export default function HubPersonal() {
         </div>
       )}
 
-      {/* 6. CALENDÁRIO HISTÓRICO */}
-      <div className="mb-8">
-         <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
-            <Calendar size={16} /> Histórico Mensal
-         </h3>
-         <div className="h-[450px]">
-            <DashboardCalendar 
-                selectedDate={selectedDate}
-                onSelectDate={setSelectedDate}
-                currentMonth={calendarMonth}
-                onMonthChange={setCalendarMonth}
-                markers={calendarMarkers}
-            />
-         </div>
-      </div>
+      {/* 6. FILTROS DE EVENTOS */}
+<div className="mb-8">
+   <CategoryFilters 
+      filters={categoryFilters}
+      onToggle={handleToggleCategory}
+   />
+</div>
 
-      {/* 7. BIO-DATA CHECK-IN */}
+{/* 7. CALENDÁRIO E EVENTOS */}
+<div className="mb-8">
+   <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
+      <Calendar size={16} /> Histórico Mensal
+   </h3>
+   
+   <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      {/* Calendário - 2 colunas em desktop */}
+      <div className="lg:col-span-2 h-[450px]">
+         <DashboardCalendar 
+            selectedDate={selectedDate}
+            onSelectDate={setSelectedDate}
+            currentMonth={calendarMonth}
+            onMonthChange={setCalendarMonth}
+            markers={combinedMarkers}
+            enabledCategories={enabledCategories}
+         />
+      </div>
+      
+      {/* Painel de Eventos - 1 coluna em desktop, lista abaixo em mobile */}
+      <div className="h-[450px]">
+         <DashboardEventsSidebar 
+            selectedDate={selectedDate}
+            events={filteredEvents}
+         />
+      </div>
+   </div>
+</div>
+
+      {/* 8. BIO-DATA CHECK-IN */}
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4 px-1">
             <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest flex items-center gap-2">
