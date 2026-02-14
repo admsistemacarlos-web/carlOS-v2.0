@@ -58,7 +58,7 @@ export const useCalendarEvents = ({ startDate, endDate, userId }: UseCalendarEve
 
       if (transactions) {
         transactions.forEach(tx => {
-          if (new Date(tx.date) > new Date()) { // Apenas futuras
+          if (new Date(tx.date) > new Date()) {
             events.push({
               id: `transaction-${tx.id}`,
               title: tx.description,
@@ -71,7 +71,62 @@ export const useCalendarEvents = ({ startDate, endDate, userId }: UseCalendarEve
         });
       }
 
-      // 3. Converter para formato CalendarMarkers
+      // 3. Buscar Wellness Logs (Treino, Dor de Cabeça)
+      const { data: wellnessLogs } = await supabase
+        .from('health_wellness_logs')
+        .select('*')
+        .eq('user_id', userId)
+        .gte('date', startDate.toISOString())
+        .lte('date', endDate.toISOString());
+
+      if (wellnessLogs) {
+        wellnessLogs.forEach(log => {
+          const dateKey = log.date.split('T')[0];
+          
+          if (log.workout_done) {
+            events.push({
+              id: `workout-${log.id}`,
+              title: 'Treino Realizado',
+              category: 'workout',
+              date: dateKey,
+              description: 'Atividade física registrada'
+            });
+          }
+          
+          if (log.headache) {
+            events.push({
+              id: `headache-${log.id}`,
+              title: 'Dor de Cabeça',
+              category: 'headache',
+              date: dateKey,
+              description: 'Sintoma registrado no Bio-Data'
+            });
+          }
+        });
+      }
+
+      // 4. Buscar Pet Logs
+      const { data: petLogs } = await supabase
+        .from('pet_logs')
+        .select('*')
+        .eq('user_id', userId)
+        .gte('event_date', startDate.toISOString())
+        .lte('event_date', endDate.toISOString());
+
+      if (petLogs) {
+        petLogs.forEach(log => {
+          const dateKey = log.event_date.split('T')[0];
+          events.push({
+            id: `pet-${log.id}`,
+            title: log.title || 'Evento Pet',
+            category: 'pet',
+            date: dateKey,
+            description: log.notes || log.category || 'Cuidado com pet registrado'
+          });
+        });
+      }
+
+      // 5. Converter para formato CalendarMarkers
       const markers: CalendarMarkers = {};
       
       events.forEach(event => {
@@ -86,6 +141,9 @@ export const useCalendarEvents = ({ startDate, endDate, userId }: UseCalendarEve
         markers[event.date].eventCount = (markers[event.date].eventCount || 0) + 1;
         
         // Definir flags booleanas por categoria
+        if (event.category === 'workout') markers[event.date].hasWorkout = true;
+        if (event.category === 'headache') markers[event.date].hasHeadache = true;
+        if (event.category === 'pet') markers[event.date].hasPetEvent = true;
         if (event.category === 'bill') markers[event.date].hasBill = true;
         if (event.category === 'invoice') markers[event.date].hasInvoice = true;
         if (event.category === 'spiritual') markers[event.date].hasSpiritual = true;
