@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../integrations/supabase/client';
 import type { CalendarEvent, CalendarMarkers } from '../types/calendar';
+import { parseLocalDate } from '../modules/personal/finance/utils/dateHelpers';
 
 interface UseCalendarEventsProps {
   startDate: Date;
@@ -35,11 +36,12 @@ export const useCalendarEvents = ({ startDate, endDate, userId }: UseCalendarEve
 
       if (bills) {
         bills.forEach(bill => {
+          const dateKey = parseLocalDate(bill.due_date);
           events.push({
             id: `bill-${bill.id}`,
             title: bill.description,
             category: 'bill',
-            date: bill.due_date,
+            date: dateKey,
             amount: bill.amount,
             status: bill.paid ? 'paid' : (new Date(bill.due_date) < new Date() ? 'overdue' : 'pending'),
             description: `Conta: ${bill.description} - R$ ${bill.amount}`
@@ -58,12 +60,13 @@ export const useCalendarEvents = ({ startDate, endDate, userId }: UseCalendarEve
 
       if (transactions) {
         transactions.forEach(tx => {
-          if (new Date(tx.date) > new Date()) {
+          const dateKey = parseLocalDate(tx.date);
+          if (new Date(dateKey) > new Date()) {
             events.push({
               id: `transaction-${tx.id}`,
               title: tx.description,
               category: 'general',
-              date: tx.date,
+              date: dateKey,
               amount: tx.amount,
               description: `${tx.type === 'income' ? 'Receita' : 'Despesa'}: ${tx.description}`
             });
@@ -81,7 +84,7 @@ export const useCalendarEvents = ({ startDate, endDate, userId }: UseCalendarEve
 
       if (wellnessLogs) {
         wellnessLogs.forEach(log => {
-          const dateKey = log.date.split('T')[0];
+          const dateKey = parseLocalDate(log.date);
           
           if (log.workout_done) {
             events.push({
@@ -105,17 +108,18 @@ export const useCalendarEvents = ({ startDate, endDate, userId }: UseCalendarEve
         });
       }
 
-      // 4. Buscar Pet Logs
+      // 4. Buscar Pet Logs - usando next_due_date e parseLocalDate
       const { data: petLogs } = await supabase
         .from('pet_logs')
         .select('*')
         .eq('user_id', userId)
-        .gte('event_date', startDate.toISOString())
-        .lte('event_date', endDate.toISOString());
+        .not('next_due_date', 'is', null)
+        .gte('next_due_date', formatDateKey(startDate))
+        .lte('next_due_date', formatDateKey(endDate));
 
       if (petLogs) {
         petLogs.forEach(log => {
-          const dateKey = log.event_date.split('T')[0];
+          const dateKey = parseLocalDate(log.next_due_date);
           events.push({
             id: `pet-${log.id}`,
             title: log.title || 'Evento Pet',
