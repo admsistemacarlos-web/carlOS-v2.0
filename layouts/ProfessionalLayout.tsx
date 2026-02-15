@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutGrid, Briefcase, Users, TrendingUp, BarChart3, ArrowLeft, Menu, X, RefreshCcw, Film, FileText, Tag } from 'lucide-react';
 import ModuleHeader from '../shared/components/Navigation/ModuleHeader';
+import { ThemeToggle } from '../shared/ThemeToggle';
 
 const SidebarItem: React.FC<{ to: string; icon: React.ReactNode; label: string; end?: boolean; onClick?: () => void }> = ({ to, icon, label, end, onClick }) => (
   <NavLink 
@@ -91,7 +91,11 @@ const ProfessionalLayout: React.FC<ProfessionalLayoutProps> = ({ children }) => 
           <SidebarItem to="/professional/finance" icon={<BarChart3 />} label="Financeiro" onClick={closeSidebar} />
         </nav>
 
-        <div className="p-4 border-t border-[#404040]">
+        <div className="p-4 border-t border-[#404040] space-y-3">
+          <div className="flex items-center justify-center">
+            <ThemeToggle />
+          </div>
+          
           <button 
             onClick={() => { closeSidebar(); navigate('/fork'); }}
             className="flex items-center gap-2 px-3 py-2 w-full text-[#737373] hover:text-[#E09B6B] hover:bg-[#37352F] rounded-md transition-colors text-xs font-medium uppercase tracking-wider"
@@ -112,6 +116,8 @@ const ProfessionalLayout: React.FC<ProfessionalLayoutProps> = ({ children }) => 
             </button>
             <h2 className="text-sm font-bold text-white">Agency OS</h2>
           </div>
+          
+          <ThemeToggle />
         </header>
 
         <main className="flex-1 overflow-auto relative selection:bg-[#E09B6B]/30 selection:text-white">

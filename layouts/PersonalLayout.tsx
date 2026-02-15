@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutGrid, DollarSign, BookOpen, Heart, Dog, Menu, Repeat, Activity, Briefcase, PieChart, Wine } from 'lucide-react';
 import ModuleNavigation from '../shared/components/layout/ModuleNavigation';
+import { ThemeToggle } from '../shared/ThemeToggle';
 
 const SidebarItem: React.FC<{ to: string; icon: React.ReactNode; label: string; end?: boolean; onClick?: () => void }> = ({ to, icon, label, end, onClick }) => (
   <NavLink 
@@ -117,7 +117,11 @@ const PersonalLayout: React.FC<PersonalLayoutProps> = ({ children }) => {
           )}
         </nav>
 
-        <div className="p-6">
+        <div className="p-6 space-y-3">
+          <div className="flex items-center justify-center">
+            <ThemeToggle />
+          </div>
+          
           <button 
             onClick={() => navigate('/fork')}
             className="flex items-center gap-3 px-4 py-3 w-full bg-white/5 hover:bg-white/10 rounded-xl transition-all text-[11px] font-semibold text-cappuccino hover:text-white"
@@ -139,13 +143,16 @@ const PersonalLayout: React.FC<PersonalLayoutProps> = ({ children }) => {
             <h2 className="text-xl font-semibold tracking-tighter">carlOS</h2>
           </div>
           
-          <button 
-            onClick={() => navigate('/professional')}
-            className="p-2 rounded-xl bg-stone-200/50 text-cappuccino hover:text-coffee transition-colors"
-            title="Ir para Profissional"
-          >
-            <Briefcase size={20} />
-          </button>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <button 
+              onClick={() => navigate('/professional')}
+              className="p-2 rounded-xl bg-stone-200/50 text-cappuccino hover:text-coffee transition-colors"
+              title="Ir para Profissional"
+            >
+              <Briefcase size={20} />
+            </button>
+          </div>
         </header>
 
         <main className="flex-1 overflow-auto p-6 md:p-12 no-scrollbar">

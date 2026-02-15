@@ -1,7 +1,8 @@
 import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'; // CORREÇÃO AQUI: Import unificado
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './shared/components/Navigation/ProtectedRoute';
 import ScrollToTop from './shared/components/Navigation/ScrollToTop';
 
@@ -102,143 +103,145 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <HashRouter>
-          <ScrollToTop />
-          <Routes>
-            {/* Páginas Públicas */}
-            <Route path="/" element={<Login />} />
-            
-            <Route path="/fork" element={
-              <ProtectedRoute>
-                <Fork />
-              </ProtectedRoute>
-            } />
-            
-            {/* ═══════════════════════════════════════ */}
-            {/* CONTEXTO 1: VIDA PESSOAL */}
-            {/* ═══════════════════════════════════════ */}
-            <Route path="/personal/*" element={
-              <ProtectedRoute>
-                <PersonalLayout>
-                  <Routes>
-                    <Route path="" element={<HubPersonal />} />
-                    
-                    {/* Módulo: Finanças */}
-                    <Route path="finance" element={<FinanceDashboard />} />
-                    <Route path="finance/analytics" element={<AnalyticsPage />} />
-                    <Route path="finance/accounts" element={<AccountsPage />} />
-                    <Route path="finance/cards" element={<CardsPage />} />
-                    <Route path="finance/cards/:id" element={<CardDetailsPage />} />
-                    <Route path="finance/cards/:id/invoices" element={<CardInvoicesPage />} />
-                    <Route path="finance/bills" element={<BillsPage />} />
-                    <Route path="finance/transactions" element={<TransactionsPage />} />
-                    <Route path="finance/transactions/new" element={<NewTransactionPage />} />
-                    <Route path="finance/new" element={<NewTransactionPage />} />
-                    <Route path="finance/edit/:id" element={<NewTransactionPage />} />
-                    <Route path="finance/limits" element={<AvailableLimitsPage />} />
-                    
-                    {/* Módulo: Estudos */}
-                    <Route path="studies" element={<StudiesDashboard />} />
-                    <Route path="studies/search" element={<SearchPage />} />
-                    <Route path="studies/courses" element={<CourseList />} />
-                    <Route path="studies/courses/:courseId" element={<CourseDetail />} />
-                    <Route path="studies/lessons/:lessonId" element={<LessonDetail />} />
-                    
-                    {/* Módulo: Pets */}
-                    <Route path="pet" element={<PetPage />} />
+        <ThemeProvider>
+          <HashRouter>
+            <ScrollToTop />
+            <Routes>
+              {/* Páginas Públicas */}
+              <Route path="/" element={<Login />} />
+              
+              <Route path="/fork" element={
+                <ProtectedRoute>
+                  <Fork />
+                </ProtectedRoute>
+              } />
+              
+              {/* ═══════════════════════════════════════ */}
+              {/* CONTEXTO 1: VIDA PESSOAL */}
+              {/* ═══════════════════════════════════════ */}
+              <Route path="/personal/*" element={
+                <ProtectedRoute>
+                  <PersonalLayout>
+                    <Routes>
+                      <Route path="" element={<HubPersonal />} />
+                      
+                      {/* Módulo: Finanças */}
+                      <Route path="finance" element={<FinanceDashboard />} />
+                      <Route path="finance/analytics" element={<AnalyticsPage />} />
+                      <Route path="finance/accounts" element={<AccountsPage />} />
+                      <Route path="finance/cards" element={<CardsPage />} />
+                      <Route path="finance/cards/:id" element={<CardDetailsPage />} />
+                      <Route path="finance/cards/:id/invoices" element={<CardInvoicesPage />} />
+                      <Route path="finance/bills" element={<BillsPage />} />
+                      <Route path="finance/transactions" element={<TransactionsPage />} />
+                      <Route path="finance/transactions/new" element={<NewTransactionPage />} />
+                      <Route path="finance/new" element={<NewTransactionPage />} />
+                      <Route path="finance/edit/:id" element={<NewTransactionPage />} />
+                      <Route path="finance/limits" element={<AvailableLimitsPage />} />
+                      
+                      {/* Módulo: Estudos */}
+                      <Route path="studies" element={<StudiesDashboard />} />
+                      <Route path="studies/search" element={<SearchPage />} />
+                      <Route path="studies/courses" element={<CourseList />} />
+                      <Route path="studies/courses/:courseId" element={<CourseDetail />} />
+                      <Route path="studies/lessons/:lessonId" element={<LessonDetail />} />
+                      
+                      {/* Módulo: Pets */}
+                      <Route path="pet" element={<PetPage />} />
 
-                    {/* Módulo: Sommelier (Adega) */}
-                    <Route path="sommelier" element={<CellarPage />} />
+                      {/* Módulo: Sommelier (Adega) */}
+                      <Route path="sommelier" element={<CellarPage />} />
 
-                    {/* Módulo: Saúde & Planejamento */}
-                    <Route path="health" element={<HealthHub />} />
-                    <Route path="health/therapy" element={<TherapyPage />} />
-                    <Route path="health/therapy/new" element={<TherapyEditor />} />
-                    <Route path="health/therapy/:id" element={<TherapyEditor />} />
-                    <Route path="health/wellness" element={<WellnessPage />} />
-                    <Route path="health/wellness/new" element={<WellnessEditor />} />
-                    <Route path="health/wellness/:id" element={<WellnessEditor />} />
-                    <Route path="health/planning/new" element={<PlanningPage />} />
-                    <Route path="health/workouts" element={<WorkoutsPage />} />
-                    
-                    {/* Módulo: Espiritual */}
-                    <Route path="spiritual" element={<SpiritualHub />} />
-                    <Route path="spiritual/reading" element={<BibleReadingPage />} />
-                    
-                    {/* Rotas de Pregações */}
-                    <Route path="spiritual/sermons" element={<SermonsPage />} />
-                    <Route path="spiritual/sermons/new" element={<SermonEditor />} />
-                    <Route path="spiritual/sermons/:id" element={<SermonEditor />} />
-                    
-                    <Route path="spiritual/studies" element={<StudyNotesPage />} />
-                    
-                    {/* Rotas de Pedidos de Oração (Lista simples) */}
-                    <Route path="spiritual/prayers-list" element={<PrayersPage />} />
+                      {/* Módulo: Saúde & Planejamento */}
+                      <Route path="health" element={<HealthHub />} />
+                      <Route path="health/therapy" element={<TherapyPage />} />
+                      <Route path="health/therapy/new" element={<TherapyEditor />} />
+                      <Route path="health/therapy/:id" element={<TherapyEditor />} />
+                      <Route path="health/wellness" element={<WellnessPage />} />
+                      <Route path="health/wellness/new" element={<WellnessEditor />} />
+                      <Route path="health/wellness/:id" element={<WellnessEditor />} />
+                      <Route path="health/planning/new" element={<PlanningPage />} />
+                      <Route path="health/workouts" element={<WorkoutsPage />} />
+                      
+                      {/* Módulo: Espiritual */}
+                      <Route path="spiritual" element={<SpiritualHub />} />
+                      <Route path="spiritual/reading" element={<BibleReadingPage />} />
+                      
+                      {/* Rotas de Pregações */}
+                      <Route path="spiritual/sermons" element={<SermonsPage />} />
+                      <Route path="spiritual/sermons/new" element={<SermonEditor />} />
+                      <Route path="spiritual/sermons/:id" element={<SermonEditor />} />
+                      
+                      <Route path="spiritual/studies" element={<StudyNotesPage />} />
+                      
+                      {/* Rotas de Pedidos de Oração (Lista simples) */}
+                      <Route path="spiritual/prayers-list" element={<PrayersPage />} />
 
-                    {/* Rotas de Biblioteca de Orações (Modelos) */}
-                    <Route path="spiritual/prayers" element={<PrayerLibraryPage />} />
-                    <Route path="spiritual/prayers/new" element={<PrayerEditor />} />
-                    <Route path="spiritual/prayers/:id" element={<PrayerEditor />} />
+                      {/* Rotas de Biblioteca de Orações (Modelos) */}
+                      <Route path="spiritual/prayers" element={<PrayerLibraryPage />} />
+                      <Route path="spiritual/prayers/new" element={<PrayerEditor />} />
+                      <Route path="spiritual/prayers/:id" element={<PrayerEditor />} />
 
-                    {/* Rotas de Hinos */}
-                    <Route path="spiritual/hymns" element={<HymnsPage />} />
-                    <Route path="spiritual/hymns/new" element={<HymnEditor />} />
-                    <Route path="spiritual/hymns/:id" element={<HymnEditor />} />
+                      {/* Rotas de Hinos */}
+                      <Route path="spiritual/hymns" element={<HymnsPage />} />
+                      <Route path="spiritual/hymns/new" element={<HymnEditor />} />
+                      <Route path="spiritual/hymns/:id" element={<HymnEditor />} />
 
-                    {/* Rotas de Livros */}
-                    <Route path="spiritual/books" element={<BooksPage />} />
-                    <Route path="spiritual/books/new" element={<BookEditor />} />
-                    <Route path="spiritual/books/:id" element={<BookEditor />} />
-                  </Routes>
-                </PersonalLayout>
-              </ProtectedRoute>
-            } />
+                      {/* Rotas de Livros */}
+                      <Route path="spiritual/books" element={<BooksPage />} />
+                      <Route path="spiritual/books/new" element={<BookEditor />} />
+                      <Route path="spiritual/books/:id" element={<BookEditor />} />
+                    </Routes>
+                  </PersonalLayout>
+                </ProtectedRoute>
+              } />
 
-            {/* ═══════════════════════════════════════ */}
-            {/* CONTEXTO 2: VIDA PROFISSIONAL */}
-            {/* ═══════════════════════════════════════ */}
-            <Route path="/professional/*" element={
-              <ProtectedRoute>
-                <ProfessionalLayout>
-                  <Routes>
-                    <Route path="" element={<HubProfessional />} />
-                    
-                    {/* Módulo: Projetos */}
-                    <Route path="projects" element={<AgencyDashboard />} />
-                    <Route path="video-editor" element={<VideoManagerPage />} />
-                    <Route path="video-editor/new" element={<VideoProjectEditor />} />
-                    <Route path="video-editor/:id" element={<VideoProjectEditor />} />
-                    
-                    {/* Módulo: CRM (Clientes) */}
-                    <Route path="crm" element={<ClientsPage />} />
-                    <Route path="crm/new" element={<ClientEditorPage />} />
-                    <Route path="crm/:id" element={<ClientEditorPage />} />
+              {/* ═══════════════════════════════════════ */}
+              {/* CONTEXTO 2: VIDA PROFISSIONAL */}
+              {/* ═══════════════════════════════════════ */}
+              <Route path="/professional/*" element={
+                <ProtectedRoute>
+                  <ProfessionalLayout>
+                    <Routes>
+                      <Route path="" element={<HubProfessional />} />
+                      
+                      {/* Módulo: Projetos */}
+                      <Route path="projects" element={<AgencyDashboard />} />
+                      <Route path="video-editor" element={<VideoManagerPage />} />
+                      <Route path="video-editor/new" element={<VideoProjectEditor />} />
+                      <Route path="video-editor/:id" element={<VideoProjectEditor />} />
+                      
+                      {/* Módulo: CRM (Clientes) */}
+                      <Route path="crm" element={<ClientsPage />} />
+                      <Route path="crm/new" element={<ClientEditorPage />} />
+                      <Route path="crm/:id" element={<ClientEditorPage />} />
 
-                    {/* Módulo: Orçamentos */}
-                    <Route path="quotes" element={<QuotesPage />} />
-                    <Route path="quotes/template" element={<ProposalTemplatePage />} />
-                    <Route path="quotes/new" element={<QuoteBuilderPage />} />
-                    <Route path="quotes/:id/view" element={<ProposalView />} />
-                    <Route path="quotes/:id" element={<QuoteBuilderPage />} />
+                      {/* Módulo: Orçamentos */}
+                      <Route path="quotes" element={<QuotesPage />} />
+                      <Route path="quotes/template" element={<ProposalTemplatePage />} />
+                      <Route path="quotes/new" element={<QuoteBuilderPage />} />
+                      <Route path="quotes/:id/view" element={<ProposalView />} />
+                      <Route path="quotes/:id" element={<QuoteBuilderPage />} />
 
-                    {/* Módulo: Serviços */}
-                    <Route path="services" element={<ServicesPage />} />
-                    
-                    {/* Módulo: Financeiro PJ (Placeholder) */}
-                    <Route path="finance" element={
-                      <div className="p-10 text-zinc-400">
-                        Financeiro PJ em construção...
-                      </div>
-                    } />
-                  </Routes>
-                </ProfessionalLayout>
-              </ProtectedRoute>
-            } />
+                      {/* Módulo: Serviços */}
+                      <Route path="services" element={<ServicesPage />} />
+                      
+                      {/* Módulo: Financeiro PJ (Placeholder) */}
+                      <Route path="finance" element={
+                        <div className="p-10 text-zinc-400">
+                          Financeiro PJ em construção...
+                        </div>
+                      } />
+                    </Routes>
+                  </ProfessionalLayout>
+                </ProtectedRoute>
+              } />
 
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </HashRouter>
+              {/* Fallback */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </HashRouter>
+        </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
