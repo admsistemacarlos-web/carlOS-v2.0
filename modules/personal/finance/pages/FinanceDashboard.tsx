@@ -1,4 +1,3 @@
-
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTransactions, useAccounts, useCards, useBills } from '../hooks/useFinanceData';
@@ -23,21 +22,21 @@ const SummaryCard: React.FC<{
   <button 
     onClick={onClick}
     disabled={loading}
-    className="w-full bg-white p-6 rounded-[2rem] border border-stone-100 flex items-center justify-between shadow-sm hover:shadow-lg transition-all active:scale-[0.98] group min-h-[8rem]"
+    className="w-full bg-card p-6 rounded-[2rem] border border-border flex items-center justify-between shadow-sm hover:shadow-lg transition-all active:scale-[0.98] group min-h-[8rem]"
   >
     <div className="flex-1 text-left pr-2">
-      <p className="text-cappuccino text-[10px] font-bold uppercase tracking-widest mb-2">
+      <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mb-2">
         {title}
       </p>
       {loading ? (
-        <div className="h-8 w-24 bg-stone-100 animate-pulse rounded-lg"></div>
+        <div className="h-8 w-24 bg-secondary animate-pulse rounded-lg"></div>
       ) : (
-        <h2 className="text-xl sm:text-2xl font-medium text-coffee tracking-tighter break-words">
+        <h2 className="text-xl sm:text-2xl font-medium text-foreground tracking-tighter break-words">
           {value}
         </h2>
       )}
     </div>
-    <div className={`hidden sm:block p-4 rounded-2xl bg-cream border border-stone-50 ml-2 flex-shrink-0 transition-colors group-hover:bg-opacity-50 ${color}`}>
+    <div className={`hidden sm:block p-4 rounded-2xl bg-secondary border border-border ml-2 flex-shrink-0 transition-colors group-hover:bg-opacity-50 ${color}`}>
       {React.cloneElement(icon as React.ReactElement<any>, { size: 20 })}
     </div>
   </button>
@@ -239,28 +238,28 @@ const FinanceDashboard: React.FC = () => {
       {/* HEADER & DATE SELECTOR */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
         <div>
-          <h1 className="text-3xl font-semibold text-coffee tracking-tighter">Visão Geral</h1>
-          <p className="text-cappuccino text-xs font-medium tracking-wide mt-1">Sua saúde financeira em tempo real.</p>
+          <h1 className="text-3xl font-semibold text-foreground tracking-tighter">Visão Geral</h1>
+          <p className="text-muted-foreground text-xs font-medium tracking-wide mt-1">Sua saúde financeira em tempo real.</p>
         </div>
 
         <div className="flex items-center gap-3 w-full lg:w-auto">
             {/* Seletor de Mês */}
-            <div className="flex items-center bg-white border border-stone-200 rounded-xl p-1 shadow-sm flex-1 lg:flex-none justify-between lg:justify-start">
-                <button onClick={prevMonth} className="p-2 hover:bg-stone-100 rounded-lg text-stone-400 hover:text-coffee transition-colors">
+            <div className="flex items-center bg-card border border-border rounded-xl p-1 shadow-sm flex-1 lg:flex-none justify-between lg:justify-start">
+                <button onClick={prevMonth} className="p-2 hover:bg-accent rounded-lg text-muted-foreground hover:text-foreground transition-colors">
                     <ChevronLeft size={18} />
                 </button>
                 <div className="flex items-center gap-2 px-4 min-w-[140px] justify-center">
                     <Calendar size={14} className="text-olive" />
-                    <span className="text-sm font-bold text-coffee capitalize">{formattedDate}</span>
+                    <span className="text-sm font-bold text-foreground capitalize">{formattedDate}</span>
                 </div>
-                <button onClick={nextMonth} className="p-2 hover:bg-stone-100 rounded-lg text-stone-400 hover:text-coffee transition-colors">
+                <button onClick={nextMonth} className="p-2 hover:bg-accent rounded-lg text-muted-foreground hover:text-foreground transition-colors">
                     <ChevronRight size={18} />
                 </button>
             </div>
 
             <button 
                 onClick={resetToToday}
-                className="px-4 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-500 font-bold text-[10px] uppercase tracking-wider rounded-xl transition-colors"
+                className="px-4 py-2.5 bg-secondary hover:bg-accent text-muted-foreground font-bold text-[10px] uppercase tracking-wider rounded-xl transition-colors"
                 title="Voltar para Hoje"
             >
                 Hoje
@@ -314,7 +313,7 @@ const FinanceDashboard: React.FC = () => {
       <div className="space-y-4">
         <div className="flex justify-between items-end px-2">
             <div>
-                 <h3 className="font-bold text-coffee text-sm uppercase tracking-widest flex items-center gap-2">
+                 <h3 className="font-bold text-foreground text-sm uppercase tracking-widest flex items-center gap-2">
                     <Filter size={14} className="text-olive"/> Movimentações de {formattedDate}
                  </h3>
             </div>
@@ -327,9 +326,9 @@ const FinanceDashboard: React.FC = () => {
         </div>
 
         {loadingTransactions ? (
-          <div className="p-20 text-center text-cappuccino text-sm animate-pulse bg-white rounded-[2rem] border border-stone-100">Carregando dados do período...</div>
+          <div className="p-20 text-center text-muted-foreground text-sm animate-pulse bg-card rounded-[2rem] border border-border">Carregando dados do período...</div>
         ) : groupedDashboardTransactions.length === 0 ? (
-          <div className="p-20 text-center text-cappuccino text-sm italic bg-white rounded-[2rem] border border-stone-100 shadow-sm">
+          <div className="p-20 text-center text-muted-foreground text-sm italic bg-card rounded-[2rem] border border-border shadow-sm">
             Nenhuma movimentação registrada em {formattedDate}.
           </div>
         ) : (
@@ -337,19 +336,19 @@ const FinanceDashboard: React.FC = () => {
                {groupedDashboardTransactions.map((group) => (
                    <div key={group.date} className="animate-fade-in">
                      <div className="flex items-center gap-3 mb-2 ml-2">
-                       <h3 className="text-xs font-bold uppercase tracking-widest text-coffee">
+                       <h3 className="text-xs font-bold uppercase tracking-widest text-foreground">
                          {formatDateHeader(group.date)}
                        </h3>
-                       <div className="h-[1px] flex-1 bg-stone-200"></div>
+                       <div className="h-[1px] flex-1 bg-border"></div>
                      </div>
 
-                     <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-hidden">
-                       <div className="divide-y divide-stone-50">
+                     <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
+                       <div className="divide-y divide-border">
                          {group.items.map((t) => (
                            <div 
                              key={t.id} 
                              onClick={() => handleEdit(t)}
-                             className={`group flex items-center justify-between py-3 px-4 hover:bg-stone-50 transition-colors cursor-pointer ${t.is_locked ? 'opacity-60' : ''}`}
+                             className={`group flex items-center justify-between py-3 px-4 hover:bg-accent transition-colors cursor-pointer ${t.is_locked ? 'opacity-60' : ''}`}
                            >
                              <div className="flex items-center gap-3">
                                <div className={`p-2 rounded-full ${t.type === 'income' ? 'bg-olive/10 text-olive' : 'bg-terracotta/10 text-terracotta'}`}>
@@ -357,16 +356,16 @@ const FinanceDashboard: React.FC = () => {
                                </div>
                                <div>
                                  <div className="flex items-center gap-2">
-                                   <p className="font-semibold text-coffee text-sm">{t.description}</p>
-                                   {t.is_locked && <Lock size={12} className="text-stone-400" />}
+                                   <p className="font-semibold text-foreground text-sm">{t.description}</p>
+                                   {t.is_locked && <Lock size={12} className="text-muted-foreground" />}
                                    {(t.items && t.items.length > 0) && <ShoppingBag size={12} className="text-olive" />}
                                  </div>
                                  <div className="flex items-center gap-2">
-                                   <span className="text-[10px] font-bold uppercase tracking-wider text-cappuccino">
+                                   <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                                      {t.category}
                                    </span>
                                    {t.location && (
-                                       <span className="text-[10px] text-stone-400 font-medium">
+                                       <span className="text-[10px] text-muted-foreground/60 font-medium">
                                            • {t.location}
                                        </span>
                                    )}
@@ -386,14 +385,14 @@ const FinanceDashboard: React.FC = () => {
                                 <div className="hidden group-hover:flex gap-1" onClick={e => e.stopPropagation()}>
                                   <button 
                                     onClick={(e) => handleDuplicate(t, e)}
-                                    className="p-1.5 hover:bg-stone-200 rounded-lg text-stone-400 hover:text-coffee transition-colors"
+                                    className="p-1.5 hover:bg-secondary rounded-lg text-muted-foreground hover:text-foreground transition-colors"
                                     title="Duplicar"
                                   >
                                     <Copy size={14} />
                                   </button>
                                   <button 
                                     onClick={(e) => { e.stopPropagation(); handleEdit(t); }}
-                                    className="p-1.5 hover:bg-stone-200 rounded-lg text-coffee transition-colors"
+                                    className="p-1.5 hover:bg-secondary rounded-lg text-foreground transition-colors"
                                     title="Editar"
                                   >
                                     <Pencil size={14} />
