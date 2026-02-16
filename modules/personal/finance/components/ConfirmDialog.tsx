@@ -21,24 +21,24 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
 
   return createPortal(
     <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-md rounded-[2rem] shadow-2xl border border-stone-100 overflow-hidden transform transition-all">
+      <div className="bg-card w-full max-w-md rounded-[2rem] shadow-2xl border border-border overflow-hidden transform transition-all">
         <div className="p-8 text-center">
           <div className="w-16 h-16 bg-terracotta/10 rounded-full flex items-center justify-center mx-auto mb-6 text-terracotta">
             <AlertTriangle size={32} />
           </div>
           
-          <h3 className="text-xl font-semibold text-coffee tracking-tight mb-2">
+          <h3 className="text-xl font-semibold text-foreground tracking-tight mb-2">
             {title}
           </h3>
           
-          <p className="text-cappuccino text-sm leading-relaxed mb-8 px-4">
+          <p className="text-muted-foreground text-sm leading-relaxed mb-8 px-4">
             {message}
           </p>
           
           <div className="flex gap-3">
             <button 
               onClick={onCancel}
-              className="flex-1 px-4 py-3.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-cappuccino hover:bg-stone-50 transition-colors border border-stone-200"
+              className="flex-1 px-4 py-3.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-muted-foreground hover:bg-secondary transition-colors border border-border"
             >
               Cancelar
             </button>

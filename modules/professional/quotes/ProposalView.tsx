@@ -90,10 +90,10 @@ export default function ProposalView() {
       </div>
 
       {/* 2. DOCUMENT CONTAINER (A4-ish Width) */}
-      <div className="max-w-[900px] mx-auto bg-[#202020] mt-8 mb-12 shadow-2xl overflow-hidden print:shadow-none print:m-0 print:max-w-none print:bg-white print:text-black">
+      <div className="max-w-[900px] mx-auto bg-[#202020] mt-8 mb-12 shadow-2xl overflow-hidden print:shadow-none print:m-0 print:max-w-none print:bg-card print:text-black">
         
         {/* HEADER / BRANDING */}
-        <div className="bg-[#151515] p-12 border-b border-[#333] flex justify-between items-start print:bg-white print:border-black">
+        <div className="bg-[#151515] p-12 border-b border-[#333] flex justify-between items-start print:bg-card print:border-black">
             <div>
                 <div className="flex items-center gap-3 mb-6">
                     <div className="w-8 h-8 bg-[#E09B6B] rounded-lg flex items-center justify-center text-[#191919] font-black">
@@ -111,18 +111,18 @@ export default function ProposalView() {
         </div>
 
         {/* CLIENT INFO */}
-        <div className="p-12 border-b border-[#333] grid grid-cols-2 gap-12 print:border-gray-200">
+        <div className="p-12 border-b border-[#333] grid grid-cols-2 gap-12 print:border-border">
              <div>
                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#5c5c5c] mb-4">Preparado Para</h3>
                 <div className="space-y-1">
                     <p className="text-xl font-bold text-white print:text-black">{quote.client?.name}</p>
                     {quote.client?.company_name && (
-                        <p className="flex items-center gap-2 text-[#999] print:text-gray-600">
+                        <p className="flex items-center gap-2 text-[#999] print:text-foreground">
                             <Building2 size={14} /> {quote.client.company_name}
                         </p>
                     )}
                     {quote.client?.email && (
-                        <p className="flex items-center gap-2 text-[#999] print:text-gray-600">
+                        <p className="flex items-center gap-2 text-[#999] print:text-foreground">
                             <Mail size={14} /> {quote.client.email}
                         </p>
                     )}
@@ -131,8 +131,8 @@ export default function ProposalView() {
              <div className="text-right">
                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#5c5c5c] mb-4">Responsável</h3>
                 <p className="text-lg font-bold text-white print:text-black">Eduardo (Cadu)</p>
-                <p className="text-[#999] print:text-gray-600">Head of Engineering</p>
-                <p className="text-[#999] print:text-gray-600">Studio Quattro9</p>
+                <p className="text-[#999] print:text-foreground">Head of Engineering</p>
+                <p className="text-[#999] print:text-foreground">Studio Quattro9</p>
              </div>
         </div>
 
@@ -145,7 +145,7 @@ export default function ProposalView() {
                     <h2 className="text-xl font-bold text-[#E09B6B] mb-4 flex items-center gap-2 uppercase tracking-wide">
                         <span className="w-8 h-[2px] bg-[#E09B6B]"></span> Apresentação
                     </h2>
-                    <div className="text-[#D4D4D4] leading-relaxed whitespace-pre-wrap text-base print:text-gray-800">
+                    <div className="text-[#D4D4D4] leading-relaxed whitespace-pre-wrap text-base print:text-foreground">
                         {quote.introduction_text}
                     </div>
                 </section>
@@ -157,7 +157,7 @@ export default function ProposalView() {
                     <h2 className="text-xl font-bold text-[#E09B6B] mb-4 flex items-center gap-2 uppercase tracking-wide">
                         <span className="w-8 h-[2px] bg-[#E09B6B]"></span> Diagnóstico & Estratégia
                     </h2>
-                    <div className="text-[#D4D4D4] leading-relaxed whitespace-pre-wrap text-base print:text-gray-800">
+                    <div className="text-[#D4D4D4] leading-relaxed whitespace-pre-wrap text-base print:text-foreground">
                         {quote.strategy_text}
                     </div>
                 </section>
@@ -166,15 +166,15 @@ export default function ProposalView() {
         </div>
 
         {/* FINANCIALS */}
-        <div className="bg-[#1A1A1A] p-12 border-y border-[#333] print:bg-gray-50 print:border-gray-200">
+        <div className="bg-[#1A1A1A] p-12 border-y border-[#333] print:bg-secondary print:border-border">
             <h2 className="text-2xl font-bold text-white mb-8 text-center uppercase tracking-widest print:text-black">Investimento & Escopo</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 print:grid-cols-2">
                 
                 {/* ONE TIME TABLE */}
                 {oneTimeItems.length > 0 && (
-                    <div className="bg-[#202020] rounded-2xl p-6 border border-[#333] shadow-lg print:bg-white print:border-gray-300 print:shadow-none">
-                        <div className="flex justify-between items-center mb-6 border-b border-[#333] pb-4 print:border-gray-200">
+                    <div className="bg-[#202020] rounded-2xl p-6 border border-[#333] shadow-lg print:bg-card print:border-border print:shadow-none">
+                        <div className="flex justify-between items-center mb-6 border-b border-[#333] pb-4 print:border-border">
                             <h3 className="font-bold text-white uppercase tracking-wider print:text-black">Implementação (Setup)</h3>
                             <span className="text-[10px] bg-[#333] text-[#999] px-2 py-1 rounded print:bg-gray-200 print:text-black">Pagamento Único</span>
                         </div>
@@ -193,7 +193,7 @@ export default function ProposalView() {
                                 </li>
                             ))}
                         </ul>
-                        <div className="mt-6 pt-4 border-t border-[#333] flex justify-between items-center print:border-gray-200">
+                        <div className="mt-6 pt-4 border-t border-[#333] flex justify-between items-center print:border-border">
                             <span className="text-xs uppercase font-bold text-[#737373]">Total Setup</span>
                             <span className="text-xl font-bold text-white print:text-black">{formatCurrency(quote.total_one_time)}</span>
                         </div>
@@ -202,10 +202,10 @@ export default function ProposalView() {
 
                 {/* RECURRING TABLE */}
                 {monthlyItems.length > 0 && (
-                    <div className="bg-[#202020] rounded-2xl p-6 border border-[#E09B6B]/30 shadow-[0_0_20px_rgba(224,155,107,0.05)] relative overflow-hidden print:bg-white print:border-gray-300 print:shadow-none">
+                    <div className="bg-[#202020] rounded-2xl p-6 border border-[#E09B6B]/30 shadow-[0_0_20px_rgba(224,155,107,0.05)] relative overflow-hidden print:bg-card print:border-border print:shadow-none">
                         <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-[#E09B6B]/10 to-transparent pointer-events-none print:hidden" />
                         
-                        <div className="flex justify-between items-center mb-6 border-b border-[#333] pb-4 print:border-gray-200">
+                        <div className="flex justify-between items-center mb-6 border-b border-[#333] pb-4 print:border-border">
                             <h3 className="font-bold text-[#E09B6B] uppercase tracking-wider print:text-black">Recorrência Mensal</h3>
                             <span className="text-[10px] bg-[#E09B6B]/20 text-[#E09B6B] px-2 py-1 rounded print:bg-gray-200 print:text-black">Mensalidade</span>
                         </div>
@@ -224,7 +224,7 @@ export default function ProposalView() {
                                 </li>
                             ))}
                         </ul>
-                        <div className="mt-6 pt-4 border-t border-[#333] flex justify-between items-center print:border-gray-200">
+                        <div className="mt-6 pt-4 border-t border-[#333] flex justify-between items-center print:border-border">
                             <span className="text-xs uppercase font-bold text-[#737373]">Total Mensal</span>
                             <span className="text-2xl font-bold text-[#E09B6B] print:text-black">{formatCurrency(quote.total_monthly)}</span>
                         </div>
@@ -234,11 +234,11 @@ export default function ProposalView() {
         </div>
 
         {/* TERMS & SIGNATURE */}
-        <div className="p-12 bg-[#151515] print:bg-white print:text-black">
+        <div className="p-12 bg-[#151515] print:bg-card print:text-black">
             {quote.terms_conditions && (
                 <div className="mb-12">
                     <h4 className="text-xs font-bold text-[#737373] uppercase tracking-widest mb-4">Termos e Condições</h4>
-                    <div className="text-xs text-[#5c5c5c] leading-relaxed whitespace-pre-wrap print:text-gray-600">
+                    <div className="text-xs text-[#5c5c5c] leading-relaxed whitespace-pre-wrap print:text-foreground">
                         {quote.terms_conditions}
                     </div>
                 </div>

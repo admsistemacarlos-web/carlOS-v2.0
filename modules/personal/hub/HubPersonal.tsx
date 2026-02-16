@@ -74,12 +74,12 @@ const DEFAULT_TASKS: OneTwoThreeTask[] = [
 const NavCard: React.FC<NavCardProps> = ({ title, icon, onClick }) => (
   <button 
     onClick={onClick}
-    className="flex flex-col items-center justify-center p-4 bg-white border border-stone-100 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group"
+    className="flex flex-col items-center justify-center p-4 bg-card border border-border rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group"
   >
-    <div className="text-stone-400 group-hover:text-[#143d2d] transition-colors mb-2">
+    <div className="text-muted-foreground group-hover:text-primary transition-colors mb-2">
       {React.cloneElement(icon as React.ReactElement<any>, { size: 24 })}
     </div>
-    <span className="text-xs font-bold text-stone-600 uppercase tracking-wider">{title}</span>
+    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{title}</span>
   </button>
 );
 
@@ -108,13 +108,13 @@ const BioTrackerCard: React.FC<BioTrackerCardProps> = ({
     else onChange(null);
   };
 
-  let cardStyle = "bg-white border-stone-200 text-stone-400";
-  let iconStyle = "text-stone-300";
+  let cardStyle = "bg-card border-border text-muted-foreground";
+  let iconStyle = "text-muted-foreground";
   let statusIcon = <Circle size={18} className="text-stone-200" />;
   let statusText = "Registrar";
 
   if (value === true) {
-    cardStyle = `bg-white ${activeColorClass} shadow-sm`;
+    cardStyle = `bg-card ${activeColorClass} shadow-sm`;
     iconStyle = "currentColor"; 
     statusIcon = <CheckCircle2 size={18} strokeWidth={2.5} />;
     statusText = "Sim";
@@ -125,8 +125,8 @@ const BioTrackerCard: React.FC<BioTrackerCardProps> = ({
       statusIcon = <CheckCircle2 size={18} strokeWidth={2.5} />;
       statusText = "Não";
     } else {
-      cardStyle = "bg-stone-50 border-stone-200 text-stone-400";
-      iconStyle = "text-stone-300";
+      cardStyle = "bg-secondary border-border text-muted-foreground";
+      iconStyle = "text-muted-foreground";
       statusIcon = <XCircle size={18} />;
       statusText = "Não";
     }
@@ -142,7 +142,7 @@ const BioTrackerCard: React.FC<BioTrackerCardProps> = ({
       `}
     >
       <div className="flex items-center gap-3">
-        <div className={`p-2 rounded-full bg-white/50 ${iconStyle}`}>
+        <div className={`p-2 rounded-full bg-card/50 ${iconStyle}`}>
           {icon}
         </div>
         <span className="font-bold text-sm">{label}</span>
@@ -258,11 +258,11 @@ export default function HubPersonal() {
     } else {
       // Futuro - Neutro
       return {
-        bg: 'bg-white',
-        border: 'border-stone-200',
-        text: 'text-stone-700',
-        icon: 'text-[#5F6F52]',
-        badge: 'bg-stone-100 text-stone-600',
+        bg: 'bg-card',
+        border: 'border-border',
+        text: 'text-foreground',
+        icon: 'text-primary',
+        badge: 'bg-secondary text-muted-foreground',
         label: `Em ${daysUntil} dias`
       };
     }
@@ -320,81 +320,83 @@ export default function HubPersonal() {
   const [calendarMarkers, setCalendarMarkers] = useState<CalendarMarkers>({});
 
   const [enabledCategories, setEnabledCategories] = useState<string[]>([]);
-const [categoryFilters, setCategoryFilters] = useState<CategoryFilter[]>([
-  { category: 'workout', label: 'Treino', color: 'text-emerald-600', icon: 'Dumbbell', enabled: true },
-  { category: 'headache', label: 'Sintoma', color: 'text-red-600', icon: 'Frown', enabled: true },
-  { category: 'pet', label: 'Pet', color: 'text-purple-600', icon: 'Dog', enabled: true },
-  { category: 'bill', label: 'Contas', color: 'text-red-600', icon: 'DollarSign', enabled: true },
-  { category: 'invoice', label: 'Faturas', color: 'text-orange-600', icon: 'DollarSign', enabled: true },
-  { category: 'spiritual', label: 'Espiritual', color: 'text-purple-600', icon: 'BookOpen', enabled: true },
-  { category: 'study', label: 'Estudos', color: 'text-blue-600', icon: 'GraduationCap', enabled: true },
-  { category: 'project', label: 'Projetos', color: 'text-emerald-600', icon: 'Briefcase', enabled: true },
-  { category: 'general', label: 'Geral', color: 'text-stone-600', icon: 'Calendar', enabled: true },
-]);
+  const [categoryFilters, setCategoryFilters] = useState<CategoryFilter[]>([
+    { category: 'workout', label: 'Treino', color: 'text-emerald-600', icon: 'Dumbbell', enabled: true },
+    { category: 'headache', label: 'Sintoma', color: 'text-red-600', icon: 'Frown', enabled: true },
+    { category: 'pet', label: 'Pet', color: 'text-purple-600', icon: 'Dog', enabled: true },
+    { category: 'bill', label: 'Contas', color: 'text-red-600', icon: 'DollarSign', enabled: true },
+    { category: 'invoice', label: 'Faturas', color: 'text-orange-600', icon: 'DollarSign', enabled: true },
+    { category: 'spiritual', label: 'Espiritual', color: 'text-purple-600', icon: 'BookOpen', enabled: true },
+    { category: 'study', label: 'Estudos', color: 'text-blue-600', icon: 'GraduationCap', enabled: true },
+    { category: 'project', label: 'Projetos', color: 'text-emerald-600', icon: 'Briefcase', enabled: true },
+    { category: 'general', label: 'Geral', color: 'text-muted-foreground', icon: 'Calendar', enabled: true },
+  ]);
   
-// Hook para buscar eventos financeiros do Supabase
-const getMonthRange = (date: Date) => {
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const startOfMonth = new Date(year, month, 1);
-  const endOfMonth = new Date(year, month + 1, 0);
-  return { startOfMonth, endOfMonth };
-};
+  // Hook para buscar eventos financeiros do Supabase
+  const getMonthRange = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const startOfMonth = new Date(year, month, 1);
+    const endOfMonth = new Date(year, month + 1, 0);
+    return { startOfMonth, endOfMonth };
+  };
 
-const { startOfMonth, endOfMonth } = getMonthRange(calendarMonth);
+  const { startOfMonth, endOfMonth } = getMonthRange(calendarMonth);
 
-const { data: financialMarkers, isLoading: isLoadingEvents } = useCalendarEvents({
-  startDate: startOfMonth,
-  endDate: endOfMonth,
-  userId: user?.id || ''
-});
+  const { data: financialMarkers, isLoading: isLoadingEvents } = useCalendarEvents({
+    startDate: startOfMonth,
+    endDate: endOfMonth,
+    userId: user?.id || ''
+  });
 
-// Função para alternar filtros
-const handleToggleCategory = (category: string) => {
-  setCategoryFilters(prev => 
-    prev.map(f => f.category === category ? { ...f, enabled: !f.enabled } : f)
+  // Função para alternar filtros
+  const handleToggleCategory = (category: string) => {
+    setCategoryFilters(prev => 
+      prev.map(f => f.category === category ? { ...f, enabled: !f.enabled } : f)
+    );
+  };
+
+  // Atualizar categorias habilitadas
+  useEffect(() => {
+    setEnabledCategories(categoryFilters.filter(f => f.enabled).map(f => f.category));
+  }, [categoryFilters]);
+
+  // Combinar markers antigos (wellness/pet) com novos (financeiro)
+  const combinedMarkers = useMemo(() => {
+    const combined = { ...calendarMarkers };
+    
+    if (financialMarkers) {
+      Object.keys(financialMarkers).forEach(dateKey => {
+        if (!combined[dateKey]) {
+          combined[dateKey] = {};
+        }
+        combined[dateKey] = {
+          ...combined[dateKey],
+          ...financialMarkers[dateKey]
+        };
+      });
+    }
+    
+    return combined;
+  }, [calendarMarkers, financialMarkers]);
+
+  // Obter eventos do dia selecionado
+  const selectedDateKey = formatDateDB(selectedDate);
+  const eventsOfSelectedDay = combinedMarkers[selectedDateKey]?.events || [];
+  const filteredEvents = eventsOfSelectedDay.filter(event => 
+    enabledCategories.length === 0 || enabledCategories.includes(event.category)
   );
-};
-
-// Atualizar categorias habilitadas
-useEffect(() => {
-  setEnabledCategories(categoryFilters.filter(f => f.enabled).map(f => f.category));
-}, [categoryFilters]);
-
-// Combinar markers antigos (wellness/pet) com novos (financeiro)
-const combinedMarkers = useMemo(() => {
-  const combined = { ...calendarMarkers };
-  
-  if (financialMarkers) {
-    Object.keys(financialMarkers).forEach(dateKey => {
-      if (!combined[dateKey]) {
-        combined[dateKey] = {};
-      }
-      combined[dateKey] = {
-        ...combined[dateKey],
-        ...financialMarkers[dateKey]
-      };
-    });
-  }
-  
-  return combined;
-}, [calendarMarkers, financialMarkers]);
-
-// Obter eventos do dia selecionado
-const selectedDateKey = formatDateDB(selectedDate);
-const eventsOfSelectedDay = combinedMarkers[selectedDateKey]?.events || [];
-const filteredEvents = eventsOfSelectedDay.filter(event => 
-  enabledCategories.length === 0 || enabledCategories.includes(event.category)
-);
 
   const [wellnessData, setWellnessData] = useState<{
     weight: string;
     workout_done: boolean | null;
+    workout_type: string;
     energy_drink_consumed: boolean | null;
     headache: boolean | null;
   }>({
     weight: '',
     workout_done: null,
+    workout_type: '',
     energy_drink_consumed: null,
     headache: null
   });
@@ -413,7 +415,7 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
 
       try {
         const { data: wellnessLogs } = await supabase.from('health_wellness_logs').select('date, workout_done, headache').eq('user_id', user.id).gte('date', startOfMonth).lte('date', endOfMonth);
-        const { data: petLogs } = await supabase.from('pet_logs').select('event_date').eq('user_id', user.id).gte('event_date', startOfMonth).lte('event_date', endOfMonth);
+        const { data: petLogs } = await supabase.from('pet_logs').select('event_date').eq('user_id', user.id).gte('event_date', startOfMonth).lte('date', endOfMonth);
 
         const markers: CalendarMarkers = {};
         wellnessLogs?.forEach(log => {
@@ -437,7 +439,7 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
   useEffect(() => {
     if (!user) return;
     const fetchDetail = async () => {
-      setWellnessData({ weight: '', workout_done: null, energy_drink_consumed: null, headache: null });
+      setWellnessData({ weight: '', workout_done: null, workout_type: '', energy_drink_consumed: null, headache: null });
       logIdRef.current = null;
       try {
         const startOfDay = new Date(selectedDate); startOfDay.setHours(0,0,0,0);
@@ -448,6 +450,7 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
           setWellnessData({
             weight: data.weight ? String(data.weight) : '',
             workout_done: data.workout_done,
+            workout_type: data.workout_type || '',
             energy_drink_consumed: data.energy_drink_consumed,
             headache: data.headache
           });
@@ -473,6 +476,7 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
           date: dateToSave,
           weight: field === 'weight' ? (value ? parseFloat(value) : null) : (wellnessData.weight ? parseFloat(wellnessData.weight) : null),
           workout_done: field === 'workout_done' ? value : wellnessData.workout_done,
+          workout_type: field === 'workout_type' ? value : (wellnessData.workout_type || null),
           energy_drink_consumed: field === 'energy_drink_consumed' ? value : wellnessData.energy_drink_consumed,
           headache: field === 'headache' ? value : wellnessData.headache,
         };
@@ -501,11 +505,11 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
       
       {/* HEADER */}
       <header className="mb-6 pt-6 text-center md:text-left">
-        <p className="text-[#143d2d] text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Dashboard Operacional</p>
-        <h1 className="text-3xl font-bold text-stone-800 tracking-tighter">
-          Olá, <span className="text-stone-400 font-serif italic">Cadu</span>.
+        <p className="text-primary text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Dashboard Operacional</p>
+        <h1 className="text-3xl font-bold text-foreground tracking-tighter">
+          Olá, <span className="text-muted-foreground font-serif italic">Cadu</span>.
         </h1>
-        <p className="text-xs font-medium text-stone-400 mt-1 capitalize">{formatFullDate(new Date())}</p>
+        <p className="text-xs font-medium text-muted-foreground mt-1 capitalize">{formatFullDate(new Date())}</p>
       </header>
 
       {/* 1. NAVEGAÇÃO DE MÓDULOS */}
@@ -538,12 +542,12 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
         >
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1">Patrimônio Líquido</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Patrimônio Líquido</p>
               <h2 className="text-3xl font-bold tracking-tighter">
                 R$ {totalBalance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </h2>
             </div>
-            <div className="p-3 bg-white/10 rounded-full text-stone-300">
+            <div className="p-3 bg-card/10 rounded-full text-muted-foreground">
               <Wallet size={24} />
             </div>
           </div>
@@ -553,7 +557,7 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
       {/* 3. LENDO AGORA */}
       {inProgressBooks.length > 0 && (
         <div className="mb-8">
-           <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
+           <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
               <BookOpen size={16} /> Lendo Agora
            </h3>
            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -563,19 +567,19 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
                  <div 
                    key={book.name} 
                    onClick={() => navigate('/personal/spiritual/reading')}
-                   className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-blue-200 transition-colors group"
+                   className="bg-card p-4 rounded-2xl border border-border shadow-sm flex items-center justify-between cursor-pointer hover:border-blue-200 transition-colors group"
                  >
                     <div className="flex-1">
                        <span className="text-[9px] font-bold text-blue-500 uppercase tracking-[0.15em] bg-blue-50 px-2 py-0.5 rounded mb-1.5 inline-block border border-blue-100/50">
                           Vida Espiritual
                        </span>
-                       <h4 className="font-bold text-stone-700 group-hover:text-blue-700 transition-colors">{book.name}</h4>
-                       <p className="text-xs text-stone-400">{stats.read} de {book.chapters} capítulos</p>
+                       <h4 className="font-bold text-foreground group-hover:text-blue-700 transition-colors">{book.name}</h4>
+                       <p className="text-xs text-muted-foreground">{stats.read} de {book.chapters} capítulos</p>
                     </div>
                     <div className="flex items-center gap-3">
                        <span className="text-xs font-bold text-blue-600">{stats.percentage}%</span>
-                       <div className="w-6 h-6 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-blue-50 group-hover:border-blue-200 transition-all">
-                          <ChevronRight size={14} className="text-stone-400 group-hover:text-blue-500" />
+                       <div className="w-6 h-6 rounded-full border border-border flex items-center justify-center group-hover:bg-blue-50 group-hover:border-blue-200 transition-all">
+                          <ChevronRight size={14} className="text-muted-foreground group-hover:text-blue-500" />
                        </div>
                     </div>
                  </div>
@@ -587,14 +591,14 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
 
       {/* 4. TÁTICA DIÁRIA */}
       <div className="mb-8">
-          <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
+          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
             <CheckCircle2 size={16} /> Tática Diária (1-2-3)
           </h3>
-          <div className="bg-white p-6 rounded-[2rem] border border-stone-200 shadow-sm space-y-4">
-            <div className="bg-stone-50 border-l-4 border-[#143d2d] rounded-xl p-4 flex items-center gap-4">
+          <div className="bg-card p-6 rounded-[2rem] border border-border shadow-sm space-y-4">
+            <div className="bg-secondary border-l-4 border-primary rounded-xl p-4 flex items-center gap-4">
               <button 
                   onClick={() => updateTask(focusTask.id, 'completed', !focusTask.completed)}
-                  className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${focusTask.completed ? 'bg-[#143d2d] border-[#143d2d] text-white' : 'border-stone-300'}`}
+                  className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${focusTask.completed ? 'bg-primary border-primary text-white' : 'border-border'}`}
               >
                   {focusTask.completed && <Check size={14} strokeWidth={3} />}
               </button>
@@ -602,15 +606,15 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
                   value={focusTask.text}
                   onChange={(e) => updateTask(focusTask.id, 'text', e.target.value)}
                   placeholder="Foco único do dia..."
-                  className={`w-full bg-transparent font-bold text-stone-800 outline-none placeholder-stone-300 ${focusTask.completed ? 'line-through text-stone-400' : ''}`}
+                  className={`w-full bg-transparent font-bold text-foreground outline-none placeholder-stone-300 ${focusTask.completed ? 'line-through text-muted-foreground' : ''}`}
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {importantTasks.map(task => (
-                <div key={task.id} className="bg-stone-50 rounded-xl p-3 flex items-center gap-3 border border-stone-100">
+                <div key={task.id} className="bg-secondary rounded-xl p-3 flex items-center gap-3 border border-border">
                     <button 
                       onClick={() => updateTask(task.id, 'completed', !task.completed)}
-                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${task.completed ? 'bg-stone-400 border-stone-400 text-white' : 'border-stone-300'}`}
+                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${task.completed ? 'bg-stone-400 border-stone-400 text-white' : 'border-border'}`}
                     >
                       {task.completed && <Check size={10} strokeWidth={3} />}
                     </button>
@@ -618,17 +622,17 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
                       value={task.text}
                       onChange={(e) => updateTask(task.id, 'text', e.target.value)}
                       placeholder="Importante..."
-                      className={`w-full bg-transparent text-sm font-medium text-stone-700 outline-none placeholder-stone-300 ${task.completed ? 'line-through text-stone-400' : ''}`}
+                      className={`w-full bg-transparent text-sm font-medium text-foreground outline-none placeholder-stone-300 ${task.completed ? 'line-through text-muted-foreground' : ''}`}
                     />
                 </div>
               ))}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
               {routineTasks.map(task => (
-                <div key={task.id} className="bg-stone-50/50 rounded-xl p-2.5 flex items-center gap-3 border border-stone-100">
+                <div key={task.id} className="bg-secondary/50 rounded-xl p-2.5 flex items-center gap-3 border border-border">
                     <button 
                       onClick={() => updateTask(task.id, 'completed', !task.completed)}
-                      className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all flex-shrink-0 ${task.completed ? 'bg-stone-300 border-stone-300 text-white' : 'border-stone-200'}`}
+                      className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all flex-shrink-0 ${task.completed ? 'bg-stone-300 border-border text-white' : 'border-border'}`}
                     >
                       {task.completed && <Check size={8} strokeWidth={3} />}
                     </button>
@@ -636,7 +640,7 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
                       value={task.text}
                       onChange={(e) => updateTask(task.id, 'text', e.target.value)}
                       placeholder="Rotina..."
-                      className={`w-full bg-transparent text-xs font-medium text-stone-600 outline-none placeholder-stone-300 ${task.completed ? 'line-through text-stone-300' : ''}`}
+                      className={`w-full bg-transparent text-xs font-medium text-muted-foreground outline-none placeholder-stone-300 ${task.completed ? 'line-through text-muted-foreground' : ''}`}
                     />
                 </div>
               ))}
@@ -647,7 +651,7 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
       {/* 5. PET REMINDERS - ATUALIZADO COM SISTEMA DE CORES E TOGGLE */}
       {petTasks.length > 0 && (
         <div className="mb-8">
-           <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
+           <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
               <Dog size={16} /> Compromissos Pet
               {urgentPetTasks > 0 && (
                 <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold rounded-full flex items-center gap-1">
@@ -670,9 +674,9 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
                         </div>
                         <div className="flex-1 min-w-0">
                            <h4 className={`font-bold ${style.text} text-sm truncate`}>{task.title}</h4>
-                           <p className="text-xs text-stone-500 font-medium">
-  {formatDateBr(task.next_due_date)}
-</p>                          
+                           <p className="text-xs text-muted-foreground font-medium">
+                             {formatDateBr(task.next_due_date)}
+                           </p>                          
                         </div>
                       </div>
                       
@@ -686,7 +690,7 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
                         className={`w-8 h-8 rounded-full flex items-center justify-center transition-all flex-shrink-0 ${
                           task.done 
                             ? 'bg-emerald-500 text-white shadow-sm' 
-                            : 'bg-white border-2 border-stone-300 text-stone-400 hover:border-emerald-400'
+                            : 'bg-card border-2 border-border text-muted-foreground hover:border-emerald-400'
                         } ${updatingTaskId === task.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-90'}`}
                       >
                         {updatingTaskId === task.id ? (
@@ -715,52 +719,52 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
       )}
 
       {/* 6. FILTROS DE EVENTOS */}
-<div className="mb-8">
-   <CategoryFilters 
-      filters={categoryFilters}
-      onToggle={handleToggleCategory}
-   />
-</div>
+      <div className="mb-8">
+         <CategoryFilters 
+            filters={categoryFilters}
+            onToggle={handleToggleCategory}
+         />
+      </div>
 
-{/* 7. CALENDÁRIO E EVENTOS */}
-<div className="mb-8">
-   <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
-      <Calendar size={16} /> Histórico Mensal
-   </h3>
-   
-   <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      {/* Calendário - 2 colunas em desktop */}
-      <div className="lg:col-span-2 h-[450px]">
-         <DashboardCalendar 
-            selectedDate={selectedDate}
-            onSelectDate={setSelectedDate}
-            currentMonth={calendarMonth}
-            onMonthChange={setCalendarMonth}
-            markers={combinedMarkers}
-            enabledCategories={enabledCategories}
-         />
+      {/* 7. CALENDÁRIO E EVENTOS */}
+      <div className="mb-8">
+         <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
+            <Calendar size={16} /> Histórico Mensal
+         </h3>
+         
+         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Calendário - 2 colunas em desktop */}
+            <div className="lg:col-span-2 h-[450px]">
+               <DashboardCalendar 
+                  selectedDate={selectedDate}
+                  onSelectDate={setSelectedDate}
+                  currentMonth={calendarMonth}
+                  onMonthChange={setCalendarMonth}
+                  markers={combinedMarkers}
+                  enabledCategories={enabledCategories}
+               />
+            </div>
+            
+            {/* Painel de Eventos - 1 coluna em desktop, lista abaixo em mobile */}
+            <div className="h-[450px]">
+               <DashboardEventsSidebar 
+                  selectedDate={selectedDate}
+                  events={filteredEvents}
+               />
+            </div>
+         </div>
       </div>
-      
-      {/* Painel de Eventos - 1 coluna em desktop, lista abaixo em mobile */}
-      <div className="h-[450px]">
-         <DashboardEventsSidebar 
-            selectedDate={selectedDate}
-            events={filteredEvents}
-         />
-      </div>
-   </div>
-</div>
 
       {/* 8. BIO-DATA CHECK-IN */}
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4 px-1">
-            <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest flex items-center gap-2">
+            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                 <Activity size={16} /> Bio-Data • {formatShortDate(selectedDate)}
             </h3>
             
             {/* Feedback Visual */}
             <div className="flex items-center gap-2">
-              {saveStatus === 'saving' && <span className="text-[10px] text-stone-400 font-medium flex gap-1"><Loader2 size={12} className="animate-spin" /></span>}
+              {saveStatus === 'saving' && <span className="text-[10px] text-muted-foreground font-medium flex gap-1"><Loader2 size={12} className="animate-spin" /></span>}
               {saveStatus === 'saved' && <span className="text-[10px] text-emerald-600 font-bold flex gap-1 animate-fade-in"><CheckCircle2 size={12} /></span>}
               {saveStatus === 'error' && <span className="text-[10px] text-red-500 font-bold flex gap-1"><AlertCircle size={12} /></span>}
             </div>
@@ -768,8 +772,8 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
         
         <div className="grid grid-cols-2 gap-3">
           {/* Card 1: Peso (Input) */}
-          <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between h-24">
-                <div className="flex items-center gap-2 text-stone-500">
+          <div className="bg-card p-4 rounded-2xl border border-border shadow-sm flex flex-col justify-between h-24">
+                <div className="flex items-center gap-2 text-muted-foreground">
                     <Scale size={16} />
                     <span className="font-bold text-xs uppercase tracking-wider">Peso</span>
                 </div>
@@ -781,21 +785,52 @@ const filteredEvents = eventsOfSelectedDay.filter(event =>
                         onChange={(e) => setWellnessData(prev => ({...prev, weight: e.target.value}))}
                         onBlur={(e) => handleUpdateLog('weight', parseFloat(e.target.value))}
                         onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
-                        className="text-2xl font-bold text-stone-800 placeholder-stone-200 w-full bg-transparent outline-none"
+                        className="text-2xl font-bold text-foreground placeholder-stone-200 w-full bg-transparent outline-none"
                     />
-                    <span className="text-xs font-bold text-stone-400">kg</span>
+                    <span className="text-xs font-bold text-muted-foreground">kg</span>
                 </div>
           </div>
 
-          {/* Card 2: Treino */}
-          <BioTrackerCard 
-            label="Treino" 
-            icon={<Dumbbell size={18} />} 
-            value={wellnessData.workout_done} 
-            onChange={(val) => handleUpdateLog('workout_done', val)}
-            activeColorClass="text-emerald-600 border-emerald-200 bg-emerald-50"
-            variant="standard"
-          />
+          {/* Card 2: Treino (com campo de texto) */}
+          <div className="bg-card p-4 rounded-2xl border border-border shadow-sm space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Dumbbell size={16} />
+                <span className="font-bold text-xs uppercase tracking-wider">Treino</span>
+              </div>
+              <button
+                onClick={() => {
+                  const newValue = wellnessData.workout_done === null ? true : wellnessData.workout_done === true ? false : null;
+                  handleUpdateLog('workout_done', newValue);
+                  if (newValue !== true) {
+                    setWellnessData(prev => ({ ...prev, workout_type: '' }));
+                    handleUpdateLog('workout_type', null);
+                  }
+                }}
+                className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase transition-all ${
+                  wellnessData.workout_done === true 
+                    ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' 
+                    : wellnessData.workout_done === false
+                    ? 'bg-secondary text-muted-foreground border border-border'
+                    : 'bg-secondary text-muted-foreground border border-border'
+                }`}
+              >
+                {wellnessData.workout_done === true ? '✓ Sim' : wellnessData.workout_done === false ? '✗ Não' : 'Registrar'}
+              </button>
+            </div>
+            
+            {wellnessData.workout_done === true && (
+              <input
+                type="text"
+                placeholder="Qual treino?"
+                value={wellnessData.workout_type}
+                onChange={(e) => setWellnessData(prev => ({ ...prev, workout_type: e.target.value }))}
+                onBlur={(e) => handleUpdateLog('workout_type', e.target.value)}
+                className="w-full bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-emerald-500/20 placeholder-stone-400"
+                autoFocus
+              />
+            )}
+          </div>
 
           {/* Card 3: Energético */}
           <BioTrackerCard 

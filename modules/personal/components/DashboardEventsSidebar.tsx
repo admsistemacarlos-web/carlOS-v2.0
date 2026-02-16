@@ -16,7 +16,7 @@ const categoryConfig = {
   spiritual: { icon: BookOpen, color: 'text-purple-500', bg: 'bg-purple-50', label: 'Espiritual' },
   study: { icon: GraduationCap, color: 'text-blue-500', bg: 'bg-blue-50', label: 'Estudo' },
   project: { icon: Briefcase, color: 'text-emerald-500', bg: 'bg-emerald-50', label: 'Projeto' },
-  general: { icon: Calendar, color: 'text-stone-500', bg: 'bg-stone-50', label: 'Geral' },
+  general: { icon: Calendar, color: 'text-muted-foreground', bg: 'bg-secondary', label: 'Geral' },
   workout: { icon: Calendar, color: 'text-emerald-500', bg: 'bg-emerald-50', label: 'Treino' },
   headache: { icon: Calendar, color: 'text-red-500', bg: 'bg-red-50', label: 'Sintoma' },
   pet: { icon: Calendar, color: 'text-purple-500', bg: 'bg-purple-50', label: 'Pet' },
@@ -34,19 +34,19 @@ export const DashboardEventsSidebar: React.FC<DashboardEventsSidebarProps> = ({
   });
 
   return (
-    <div className="bg-white rounded-[2rem] border border-stone-200 shadow-sm p-6 h-full flex flex-col">
+    <div className="bg-card rounded-[2rem] border border-border shadow-sm p-6 h-full flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h3 className="text-sm font-bold text-coffee uppercase tracking-widest mb-1">
+          <h3 className="text-sm font-bold text-foreground uppercase tracking-widest mb-1">
             Eventos do Dia
           </h3>
-          <p className="text-xs text-stone-400 capitalize">{formattedDate}</p>
+          <p className="text-xs text-muted-foreground capitalize">{formattedDate}</p>
         </div>
         {onClose && (
           <button
             onClick={onClose}
-            className="md:hidden p-2 hover:bg-stone-50 rounded-lg text-stone-400 hover:text-coffee transition-colors"
+            className="md:hidden p-2 hover:bg-secondary rounded-lg text-muted-foreground hover:text-foreground transition-colors"
           >
             <X size={18} />
           </button>
@@ -57,8 +57,8 @@ export const DashboardEventsSidebar: React.FC<DashboardEventsSidebarProps> = ({
       <div className="flex-1 overflow-y-auto space-y-3">
         {events.length === 0 ? (
           <div className="text-center py-12">
-            <Calendar className="mx-auto mb-3 text-stone-300" size={48} />
-            <p className="text-sm text-stone-400">Nenhum evento neste dia</p>
+            <Calendar className="mx-auto mb-3 text-muted-foreground" size={48} />
+            <p className="text-sm text-muted-foreground">Nenhum evento neste dia</p>
           </div>
         ) : (
           events.map((event) => {
@@ -68,7 +68,7 @@ export const DashboardEventsSidebar: React.FC<DashboardEventsSidebarProps> = ({
             return (
               <div
                 key={event.id}
-                className={`${config.bg} rounded-2xl p-4 border border-stone-100 hover:shadow-sm transition-shadow`}
+                className={`${config.bg} rounded-2xl p-4 border border-border hover:shadow-sm transition-shadow`}
               >
                 <div className="flex items-start gap-3">
                   <div className={`${config.color} mt-0.5`}>
@@ -90,21 +90,21 @@ export const DashboardEventsSidebar: React.FC<DashboardEventsSidebarProps> = ({
                         </span>
                       )}
                     </div>
-                    <h4 className="font-semibold text-sm text-coffee mb-1 truncate">
+                    <h4 className="font-semibold text-sm text-foreground mb-1 truncate">
                       {event.title}
                     </h4>
                     {event.description && (
-                      <p className="text-xs text-stone-500 leading-relaxed">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
                         {event.description}
                       </p>
                     )}
                     {event.amount && (
-                      <p className="text-sm font-bold text-coffee mt-2">
+                      <p className="text-sm font-bold text-foreground mt-2">
                         R$ {event.amount.toFixed(2)}
                       </p>
                     )}
                     {event.time && (
-                      <p className="text-xs text-stone-400 mt-1">
+                      <p className="text-xs text-muted-foreground mt-1">
                         🕐 {event.time}
                       </p>
                     )}

@@ -185,7 +185,7 @@ export default function WorkoutsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-transparent flex items-center justify-center">
-        <Loader2 className="animate-spin text-[#143d2d]" size={32} />
+        <Loader2 className="animate-spin text-primary" size={32} />
       </div>
     );
   }
@@ -198,24 +198,24 @@ export default function WorkoutsPage() {
       {/* Header */}
       <div className="px-8 pt-8 pb-6 flex flex-col md:flex-row justify-between items-start gap-4">
         <div>
-          <button onClick={() => navigate('/personal/health')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-400 hover:text-[#143d2d] transition-colors mb-4">
+          <button onClick={() => navigate('/personal/health')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-4">
             <ArrowLeft size={14} /> Voltar
           </button>
-          <h1 className="text-3xl font-bold text-stone-800 tracking-tight flex items-center gap-3">
-            <Dumbbell className="text-[#143d2d]" /> Workouts
+          <h1 className="text-3xl font-bold text-foreground tracking-tight flex items-center gap-3">
+            <Dumbbell className="text-primary" /> Workouts
           </h1>
         </div>
         
         <div className="flex gap-2">
             <button 
                 onClick={() => setIsTemplateFormOpen(true)}
-                className="bg-[#143d2d] hover:bg-[#0f2e22] text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm flex items-center gap-2"
+                className="bg-primary hover:bg-[#0f2e22] text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm flex items-center gap-2"
             >
                 <Plus size={16} /> Criar Modelo
             </button>
             <button 
                 onClick={() => setIsExerciseMgrOpen(!isExerciseMgrOpen)}
-                className={`bg-white border border-stone-200 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm flex items-center gap-2 ${isExerciseMgrOpen ? 'text-[#143d2d] border-[#143d2d]' : 'text-stone-500 hover:text-[#143d2d]'}`}
+                className={`bg-card border border-border px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm flex items-center gap-2 ${isExerciseMgrOpen ? 'text-primary border-primary' : 'text-muted-foreground hover:text-primary'}`}
             >
                 <Settings size={16} /> Exercícios
             </button>
@@ -225,11 +225,11 @@ export default function WorkoutsPage() {
       {/* Exercise Manager (Expandable) */}
       {isExerciseMgrOpen && (
           <div className="px-8 mb-8 animate-fade-in">
-              <div className="bg-white p-6 rounded-[2rem] border border-stone-200 shadow-sm flex flex-col gap-6">
+              <div className="bg-card p-6 rounded-[2rem] border border-border shadow-sm flex flex-col gap-6">
                   
                   {/* Form de Criação / Edição */}
-                  <div className="flex flex-col gap-2 bg-stone-50 p-4 rounded-xl border border-stone-100">
-                      <h3 className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-2">
+                  <div className="flex flex-col gap-2 bg-secondary p-4 rounded-xl border border-border">
+                      <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">
                           {editingExerciseId ? 'Editar Exercício' : 'Novo Exercício'}
                       </h3>
                       <div className="flex flex-col md:flex-row gap-3">
@@ -237,12 +237,12 @@ export default function WorkoutsPage() {
                             value={newExName} 
                             onChange={e => setNewExName(e.target.value)}
                             placeholder="Nome (ex: Supino Reto)"
-                            className="flex-1 bg-white border border-stone-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#143d2d]"
+                            className="flex-1 bg-card border border-border rounded-xl px-4 py-2.5 text-sm outline-none focus:border-primary"
                           />
                           <select 
                             value={newExMuscle}
                             onChange={e => setNewExMuscle(e.target.value)}
-                            className="bg-white border border-stone-200 rounded-xl px-4 py-2.5 text-sm outline-none cursor-pointer"
+                            className="bg-card border border-border rounded-xl px-4 py-2.5 text-sm outline-none cursor-pointer"
                           >
                               {Object.entries(muscleLabels).map(([key, label]) => (
                                   <option key={key} value={key}>{label}</option>
@@ -252,14 +252,14 @@ export default function WorkoutsPage() {
                             {editingExerciseId && (
                                 <button 
                                     onClick={handleCancelEdit} 
-                                    className="bg-stone-200 text-stone-600 px-4 rounded-xl font-bold text-xs uppercase hover:bg-stone-300 transition-colors"
+                                    className="bg-accent text-muted-foreground px-4 rounded-xl font-bold text-xs uppercase hover:bg-stone-300 transition-colors"
                                 >
                                     <X size={16} />
                                 </button>
                             )}
                             <button 
                                 onClick={handleSaveExercise} 
-                                className="bg-[#143d2d] text-white px-5 rounded-xl font-bold text-xs uppercase hover:bg-[#0f2e22] transition-colors flex items-center gap-2"
+                                className="bg-primary text-primary-foreground px-5 rounded-xl font-bold text-xs uppercase hover:bg-[#0f2e22] transition-colors flex items-center gap-2"
                             >
                                 {editingExerciseId ? <Save size={16} /> : <Plus size={16} />}
                                 {editingExerciseId ? 'Salvar' : 'Adicionar'}
@@ -271,34 +271,34 @@ export default function WorkoutsPage() {
                   {/* Lista de Exercícios */}
                   <div className="space-y-4">
                       <div className="relative">
-                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                           <input 
                               value={exerciseSearch}
                               onChange={e => setExerciseSearch(e.target.value)}
                               placeholder="Buscar exercício cadastrado..."
-                              className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:border-[#143d2d]"
+                              className="w-full bg-secondary border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:border-primary"
                           />
                       </div>
 
                       <div className="max-h-64 overflow-y-auto pr-2 custom-scrollbar space-y-2">
                           {filteredExercises.map(ex => (
-                              <div key={ex.id} className="flex justify-between items-center p-3 hover:bg-stone-50 rounded-xl border border-transparent hover:border-stone-100 transition-all group">
+                              <div key={ex.id} className="flex justify-between items-center p-3 hover:bg-secondary rounded-xl border border-transparent hover:border-border transition-all group">
                                   <div>
-                                      <p className="text-sm font-bold text-stone-700">{ex.name}</p>
-                                      <span className="text-[10px] uppercase font-bold text-stone-400 bg-stone-100 px-2 py-0.5 rounded-md mt-1 inline-block">
+                                      <p className="text-sm font-bold text-foreground">{ex.name}</p>
+                                      <span className="text-[10px] uppercase font-bold text-muted-foreground bg-secondary px-2 py-0.5 rounded-md mt-1 inline-block">
                                           {muscleLabels[ex.muscle_group] || ex.muscle_group}
                                       </span>
                                   </div>
                                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                       <button 
                                           onClick={() => handleEditExercise(ex)}
-                                          className="p-2 text-stone-300 hover:text-[#143d2d] hover:bg-stone-100 rounded-lg transition-colors"
+                                          className="p-2 text-muted-foreground hover:text-primary hover:bg-secondary rounded-lg transition-colors"
                                       >
                                           <Pencil size={14} />
                                       </button>
                                       <button 
                                           onClick={() => handleDeleteExercise(ex.id)}
-                                          className="p-2 text-stone-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                          className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                                       >
                                           <Trash2 size={14} />
                                       </button>
@@ -306,7 +306,7 @@ export default function WorkoutsPage() {
                               </div>
                           ))}
                           {filteredExercises.length === 0 && (
-                              <p className="text-center text-stone-400 text-xs py-4 italic">Nenhum exercício encontrado.</p>
+                              <p className="text-center text-muted-foreground text-xs py-4 italic">Nenhum exercício encontrado.</p>
                           )}
                       </div>
                   </div>
@@ -322,41 +322,41 @@ export default function WorkoutsPage() {
                 onClick={handleResume}
                 className="w-full py-6 rounded-[2rem] flex items-center justify-center gap-3 text-lg font-bold uppercase tracking-widest shadow-lg transition-all active:scale-[0.98] bg-emerald-100 text-emerald-800 border-2 border-emerald-200 hover:bg-emerald-200"
             >
-                Treino em Andamento... <span className="text-xs bg-white/50 px-2 py-1 rounded ml-2 flex items-center gap-1"><Play size={10} fill="currentColor"/> Retomar</span>
+                Treino em Andamento... <span className="text-xs bg-card/50 px-2 py-1 rounded ml-2 flex items-center gap-1"><Play size={10} fill="currentColor"/> Retomar</span>
             </button>
           </div>
       )}
 
       {/* Templates Section */}
       <div className="px-8 mb-10">
-        <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest flex items-center gap-2 mb-4">
+        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2 mb-4">
             <LayoutTemplate size={16} /> Meus Modelos
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Card para Novo Treino Avulso */}
-            <div className="bg-stone-100 rounded-[2rem] p-6 border-2 border-dashed border-stone-200 flex flex-col justify-center items-center cursor-pointer hover:border-stone-300 hover:bg-stone-200/50 transition-all group min-h-[140px]" onClick={() => setIsStarting(true)}>
+            <div className="bg-secondary rounded-[2rem] p-6 border-2 border-dashed border-border flex flex-col justify-center items-center cursor-pointer hover:border-border hover:bg-accent/50 transition-all group min-h-[140px]" onClick={() => setIsStarting(true)}>
                 {!isStarting ? (
                     <>
-                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-stone-400 group-hover:text-[#143d2d] mb-2 shadow-sm">
+                        <div className="w-10 h-10 rounded-full bg-card flex items-center justify-center text-muted-foreground group-hover:text-primary mb-2 shadow-sm">
                             <Plus size={20} />
                         </div>
-                        <span className="text-xs font-bold uppercase tracking-widest text-stone-500">Treino Avulso</span>
+                        <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Treino Avulso</span>
                     </>
                 ) : (
                     <div className="w-full animate-fade-in" onClick={e => e.stopPropagation()}>
-                        <label className="text-[10px] font-bold uppercase text-stone-400 tracking-widest mb-2 block text-center">Nome do Treino</label>
+                        <label className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest mb-2 block text-center">Nome do Treino</label>
                         <input 
                             autoFocus
                             value={newSessionName}
                             onChange={e => setNewSessionName(e.target.value)}
                             placeholder="Ex: Treino Rápido"
-                            className="w-full bg-white border border-stone-200 rounded-xl px-4 py-2 text-stone-800 font-bold outline-none focus:ring-2 focus:ring-[#143d2d]/20 mb-2 text-center"
+                            className="w-full bg-card border border-border rounded-xl px-4 py-2 text-foreground font-bold outline-none focus:ring-2 focus:ring-[#143d2d]/20 mb-2 text-center"
                             onKeyDown={e => e.key === 'Enter' && handleStart()}
                         />
                         <div className="flex gap-2">
-                            <button onClick={() => setIsStarting(false)} className="flex-1 bg-white text-stone-500 py-2 rounded-lg font-bold text-xs uppercase">Cancelar</button>
-                            <button onClick={handleStart} className="flex-1 bg-[#143d2d] text-white py-2 rounded-lg font-bold text-xs uppercase">Iniciar</button>
+                            <button onClick={() => setIsStarting(false)} className="flex-1 bg-card text-muted-foreground py-2 rounded-lg font-bold text-xs uppercase">Cancelar</button>
+                            <button onClick={handleStart} className="flex-1 bg-primary text-primary-foreground py-2 rounded-lg font-bold text-xs uppercase">Iniciar</button>
                         </div>
                     </div>
                 )}
@@ -367,34 +367,34 @@ export default function WorkoutsPage() {
                 <div 
                     key={template.id}
                     onClick={() => handleStartTemplate(template.id)}
-                    className="bg-white rounded-[2rem] p-6 border border-stone-100 shadow-sm hover:shadow-md hover:border-[#143d2d]/30 transition-all cursor-pointer group relative flex flex-col justify-between min-h-[140px]"
+                    className="bg-card rounded-[2rem] p-6 border border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all cursor-pointer group relative flex flex-col justify-between min-h-[140px]"
                 >
                     <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button 
                             onClick={(e) => handleDeleteTemplateClick(e, template.id)}
-                            className="p-2 text-stone-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                            className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
                         >
                             <Trash2 size={16} />
                         </button>
                     </div>
 
                     <div>
-                        <h4 className="text-lg font-bold text-stone-800 mb-2 pr-8">{template.name}</h4>
+                        <h4 className="text-lg font-bold text-foreground mb-2 pr-8">{template.name}</h4>
                         <div className="flex flex-wrap gap-1">
                             {template.items?.slice(0, 3).map((item: any) => (
-                                <span key={item.id} className="text-[9px] font-bold uppercase bg-stone-50 text-stone-500 px-2 py-1 rounded border border-stone-100">
+                                <span key={item.id} className="text-[9px] font-bold uppercase bg-secondary text-muted-foreground px-2 py-1 rounded border border-border">
                                     {item.exercise?.name}
                                 </span>
                             ))}
                             {(template.items?.length || 0) > 3 && (
-                                <span className="text-[9px] font-bold uppercase bg-stone-50 text-stone-400 px-2 py-1 rounded border border-stone-100">
+                                <span className="text-[9px] font-bold uppercase bg-secondary text-muted-foreground px-2 py-1 rounded border border-border">
                                     +{template.items!.length - 3}
                                 </span>
                             )}
                         </div>
                     </div>
 
-                    <div className="mt-4 flex items-center text-[#143d2d] text-xs font-bold uppercase tracking-widest gap-2">
+                    <div className="mt-4 flex items-center text-primary text-xs font-bold uppercase tracking-widest gap-2">
                         <Play size={14} fill="currentColor" /> Iniciar
                     </div>
                 </div>
@@ -404,12 +404,12 @@ export default function WorkoutsPage() {
 
       {/* Recent History */}
       <div className="px-8 space-y-4">
-        <h3 className="text-sm font-bold text-stone-400 uppercase tracking-widest flex items-center gap-2">
+        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
             <Clock size={16} /> Histórico Recente
         </h3>
 
         {recentSessions.length === 0 ? (
-            <div className="text-center py-12 bg-stone-50 rounded-[2rem] border border-dashed border-stone-200 text-stone-400 text-sm">
+            <div className="text-center py-12 bg-secondary rounded-[2rem] border border-dashed border-border text-muted-foreground text-sm">
                 Nenhum treino finalizado ainda.
             </div>
         ) : (
@@ -421,31 +421,31 @@ export default function WorkoutsPage() {
                     <div 
                         key={session.id} 
                         onClick={() => handleHistoryClick(session)}
-                        className="bg-white p-6 rounded-[2rem] border border-stone-200 shadow-sm flex justify-between items-center group hover:border-[#143d2d]/30 hover:shadow-md transition-all cursor-pointer relative"
+                        className="bg-card p-6 rounded-[2rem] border border-border shadow-sm flex justify-between items-center group hover:border-primary/30 hover:shadow-md transition-all cursor-pointer relative"
                     >
                         <div>
                             <div className="flex items-center gap-3 mb-1">
-                                <span className="bg-stone-100 text-stone-500 text-[10px] font-bold uppercase px-2 py-0.5 rounded border border-stone-200 flex items-center gap-1">
+                                <span className="bg-secondary text-muted-foreground text-[10px] font-bold uppercase px-2 py-0.5 rounded border border-border flex items-center gap-1">
                                     <Calendar size={10} /> {formatDateBr(session.ended_at || session.started_at)}
                                 </span>
                                 {volume > 0 && (
-                                    <span className="text-[10px] font-bold text-[#143d2d] bg-[#143d2d]/5 px-2 py-0.5 rounded">
+                                    <span className="text-[10px] font-bold text-primary bg-primary/5 px-2 py-0.5 rounded">
                                         {volume.toLocaleString()}kg Vol.
                                     </span>
                                 )}
                             </div>
-                            <h4 className="text-lg font-bold text-stone-800">{session.name}</h4>
-                            <p className="text-xs text-stone-400 mt-1">{session.sets?.length || 0} séries • {exercisesCount} exercícios</p>
+                            <h4 className="text-lg font-bold text-foreground">{session.name}</h4>
+                            <p className="text-xs text-muted-foreground mt-1">{session.sets?.length || 0} séries • {exercisesCount} exercícios</p>
                         </div>
                         <div className="flex items-center gap-4">
                             <button 
                                 onClick={(e) => handleDeleteSessionClick(e, session.id)}
-                                className="p-2 text-stone-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                                className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded-full transition-colors opacity-0 group-hover:opacity-100"
                                 title="Excluir Treino"
                             >
                                 <Trash2 size={18} />
                             </button>
-                            <div className="text-stone-300 group-hover:text-[#143d2d] transition-colors">
+                            <div className="text-muted-foreground group-hover:text-primary transition-colors">
                                 <ChevronRight size={20} />
                             </div>
                         </div>

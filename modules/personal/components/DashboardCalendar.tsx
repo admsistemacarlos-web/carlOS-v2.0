@@ -101,23 +101,23 @@ export const DashboardCalendar: React.FC<DashboardCalendarProps> = ({
   };
 
   return (
-    <div className="bg-white p-4 md:p-6 rounded-[2rem] border border-stone-200 shadow-sm h-full flex flex-col">
+    <div className="bg-card p-4 md:p-6 rounded-[2rem] border border-border shadow-sm h-full flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center mb-4 md:mb-6">
-        <h3 className="text-xs md:text-sm font-bold text-coffee uppercase tracking-widest">
+        <h3 className="text-xs md:text-sm font-bold text-foreground uppercase tracking-widest">
           {currentMonth.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
         </h3>
         <div className="flex gap-2">
           <button 
             onClick={goToToday}
-            className="hidden md:block px-3 py-1.5 text-xs font-semibold bg-stone-100 hover:bg-coffee hover:text-white rounded-lg transition-colors"
+            className="hidden md:block px-3 py-1.5 text-xs font-semibold bg-secondary hover:bg-coffee hover:text-white rounded-lg transition-colors"
           >
             Hoje
           </button>
-          <button onClick={prevMonth} className="p-1.5 hover:bg-stone-50 rounded-lg text-stone-400 hover:text-coffee transition-colors">
+          <button onClick={prevMonth} className="p-1.5 hover:bg-secondary rounded-lg text-muted-foreground hover:text-foreground transition-colors">
             <ChevronLeft size={18} />
           </button>
-          <button onClick={nextMonth} className="p-1.5 hover:bg-stone-50 rounded-lg text-stone-400 hover:text-coffee transition-colors">
+          <button onClick={nextMonth} className="p-1.5 hover:bg-secondary rounded-lg text-muted-foreground hover:text-foreground transition-colors">
             <ChevronRight size={18} />
           </button>
         </div>
@@ -126,7 +126,7 @@ export const DashboardCalendar: React.FC<DashboardCalendarProps> = ({
       {/* Weekdays */}
       <div className="grid grid-cols-7 mb-2">
         {WEEKDAYS.map((day, i) => (
-          <div key={i} className="text-center text-[10px] font-bold text-stone-300 uppercase py-2">
+          <div key={i} className="text-center text-[10px] font-bold text-muted-foreground uppercase py-2">
             {day}
           </div>
         ))}
@@ -159,8 +159,8 @@ export const DashboardCalendar: React.FC<DashboardCalendarProps> = ({
                   ${isSelected 
                     ? 'bg-coffee text-white shadow-md scale-105 z-10' 
                     : isToday 
-                      ? 'bg-stone-100 text-coffee font-bold' 
-                      : 'text-stone-600 hover:bg-stone-50'
+                      ? 'bg-secondary text-foreground font-bold' 
+                      : 'text-muted-foreground hover:bg-secondary'
                   }
                 `}
               >
@@ -170,7 +170,7 @@ export const DashboardCalendar: React.FC<DashboardCalendarProps> = ({
                 {eventCount > 0 && (
                   <span className={`
                     absolute -top-1 -right-1 w-4 h-4 rounded-full text-[8px] font-bold flex items-center justify-center
-                    ${isSelected ? 'bg-white text-coffee' : 'bg-coffee text-white'}
+                    ${isSelected ? 'bg-primary text-primary-foreground' : 'bg-coffee text-white'}
                   `}>
                     {eventCount}
                   </span>
@@ -203,7 +203,7 @@ export const DashboardCalendar: React.FC<DashboardCalendarProps> = ({
                     <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-emerald-300' : 'bg-emerald-500'}`}></div>
                   )}
                   {marker?.hasGeneral && shouldShowMarker(dateKey, 'hasGeneral') && (
-                    <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-stone-300' : 'bg-stone-500'}`}></div>
+                    <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-stone-300' : 'bg-secondary0'}`}></div>
                   )}
                 </div>
               </button>
@@ -221,60 +221,60 @@ export const DashboardCalendar: React.FC<DashboardCalendarProps> = ({
       </div>
 
       {/* Legend */}
-      <div className="mt-4 md:mt-6 pt-4 border-t border-stone-100">
+      <div className="mt-4 md:mt-6 pt-4 border-t border-border">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
           {shouldShowMarker('', 'hasWorkout') && (
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-              <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider">Treino</span>
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Treino</span>
             </div>
           )}
           {shouldShowMarker('', 'hasHeadache') && (
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-red-400"></div>
-              <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider">Sintoma</span>
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Sintoma</span>
             </div>
           )}
           {shouldShowMarker('', 'hasPetEvent') && (
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-purple-400"></div>
-              <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider">Pet</span>
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Pet</span>
             </div>
           )}
           {shouldShowMarker('', 'hasBill') && (
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-red-500"></div>
-              <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider">Conta</span>
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Conta</span>
             </div>
           )}
           {shouldShowMarker('', 'hasInvoice') && (
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-orange-500"></div>
-              <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider">Fatura</span>
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Fatura</span>
             </div>
           )}
           {shouldShowMarker('', 'hasSpiritual') && (
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-              <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider">Espiritual</span>
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Espiritual</span>
             </div>
           )}
           {shouldShowMarker('', 'hasStudy') && (
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-              <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider">Estudo</span>
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Estudo</span>
             </div>
           )}
           {shouldShowMarker('', 'hasProject') && (
             <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-              <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider">Projeto</span>
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Projeto</span>
             </div>
           )}
           {shouldShowMarker('', 'hasGeneral') && (
             <div className="flex items-center gap-1.5">
-              <div className="w-2 h-2 rounded-full bg-stone-500"></div>
-              <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider">Geral</span>
+              <div className="w-2 h-2 rounded-full bg-secondary0"></div>
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Geral</span>
             </div>
           )}
         </div>

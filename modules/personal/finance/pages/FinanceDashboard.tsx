@@ -287,7 +287,7 @@ const FinanceDashboard: React.FC = () => {
           title={`Gasto Cartão (${formattedDate})`}
           value={`R$ ${stats.cardSpend.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`} 
           icon={<CreditCard />}
-          color="text-coffee"
+          color="text-foreground"
           loading={loadingTransactions}
           onClick={() => navigate('/personal/finance/cards')}
         />
@@ -351,7 +351,7 @@ const FinanceDashboard: React.FC = () => {
                              className={`group flex items-center justify-between py-3 px-4 hover:bg-accent transition-colors cursor-pointer ${t.is_locked ? 'opacity-60' : ''}`}
                            >
                              <div className="flex items-center gap-3">
-                               <div className={`p-2 rounded-full ${t.type === 'income' ? 'bg-olive/10 text-olive' : 'bg-terracotta/10 text-terracotta'}`}>
+                               <div className={`p-2 rounded-full ${t.type === 'income' ? 'bg-primary/10 text-olive' : 'bg-terracotta/10 text-terracotta'}`}>
                                  {t.type === 'income' ? <ArrowUpRight size={16} /> : <ArrowDownLeft size={16} />}
                                </div>
                                <div>

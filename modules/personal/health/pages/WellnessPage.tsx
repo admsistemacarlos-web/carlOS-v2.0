@@ -290,35 +290,35 @@ export default function WellnessPage() {
       {/* Header */}
       <div className="px-4 md:px-8 pt-8 pb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <button onClick={() => navigate('/personal/health')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-400 hover:text-[#143d2d] transition-colors mb-4">
+          <button onClick={() => navigate('/personal/health')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-4">
             <ArrowLeft size={14} /> Voltar
           </button>
-          <h1 className="text-3xl font-bold text-stone-800 tracking-tight flex items-center gap-3">
-            <CalendarIcon className="text-[#143d2d]" /> Diário de Bem-Estar
+          <h1 className="text-3xl font-bold text-foreground tracking-tight flex items-center gap-3">
+            <CalendarIcon className="text-primary" /> Diário de Bem-Estar
           </h1>
         </div>
 
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           {/* Seletor de Mês */}
-          <div className="flex items-center bg-white border border-stone-200 rounded-xl p-1 shadow-sm overflow-hidden">
-            <button onClick={prevMonth} className="p-2 hover:bg-stone-50 rounded-lg text-stone-400 hover:text-[#143d2d] transition-colors">
+          <div className="flex items-center bg-card border border-border rounded-xl p-1 shadow-sm overflow-hidden">
+            <button onClick={prevMonth} className="p-2 hover:bg-secondary rounded-lg text-muted-foreground hover:text-primary transition-colors">
               <ChevronLeft size={20} />
             </button>
             <div className="px-4 min-w-[140px] text-center">
-              <span className="text-sm font-bold text-stone-700 capitalize">
+              <span className="text-sm font-bold text-foreground capitalize">
                 {currentDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
               </span>
             </div>
-            <button onClick={nextMonth} className="p-2 hover:bg-stone-50 rounded-lg text-stone-400 hover:text-[#143d2d] transition-colors">
+            <button onClick={nextMonth} className="p-2 hover:bg-secondary rounded-lg text-muted-foreground hover:text-primary transition-colors">
               <ChevronRight size={20} />
             </button>
           </div>
 
-          <button onClick={goToToday} className="px-4 py-2.5 bg-white border border-stone-200 text-stone-500 font-bold text-[10px] uppercase tracking-widest rounded-xl hover:bg-stone-50 transition-colors shadow-sm">
+          <button onClick={goToToday} className="px-4 py-2.5 bg-card border border-border text-muted-foreground font-bold text-[10px] uppercase tracking-widest rounded-xl hover:bg-secondary transition-colors shadow-sm">
             Hoje
           </button>
 
-          <button onClick={() => navigate('/personal/health/wellness/new')} className="bg-[#143d2d] hover:bg-[#0f2e22] text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-sm transition-all active:scale-95 ml-auto md:ml-0">
+          <button onClick={() => navigate('/personal/health/wellness/new')} className="bg-primary hover:bg-[#0f2e22] text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-sm transition-all active:scale-95 ml-auto md:ml-0">
             <Plus size={18} /> Novo
           </button>
         </div>
@@ -327,18 +327,18 @@ export default function WellnessPage() {
       <div className="px-4 md:px-8 space-y-8">
         
         {loading ? (
-          <div className="flex justify-center py-20"><Loader2 className="animate-spin text-[#143d2d]" size={32} /></div>
+          <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" size={32} /></div>
         ) : (
           <>
             {/* Painel de Estatísticas */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {/* Card 1: Sequência de Treinos */}
-              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4">
+              <div className="bg-card rounded-2xl border border-border shadow-sm p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="p-2 bg-emerald-50 rounded-lg">
                     <Flame className="text-emerald-600" size={16} />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                     Sequência Atual
                   </span>
                 </div>
@@ -346,20 +346,20 @@ export default function WellnessPage() {
                   <span className="text-3xl font-bold text-emerald-600">
                     {statistics.workoutStreak.current}
                   </span>
-                  <span className="text-xs font-bold text-stone-400">dias</span>
+                  <span className="text-xs font-bold text-muted-foreground">dias</span>
                 </div>
-                <p className="text-[10px] text-stone-400 mt-1">
+                <p className="text-[10px] text-muted-foreground mt-1">
                   Recorde: {statistics.workoutStreak.max} dias
                 </p>
               </div>
 
               {/* Card 2: Treinos no Mês */}
-              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4">
+              <div className="bg-card rounded-2xl border border-border shadow-sm p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="p-2 bg-blue-50 rounded-lg">
                     <BarChart3 className="text-blue-600" size={16} />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                     Treinos {currentDate.toLocaleDateString('pt-BR', { month: 'short' })}
                   </span>
                 </div>
@@ -367,17 +367,17 @@ export default function WellnessPage() {
                   <span className="text-3xl font-bold text-blue-600">
                     {statistics.workoutsThisMonth}
                   </span>
-                  <span className="text-xs font-bold text-stone-400">dias</span>
+                  <span className="text-xs font-bold text-muted-foreground">dias</span>
                 </div>
               </div>
 
               {/* Card 3: Sem Dor de Cabeça */}
-              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4">
+              <div className="bg-card rounded-2xl border border-border shadow-sm p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="p-2 bg-purple-50 rounded-lg">
                     <Smile className="text-purple-600" size={16} />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                     Sem Sintomas
                   </span>
                 </div>
@@ -385,20 +385,20 @@ export default function WellnessPage() {
                   <span className="text-3xl font-bold text-purple-600">
                     {statistics.noHeadacheStreak.current}
                   </span>
-                  <span className="text-xs font-bold text-stone-400">dias</span>
+                  <span className="text-xs font-bold text-muted-foreground">dias</span>
                 </div>
-                <p className="text-[10px] text-stone-400 mt-1">
+                <p className="text-[10px] text-muted-foreground mt-1">
                   Recorde: {statistics.noHeadacheStreak.max} dias
                 </p>
               </div>
 
               {/* Card 4: Dias com Dor de Cabeça no Mês */}
-              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4">
+              <div className="bg-card rounded-2xl border border-border shadow-sm p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="p-2 bg-red-50 rounded-lg">
                     <AlertCircle className="text-red-600" size={16} />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                     Sintomas {currentDate.toLocaleDateString('pt-BR', { month: 'short' })}
                   </span>
                 </div>
@@ -406,17 +406,17 @@ export default function WellnessPage() {
                   <span className="text-3xl font-bold text-red-600">
                     {statistics.headacheDaysThisMonth}
                   </span>
-                  <span className="text-xs font-bold text-stone-400">dias</span>
+                  <span className="text-xs font-bold text-muted-foreground">dias</span>
                 </div>
               </div>
 
               {/* Card 5: Detox */}
-              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-4">
+              <div className="bg-card rounded-2xl border border-border shadow-sm p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="p-2 bg-amber-50 rounded-lg">
                     <ZapOff className="text-amber-600" size={16} />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                     Detox Atual
                   </span>
                 </div>
@@ -424,9 +424,9 @@ export default function WellnessPage() {
                   <span className="text-3xl font-bold text-amber-600">
                     {statistics.noEnergyDrinkStreak.current}
                   </span>
-                  <span className="text-xs font-bold text-stone-400">dias</span>
+                  <span className="text-xs font-bold text-muted-foreground">dias</span>
                 </div>
-                <p className="text-[10px] text-stone-400 mt-1">
+                <p className="text-[10px] text-muted-foreground mt-1">
                   Recorde: {statistics.noEnergyDrinkStreak.max} dias
                 </p>
               </div>
@@ -434,10 +434,10 @@ export default function WellnessPage() {
 
             {/* Gráfico de Evolução de Peso */}
             {weightChartData.length > 1 && (
-              <div className="bg-white rounded-[2rem] border border-stone-200 shadow-sm p-6">
+              <div className="bg-card rounded-[2rem] border border-border shadow-sm p-6">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                  <h3 className="text-xs font-bold text-stone-400 uppercase tracking-widest flex items-center gap-2">
-                    <Scale size={14} className="text-[#143d2d]" /> Evolução do Peso (Recente)
+                  <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                    <Scale size={14} className="text-primary" /> Evolução do Peso (Recente)
                   </h3>
                   
                   {/* Card de Progresso Total */}
@@ -448,23 +448,23 @@ export default function WellnessPage() {
                         ? 'bg-emerald-50 border-emerald-200' 
                         : weightProgress.isGain 
                           ? 'bg-amber-50 border-amber-200' 
-                          : 'bg-stone-50 border-stone-200'
+                          : 'bg-secondary border-border'
                       }
                     `}>
                       {weightProgress.isLoss && <TrendingDown className="text-emerald-600" size={20} />}
                       {weightProgress.isGain && <TrendingUp className="text-amber-600" size={20} />}
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                           Progresso Total
                         </span>
                         <div className="flex items-baseline gap-1">
                           <span className={`
                             text-xl font-bold
-                            ${weightProgress.isLoss ? 'text-emerald-600' : weightProgress.isGain ? 'text-amber-600' : 'text-stone-600'}
+                            ${weightProgress.isLoss ? 'text-emerald-600' : weightProgress.isGain ? 'text-amber-600' : 'text-muted-foreground'}
                           `}>
                             {weightProgress.isLoss ? '' : '+'}{Math.abs(weightProgress.difference).toFixed(1)}
                           </span>
-                          <span className="text-xs font-bold text-stone-400">kg</span>
+                          <span className="text-xs font-bold text-muted-foreground">kg</span>
                         </div>
                       </div>
                     </div>
@@ -524,18 +524,18 @@ export default function WellnessPage() {
               </div>
             )}
 
-            <div className="bg-white rounded-[2rem] border border-stone-200 shadow-sm overflow-hidden">
+            <div className="bg-card rounded-[2rem] border border-border shadow-sm overflow-hidden">
               {/* Dias da Semana */}
-              <div className="grid grid-cols-7 border-b border-stone-100 bg-stone-50/50">
+              <div className="grid grid-cols-7 border-b border-border bg-secondary/50">
                 {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
-                  <div key={day} className="p-3 text-center text-[10px] font-bold text-stone-400 uppercase tracking-widest">
+                  <div key={day} className="p-3 text-center text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                     {day}
                   </div>
                 ))}
               </div>
 
               {/* Grid de Dias */}
-              <div className="grid grid-cols-7 divide-x divide-y divide-stone-100 border-t border-stone-100">
+              <div className="grid grid-cols-7 divide-x divide-y divide-stone-100 border-t border-border">
                 {calendarDays.map((day, idx) => {
                   const dateKey = formatDateKey(day);
                   const log = logsMap[dateKey];
@@ -548,22 +548,22 @@ export default function WellnessPage() {
                       onClick={() => handleDayClick(day)}
                       className={`
                         min-h-[100px] md:min-h-[130px] p-2 transition-all cursor-pointer group relative flex flex-col justify-between
-                        ${!isCurrentMonth ? 'bg-stone-50/30' : 'bg-white'}
+                        ${!isCurrentMonth ? 'bg-secondary/30' : 'bg-card'}
                         ${log?.workout_done ? 'bg-emerald-50/10' : ''}
-                        hover:bg-stone-50
+                        hover:bg-secondary
                       `}
                     >
                       {/* Header do Dia: Data e Peso */}
                       <div className="flex justify-between items-start mb-1">
                         <span className={`
                           text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full transition-colors
-                          ${isTodayDate ? 'bg-[#143d2d] text-white shadow-md' : isCurrentMonth ? 'text-stone-700' : 'text-stone-300'}
+                          ${isTodayDate ? 'bg-primary text-primary-foreground shadow-md' : isCurrentMonth ? 'text-foreground' : 'text-muted-foreground'}
                         `}>
                           {day.getDate()}
                         </span>
                         
                         {log?.weight && (
-                          <span className="text-[10px] font-bold text-stone-400 bg-stone-50 px-1.5 py-0.5 rounded border border-stone-100">
+                          <span className="text-[10px] font-bold text-muted-foreground bg-secondary px-1.5 py-0.5 rounded border border-border">
                             {log.weight}kg
                           </span>
                         )}
@@ -604,12 +604,12 @@ export default function WellnessPage() {
                         {/* 2. Treino (Na base, preenchendo a largura) - AGORA SEMPRE MOSTRA */}
                         {log && (
                           log.workout_done ? (
-                            <div className="flex items-center gap-1 text-[9px] font-bold text-[#143d2d] bg-[#143d2d]/5 px-1.5 py-1 rounded border border-[#143d2d]/10 w-full truncate">
+                            <div className="flex items-center gap-1 text-[9px] font-bold text-primary bg-primary/5 px-1.5 py-1 rounded border border-primary/10 w-full truncate">
                               <span className="shrink-0">{getWorkoutIcon(log.workout_type)}</span>
                               <span className="truncate">{log.workout_type || 'Treino'}</span>
                             </div>
                           ) : (
-                            <div className="flex items-center gap-1 text-[9px] font-bold text-stone-400 bg-stone-50 px-1.5 py-1 rounded border border-stone-200 w-full truncate">
+                            <div className="flex items-center gap-1 text-[9px] font-bold text-muted-foreground bg-secondary px-1.5 py-1 rounded border border-border w-full truncate">
                               <CheckCircle2 size={10} />
                               <span className="truncate">Sem treino</span>
                             </div>
@@ -620,7 +620,7 @@ export default function WellnessPage() {
                       {/* Botão de Adição Rápida (só aparece no hover se não houver log) */}
                       {!log && isCurrentMonth && (
                         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                           <div className="p-2 bg-stone-100 rounded-full text-stone-400">
+                           <div className="p-2 bg-secondary rounded-full text-muted-foreground">
                              <Plus size={16} />
                            </div>
                         </div>
@@ -638,31 +638,31 @@ export default function WellnessPage() {
       <div className="px-4 md:px-8 mt-6 flex flex-wrap gap-6 justify-center md:justify-start pb-8">
         <div className="flex items-center gap-2">
           <Dumbbell size={14} className="text-emerald-500" />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Musculação</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Musculação</span>
         </div>
         <div className="flex items-center gap-2">
           <Footprints size={14} className="text-emerald-500" />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Cardio</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Cardio</span>
         </div>
         <div className="flex items-center gap-2">
           <Volleyball size={14} className="text-emerald-500" />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Vôlei</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Vôlei</span>
         </div>
         <div className="flex items-center gap-2">
           <Dribbble size={14} className="text-emerald-500" />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">FTV</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">FTV</span>
         </div>
         <div className="flex items-center gap-2">
           <ZapOff size={14} className="text-emerald-500" />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Sucesso Detox</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Sucesso Detox</span>
         </div>
         <div className="flex items-center gap-2">
           <Zap size={14} className="text-yellow-500" />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Energético</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Energético</span>
         </div>
         <div className="flex items-center gap-2">
           <Frown size={14} className="text-red-500" />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Sintoma</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Sintoma</span>
         </div>
       </div>
     </div>

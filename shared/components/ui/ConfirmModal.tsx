@@ -28,21 +28,21 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-stone-900/40 backdrop-blur-sm transition-opacity" 
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity" 
         onClick={!isLoading ? onClose : undefined}
       />
       
       {/* Modal */}
-      <div className="relative bg-white w-full max-w-sm rounded-[2rem] shadow-2xl p-8 text-center border border-stone-100 animate-fade-in">
-        <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 ${isDestructive ? 'bg-red-50 text-red-500' : 'bg-stone-100 text-stone-500'}`}>
+      <div className="relative bg-card w-full max-w-sm rounded-[2rem] shadow-2xl p-8 text-center border border-border animate-fade-in">
+        <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 ${isDestructive ? 'bg-red-50 text-red-500' : 'bg-secondary text-muted-foreground'}`}>
           <AlertTriangle size={32} />
         </div>
         
-        <h3 className="text-xl font-bold text-stone-800 mb-2">
+        <h3 className="text-xl font-bold text-foreground mb-2">
           {title}
         </h3>
         
-        <p className="text-stone-500 text-sm leading-relaxed mb-8">
+        <p className="text-muted-foreground text-sm leading-relaxed mb-8">
           {description}
         </p>
         
@@ -50,7 +50,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           <button 
             onClick={onClose}
             disabled={isLoading}
-            className="flex-1 py-3.5 rounded-xl text-xs font-bold uppercase tracking-widest text-stone-500 bg-stone-100 hover:bg-stone-200 transition-colors disabled:opacity-50"
+            className="flex-1 py-3.5 rounded-xl text-xs font-bold uppercase tracking-widest text-muted-foreground bg-secondary hover:bg-accent transition-colors disabled:opacity-50"
           >
             Cancelar
           </button>

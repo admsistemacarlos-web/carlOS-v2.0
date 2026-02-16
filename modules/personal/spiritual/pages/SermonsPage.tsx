@@ -39,18 +39,18 @@ const SermonSection: React.FC<SermonSectionProps> = ({
         <div className="w-full animate-fade-in mb-4">
             <button 
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between p-4 bg-stone-50 border border-stone-200/50 rounded-xl hover:bg-stone-100 transition-colors group select-none"
+                className="w-full flex items-center justify-between p-4 bg-secondary border border-border/50 rounded-xl hover:bg-secondary transition-colors group select-none"
             >
-                <div className="flex items-center gap-3 text-stone-600">
+                <div className="flex items-center gap-3 text-muted-foreground">
                     {icon}
                     <h2 className="text-sm font-bold uppercase tracking-widest">{title}</h2>
-                    <span className="bg-white px-2 py-0.5 rounded-md text-[10px] font-bold border border-stone-200 text-stone-400">
+                    <span className="bg-card px-2 py-0.5 rounded-md text-[10px] font-bold border border-border text-muted-foreground">
                         {count}
                     </span>
                 </div>
                 <ChevronDown 
                     size={20} 
-                    className={`text-stone-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
+                    className={`text-muted-foreground transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
                 />
             </button>
 
@@ -131,16 +131,16 @@ export default function SermonsPage() {
   const SermonCard: React.FC<{ sermon: Sermon }> = ({ sermon }) => (
     <div 
         onClick={() => handleEdit(sermon.id)}
-        className="bg-white p-6 rounded-[2rem] border border-[#E6E2DE] shadow-sm hover:shadow-xl hover:border-[#D7CCC8] hover:-translate-y-1 transition-all group flex flex-col h-full cursor-pointer relative"
+        className="bg-card p-6 rounded-[2rem] border border-border shadow-sm hover:shadow-xl hover:border-[#D7CCC8] hover:-translate-y-1 transition-all group flex flex-col h-full cursor-pointer relative"
     >
         <div className="flex justify-between items-start mb-4">
-        <span className="bg-stone-50 border border-stone-100 text-stone-500 text-[10px] font-bold uppercase px-3 py-1 rounded-full tracking-wider">
+        <span className="bg-secondary border border-border text-muted-foreground text-[10px] font-bold uppercase px-3 py-1 rounded-full tracking-wider">
             {formatDateBr(sermon.date)}
         </span>
         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity absolute top-6 right-6">
             <button 
             onClick={(e) => handleDeleteRequest(sermon.id, e)} 
-            className="p-2 bg-white rounded-full hover:bg-red-50 text-stone-300 hover:text-red-500 transition-colors shadow-sm border border-stone-100"
+            className="p-2 bg-card rounded-full hover:bg-red-50 text-muted-foreground hover:text-red-500 transition-colors shadow-sm border border-border"
             title="Excluir pregação"
             >
             <Trash2 size={14} />
@@ -148,9 +148,9 @@ export default function SermonsPage() {
         </div>
         </div>
         
-        <h3 className="text-xl font-bold text-stone-800 mb-2 line-clamp-2">{sermon.title}</h3>
+        <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-2">{sermon.title}</h3>
         
-        <div className="flex items-center gap-4 text-xs text-stone-500 mb-4">
+        <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
         {sermon.preacher && (
             <span className="flex items-center gap-1"><User size={12} /> {sermon.preacher}</span>
         )}
@@ -159,7 +159,7 @@ export default function SermonsPage() {
         )}
         </div>
         
-        <div className="flex-1 bg-stone-50 border border-stone-100 rounded-xl p-4 text-sm text-stone-600 leading-relaxed line-clamp-4 relative overflow-hidden">
+        <div className="flex-1 bg-secondary border border-border rounded-xl p-4 text-sm text-muted-foreground leading-relaxed line-clamp-4 relative overflow-hidden">
         {sermon.content}
         <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-stone-50 to-transparent"></div>
         </div>
@@ -173,15 +173,15 @@ export default function SermonsPage() {
   );
 
   return (
-    <div className="w-full min-h-screen pb-20 animate-fade-in font-sans bg-[#FAF9F6]">
+    <div className="w-full min-h-screen pb-20 animate-fade-in font-sans bg-card">
       
       {/* Header */}
       <div className="px-8 pt-8 pb-6 flex flex-col md:flex-row justify-between items-start gap-4">
         <div>
-          <button onClick={() => navigate('/personal/spiritual')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-400 hover:text-stone-600 transition-colors mb-4">
+          <button onClick={() => navigate('/personal/spiritual')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-muted-foreground transition-colors mb-4">
             <ArrowLeft size={14} /> Voltar
           </button>
-          <h1 className="text-3xl font-bold text-stone-800 tracking-tight flex items-center gap-3">
+          <h1 className="text-3xl font-bold text-foreground tracking-tight flex items-center gap-3">
             <Mic2 className="text-[#5D4037]" /> Pregações & Cultos
           </h1>
         </div>
@@ -189,17 +189,17 @@ export default function SermonsPage() {
         <div className="flex gap-3 w-full md:w-auto">
             {/* Barra de Pesquisa */}
             <div className="relative flex-1 md:w-64 group">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-[#5D4037] transition-colors" size={18} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-[#5D4037] transition-colors" size={18} />
                 <input 
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Buscar pregações..."
-                    className="w-full bg-white border border-stone-200 rounded-xl pl-10 pr-10 py-3 text-sm outline-none focus:ring-2 focus:ring-[#5D4037]/20 focus:border-[#5D4037] transition-all shadow-sm placeholder:text-stone-400 text-stone-700"
+                    className="w-full bg-card border border-border rounded-xl pl-10 pr-10 py-3 text-sm outline-none focus:ring-2 focus:ring-[#5D4037]/20 focus:border-[#5D4037] transition-all shadow-sm placeholder:text-muted-foreground text-foreground"
                 />
                 {searchQuery && (
                     <button 
                         onClick={() => setSearchQuery('')}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-stone-100 rounded-full text-stone-400 transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-secondary rounded-full text-muted-foreground transition-colors"
                     >
                         <X size={14} />
                     </button>
@@ -215,18 +215,18 @@ export default function SermonsPage() {
       {/* Content */}
       <div className="px-8 space-y-2">
         {loading ? (
-          <div className="flex justify-center py-20"><Loader2 className="animate-spin text-stone-400" size={32} /></div>
+          <div className="flex justify-center py-20"><Loader2 className="animate-spin text-muted-foreground" size={32} /></div>
         ) : filteredTotal === 0 ? (
-          <div className="text-center py-20 bg-stone-50 rounded-[2rem] border border-dashed border-stone-200">
+          <div className="text-center py-20 bg-secondary rounded-[2rem] border border-dashed border-border">
             {searchQuery ? (
                 <>
-                    <Search className="mx-auto text-stone-300 mb-3" size={32} />
-                    <p className="text-stone-400">Nenhuma pregação encontrada para "{searchQuery}".</p>
+                    <Search className="mx-auto text-muted-foreground mb-3" size={32} />
+                    <p className="text-muted-foreground">Nenhuma pregação encontrada para "{searchQuery}".</p>
                     <button onClick={() => setSearchQuery('')} className="text-[#5D4037] font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Limpar Busca</button>
                 </>
             ) : (
                 <>
-                    <p className="text-stone-400">Nenhuma pregação anotada ainda.</p>
+                    <p className="text-muted-foreground">Nenhuma pregação anotada ainda.</p>
                     <button onClick={handleNew} className="text-[#5D4037] font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Criar a primeira</button>
                 </>
             )}
@@ -261,20 +261,20 @@ export default function SermonsPage() {
             className="absolute inset-0 bg-[#3E2723]/20 backdrop-blur-sm transition-opacity" 
             onClick={() => setIsDeleteOpen(false)}
           />
-          <div className="relative bg-white w-full max-w-sm rounded-[1.5rem] shadow-2xl p-6 animate-fade-in border border-stone-200">
+          <div className="relative bg-card w-full max-w-sm rounded-[1.5rem] shadow-2xl p-6 animate-fade-in border border-border">
             <div className="flex flex-col items-center text-center">
               <div className="w-12 h-12 bg-red-50 text-red-600 rounded-full flex items-center justify-center mb-4 border border-red-100">
                 <AlertTriangle size={24} />
               </div>
-              <h2 className="text-lg font-bold text-stone-800 mb-2">Excluir pregação?</h2>
-              <p className="text-sm text-stone-500 leading-relaxed mb-6">
+              <h2 className="text-lg font-bold text-foreground mb-2">Excluir pregação?</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-6">
                 Essa ação não pode ser desfeita. A anotação será removida permanentemente.
               </p>
               
               <div className="flex gap-3 w-full">
                 <button 
                   onClick={() => setIsDeleteOpen(false)}
-                  className="flex-1 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 transition-colors"
+                  className="flex-1 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-muted-foreground bg-secondary hover:bg-accent transition-colors"
                 >
                   Cancelar
                 </button>

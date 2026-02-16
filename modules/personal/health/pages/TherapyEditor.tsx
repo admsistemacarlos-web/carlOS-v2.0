@@ -113,24 +113,24 @@ export default function TherapyEditor() {
   if (loading) {
     return (
       <div className="h-screen bg-transparent flex items-center justify-center">
-        <Loader2 className="animate-spin text-[#143d2d]" size={32} />
+        <Loader2 className="animate-spin text-primary" size={32} />
       </div>
     );
   }
 
   return (
-    <div className="h-screen flex flex-col bg-transparent font-sans text-stone-800 animate-fade-in overflow-hidden">
+    <div className="h-screen flex flex-col bg-transparent font-sans text-foreground animate-fade-in overflow-hidden">
       
       {/* Header Fixo */}
-      <header className="flex-none w-full bg-transparent border-b border-stone-200 px-6 py-4 flex justify-between items-center z-10">
+      <header className="flex-none w-full bg-transparent border-b border-border px-6 py-4 flex justify-between items-center z-10">
         <div className="flex items-center gap-4">
           <button 
             onClick={() => navigate('/personal/health/therapy')}
-            className="p-2 -ml-2 hover:bg-stone-200 rounded-full text-stone-500 hover:text-[#143d2d] transition-colors"
+            className="p-2 -ml-2 hover:bg-accent rounded-full text-muted-foreground hover:text-primary transition-colors"
           >
             <ArrowLeft size={20} />
           </button>
-          <h1 className="text-sm font-bold uppercase tracking-widest text-stone-500 hidden md:block">
+          <h1 className="text-sm font-bold uppercase tracking-widest text-muted-foreground hidden md:block">
             {id ? 'Editando Sessão' : 'Nova Sessão'}
           </h1>
         </div>
@@ -138,7 +138,7 @@ export default function TherapyEditor() {
         <div className="flex gap-2">
           <button
             onClick={() => setMode(mode === 'write' ? 'read' : 'write')}
-            className="flex items-center gap-2 bg-white hover:bg-stone-100 text-stone-600 border border-stone-200 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all active:scale-95"
+            className="flex items-center gap-2 bg-card hover:bg-secondary text-muted-foreground border border-border px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all active:scale-95"
           >
             {mode === 'write' ? <Eye size={16} /> : <PenTool size={16} />}
             <span className="hidden sm:inline">{mode === 'write' ? 'Ler' : 'Editar'}</span>
@@ -147,7 +147,7 @@ export default function TherapyEditor() {
           {id && (
             <button 
               onClick={() => setShowDeleteConfirm(true)}
-              className="p-2 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+              className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
             >
               <Trash2 size={20} />
             </button>
@@ -155,7 +155,7 @@ export default function TherapyEditor() {
           <button 
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 bg-[#143d2d] hover:bg-[#0f2e22] text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-sm active:scale-95 transition-all disabled:opacity-50"
+            className="flex items-center gap-2 bg-primary hover:bg-[#0f2e22] text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-sm active:scale-95 transition-all disabled:opacity-50"
           >
             {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             <span className="hidden sm:inline">Salvar</span>
@@ -168,42 +168,42 @@ export default function TherapyEditor() {
         <div className="max-w-4xl mx-auto p-4 md:p-8 flex flex-col gap-6 min-h-full">
           
           {/* Cartão de Metadados */}
-          <div className="flex-none bg-white p-6 rounded-[1.5rem] border border-stone-200 shadow-sm space-y-6">
+          <div className="flex-none bg-card p-6 rounded-[1.5rem] border border-border shadow-sm space-y-6">
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="group">
-                <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#143d2d] mb-1">
+                <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary mb-1">
                   <User size={12} /> Profissional
                 </label>
                 <input 
                   value={formData.professional}
                   onChange={(e) => setFormData({...formData, professional: e.target.value})}
                   placeholder="Ex: Dra. Ana"
-                  className="w-full bg-stone-50 border-b border-stone-200 focus:border-[#143d2d] rounded-lg px-3 py-2 text-sm text-stone-700 outline-none transition-all"
+                  className="w-full bg-secondary border-b border-border focus:border-primary rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-all"
                   autoFocus={!id}
                 />
               </div>
 
               <div className="group">
-                <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#143d2d] mb-1">
+                <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary mb-1">
                   <Calendar size={12} /> Data Sessão
                 </label>
                 <input 
                   type="date"
                   value={formData.date}
                   onChange={(e) => setFormData({...formData, date: e.target.value})}
-                  className="w-full bg-stone-50 border-b border-stone-200 focus:border-[#143d2d] rounded-lg px-3 py-2 text-sm text-stone-700 outline-none transition-all"
+                  className="w-full bg-secondary border-b border-border focus:border-primary rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-all"
                 />
               </div>
 
               <div className="group">
-                <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#143d2d] mb-1">
+                <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary mb-1">
                   <Activity size={12} /> Tipo
                 </label>
                 <select 
                   value={formData.type}
                   onChange={(e) => setFormData({...formData, type: e.target.value})}
-                  className="w-full bg-stone-50 border-b border-stone-200 focus:border-[#143d2d] rounded-lg px-3 py-2 text-sm text-stone-700 outline-none transition-all cursor-pointer appearance-none"
+                  className="w-full bg-secondary border-b border-border focus:border-primary rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-all cursor-pointer appearance-none"
                 >
                     <option value="psychologist">Psicólogo(a)</option>
                     <option value="psychiatrist">Psiquiatra</option>
@@ -213,21 +213,21 @@ export default function TherapyEditor() {
               </div>
 
               <div className="group">
-                <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#143d2d] mb-1">
+                <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary mb-1">
                   <Clock size={12} /> Próxima Consulta
                 </label>
                 <input 
                   type="datetime-local"
                   value={formData.next_appointment}
                   onChange={(e) => setFormData({...formData, next_appointment: e.target.value})}
-                  className="w-full bg-stone-50 border-b border-stone-200 focus:border-[#143d2d] rounded-lg px-3 py-2 text-sm text-stone-700 outline-none transition-all"
+                  className="w-full bg-secondary border-b border-border focus:border-primary rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-all"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-stone-50 p-4 rounded-xl border border-stone-100">
-                    <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#143d2d] mb-2">
+                <div className="bg-secondary p-4 rounded-xl border border-border">
+                    <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary mb-2">
                         <Brain size={14} /> Insights Chave
                     </label>
                     <textarea 
@@ -235,11 +235,11 @@ export default function TherapyEditor() {
                         onChange={(e) => setFormData({...formData, insights: e.target.value})}
                         placeholder="Quais foram os pontos altos?"
                         rows={3}
-                        className="w-full bg-transparent border-none p-0 text-sm text-stone-700 placeholder-stone-400 outline-none resize-none leading-relaxed"
+                        className="w-full bg-transparent border-none p-0 text-sm text-foreground placeholder-stone-400 outline-none resize-none leading-relaxed"
                     />
                 </div>
-                <div className="bg-stone-50 p-4 rounded-xl border border-stone-100">
-                    <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#143d2d] mb-2">
+                <div className="bg-secondary p-4 rounded-xl border border-border">
+                    <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary mb-2">
                         <CheckSquare size={14} /> Tarefas de Casa
                     </label>
                     <textarea 
@@ -247,32 +247,32 @@ export default function TherapyEditor() {
                         onChange={(e) => setFormData({...formData, action_items: e.target.value})}
                         placeholder="O que preciso fazer até a próxima sessão?"
                         rows={3}
-                        className="w-full bg-transparent border-none p-0 text-sm text-stone-700 placeholder-stone-400 outline-none resize-none leading-relaxed"
+                        className="w-full bg-transparent border-none p-0 text-sm text-foreground placeholder-stone-400 outline-none resize-none leading-relaxed"
                     />
                 </div>
             </div>
           </div>
 
           {/* Área de Texto Principal */}
-          <div className="flex-1 flex flex-col bg-white rounded-[1.5rem] border border-stone-200 shadow-sm relative overflow-hidden min-h-[500px]">
-            <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-[#143d2d]/10 hidden md:block h-full"></div>
+          <div className="flex-1 flex flex-col bg-card rounded-[1.5rem] border border-border shadow-sm relative overflow-hidden min-h-[500px]">
+            <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-primary/10 hidden md:block h-full"></div>
             
             {mode === 'write' ? (
               <textarea 
                 value={formData.notes}
                 onChange={(e) => setFormData({...formData, notes: e.target.value})}
                 placeholder="# Detalhes da Sessão\n\nDescreva como foi a conversa, sentimentos e tópicos abordados..."
-                className="flex-1 w-full h-full resize-none outline-none text-lg text-stone-700 leading-relaxed bg-transparent placeholder-stone-300 p-8 md:pl-12 border-none focus:ring-0 font-sans"
+                className="flex-1 w-full h-full resize-none outline-none text-lg text-foreground leading-relaxed bg-transparent placeholder-stone-300 p-8 md:pl-12 border-none focus:ring-0 font-sans"
                 spellCheck={false}
               />
             ) : (
-              <div className="flex-1 w-full h-full overflow-y-auto p-8 md:pl-12 prose prose-stone prose-lg max-w-none prose-headings:text-[#143d2d] prose-a:text-[#143d2d]">
+              <div className="flex-1 w-full h-full overflow-y-auto p-8 md:pl-12 prose prose-stone prose-lg max-w-none prose-headings:text-primary prose-a:text-primary">
                 {formData.notes ? (
                   <ReactMarkdown>
                     {formData.notes}
                   </ReactMarkdown>
                 ) : (
-                  <p className="text-stone-300 italic">Nenhuma anotação detalhada.</p>
+                  <p className="text-muted-foreground italic">Nenhuma anotação detalhada.</p>
                 )}
               </div>
             )}

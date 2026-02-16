@@ -72,7 +72,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           relative group cursor-pointer overflow-hidden transition-all duration-300
           ${value 
             ? 'border-0' 
-            : 'border-2 border-dashed border-stone-200 hover:border-stone-400 bg-stone-50 hover:bg-stone-100'
+            : 'border-2 border-dashed border-border hover:border-muted-foreground bg-secondary hover:bg-secondary'
           }
           w-32 h-48 md:w-40 md:h-56 rounded-xl flex flex-col items-center justify-center text-center
         `}
@@ -100,19 +100,19 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             {/* Botão Remover */}
             <button
               onClick={handleRemove}
-              className="absolute -top-2 -right-2 bg-white text-red-500 p-1.5 rounded-full shadow-md hover:bg-red-50 transition-colors z-10 opacity-0 group-hover:opacity-100"
+              className="absolute -top-2 -right-2 bg-card text-red-500 p-1.5 rounded-full shadow-md hover:bg-red-50 transition-colors z-10 opacity-0 group-hover:opacity-100"
               title="Remover imagem"
             >
               <X size={14} />
             </button>
           </>
         ) : (
-          <div className="p-4 flex flex-col items-center gap-3 text-stone-400 group-hover:text-stone-600">
+          <div className="p-4 flex flex-col items-center gap-3 text-muted-foreground group-hover:text-muted-foreground">
             {uploading ? (
               <Loader2 className="animate-spin" size={24} />
             ) : (
               <>
-                <div className="p-3 bg-white rounded-full shadow-sm">
+                <div className="p-3 bg-card rounded-full shadow-sm">
                    <Image size={20} />
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-widest">

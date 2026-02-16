@@ -18,9 +18,9 @@ type PeriodType = 'month' | 'quarter' | 'semester' | 'year';
 
 const getTypeLabel = (type?: string) => {
   const labels: Record<string, { label: string; color: string }> = {
-    'fixed': { label: 'Fixa', color: 'text-stone-600' }, 
-    'variable': { label: 'Variável', color: 'text-stone-400' },
-    'temporary': { label: 'Temp', color: 'text-stone-300' },
+    'fixed': { label: 'Fixa', color: 'text-muted-foreground' }, 
+    'variable': { label: 'Variável', color: 'text-muted-foreground' },
+    'temporary': { label: 'Temp', color: 'text-muted-foreground' },
   };
   return labels[type || 'variable'];
 };
@@ -169,24 +169,24 @@ const BillsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate(-1)} className="p-2 -ml-2 hover:bg-stone-100 rounded-full transition-colors text-cappuccino">
+          <button onClick={() => navigate(-1)} className="p-2 -ml-2 hover:bg-secondary rounded-full transition-colors text-muted-foreground">
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-2xl font-semibold text-coffee tracking-tighter">Extrato de Contas</h1>
-            <p className="text-cappuccino text-xs font-bold uppercase tracking-widest mt-1">Gestão Cronológica</p>
+            <h1 className="text-2xl font-semibold text-foreground tracking-tighter">Extrato de Contas</h1>
+            <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">Gestão Cronológica</p>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
           {/* Seletor de Tipo de Período */}
-          <div className="flex bg-stone-100 p-1 rounded-xl">
+          <div className="flex bg-secondary p-1 rounded-xl">
             {(['month', 'quarter', 'semester', 'year'] as PeriodType[]).map((type) => (
               <button
                 key={type}
                 onClick={() => setPeriodType(type)}
                 className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
-                  periodType === type ? 'bg-white text-coffee shadow-sm' : 'text-stone-400 hover:text-stone-600'
+                  periodType === type ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'
                 }`}
               >
                 {type === 'month' ? 'Mês' : type === 'quarter' ? 'Tri' : type === 'semester' ? 'Sem' : 'Ano'}
@@ -195,15 +195,15 @@ const BillsPage: React.FC = () => {
           </div>
 
           {/* Navegador de Data */}
-          <div className="flex items-center bg-white border border-stone-200 rounded-xl p-1 shadow-sm">
-            <button onClick={() => navigatePeriod('prev')} className="p-1.5 hover:bg-stone-50 rounded-lg text-stone-400 hover:text-coffee transition-colors">
+          <div className="flex items-center bg-card border border-border rounded-xl p-1 shadow-sm">
+            <button onClick={() => navigatePeriod('prev')} className="p-1.5 hover:bg-secondary rounded-lg text-muted-foreground hover:text-foreground transition-colors">
               <ChevronLeft size={18} />
             </button>
             <div className="flex items-center gap-2 px-3 min-w-[140px] justify-center">
               <CalendarDays size={14} className="text-olive" />
-              <span className="text-xs font-bold text-coffee capitalize whitespace-nowrap">{getPeriodLabel()}</span>
+              <span className="text-xs font-bold text-foreground capitalize whitespace-nowrap">{getPeriodLabel()}</span>
             </div>
-            <button onClick={() => navigatePeriod('next')} className="p-1.5 hover:bg-stone-50 rounded-lg text-stone-400 hover:text-coffee transition-colors">
+            <button onClick={() => navigatePeriod('next')} className="p-1.5 hover:bg-secondary rounded-lg text-muted-foreground hover:text-foreground transition-colors">
               <ChevronRight size={18} />
             </button>
           </div>
@@ -219,15 +219,15 @@ const BillsPage: React.FC = () => {
 
       {/* Cards de Resumo Dinâmicos */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white p-6 rounded-[2rem] border border-stone-100 shadow-sm group hover:shadow-md transition-shadow">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-cappuccino mb-2">Pendente no Período</p>
+        <div className="bg-card p-6 rounded-[2rem] border border-border shadow-sm group hover:shadow-md transition-shadow">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Pendente no Período</p>
           <div className="flex items-end justify-between">
-            <h2 className="text-2xl font-bold text-coffee">R$ {stats.pending.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h2>
-            <Clock size={18} className="text-stone-300 group-hover:text-stone-400 transition-colors" />
+            <h2 className="text-2xl font-bold text-foreground">R$ {stats.pending.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h2>
+            <Clock size={18} className="text-muted-foreground group-hover:text-muted-foreground transition-colors" />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-[2rem] border border-red-100 shadow-sm group hover:shadow-md transition-shadow">
+        <div className="bg-card p-6 rounded-[2rem] border border-red-100 shadow-sm group hover:shadow-md transition-shadow">
           <p className="text-[10px] font-bold uppercase tracking-widest text-red-800 mb-2">Atrasado no Período</p>
           <div className="flex items-end justify-between">
             <h2 className="text-2xl font-bold text-red-700">R$ {stats.overdue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h2>
@@ -235,11 +235,11 @@ const BillsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-[2rem] border border-emerald-100 shadow-sm group hover:shadow-md transition-shadow">
+        <div className="bg-card p-6 rounded-[2rem] border border-emerald-100 shadow-sm group hover:shadow-md transition-shadow">
           <p className="text-[10px] font-bold uppercase tracking-widest text-olive mb-2">Pago no Período</p>
           <div className="flex items-end justify-between">
             <h2 className="text-2xl font-bold text-olive">R$ {stats.paid.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h2>
-            <CheckCircle2 size={18} className="text-emerald-200 group-hover:text-olive transition-colors" />
+            <CheckCircle2 size={18} className="text-emerald-200 group-hover:text-primary transition-colors" />
           </div>
         </div>
       </div>
@@ -258,7 +258,7 @@ const BillsPage: React.FC = () => {
                 className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest border transition-all whitespace-nowrap ${
                     statusFilter === filter.id 
                     ? 'bg-stone-800 text-white border-stone-800 shadow-md scale-105' 
-                    : 'bg-white text-cappuccino border-stone-200 hover:bg-stone-50'
+                    : 'bg-card text-muted-foreground border-border hover:bg-secondary'
                 }`}
             >
                 {filter.label}
@@ -268,9 +268,9 @@ const BillsPage: React.FC = () => {
 
       {/* LISTA AGRUPADA */}
       {loading ? (
-        <div className="p-20 text-center text-stone-400 animate-pulse bg-white rounded-[2rem] border border-stone-100">Calculando lançamentos...</div>
+        <div className="p-20 text-center text-muted-foreground animate-pulse bg-card rounded-[2rem] border border-border">Calculando lançamentos...</div>
       ) : groupedBills.length === 0 ? (
-        <div className="p-20 text-center text-stone-400 italic bg-white rounded-[2rem] border border-dashed border-stone-200">
+        <div className="p-20 text-center text-muted-foreground italic bg-card rounded-[2rem] border border-dashed border-border">
           Nenhuma conta encontrada para o período selecionado.
         </div>
       ) : (
@@ -280,10 +280,10 @@ const BillsPage: React.FC = () => {
             return (
               <div key={group.date} className="animate-fade-in">
                 <div className="flex items-center gap-3 mb-3 ml-2">
-                  <div className={`text-[10px] font-black uppercase tracking-[0.2em] ${dateInfo.isToday ? 'text-blue-600' : dateInfo.isPast ? 'text-red-500' : 'text-stone-400'}`}>
+                  <div className={`text-[10px] font-black uppercase tracking-[0.2em] ${dateInfo.isToday ? 'text-blue-600' : dateInfo.isPast ? 'text-red-500' : 'text-muted-foreground'}`}>
                     {dateInfo.text}
                   </div>
-                  <div className="h-[1px] flex-1 bg-stone-100"></div>
+                  <div className="h-[1px] flex-1 bg-secondary"></div>
                 </div>
 
                 <div className="space-y-2">
@@ -292,25 +292,25 @@ const BillsPage: React.FC = () => {
                       key={bill.id} 
                       className={`group flex items-center justify-between py-3.5 px-5 rounded-2xl border transition-all hover:shadow-sm ${
                         bill.status === 'paid' 
-                          ? 'bg-stone-50/50 border-stone-100 opacity-60' 
-                          : 'bg-white border-stone-100 hover:border-stone-300'
+                          ? 'bg-secondary/50 border-border opacity-60' 
+                          : 'bg-card border-border hover:border-border'
                       }`}
                     >
                       <div className="flex items-center gap-4 min-w-0">
                         <div className={`p-2 rounded-xl flex-shrink-0 ${
                           bill.status === 'paid' ? 'bg-emerald-50 text-emerald-600' :
                           bill.status === 'overdue' ? 'bg-red-50 text-red-600' :
-                          'bg-stone-100 text-stone-400'
+                          'bg-secondary text-muted-foreground'
                         }`}>
                           {bill.status === 'paid' ? <CheckCircle2 size={16} /> : <Clock size={16} />}
                         </div>
 
                         <div className="min-w-0">
-                          <h3 className={`font-bold text-sm truncate ${bill.status === 'paid' ? 'text-stone-400 line-through' : 'text-stone-800'}`}>
+                          <h3 className={`font-bold text-sm truncate ${bill.status === 'paid' ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
                             {bill.description}
                           </h3>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-[9px] font-bold uppercase tracking-wider text-stone-400 bg-stone-100/50 px-1.5 py-0.5 rounded">
+                            <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground bg-secondary/50 px-1.5 py-0.5 rounded">
                               {bill.category}
                             </span>
                             {bill.is_installment && (
@@ -326,16 +326,16 @@ const BillsPage: React.FC = () => {
                         <p className={`text-sm font-bold ${
                           bill.status === 'paid' ? 'text-emerald-600' : 
                           bill.status === 'overdue' ? 'text-red-600' : 
-                          'text-stone-700'
+                          'text-foreground'
                         }`}>
                           R$ {bill.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                         </p>
                         
                         <div className="hidden group-hover:flex gap-1">
-                          <button onClick={() => handleEditClick(bill)} className="p-2 hover:bg-stone-100 text-stone-400 hover:text-stone-600 rounded-lg transition-colors"><Pencil size={14} /></button>
-                          <button onClick={() => handleDeleteClick(bill.id)} className="p-2 hover:bg-red-50 text-stone-400 hover:text-red-500 rounded-lg transition-colors"><Trash2 size={14} /></button>
+                          <button onClick={() => handleEditClick(bill)} className="p-2 hover:bg-secondary text-muted-foreground hover:text-muted-foreground rounded-lg transition-colors"><Pencil size={14} /></button>
+                          <button onClick={() => handleDeleteClick(bill.id)} className="p-2 hover:bg-red-50 text-muted-foreground hover:text-red-500 rounded-lg transition-colors"><Trash2 size={14} /></button>
                           {bill.status !== 'paid' && (
-                            <button onClick={() => handlePayClick(bill)} className="px-3 py-1.5 bg-olive hover:bg-black text-white rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-sm transition-all active:scale-95">Pagar</button>
+                            <button onClick={() => handlePayClick(bill)} className="px-3 py-1.5 bg-primary hover:bg-black text-white rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-sm transition-all active:scale-95">Pagar</button>
                           )}
                         </div>
                       </div>

@@ -186,14 +186,14 @@ export default function StudiesDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent pb-20 font-sans text-gray-900 animate-fade-in w-full">
+    <div className="min-h-screen bg-transparent pb-20 font-sans text-foreground animate-fade-in w-full">
       
       {/* --- HEADER --- */}
       <div className="w-full px-8 pt-8 pb-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Meus Estudos</h1>
-            <p className="text-sm text-gray-500 mt-1">Gerencie seus cursos, livros e anotações.</p>
+            <h1 className="text-2xl font-bold text-foreground tracking-tight">Meus Estudos</h1>
+            <p className="text-sm text-muted-foreground mt-1">Gerencie seus cursos, livros e anotações.</p>
           </div>
           
           <button 
@@ -206,12 +206,12 @@ export default function StudiesDashboard() {
 
         {/* Search Bar */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
           <input 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar por nome ou categoria..."
-            className="w-full bg-white border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm placeholder:text-gray-400"
+            className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm placeholder:text-muted-foreground"
           />
         </div>
       </div>
@@ -224,10 +224,10 @@ export default function StudiesDashboard() {
             <Loader2 className="animate-spin text-blue-600" size={32} />
           </div>
         ) : Object.keys(groupedCourses).length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-2xl border border-gray-200 border-dashed">
+          <div className="text-center py-20 bg-card rounded-2xl border border-border border-dashed">
             <Book className="mx-auto h-12 w-12 text-gray-300 mb-3" />
-            <h3 className="text-lg font-medium text-gray-900">Nenhum curso encontrado</h3>
-            <p className="text-gray-500 text-sm mb-6">Comece adicionando seu primeiro material de estudo.</p>
+            <h3 className="text-lg font-medium text-foreground">Nenhum curso encontrado</h3>
+            <p className="text-muted-foreground text-sm mb-6">Comece adicionando seu primeiro material de estudo.</p>
             <button onClick={handleOpenCreate} className="text-blue-600 hover:underline text-sm font-medium">
               + Criar Curso
             </button>
@@ -237,18 +237,18 @@ export default function StudiesDashboard() {
             <div key={category} className="animate-fade-in w-full">
               {/* Category Header */}
               <div className="flex items-center gap-2 mb-3 px-1">
-                <Folder size={16} className="text-gray-400" />
-                <h2 className="text-sm font-bold text-gray-700 uppercase tracking-wider">{category}</h2>
+                <Folder size={16} className="text-muted-foreground" />
+                <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">{category}</h2>
                 <div className="h-px bg-gray-200 flex-1 ml-2"></div>
               </div>
 
               {/* Courses List */}
-              <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden divide-y divide-gray-100 w-full">
+              <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden divide-y divide-gray-100 w-full">
                 {groupedCourses[category].map(course => (
                   <div 
                     key={course.id}
                     onClick={() => navigate(`/personal/studies/courses/${course.id}`)}
-                    className="group flex items-center justify-between p-4 hover:bg-gray-50 transition-colors cursor-pointer w-full"
+                    className="group flex items-center justify-between p-4 hover:bg-secondary transition-colors cursor-pointer w-full"
                   >
                     {/* Left: Info */}
                     <div className="flex items-center gap-4 flex-1 min-w-0">
@@ -256,15 +256,15 @@ export default function StudiesDashboard() {
                         <Book size={20} />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="text-base font-semibold text-gray-900 truncate group-hover:text-blue-600 transition-colors">
+                        <h3 className="text-base font-semibold text-foreground truncate group-hover:text-blue-600 transition-colors">
                           {course.title}
                         </h3>
                         {course.description ? (
-                          <p className="text-xs text-gray-500 truncate max-w-md">
+                          <p className="text-xs text-muted-foreground truncate max-w-md">
                             {course.description}
                           </p>
                         ) : (
-                          <p className="text-xs text-gray-400 italic">Sem descrição</p>
+                          <p className="text-xs text-muted-foreground italic">Sem descrição</p>
                         )}
                       </div>
                     </div>
@@ -273,14 +273,14 @@ export default function StudiesDashboard() {
                     <div className="flex items-center gap-2 pl-4">
                       <button 
                         onClick={(e) => handleOpenEdit(course, e)}
-                        className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                        className="p-2 text-muted-foreground hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
                         title="Editar"
                       >
                         <Pencil size={16} />
                       </button>
                       <button 
                         onClick={(e) => handleDeleteRequest(course.id, e)}
-                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                        className="p-2 text-muted-foreground hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
                         title="Excluir"
                       >
                         <Trash2 size={16} />
@@ -305,15 +305,15 @@ export default function StudiesDashboard() {
             onClick={() => setIsModalOpen(false)} 
           />
           
-          <div className="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-fade-in">
+          <div className="relative bg-card w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-fade-in">
             {/* Modal Header */}
             <div className="flex justify-between items-center p-6 border-b border-gray-100">
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-foreground">
                 {editingCourse ? 'Editar Curso' : 'Novo Curso'}
               </h2>
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
+                className="p-2 hover:bg-secondary rounded-full text-muted-foreground hover:text-foreground transition-colors"
               >
                 <X size={20} />
               </button>
@@ -325,66 +325,66 @@ export default function StudiesDashboard() {
               {/* Título & Categoria */}
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Título do Curso</label>
+                  <label className="block text-xs font-semibold text-muted-foreground uppercase mb-1">Título do Curso</label>
                   <input 
                     required
                     value={formData.title}
                     onChange={e => setFormData({...formData, title: e.target.value})}
                     placeholder="Ex: Introdução ao Design"
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                    className="w-full bg-secondary border border-border rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Categoria</label>
+                  <label className="block text-xs font-semibold text-muted-foreground uppercase mb-1">Categoria</label>
                   <input 
                     value={formData.category}
                     onChange={e => setFormData({...formData, category: e.target.value})}
                     placeholder="Ex: Design, Programação, Finanças..."
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                    className="w-full bg-secondary border border-border rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Descrição</label>
+                  <label className="block text-xs font-semibold text-muted-foreground uppercase mb-1">Descrição</label>
                   <textarea 
                     rows={3}
                     value={formData.description}
                     onChange={e => setFormData({...formData, description: e.target.value})}
                     placeholder="Sobre o que é este curso?"
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all resize-none"
+                    className="w-full bg-secondary border border-border rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all resize-none"
                   />
                 </div>
               </div>
 
-              <div className="h-px bg-gray-100" />
+              <div className="h-px bg-secondary" />
 
               {/* Dados de Acesso (Opcional) */}
               <div className="space-y-4">
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Dados de Acesso (Opcional)</h3>
+                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Dados de Acesso (Opcional)</h3>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 mb-1">Link do Curso</label>
+                  <label className="block text-xs font-semibold text-muted-foreground mb-1">Link do Curso</label>
                   <input 
                     type="url"
                     value={formData.course_url}
                     onChange={e => setFormData({...formData, course_url: e.target.value})}
                     placeholder="https://..."
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                    className="w-full bg-secondary border border-border rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1">Email / Login</label>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">Email / Login</label>
                     <input 
                       value={formData.access_email}
                       onChange={e => setFormData({...formData, access_email: e.target.value})}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                      className="w-full bg-secondary border border-border rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1">Senha</label>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">Senha</label>
                     <input 
                       value={formData.access_password}
                       onChange={e => setFormData({...formData, access_password: e.target.value})}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                      className="w-full bg-secondary border border-border rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -395,7 +395,7 @@ export default function StudiesDashboard() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition-colors text-sm"
+                  className="flex-1 py-3 bg-secondary hover:bg-gray-200 text-foreground font-semibold rounded-lg transition-colors text-sm"
                 >
                   Cancelar
                 </button>

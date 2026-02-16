@@ -94,9 +94,9 @@ export const BeverageFormModal: React.FC<BeverageFormModalProps> = ({ isOpen, on
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-lg rounded-[2rem] p-8 shadow-2xl relative flex flex-col max-h-[90vh]">
-        <button onClick={onClose} className="absolute top-6 right-6 text-stone-400 hover:text-stone-600 z-10">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+      <div className="bg-card w-full max-w-lg rounded-[2rem] p-8 shadow-2xl relative flex flex-col max-h-[90vh]">
+        <button onClick={onClose} className="absolute top-6 right-6 text-muted-foreground hover:text-muted-foreground z-10">
           <X size={20} />
         </button>
         
@@ -104,7 +104,7 @@ export const BeverageFormModal: React.FC<BeverageFormModalProps> = ({ isOpen, on
           <div className="p-3 bg-rose-50 rounded-full text-rose-800">
             <Wine size={24} />
           </div>
-          <h2 className="text-xl font-bold text-stone-800">
+          <h2 className="text-xl font-bold text-foreground">
             {beverageToEdit ? 'Editar Rótulo' : 'Nova Degustação'}
           </h2>
         </div>
@@ -123,7 +123,7 @@ export const BeverageFormModal: React.FC<BeverageFormModalProps> = ({ isOpen, on
                 <button 
                     type="button"
                     onClick={() => setShowUrlInput(!showUrlInput)}
-                    className="text-[10px] font-bold uppercase tracking-wider text-stone-400 hover:text-stone-600 flex items-center gap-1"
+                    className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground hover:text-muted-foreground flex items-center gap-1"
                 >
                     <LinkIcon size={10} /> {showUrlInput ? 'Ocultar Link' : 'Colar URL'}
                 </button>
@@ -132,7 +132,7 @@ export const BeverageFormModal: React.FC<BeverageFormModalProps> = ({ isOpen, on
                         value={imageUrl}
                         onChange={(e) => setImageUrl(e.target.value)}
                         placeholder="https://..."
-                        className="w-32 bg-stone-50 border border-stone-200 rounded-lg px-2 py-1 text-[10px] outline-none focus:border-stone-400"
+                        className="w-32 bg-secondary border border-border rounded-lg px-2 py-1 text-[10px] outline-none focus:border-stone-400"
                     />
                 )}
             </div>
@@ -140,33 +140,33 @@ export const BeverageFormModal: React.FC<BeverageFormModalProps> = ({ isOpen, on
             {/* Campos Principais */}
             <div className="flex-1 space-y-4">
                 <div>
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Nome do Rótulo</label>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Nome do Rótulo</label>
                     <input 
                     value={name}
                     onChange={e => setName(e.target.value)}
                     placeholder="Ex: Angelica Zapata Malbec"
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-700 outline-none focus:ring-2 focus:ring-rose-200 font-semibold"
+                    className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground outline-none focus:ring-2 focus:ring-rose-200 font-semibold"
                     autoFocus
                     />
                 </div>
 
                 <div>
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Produtor / Marca</label>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Produtor / Marca</label>
                     <input 
                     value={producer}
                     onChange={e => setProducer(e.target.value)}
                     placeholder="Ex: Catena Zapata"
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-700 outline-none focus:ring-2 focus:ring-rose-200"
+                    className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground outline-none focus:ring-2 focus:ring-rose-200"
                     />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Tipo</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Tipo</label>
                         <select 
                             value={type}
                             onChange={e => setType(e.target.value as BeverageType)}
-                            className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-700 outline-none focus:ring-2 focus:ring-rose-200 appearance-none cursor-pointer"
+                            className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground outline-none focus:ring-2 focus:ring-rose-200 appearance-none cursor-pointer"
                         >
                             {Object.entries(BEVERAGE_TYPES).map(([key, label]) => (
                                 <option key={key} value={key}>{label}</option>
@@ -174,12 +174,12 @@ export const BeverageFormModal: React.FC<BeverageFormModalProps> = ({ isOpen, on
                         </select>
                     </div>
                     <div>
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Uva / Estilo</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Uva / Estilo</label>
                         <input 
                         value={grape}
                         onChange={e => setGrape(e.target.value)}
                         placeholder="Ex: Malbec"
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-700 outline-none focus:ring-2 focus:ring-rose-200"
+                        className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground outline-none focus:ring-2 focus:ring-rose-200"
                         />
                     </div>
                 </div>
@@ -188,30 +188,30 @@ export const BeverageFormModal: React.FC<BeverageFormModalProps> = ({ isOpen, on
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-                <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Preço Pago (R$)</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Preço Pago (R$)</label>
                 <input 
                     type="number"
                     step="0.01"
                     value={price}
                     onChange={e => setPrice(e.target.value)}
                     placeholder="0.00"
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-700 outline-none focus:ring-2 focus:ring-rose-200"
+                    className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground outline-none focus:ring-2 focus:ring-rose-200"
                 />
             </div>
             <div>
-                <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Data da Experiência</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Data da Experiência</label>
                 <input 
                 type="date"
                 value={date}
                 onChange={e => setDate(e.target.value)}
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-700 outline-none focus:ring-2 focus:ring-rose-200"
+                className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground outline-none focus:ring-2 focus:ring-rose-200"
                 />
             </div>
           </div>
 
           <div>
-            <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1 mb-2 block">Avaliação</label>
-            <div className="flex gap-2 justify-center bg-stone-50 p-3 rounded-xl border border-stone-200">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1 mb-2 block">Avaliação</label>
+            <div className="flex gap-2 justify-center bg-secondary p-3 rounded-xl border border-border">
                 {[1, 2, 3, 4, 5].map((star) => (
                     <button
                         key={star}
@@ -221,7 +221,7 @@ export const BeverageFormModal: React.FC<BeverageFormModalProps> = ({ isOpen, on
                     >
                         <Star 
                             size={28} 
-                            className={star <= rating ? "fill-amber-400 text-amber-400" : "text-stone-300"} 
+                            className={star <= rating ? "fill-amber-400 text-amber-400" : "text-muted-foreground"} 
                             strokeWidth={1.5}
                         />
                     </button>
@@ -230,13 +230,13 @@ export const BeverageFormModal: React.FC<BeverageFormModalProps> = ({ isOpen, on
           </div>
 
           <div>
-            <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Minha Opinião</label>
+            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Minha Opinião</label>
             <textarea 
               value={review}
               onChange={e => setReview(e.target.value)}
               placeholder="O que achou? Notas de sabor, harmonização..."
               rows={3}
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-700 outline-none focus:ring-2 focus:ring-rose-200 resize-none"
+              className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground outline-none focus:ring-2 focus:ring-rose-200 resize-none"
             />
           </div>
 

@@ -58,42 +58,42 @@ export const WorkoutTemplateForm: React.FC<WorkoutTemplateFormProps> = ({
 
   return createPortal(
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-md rounded-[2rem] p-6 shadow-2xl relative flex flex-col max-h-[85vh]">
+      <div className="bg-card w-full max-w-md rounded-[2rem] p-6 shadow-2xl relative flex flex-col max-h-[85vh]">
         <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-stone-800">Novo Modelo de Treino</h2>
-            <button onClick={onClose} className="p-2 bg-stone-100 rounded-full text-stone-400 hover:text-stone-600">
+            <h2 className="text-xl font-bold text-foreground">Novo Modelo de Treino</h2>
+            <button onClick={onClose} className="p-2 bg-secondary rounded-full text-muted-foreground hover:text-muted-foreground">
                 <X size={20} />
             </button>
         </div>
 
         <div className="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
             <div>
-                <label className="text-xs font-bold uppercase text-stone-400 tracking-widest ml-1">Nome do Modelo</label>
+                <label className="text-xs font-bold uppercase text-muted-foreground tracking-widest ml-1">Nome do Modelo</label>
                 <input 
                     value={name}
                     onChange={e => setName(e.target.value)}
                     placeholder="Ex: Treino A - Superiores"
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-800 outline-none focus:border-[#143d2d] transition-colors"
+                    className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground outline-none focus:border-primary transition-colors"
                     autoFocus
                 />
             </div>
 
             <div>
-                <label className="text-xs font-bold uppercase text-stone-400 tracking-widest ml-1 mb-2 block">Exercícios da Rotina</label>
+                <label className="text-xs font-bold uppercase text-muted-foreground tracking-widest ml-1 mb-2 block">Exercícios da Rotina</label>
                 
                 {/* Lista de Selecionados */}
                 <div className="space-y-2 mb-4">
                     {selectedItems.map((item, index) => (
-                        <div key={item.tempId} className="flex items-center gap-3 bg-stone-50 p-3 rounded-xl border border-stone-100 group">
-                            <span className="text-xs font-bold text-stone-300 w-4">{index + 1}</span>
-                            <span className="flex-1 text-sm font-semibold text-stone-700">{getExerciseName(item.exerciseId)}</span>
-                            <button onClick={() => handleRemoveItem(item.tempId)} className="text-stone-300 hover:text-red-500">
+                        <div key={item.tempId} className="flex items-center gap-3 bg-secondary p-3 rounded-xl border border-border group">
+                            <span className="text-xs font-bold text-muted-foreground w-4">{index + 1}</span>
+                            <span className="flex-1 text-sm font-semibold text-foreground">{getExerciseName(item.exerciseId)}</span>
+                            <button onClick={() => handleRemoveItem(item.tempId)} className="text-muted-foreground hover:text-red-500">
                                 <Trash2 size={16} />
                             </button>
                         </div>
                     ))}
                     {selectedItems.length === 0 && (
-                        <div className="text-center py-6 border-2 border-dashed border-stone-200 rounded-xl text-stone-400 text-xs italic">
+                        <div className="text-center py-6 border-2 border-dashed border-border rounded-xl text-muted-foreground text-xs italic">
                             Adicione exercícios abaixo para montar a rotina.
                         </div>
                     )}
@@ -104,7 +104,7 @@ export const WorkoutTemplateForm: React.FC<WorkoutTemplateFormProps> = ({
                     <select 
                         value={currentExerciseId}
                         onChange={e => setCurrentExerciseId(e.target.value)}
-                        className="flex-1 bg-white border border-stone-200 rounded-xl px-3 py-2 text-sm text-stone-700 outline-none focus:border-[#143d2d]"
+                        className="flex-1 bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
                     >
                         <option value="">Selecione um exercício...</option>
                         {exercises.map(ex => (
@@ -114,7 +114,7 @@ export const WorkoutTemplateForm: React.FC<WorkoutTemplateFormProps> = ({
                     <button 
                         onClick={handleAddItem}
                         disabled={!currentExerciseId}
-                        className="bg-stone-100 hover:bg-stone-200 text-stone-600 p-2.5 rounded-xl transition-colors disabled:opacity-50"
+                        className="bg-secondary hover:bg-accent text-muted-foreground p-2.5 rounded-xl transition-colors disabled:opacity-50"
                     >
                         <Plus size={20} />
                     </button>
@@ -122,11 +122,11 @@ export const WorkoutTemplateForm: React.FC<WorkoutTemplateFormProps> = ({
             </div>
         </div>
 
-        <div className="pt-6 mt-2 border-t border-stone-100">
+        <div className="pt-6 mt-2 border-t border-border">
             <button 
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="w-full bg-[#143d2d] hover:bg-[#0f2e22] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full bg-primary hover:bg-[#0f2e22] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
                 {isSubmitting ? 'Salvando...' : 'Salvar Modelo'} <Save size={18} />
             </button>

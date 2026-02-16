@@ -99,26 +99,26 @@ export default function PrayerEditor() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center">
-        <Loader2 className="animate-spin text-stone-400" size={32} />
+      <div className="min-h-screen bg-card flex items-center justify-center">
+        <Loader2 className="animate-spin text-muted-foreground" size={32} />
       </div>
     );
   }
 
   return (
     // 1. Container Principal: h-screen trava a altura na janela, flex-col organiza verticalmente, overflow-hidden impede scroll externo
-    <div className="h-screen flex flex-col bg-[#FAF9F6] font-sans text-stone-800 animate-fade-in overflow-hidden">
+    <div className="h-screen flex flex-col bg-card font-sans text-foreground animate-fade-in overflow-hidden">
       
       {/* 2. Cabeçalho: flex-none garante que ele não encolha nem cresça, ocupando seu espaço natural */}
-      <header className="flex-none w-full bg-[#FAF9F6] border-b border-stone-200 px-6 py-4 flex justify-between items-center z-10">
+      <header className="flex-none w-full bg-card border-b border-border px-6 py-4 flex justify-between items-center z-10">
         <div className="flex items-center gap-4">
           <button 
             onClick={() => navigate('/personal/spiritual/prayers')}
-            className="p-2 -ml-2 hover:bg-stone-200 rounded-full text-stone-500 transition-colors"
+            className="p-2 -ml-2 hover:bg-accent rounded-full text-muted-foreground transition-colors"
           >
             <ArrowLeft size={20} />
           </button>
-          <h1 className="text-sm font-bold uppercase tracking-widest text-stone-500 hidden md:block">
+          <h1 className="text-sm font-bold uppercase tracking-widest text-muted-foreground hidden md:block">
             {id ? 'Editando Modelo' : 'Novo Modelo de Oração'}
           </h1>
         </div>
@@ -127,7 +127,7 @@ export default function PrayerEditor() {
           {/* Toggle Visualizar/Editar */}
           <button
             onClick={() => setMode(mode === 'write' ? 'read' : 'write')}
-            className="flex items-center gap-2 bg-white hover:bg-stone-100 text-stone-600 border border-stone-200 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all active:scale-95"
+            className="flex items-center gap-2 bg-card hover:bg-secondary text-muted-foreground border border-border px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all active:scale-95"
             title={mode === 'write' ? "Visualizar Leitura" : "Voltar a Editar"}
           >
             {mode === 'write' ? <Eye size={16} /> : <PenTool size={16} />}
@@ -137,7 +137,7 @@ export default function PrayerEditor() {
           {id && (
             <button 
               onClick={handleDelete}
-              className="p-2 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+              className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
               title="Excluir"
             >
               <Trash2 size={20} />
@@ -159,44 +159,44 @@ export default function PrayerEditor() {
         <div className="max-w-4xl mx-auto p-4 md:p-8 flex flex-col gap-6 min-h-full">
           
           {/* Metadados (Formulário Estruturado) */}
-          <div className="flex-none bg-white p-6 rounded-[1.5rem] border border-stone-100 shadow-sm space-y-4">
+          <div className="flex-none bg-card p-6 rounded-[1.5rem] border border-border shadow-sm space-y-4">
             
             <div className="flex items-center gap-3 mb-2">
-               <div className="p-2 bg-stone-50 rounded-lg text-[#8D6E63]">
+               <div className="p-2 bg-secondary rounded-lg text-[#8D6E63]">
                   <Feather size={20} />
                </div>
-               <h2 className="text-lg font-bold text-stone-800">Dados da Oração</h2>
+               <h2 className="text-lg font-bold text-foreground">Dados da Oração</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Campo 1: Título */}
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-stone-500 ml-1">
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">
                   Título do Modelo
                 </label>
                 <input 
                   value={formData.title}
                   onChange={(e) => setFormData({...formData, title: e.target.value})}
                   placeholder="Ex: Oração de Arrependimento"
-                  className="flex h-12 w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm ring-offset-white placeholder:text-stone-400 focus-visible:outline-none focus:ring-2 focus:ring-stone-400 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-all text-stone-800"
+                  className="flex h-12 w-full rounded-xl border border-border bg-card px-4 py-3 text-sm ring-offset-white placeholder:text-muted-foreground focus-visible:outline-none focus:ring-2 focus:ring-stone-400 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-all text-foreground"
                   autoFocus={!id}
                 />
               </div>
 
               {/* Campo 2: Referência */}
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-stone-500 ml-1">
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">
                   Referência / Fonte
                 </label>
                 <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
                     <Quote size={16} />
                   </div>
                   <input 
                     value={formData.reference}
                     onChange={(e) => setFormData({...formData, reference: e.target.value})}
                     placeholder="Ex: Salmo 51, Agostinho, etc."
-                    className="flex h-12 w-full rounded-xl border border-stone-200 bg-white pl-11 pr-4 py-3 text-sm ring-offset-white placeholder:text-stone-400 focus-visible:outline-none focus:ring-2 focus:ring-stone-400 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-all text-stone-800"
+                    className="flex h-12 w-full rounded-xl border border-border bg-card pl-11 pr-4 py-3 text-sm ring-offset-white placeholder:text-muted-foreground focus-visible:outline-none focus:ring-2 focus:ring-stone-400 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-all text-foreground"
                   />
                 </div>
               </div>
@@ -204,16 +204,16 @@ export default function PrayerEditor() {
           </div>
 
           {/* Área de Texto Principal (Papel) */}
-          <div className="flex-1 flex flex-col bg-white rounded-[1.5rem] border border-stone-100 shadow-sm relative overflow-hidden min-h-[500px]">
+          <div className="flex-1 flex flex-col bg-card rounded-[1.5rem] border border-border shadow-sm relative overflow-hidden min-h-[500px]">
             {/* Linhas decorativas sutis na lateral */}
-            <div className="absolute top-0 left-8 bottom-0 w-px bg-stone-50 hidden md:block h-full pointer-events-none"></div>
+            <div className="absolute top-0 left-8 bottom-0 w-px bg-secondary hidden md:block h-full pointer-events-none"></div>
             
             {mode === 'write' ? (
               <textarea 
                 value={formData.content}
                 onChange={(e) => setFormData({...formData, content: e.target.value})}
                 placeholder="# Oração\n\nEscreva aqui o texto da oração..."
-                className="flex-1 w-full h-full resize-none outline-none text-lg text-stone-700 font-serif leading-loose bg-transparent placeholder-stone-300 p-8 md:pl-16 border-none focus:ring-0"
+                className="flex-1 w-full h-full resize-none outline-none text-lg text-foreground font-serif leading-loose bg-transparent placeholder-stone-300 p-8 md:pl-16 border-none focus:ring-0"
                 spellCheck={false}
               />
             ) : (
@@ -223,7 +223,7 @@ export default function PrayerEditor() {
                     {formData.content}
                   </ReactMarkdown>
                 ) : (
-                  <p className="text-stone-300 italic text-center mt-20">Nenhuma oração escrita para visualizar.</p>
+                  <p className="text-muted-foreground italic text-center mt-20">Nenhuma oração escrita para visualizar.</p>
                 )}
               </div>
             )}

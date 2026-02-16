@@ -50,19 +50,19 @@ export const TestamentSection: React.FC<TestamentSectionProps> = ({
       {/* Header da Seção */}
       <button 
         onClick={() => setIsSectionExpanded(!isSectionExpanded)}
-        className={`w-full flex items-center justify-between group p-3 rounded-xl transition-colors mb-3 select-none ${highlight ? 'bg-blue-50/50' : 'hover:bg-stone-50'}`}
+        className={`w-full flex items-center justify-between group p-3 rounded-xl transition-colors mb-3 select-none ${highlight ? 'bg-blue-50/50' : 'hover:bg-secondary'}`}
       >
-        <h2 className="text-lg font-bold text-coffee flex items-center gap-3 px-1">
-          <span className={`w-1.5 h-6 rounded-full transition-colors ${highlight ? 'bg-blue-500 shadow-blue-200 shadow-sm' : (isSectionExpanded ? 'bg-olive' : 'bg-stone-300')}`}></span>
+        <h2 className="text-lg font-bold text-foreground flex items-center gap-3 px-1">
+          <span className={`w-1.5 h-6 rounded-full transition-colors ${highlight ? 'bg-blue-500 shadow-blue-200 shadow-sm' : (isSectionExpanded ? 'bg-primary' : 'bg-stone-300')}`}></span>
           {title}
-          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${highlight ? 'bg-blue-100 text-blue-600' : 'bg-stone-100 text-stone-400'}`}>
+          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${highlight ? 'bg-blue-100 text-blue-600' : 'bg-secondary text-muted-foreground'}`}>
             {books.length} {books.length === 1 ? 'livro' : 'livros'}
           </span>
         </h2>
         
         <div className={`
-          p-2 rounded-full text-stone-400 transition-all duration-300
-          ${isSectionExpanded ? 'bg-white shadow-sm rotate-180 text-olive' : 'bg-transparent rotate-0'}
+          p-2 rounded-full text-muted-foreground transition-all duration-300
+          ${isSectionExpanded ? 'bg-card shadow-sm rotate-180 text-olive' : 'bg-transparent rotate-0'}
         `}>
           <ChevronDown size={20} />
         </div>
@@ -70,7 +70,7 @@ export const TestamentSection: React.FC<TestamentSectionProps> = ({
       
       {/* Container Lista Vertical (Accordion Style) */}
       {isSectionExpanded && (
-        <div className={`bg-white rounded-[1.5rem] border overflow-hidden shadow-sm divide-y divide-stone-50 animate-fade-in origin-top ${highlight ? 'border-blue-100 shadow-blue-50' : 'border-stone-100'}`}>
+        <div className={`bg-card rounded-[1.5rem] border overflow-hidden shadow-sm divide-y divide-stone-50 animate-fade-in origin-top ${highlight ? 'border-blue-100 shadow-blue-50' : 'border-border'}`}>
           {books.map((book) => {
             const stats = getBookProgress(book.name, book.chapters);
             const isComplete = stats.percentage === 100;
@@ -84,15 +84,15 @@ export const TestamentSection: React.FC<TestamentSectionProps> = ({
                   onClick={() => toggleBook(book.name)}
                   className={`
                     w-full flex items-center justify-between p-5 cursor-pointer transition-all
-                    ${isExpanded ? 'bg-stone-50/80' : 'hover:bg-stone-50/40 bg-white'}
+                    ${isExpanded ? 'bg-secondary/80' : 'hover:bg-secondary/40 bg-card'}
                   `}
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`text-stone-400 transition-transform duration-300 ${isExpanded ? 'rotate-90 text-olive' : ''}`}>
+                    <div className={`text-muted-foreground transition-transform duration-300 ${isExpanded ? 'rotate-90 text-olive' : ''}`}>
                       <ChevronRight size={18} />
                     </div>
                     <div>
-                      <h3 className={`font-semibold text-base ${isComplete ? 'text-olive line-through decoration-olive/30' : 'text-coffee'}`}>
+                      <h3 className={`font-semibold text-base ${isComplete ? 'text-olive line-through decoration-olive/30' : 'text-foreground'}`}>
                         {book.name}
                       </h3>
                       {/* Subtitulo para seção de leitura ativa */}
@@ -109,20 +109,20 @@ export const TestamentSection: React.FC<TestamentSectionProps> = ({
                     {/* Porcentagem / Badge de Progresso */}
                     <div className="flex items-center gap-3">
                       {highlight ? (
-                         <div className="bg-white border border-blue-100 px-3 py-1 rounded-full shadow-sm">
+                         <div className="bg-card border border-blue-100 px-3 py-1 rounded-full shadow-sm">
                             <span className="text-xs font-bold text-blue-600">
                                 {stats.read} <span className="text-blue-300">/</span> {book.chapters}
                             </span>
                          </div>
                       ) : (
                         <div className="flex items-center gap-2">
-                            <span className={`text-xs font-bold ${isComplete ? 'text-olive' : 'text-stone-400'}`}>
+                            <span className={`text-xs font-bold ${isComplete ? 'text-olive' : 'text-muted-foreground'}`}>
                             {stats.percentage}%
                             </span>
                             {/* Mini barra visual apenas em telas maiores */}
-                            <div className="hidden sm:block w-12 h-1 bg-stone-100 rounded-full overflow-hidden">
+                            <div className="hidden sm:block w-12 h-1 bg-secondary rounded-full overflow-hidden">
                             <div 
-                                className={`h-full rounded-full transition-all duration-500 ${isComplete ? 'bg-olive' : 'bg-stone-300'}`}
+                                className={`h-full rounded-full transition-all duration-500 ${isComplete ? 'bg-primary' : 'bg-stone-300'}`}
                                 style={{ width: `${stats.percentage}%` }}
                             />
                             </div>
@@ -134,7 +134,7 @@ export const TestamentSection: React.FC<TestamentSectionProps> = ({
                         {isComplete ? (
                           <button 
                             onClick={() => onResetBook(book.name)}
-                            className="p-2 text-olive hover:bg-olive/10 rounded-full transition-colors"
+                            className="p-2 text-olive hover:bg-primary/10 rounded-full transition-colors"
                             title="Reiniciar Leitura"
                           >
                             <RotateCcw size={16} />
@@ -142,7 +142,7 @@ export const TestamentSection: React.FC<TestamentSectionProps> = ({
                         ) : (
                           <button 
                             onClick={() => onMarkComplete(book.name, book.chapters)}
-                            className="p-2 text-stone-300 hover:text-olive hover:bg-stone-100 rounded-full transition-colors"
+                            className="p-2 text-muted-foreground hover:text-primary hover:bg-secondary rounded-full transition-colors"
                             title="Marcar todos como lido"
                           >
                             <CheckCircle2 size={18} />
@@ -155,7 +155,7 @@ export const TestamentSection: React.FC<TestamentSectionProps> = ({
 
                 {/* Content / Grid de Capítulos */}
                 {isExpanded && (
-                  <div className={`border-t border-stone-50 p-6 animate-fade-in ${highlight ? 'bg-blue-50/10' : 'bg-stone-50/30'}`}>
+                  <div className={`border-t border-stone-50 p-6 animate-fade-in ${highlight ? 'bg-blue-50/10' : 'bg-secondary/30'}`}>
                     <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-3">
                       {Array.from({ length: book.chapters }, (_, i) => i + 1).map((chapter) => {
                         const read = isChapterRead(book.name, chapter);
@@ -166,8 +166,8 @@ export const TestamentSection: React.FC<TestamentSectionProps> = ({
                             className={`
                               h-9 rounded-lg text-xs font-bold transition-all duration-200 flex items-center justify-center
                               ${read 
-                                ? 'bg-olive text-white shadow-sm scale-105' 
-                                : 'bg-white text-stone-400 border border-stone-200 hover:border-olive/50 hover:text-olive'
+                                ? 'bg-primary text-primary-foreground shadow-sm scale-105' 
+  : 'bg-card text-muted-foreground border border-border hover:border-primary/50 hover:text-primary'
                               }
                             `}
                           >

@@ -197,50 +197,50 @@ const BillFormModal: React.FC<BillFormModalProps> = ({ isOpen, onClose, onSucces
       <div className="absolute inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity" onClick={onClose} />
       
       <div className="fixed left-[50%] top-[50%] z-50 w-full max-w-md translate-x-[-50%] translate-y-[-50%] p-4">
-        <div className="bg-white w-full rounded-[2rem] shadow-2xl border border-stone-100 overflow-hidden relative">
+        <div className="bg-card w-full rounded-[2rem] shadow-2xl border border-border overflow-hidden relative">
           <button 
              onClick={onClose}
-             className="absolute top-6 right-6 p-2 hover:bg-stone-100 rounded-full transition-colors text-cappuccino z-10"
+             className="absolute top-6 right-6 p-2 hover:bg-secondary rounded-full transition-colors text-muted-foreground z-10"
           >
              <X size={20} />
           </button>
 
           <div className="p-8">
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-coffee tracking-tighter">
+              <h2 className="text-xl font-semibold text-foreground tracking-tighter">
                 {billToEdit ? 'Editar Conta' : 'Nova Conta'}
               </h2>
-              <p className="text-cappuccino text-[10px] font-bold uppercase tracking-widest mt-1">
+              <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mt-1">
                 {billToEdit ? 'Alterar detalhes do lançamento' : 'Adicionar compromisso financeiro'}
               </p>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div ref={suggestionsRef} className="relative">
-                <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Descrição</label>
+                <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Descrição</label>
                 <div className="relative">
-                  <FileText size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-cappuccino" />
+                  <FileText size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <input 
                     {...register('description')} 
                     onChange={handleDescriptionChange}
                     placeholder="Ex: Netflix, Aluguel..." 
                     autoComplete="off"
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3.5 pl-9 pr-3 text-coffee text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all placeholder:text-stone-300" 
+                    className="w-full bg-secondary border border-border rounded-xl py-3.5 pl-9 pr-3 text-foreground text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all placeholder:text-muted-foreground" 
                   />
                 </div>
                 
                 {/* Autocomplete Dropdown */}
                 {showSuggestions && filteredSuggestions.length > 0 && (
-                  <div className="absolute top-full left-0 w-full bg-white border border-stone-200 rounded-xl shadow-lg mt-1 z-50 max-h-40 overflow-y-auto">
+                  <div className="absolute top-full left-0 w-full bg-card border border-border rounded-xl shadow-lg mt-1 z-50 max-h-40 overflow-y-auto">
                     {filteredSuggestions.map((s, i) => (
                       <button
                         key={i}
                         type="button"
-                        className="w-full text-left px-4 py-2.5 text-xs hover:bg-stone-50 text-coffee flex justify-between items-center transition-colors border-b border-stone-50 last:border-0"
+                        className="w-full text-left px-4 py-2.5 text-xs hover:bg-secondary text-foreground flex justify-between items-center transition-colors border-b border-stone-50 last:border-0"
                         onClick={() => handleSelectSuggestion(s)}
                       >
                         <span className="font-medium">{s.name}</span>
-                        <span className="text-[9px] text-stone-400 uppercase bg-stone-100 px-1.5 py-0.5 rounded">{s.category}</span>
+                        <span className="text-[9px] text-muted-foreground uppercase bg-secondary px-1.5 py-0.5 rounded">{s.category}</span>
                       </button>
                     ))}
                   </div>
@@ -249,27 +249,27 @@ const BillFormModal: React.FC<BillFormModalProps> = ({ isOpen, onClose, onSucces
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Valor Total (R$)</label>
+                  <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Valor Total (R$)</label>
                   <div className="relative">
-                    <DollarSign size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-cappuccino" />
+                    <DollarSign size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                     <input 
                       type="number" 
                       step="0.01" 
                       {...register('amount')} 
                       placeholder="0.00" 
                       onWheel={(e) => e.currentTarget.blur()}
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3.5 pl-9 pr-3 text-coffee font-semibold text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all" 
+                      className="w-full bg-secondary border border-border rounded-xl py-3.5 pl-9 pr-3 text-foreground font-semibold text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all" 
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Vencimento</label>
+                  <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Vencimento</label>
                   <div className="relative">
-                    <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-cappuccino" />
+                    <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                     <input 
                       type="date" 
                       {...register('due_date')} 
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3.5 pl-9 pr-3 text-coffee text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all" 
+                      className="w-full bg-secondary border border-border rounded-xl py-3.5 pl-9 pr-3 text-foreground text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all" 
                     />
                   </div>
                 </div>
@@ -277,21 +277,21 @@ const BillFormModal: React.FC<BillFormModalProps> = ({ isOpen, onClose, onSucces
 
               <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Categoria</label>
+                    <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Categoria</label>
                     <div className="relative">
-                      <Tag size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-cappuccino" />
+                      <Tag size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                       <input 
                         {...register('category')} 
                         placeholder="Ex: Streaming" 
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3.5 pl-9 pr-3 text-coffee text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all" 
+                        className="w-full bg-secondary border border-border rounded-xl py-3.5 pl-9 pr-3 text-foreground text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all" 
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Tipo</label>
+                    <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Tipo</label>
                     <select 
                        {...register('type')}
-                       className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3.5 px-3 text-coffee text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all cursor-pointer appearance-none"
+                       className="w-full bg-secondary border border-border rounded-xl py-3.5 px-3 text-foreground text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all cursor-pointer appearance-none"
                     >
                       <option value="fixed">Fixo</option>
                       <option value="variable">Variável</option>
@@ -301,25 +301,25 @@ const BillFormModal: React.FC<BillFormModalProps> = ({ isOpen, onClose, onSucces
               </div>
 
               {/* Checkbox de Recorrência */}
-              <div className="flex items-center gap-3 p-4 bg-stone-50 rounded-xl border border-stone-100 cursor-pointer" onClick={() => !isInstallment && setValue('is_recurring', !isRecurring)}>
-                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isRecurring ? 'bg-olive border-olive text-white' : 'bg-white border-stone-300'} ${isInstallment ? 'opacity-50' : ''}`}>
+              <div className="flex items-center gap-3 p-4 bg-secondary rounded-xl border border-border cursor-pointer" onClick={() => !isInstallment && setValue('is_recurring', !isRecurring)}>
+                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isRecurring ? 'bg-primary border-primary text-white' : 'bg-card border-border'} ${isInstallment ? 'opacity-50' : ''}`}>
                       {isRecurring && <Repeat size={12} />}
                   </div>
                   <div className={`flex-1 ${isInstallment ? 'opacity-50' : ''}`}>
-                      <p className="text-xs font-bold text-coffee">Conta Recorrente</p>
-                      <p className="text-sm text-cappuccino">Repetir mensalmente (Assinaturas)</p>
+                      <p className="text-xs font-bold text-foreground">Conta Recorrente</p>
+                      <p className="text-sm text-muted-foreground">Repetir mensalmente (Assinaturas)</p>
                   </div>
                   <input type="checkbox" {...register('is_recurring')} className="hidden" disabled={isInstallment} />
               </div>
 
               {/* Checkbox de Parcelamento */}
-              <div className="flex items-center gap-3 p-4 bg-stone-50 rounded-xl border border-stone-100 cursor-pointer" onClick={() => !billToEdit && !isRecurring && setValue('is_installment', !isInstallment)}>
-                <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isInstallment ? 'bg-coffee border-coffee text-white' : 'bg-white border-stone-300'} ${isRecurring ? 'opacity-50' : ''}`}>
+              <div className="flex items-center gap-3 p-4 bg-secondary rounded-xl border border-border cursor-pointer" onClick={() => !billToEdit && !isRecurring && setValue('is_installment', !isInstallment)}>
+                <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isInstallment ? 'bg-coffee border-coffee text-white' : 'bg-card border-border'} ${isRecurring ? 'opacity-50' : ''}`}>
                   {isInstallment && <span className="text-xs">✓</span>}
                 </div>
                 <div className={`flex-1 ${isRecurring ? 'opacity-50' : ''}`}>
-                  <p className="text-xs font-bold text-coffee">Parcelar este Compromisso</p>
-                  <p className="text-sm text-cappuccino">Dividir em múltiplas contas mensais</p>
+                  <p className="text-xs font-bold text-foreground">Parcelar este Compromisso</p>
+                  <p className="text-sm text-muted-foreground">Dividir em múltiplas contas mensais</p>
                 </div>
                 <input type="checkbox" {...register('is_installment')} className="hidden" disabled={!!billToEdit || isRecurring} />
               </div>
@@ -328,7 +328,7 @@ const BillFormModal: React.FC<BillFormModalProps> = ({ isOpen, onClose, onSucces
               {isInstallment && !billToEdit && (
                 <div className="p-4 bg-blue-50 border border-blue-100 rounded-xl space-y-3">
                   <div>
-                    <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">
+                    <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">
                       Número de Parcelas
                     </label>
                     <input
@@ -341,31 +341,31 @@ const BillFormModal: React.FC<BillFormModalProps> = ({ isOpen, onClose, onSucces
                         max: 120 
                       })}
                       onWheel={(e) => e.currentTarget.blur()}
-                      className="w-full bg-white border border-blue-200 rounded-xl py-3.5 px-4 text-coffee font-semibold text-sm focus:ring-2 focus:ring-blue-500/10 outline-none transition-all"
+                      className="w-full bg-card border border-blue-200 rounded-xl py-3.5 px-4 text-foreground font-semibold text-sm focus:ring-2 focus:ring-blue-500/10 outline-none transition-all"
                       placeholder="Ex: 12"
                     />
-                    <p className="text-[9px] text-cappuccino mt-1 ml-1">
+                    <p className="text-[9px] text-muted-foreground mt-1 ml-1">
                       Entre 2 e 120 parcelas
                     </p>
                   </div>
                   
                   {/* Resumo do Parcelamento */}
                   {totalInstallments >= 2 && amount && (
-                    <div className="bg-white p-3 rounded-lg border border-blue-200">
-                      <p className="text-[9px] text-cappuccino uppercase tracking-wider mb-1">Resumo</p>
+                    <div className="bg-card p-3 rounded-lg border border-blue-200">
+                      <p className="text-[9px] text-muted-foreground uppercase tracking-wider mb-1">Resumo</p>
                       <div className="flex justify-between items-center">
-                        <span className="text-xs text-coffee">Valor Total:</span>
-                        <span className="text-sm font-bold text-coffee">
+                        <span className="text-xs text-foreground">Valor Total:</span>
+                        <span className="text-sm font-bold text-foreground">
                           R$ {Number(amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                         </span>
                       </div>
                       <div className="flex justify-between items-center mt-1">
-                        <span className="text-xs text-coffee">{totalInstallments}x de:</span>
+                        <span className="text-xs text-foreground">{totalInstallments}x de:</span>
                         <span className="text-lg font-bold text-blue-600">
                           R$ {installmentValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                         </span>
                       </div>
-                      <p className="text-[9px] text-cappuccino mt-2">
+                      <p className="text-[9px] text-muted-foreground mt-2">
                         Serão criadas {totalInstallments} contas mensais automaticamente
                       </p>
                     </div>
@@ -385,7 +385,7 @@ const BillFormModal: React.FC<BillFormModalProps> = ({ isOpen, onClose, onSucces
               <button 
                 type="submit" 
                 disabled={isSubmitting} 
-                className="w-full bg-olive hover:bg-black text-white px-6 py-4 rounded-xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full bg-primary hover:bg-black text-white px-6 py-4 rounded-xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
                 {isSubmitting ? 'Salvando...' : 'Salvar Compromisso'}

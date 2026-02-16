@@ -39,13 +39,13 @@ export function ModuleHeader({ title, subtitle, backLink, actions }: ModuleHeade
   // --- MODO PESSOAL (Quiet Luxury - Light - Stone/Cream) ---
   if (isPersonal) {
     return (
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10 pb-6 border-b border-stone-200">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10 pb-6 border-b border-border">
         <div>
-          <h2 className="text-3xl font-serif italic text-[#3C3633] tracking-tight">{sectionName}</h2>
+          <h2 className="text-3xl font-serif italic text-foreground tracking-tight">{sectionName}</h2>
           {subtitle ? (
-            <p className="text-sm text-stone-500 mt-1 font-medium">{subtitle}</p>
+            <p className="text-sm text-muted-foreground mt-1 font-medium">{subtitle}</p>
           ) : (
-            <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#747264] mt-1">Ambiente Privado</p>
+            <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground mt-1">Ambiente Privado</p>
           )}
         </div>
         
@@ -54,7 +54,7 @@ export function ModuleHeader({ title, subtitle, backLink, actions }: ModuleHeade
           
           <button 
             onClick={() => backLink ? navigate(backLink) : navigate('/fork')}
-            className="flex items-center gap-2 px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-stone-500 hover:text-[#5F6F52] transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
           >
             {backLink ? <ArrowLeft size={14} /> : <ArrowRightLeft size={14} />} 
             {backLink ? 'Voltar' : 'Trocar Contexto'}
@@ -63,9 +63,9 @@ export function ModuleHeader({ title, subtitle, backLink, actions }: ModuleHeade
           {!backLink && (
             <button 
               onClick={() => navigate(hubPath)}
-              className="flex items-center gap-2 px-5 py-2.5 bg-white border border-stone-200 rounded-full shadow-sm text-[#3C3633] text-[10px] font-bold uppercase tracking-widest hover:shadow-md hover:-translate-y-0.5 transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 bg-card border border-border rounded-full shadow-sm text-foreground text-[10px] font-bold uppercase tracking-widest hover:shadow-md hover:-translate-y-0.5 transition-all"
             >
-              <LayoutGrid size={14} className="text-[#5F6F52]" /> Módulos
+              <LayoutGrid size={14} className="text-primary" /> Módulos
             </button>
           )}
         </div>

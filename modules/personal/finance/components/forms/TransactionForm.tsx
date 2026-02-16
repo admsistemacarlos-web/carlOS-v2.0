@@ -131,12 +131,12 @@ const SmartCombobox = ({
   return (
     <div className="relative" ref={containerRef}>
       <div 
-        className="flex items-center gap-2 w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-3 cursor-text focus-within:ring-2 focus-within:ring-olive/20"
+        className="flex items-center gap-2 w-full bg-secondary border border-border rounded-xl px-3 py-3 cursor-text focus-within:ring-2 focus-within:ring-olive/20"
         onClick={() => setIsOpen(true)}
       >
-        <Tag size={16} className="text-stone-400 shrink-0" />
+        <Tag size={16} className="text-muted-foreground shrink-0" />
         <input 
-          className="bg-transparent outline-none w-full text-sm text-coffee placeholder-stone-400"
+          className="bg-transparent outline-none w-full text-sm text-foreground placeholder-stone-400"
           placeholder={selectedName || "Selecione..."}
           value={isOpen ? query : selectedName}
           onChange={e => setQuery(e.target.value)}
@@ -145,13 +145,13 @@ const SmartCombobox = ({
       </div>
 
       {isOpen && (
-        <div className="absolute z-50 mt-1 w-full bg-white border border-stone-200 rounded-xl shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-50 mt-1 w-full bg-card border border-border rounded-xl shadow-lg max-h-60 overflow-auto">
           {filtered.length === 0 && query.trim() ? (
             <button
               type="button"
               onClick={handleCreate}
               disabled={loading}
-              className="w-full px-4 py-3 text-left text-sm hover:bg-stone-50 flex items-center gap-2 text-olive font-medium"
+              className="w-full px-4 py-3 text-left text-sm hover:bg-secondary flex items-center gap-2 text-olive font-medium"
             >
               {loading ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
               Criar "{query}"
@@ -166,7 +166,7 @@ const SmartCombobox = ({
                   setIsOpen(false);
                   setQuery('');
                 }}
-                className="w-full px-4 py-3 text-left text-sm hover:bg-stone-50 flex items-center gap-2"
+                className="w-full px-4 py-3 text-left text-sm hover:bg-secondary flex items-center gap-2"
               >
                 {value === opt.id && <Check size={14} className="text-olive" />}
                 <span>{opt.name}</span>
@@ -199,9 +199,9 @@ const TagInput = ({ value, onChange }: { value: string[], onChange: (tags: strin
   };
 
   return (
-    <div className="flex flex-wrap gap-2 bg-stone-50 border border-stone-200 rounded-xl p-3 min-h-[44px]">
+    <div className="flex flex-wrap gap-2 bg-secondary border border-border rounded-xl p-3 min-h-[44px]">
       {value.map(tag => (
-        <span key={tag} className="inline-flex items-center gap-1 bg-olive/10 text-olive text-xs px-2 py-1 rounded-lg">
+        <span key={tag} className="inline-flex items-center gap-1 bg-primary/10 text-olive text-xs px-2 py-1 rounded-lg">
           {tag}
           <button type="button" onClick={() => removeTag(tag)} className="hover:text-red-500">
             <X size={12} />
@@ -586,26 +586,26 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       
       {/* 1. SELETOR DE TIPO */}
-      <div className="flex bg-stone-100 p-1 rounded-xl">
-        <button type="button" onClick={() => setValue('type', 'expense')} className={`flex-1 py-3 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${type === 'expense' ? 'bg-white text-terracotta shadow-sm' : 'text-stone-400'}`}>
+      <div className="flex bg-secondary p-1 rounded-xl">
+        <button type="button" onClick={() => setValue('type', 'expense')} className={`flex-1 py-3 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${type === 'expense' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground'}`}>
           <ArrowDownCircle size={16} /> Despesa
         </button>
-        <button type="button" onClick={() => setValue('type', 'income')} className={`flex-1 py-3 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${type === 'income' ? 'bg-white text-olive shadow-sm' : 'text-stone-400'}`}>
+        <button type="button" onClick={() => setValue('type', 'income')} className={`flex-1 py-3 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${type === 'income' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground'}`}>
           <ArrowUpCircle size={16} /> Receita
         </button>
-        <button type="button" onClick={() => setValue('type', 'transfer')} className={`flex-1 py-3 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${type === 'transfer' ? 'bg-white text-blue-500 shadow-sm' : 'text-stone-400'}`}>
+        <button type="button" onClick={() => setValue('type', 'transfer')} className={`flex-1 py-3 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${type === 'transfer' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground'}`}>
           <ArrowRightLeft size={16} /> Transferência
         </button>
       </div>
 
       {/* 2. DESCRIÇÃO */}
       <div className="space-y-1">
-        <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Descrição</label>
+        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Descrição</label>
         <div className="relative">
-            <AlignLeft className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
+            <AlignLeft className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
             <input 
               {...register('description')}
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-10 pr-4 py-3 text-base font-medium text-coffee outline-none focus:ring-2 focus:ring-olive/20 placeholder-stone-400"
+              className="w-full bg-secondary border border-border rounded-xl pl-10 pr-4 py-3 text-base font-medium text-foreground outline-none focus:ring-2 focus:ring-olive/20 placeholder-stone-400"
               placeholder={type === 'transfer' ? "Motivo da transferência..." : "Ex: Supermercado Semanal"}
               autoFocus
             />
@@ -620,27 +620,27 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
             {/* LINHA 1: Data e Valor */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Data da Transferência</label>
+                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Data da Transferência</label>
                 <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                     <input 
                       type="date" 
                       {...register('date')} 
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-10 pr-3 py-3 text-sm text-coffee outline-none focus:border-blue-500"
+                      className="w-full bg-secondary border border-border rounded-xl pl-10 pr-3 py-3 text-sm text-foreground outline-none focus:border-blue-500"
                     />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Valor Total</label>
+                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Valor Total</label>
                 <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                     <input 
                       type="number" 
                       step="0.01" 
                       onWheel={preventScroll}
                       {...register('amount')}
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-10 pr-3 py-3 text-sm font-semibold text-coffee outline-none focus:border-blue-500 placeholder-stone-300"
+                      className="w-full bg-secondary border border-border rounded-xl pl-10 pr-3 py-3 text-sm font-semibold text-foreground outline-none focus:border-blue-500 placeholder-stone-300"
                       placeholder="0.00"
                     />
                 </div>
@@ -648,12 +648,12 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
             </div>
 
             {/* LINHA 2: Origem e Destino */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-stone-50 p-4 rounded-2xl border border-stone-200">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-secondary p-4 rounded-2xl border border-border">
               <div>
                 <label className="text-xs font-bold text-red-400 uppercase block mb-2">Sai de (Origem)</label>
                 <div className="relative">
                   <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300" size={16} />
-                  <select {...register('origin_account_id')} className="w-full bg-white border border-red-200 rounded-xl pl-9 pr-3 py-3 text-sm outline-none">
+                  <select {...register('origin_account_id')} className="w-full bg-card border border-red-200 rounded-xl pl-9 pr-3 py-3 text-sm outline-none">
                     <option value="">Selecione...</option>
                     {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance.toFixed(2)})</option>)}
                   </select>
@@ -663,7 +663,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                 <label className="text-xs font-bold text-emerald-500 uppercase block mb-2">Entra em (Destino)</label>
                 <div className="relative">
                   <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-300" size={16} />
-                  <select {...register('destination_account_id')} className="w-full bg-white border border-emerald-200 rounded-xl pl-9 pr-3 py-3 text-sm outline-none">
+                  <select {...register('destination_account_id')} className="w-full bg-card border border-emerald-200 rounded-xl pl-9 pr-3 py-3 text-sm outline-none">
                     <option value="">Selecione...</option>
                     {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance.toFixed(2)})</option>)}
                   </select>
@@ -675,19 +675,19 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
           // MODO PADRÃO (DESPESA/RECEITA)
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in">
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Data</label>
+                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Data</label>
                 <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                     <input 
                       type="date" 
                       {...register('date')} 
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-10 pr-3 py-3 text-sm text-coffee outline-none focus:border-olive"
+                      className="w-full bg-secondary border border-border rounded-xl pl-10 pr-3 py-3 text-sm text-foreground outline-none focus:border-primary"
                     />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Categoria</label>
+                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Categoria</label>
                 <Controller 
                   name="category_id" 
                   control={control}
@@ -705,13 +705,13 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Local / Tags</label>
+                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Local / Tags</label>
                 <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                     <input 
                       {...register('location')}
                       placeholder="Local (Opcional)"
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-10 pr-4 py-3 text-sm text-coffee outline-none focus:border-olive placeholder-stone-400"
+                      className="w-full bg-secondary border border-border rounded-xl pl-10 pr-4 py-3 text-sm text-foreground outline-none focus:border-primary placeholder-stone-400"
                     />
                 </div>
               </div>
@@ -720,7 +720,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
 
       {/* 4. ITENS DA COMPRA (Apenas Despesa) */}
       {type === 'expense' && (
-        <div className="border-t border-stone-100 pt-4">
+        <div className="border-t border-border pt-4">
             <button 
                 type="button" 
                 onClick={() => setShowItems(!showItems)}
@@ -730,8 +730,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
             </button>
 
             {showItems && (
-                <div className="space-y-2 bg-stone-50 p-4 rounded-xl border border-stone-200">
-                    <div className="grid grid-cols-[1fr_80px_100px_80px_40px] gap-2 text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-2">
+                <div className="space-y-2 bg-secondary p-4 rounded-xl border border-border">
+                    <div className="grid grid-cols-[1fr_80px_100px_80px_40px] gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
                         <div>Item</div>
                         <div className="text-center">Qtd</div>
                         <div className="text-right pr-2">Preço Unit.</div>
@@ -747,38 +747,38 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                                 <input 
                                     {...register(`items.${index}.name`)}
                                     placeholder="Nome do item"
-                                    className="w-full bg-white rounded-lg p-2 text-xs outline-none border border-stone-100"
+                                    className="w-full bg-card rounded-lg p-2 text-xs outline-none border border-border"
                                 />
 
                                 <input 
                                     {...register(`items.${index}.quantity`)}
                                     type="number" min="1" step="1"
                                     onWheel={preventScroll}
-                                    className="w-full bg-white rounded-lg p-2 text-xs text-center outline-none border border-stone-100"
+                                    className="w-full bg-card rounded-lg p-2 text-xs text-center outline-none border border-border"
                                 />
 
                                 <div className="relative">
-                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-stone-400">R$</span>
+                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground">R$</span>
                                     <input 
                                         {...register(`items.${index}.unit_price`)}
                                         type="number" step="0.01"
                                         onWheel={preventScroll}
-                                        className="w-full bg-white rounded-lg p-2 pl-6 text-xs text-right outline-none border border-stone-100"
+                                        className="w-full bg-card rounded-lg p-2 pl-6 text-xs text-right outline-none border border-border"
                                     />
                                 </div>
 
-                                <div className="w-20 text-right text-xs font-bold text-stone-500 pr-2">
+                                <div className="w-20 text-right text-xs font-bold text-muted-foreground pr-2">
                                     {subtotal.toFixed(2)}
                                 </div>
 
-                                <button type="button" onClick={() => removeItem(index)} className="p-2 text-stone-300 hover:text-red-500"><X size={14} /></button>
+                                <button type="button" onClick={() => removeItem(index)} className="p-2 text-muted-foreground hover:text-red-500"><X size={14} /></button>
                             </div>
                         );
                     })}
                     <button 
                         type="button"
                         onClick={() => appendItem({ name: '', quantity: 1, unit_price: 0 })}
-                        className="w-full py-2 border border-dashed border-olive/30 rounded-xl text-[10px] font-bold text-olive uppercase tracking-widest hover:bg-olive/5 flex items-center justify-center gap-1"
+                        className="w-full py-2 border border-dashed border-primary/30 rounded-xl text-[10px] font-bold text-olive uppercase tracking-widest hover:bg-primary/5 flex items-center justify-center gap-1"
                     >
                         <Plus size={12} /> Adicionar Item
                     </button>
@@ -789,16 +789,16 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
 
       {/* 5. VALOR TOTAL (Destaque) - Apenas para Despesa/Receita */}
       {type !== 'transfer' && (
-        <div className="bg-white p-6 rounded-[2rem] border border-stone-200 shadow-sm text-center">
-          <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1 block">Valor Total</label>
+        <div className="bg-card p-6 rounded-[2rem] border border-border shadow-sm text-center">
+          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Valor Total</label>
           <div className="relative inline-block w-full max-w-xs">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-stone-300">R$</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-muted-foreground">R$</span>
               <input 
                 type="number" 
                 step="0.01" 
                 onWheel={preventScroll}
                 {...register('amount')}
-                className="w-full bg-stone-50 border border-stone-200 rounded-2xl py-4 pl-12 pr-4 text-3xl font-bold text-coffee text-center outline-none focus:ring-2 focus:ring-olive/20 placeholder-stone-200"
+                className="w-full bg-secondary border border-border rounded-2xl py-4 pl-12 pr-4 text-3xl font-bold text-foreground text-center outline-none focus:ring-2 focus:ring-olive/20 placeholder-stone-200"
                 placeholder="0.00"
               />
           </div>
@@ -807,9 +807,9 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
 
       {/* 6. FORMA DE PAGAMENTO (Apenas para Despesa/Receita) */}
       {type !== 'transfer' && (
-          <div className="bg-stone-50 p-6 rounded-2xl border border-stone-200 space-y-4">
+          <div className="bg-secondary p-6 rounded-2xl border border-border space-y-4">
               <div className="flex justify-between items-center">
-                  <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">
+                  <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                     {type === 'income' ? 'Destino do Recurso' : 'Forma de Pagamento'}
                   </label>
                   
@@ -817,7 +817,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                     <button 
                         type="button" 
                         onClick={() => setValue('status', status === 'pending' ? 'paid' : 'pending')}
-                        className={`text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full transition-all ${status === 'paid' ? 'bg-olive/20 text-olive' : 'bg-yellow-100 text-yellow-700'}`}
+                        className={`text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full transition-all ${status === 'paid' ? 'bg-primary/20 text-olive' : 'bg-yellow-100 text-yellow-700'}`}
                     >
                         {status === 'paid' ? 'Pago' : 'Pendente'}
                     </button>
@@ -826,14 +826,14 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
 
               {status === 'paid' && (
                   <>
-                      <div className="flex bg-white p-1 rounded-xl">
+                      <div className="flex bg-card p-1 rounded-xl">
                           <button
                             type="button"
                             onClick={() => {
                                 setValue('payment_method', 'account');
                                 setValue('use_split_payment', false);
                             }}
-                            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${paymentMethod === 'account' && !useSplitPayment ? 'bg-olive text-white' : 'text-stone-400'}`}
+                            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${paymentMethod === 'account' && !useSplitPayment ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
                           >
                             <Wallet size={14} /> Conta
                           </button>
@@ -843,7 +843,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                                 setValue('payment_method', 'credit_card');
                                 setValue('use_split_payment', false);
                             }}
-                            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${paymentMethod === 'credit_card' && !useSplitPayment ? 'bg-olive text-white' : 'text-stone-400'}`}
+                            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${paymentMethod === 'credit_card' && !useSplitPayment ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
                           >
                             <CreditCard size={14} /> Cartão
                           </button>
@@ -851,7 +851,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                             <button
                               type="button"
                               onClick={() => setValue('use_split_payment', true)}
-                              className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${useSplitPayment ? 'bg-olive text-white' : 'text-stone-400'}`}
+                              className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${useSplitPayment ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
                             >
                               <Split size={14} /> Dividir
                             </button>
@@ -862,8 +862,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               {paymentMethod === 'account' ? (
                                   <div className="space-y-1 md:col-span-2">
-                                      <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Conta</label>
-                                      <select {...register('account_id')} className="w-full bg-white border border-stone-200 rounded-xl p-3 text-sm outline-none">
+                                      <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Conta</label>
+                                      <select {...register('account_id')} className="w-full bg-card border border-border rounded-xl p-3 text-sm outline-none">
                                           <option value="">Selecione...</option>
                                           {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
                                       </select>
@@ -871,15 +871,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                               ) : (
                                   <>
                                       <div className="space-y-1">
-                                          <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Cartão</label>
-                                          <select {...register('credit_card_id')} className="w-full bg-white border border-stone-200 rounded-xl p-3 text-sm outline-none">
+                                          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Cartão</label>
+                                          <select {...register('credit_card_id')} className="w-full bg-card border border-border rounded-xl p-3 text-sm outline-none">
                                               <option value="">Selecione...</option>
                                               {cards.map(card => <option key={card.id} value={card.id}>{card.name}</option>)}
                                           </select>
                                       </div>
                                       <div className="space-y-1">
-                                          <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Parcelas</label>
-                                          <select {...register('installments')} className="w-full bg-white border border-stone-200 rounded-xl p-3 text-sm outline-none">
+                                          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Parcelas</label>
+                                          <select {...register('installments')} className="w-full bg-card border border-border rounded-xl p-3 text-sm outline-none">
                                               <option value="1">À vista (1x)</option>
                                               {[...Array(23)].map((_, i) => (
                                                   <option key={i} value={i + 2}>{i + 2}x</option>
@@ -914,19 +914,19 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                       ) : (
                           <div className="space-y-3">
                               {splitFields.map((field, index) => (
-                                  <div key={field.id} className="grid grid-cols-[1fr_2fr_1fr_40px] gap-2 items-end bg-white p-3 rounded-xl border border-stone-100">
-                                      <select {...register(`payments.${index}.method`)} className="bg-stone-50 border border-stone-200 rounded-lg p-2 text-xs">
+                                  <div key={field.id} className="grid grid-cols-[1fr_2fr_1fr_40px] gap-2 items-end bg-card p-3 rounded-xl border border-border">
+                                      <select {...register(`payments.${index}.method`)} className="bg-secondary border border-border rounded-lg p-2 text-xs">
                                           <option value="account">Conta</option>
                                           <option value="credit_card">Cartão</option>
                                       </select>
 
                                       {watch(`payments.${index}.method`) === 'account' ? (
-                                          <select {...register(`payments.${index}.account_id`)} className="bg-stone-50 border border-stone-200 rounded-lg p-2 text-xs">
+                                          <select {...register(`payments.${index}.account_id`)} className="bg-secondary border border-border rounded-lg p-2 text-xs">
                                               <option value="">Selecione...</option>
                                               {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
                                           </select>
                                       ) : (
-                                          <select {...register(`payments.${index}.credit_card_id`)} className="bg-stone-50 border border-stone-200 rounded-lg p-2 text-xs">
+                                          <select {...register(`payments.${index}.credit_card_id`)} className="bg-secondary border border-border rounded-lg p-2 text-xs">
                                               <option value="">Selecione...</option>
                                               {cards.map(card => <option key={card.id} value={card.id}>{card.name}</option>)}
                                           </select>
@@ -937,10 +937,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                                           type="number" step="0.01"
                                           onWheel={preventScroll}
                                           placeholder="R$ 0.00"
-                                          className="bg-stone-50 border border-stone-200 rounded-lg p-2 text-xs text-right"
+                                          className="bg-secondary border border-border rounded-lg p-2 text-xs text-right"
                                       />
 
-                                      <button type="button" onClick={() => removeSplit(index)} className="p-2 text-stone-300 hover:text-red-500">
+                                      <button type="button" onClick={() => removeSplit(index)} className="p-2 text-muted-foreground hover:text-red-500">
                                           <X size={14} />
                                       </button>
                                   </div>
@@ -948,7 +948,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                               <button 
                                   type="button"
                                   onClick={() => appendSplit({ method: 'account', amount: 0 })}
-                                  className="w-full py-2 border border-dashed border-olive/30 rounded-xl text-[10px] font-bold text-olive uppercase tracking-widest hover:bg-olive/5"
+                                  className="w-full py-2 border border-dashed border-primary/30 rounded-xl text-[10px] font-bold text-olive uppercase tracking-widest hover:bg-primary/5"
                               >
                                   <Plus size={12} className="inline mr-1" /> Adicionar Meio de Pagamento
                               </button>
@@ -961,10 +961,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
               {status === 'pending' && (
                   <div className="space-y-4">
                       <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">
+                          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">
                               {type === 'income' ? 'Conta Destino' : 'Conta para Débito Futuro'}
                           </label>
-                          <select {...register('account_id')} className="w-full bg-white border border-stone-200 rounded-xl p-3 text-sm outline-none">
+                          <select {...register('account_id')} className="w-full bg-card border border-border rounded-xl p-3 text-sm outline-none">
                               <option value="">Selecione...</option>
                               {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
                           </select>
@@ -973,14 +973,14 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                       {/* CHECKBOX PARCELAR */}
                       <div 
                           onClick={() => setValue('is_installment', !isInstallment)}
-                          className={`flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all ${isInstallment ? 'bg-blue-50 border-2 border-blue-300' : 'bg-white border-2 border-stone-200'}`}
+                          className={`flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all ${isInstallment ? 'bg-blue-50 border-2 border-blue-300' : 'bg-card border-2 border-border'}`}
                       >
-                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${isInstallment ? 'bg-blue-500 border-blue-500' : 'border-stone-300'}`}>
+                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${isInstallment ? 'bg-blue-500 border-blue-500' : 'border-border'}`}>
                               {isInstallment && <Check size={14} className="text-white" />}
                           </div>
                           <div className="flex-1">
-                              <p className="text-xs font-bold text-coffee">Parcelar este Compromisso</p>
-                              <p className="text-[10px] text-stone-500">Dividir em múltiplas contas mensais</p>
+                              <p className="text-xs font-bold text-foreground">Parcelar este Compromisso</p>
+                              <p className="text-[10px] text-muted-foreground">Dividir em múltiplas contas mensais</p>
                           </div>
                           <input type="checkbox" {...register('is_installment')} className="hidden" />
                       </div>
@@ -1002,7 +1002,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                                           max: 120 
                                       })}
                                       onWheel={preventScroll}
-                                      className="w-full bg-white border border-blue-200 rounded-xl py-3 px-4 text-coffee font-semibold text-sm focus:ring-2 focus:ring-blue-500/10 outline-none transition-all"
+                                      className="w-full bg-card border border-blue-200 rounded-xl py-3 px-4 text-foreground font-semibold text-sm focus:ring-2 focus:ring-blue-500/10 outline-none transition-all"
                                       placeholder="Ex: 12"
                                   />
                                   <p className="text-[9px] text-blue-600 mt-1 ml-1">
@@ -1012,16 +1012,16 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                               
                               {/* PREVIEW DO PARCELAMENTO BILLS */}
                               {Number(totalInstallments) >= 2 && Number(watchedAmount) > 0 && (
-                                  <div className="bg-white p-3 rounded-lg border border-blue-200">
+                                  <div className="bg-card p-3 rounded-lg border border-blue-200">
                                       <p className="text-[9px] text-blue-600 uppercase tracking-wider mb-1">📊 Resumo</p>
                                       <div className="flex justify-between items-center">
-                                          <span className="text-xs text-coffee">Valor Total:</span>
-                                          <span className="text-sm font-bold text-coffee">
+                                          <span className="text-xs text-foreground">Valor Total:</span>
+                                          <span className="text-sm font-bold text-foreground">
                                               R$ {Number(watchedAmount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                           </span>
                                       </div>
                                       <div className="flex justify-between items-center mt-1">
-                                          <span className="text-xs text-coffee">{totalInstallments}x de:</span>
+                                          <span className="text-xs text-foreground">{totalInstallments}x de:</span>
                                           <span className="text-lg font-bold text-blue-600">
                                               R$ {(Number(watchedAmount) / Number(totalInstallments)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                           </span>
@@ -1040,7 +1040,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
 
       {/* 7. TAGS */}
       <div className="space-y-1">
-          <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Tags (Opcional)</label>
+          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Tags (Opcional)</label>
           <Controller 
               name="tags"
               control={control}

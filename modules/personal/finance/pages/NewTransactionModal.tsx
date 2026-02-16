@@ -261,13 +261,13 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
 
       {/* CONTENT: Centered Absoluted */}
       <div className="fixed left-[50%] top-[50%] z-50 w-full max-w-2xl translate-x-[-50%] translate-y-[-50%] p-4">
-        <div className="bg-white w-full rounded-[2rem] shadow-2xl border border-stone-100 flex flex-col max-h-[90vh] overflow-hidden animate-fade-in">
+        <div className="bg-card w-full rounded-[2rem] shadow-2xl border border-border flex flex-col max-h-[90vh] overflow-hidden animate-fade-in">
           
           <div className="flex justify-between items-center p-6 border-b border-stone-50">
-            <h2 className="text-xl font-semibold text-coffee tracking-tight">
+            <h2 className="text-xl font-semibold text-foreground tracking-tight">
               {transactionToEdit ? 'Editar Movimentação' : 'Nova Movimentação'}
             </h2>
-            <button onClick={onClose} className="p-2 hover:bg-stone-50 rounded-full text-cappuccino transition-colors">
+            <button onClick={onClose} className="p-2 hover:bg-secondary rounded-full text-muted-foreground transition-colors">
               <X size={20} />
             </button>
           </div>
@@ -275,46 +275,46 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
           <form onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-y-auto p-6 space-y-6">
             
             <div className="flex gap-4">
-              <div className="flex bg-stone-50 p-1 rounded-xl flex-1">
+              <div className="flex bg-secondary p-1 rounded-xl flex-1">
                 <button
                   type="button"
                   onClick={() => setValue('type', 'expense')}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${type === 'expense' ? 'bg-white text-terracotta shadow-sm' : 'text-stone-400'}`}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${type === 'expense' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground'}`}
                 >
                   <ArrowDownCircle size={14} /> Despesa
                 </button>
                 <button
                   type="button"
                   onClick={() => setValue('type', 'income')}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${type === 'income' ? 'bg-white text-olive shadow-sm' : 'text-stone-400'}`}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${type === 'income' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground'}`}
                 >
                   <ArrowUpCircle size={14} /> Receita
                 </button>
               </div>
               
               <div className="flex-1 relative">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                 <input 
                   type="date"
                   {...register('date')}
-                  className="w-full h-full bg-stone-50 border border-stone-200 rounded-xl pl-10 pr-4 text-sm text-coffee outline-none focus:ring-2 focus:ring-black/5 font-medium"
+                  className="w-full h-full bg-secondary border border-border rounded-xl pl-10 pr-4 text-sm text-foreground outline-none focus:ring-2 focus:ring-black/5 font-medium"
                 />
               </div>
             </div>
 
             {type === 'expense' && (
-              <div className="flex border-b border-stone-100">
+              <div className="flex border-b border-border">
                 <button
                   type="button"
                   onClick={() => setActiveTab('simple')}
-                  className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'simple' ? 'border-olive text-olive' : 'border-transparent text-stone-400'}`}
+                  className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'simple' ? 'border-primary text-olive' : 'border-transparent text-muted-foreground'}`}
                 >
                   <DollarSign size={14} /> Valor Único
                 </button>
                 <button
                   type="button"
                   onClick={() => setActiveTab('items')}
-                  className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'items' ? 'border-olive text-olive' : 'border-transparent text-stone-400'}`}
+                  className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'items' ? 'border-primary text-olive' : 'border-transparent text-muted-foreground'}`}
                 >
                   <ListPlus size={14} /> Detalhar Itens
                 </button>
@@ -323,7 +323,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
 
             {activeTab === 'simple' ? (
               <div className="text-center py-4 animate-fade-in">
-                <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Valor da Transação</label>
+                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Valor da Transação</label>
                 <div className="relative inline-block w-full max-w-[200px]">
                   <span className={`absolute left-0 top-1/2 -translate-y-1/2 text-2xl font-medium opacity-40`} style={{ color: themeHex }}>R$</span>
                   <input 
@@ -338,36 +338,36 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                 </div>
               </div>
             ) : (
-              <div className="bg-stone-50 rounded-xl p-4 border border-stone-100 space-y-4 animate-fade-in">
+              <div className="bg-secondary rounded-xl p-4 border border-border space-y-4 animate-fade-in">
                 <div className="flex gap-2 items-end">
                   <div className="flex-1">
-                    <label className="text-[9px] font-bold text-stone-400 uppercase ml-1">Produto</label>
+                    <label className="text-[9px] font-bold text-muted-foreground uppercase ml-1">Produto</label>
                     <input 
                       value={newItemName}
                       onChange={e => setNewItemName(e.target.value)}
                       placeholder="Ex: Gasolina..."
-                      className="w-full p-2 rounded-lg border border-stone-200 text-sm outline-none focus:ring-1 focus:ring-olive/20"
+                      className="w-full p-2 rounded-lg border border-border text-sm outline-none focus:ring-1 focus:ring-olive/20"
                       onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
                     />
                   </div>
                   <div className="w-16">
-                    <label className="text-[9px] font-bold text-stone-400 uppercase ml-1">Qtd</label>
+                    <label className="text-[9px] font-bold text-muted-foreground uppercase ml-1">Qtd</label>
                     <input 
                       type="number"
                       value={newItemQty}
                       onChange={e => setNewItemQty(Number(e.target.value))}
-                      className="w-full p-2 rounded-lg border border-stone-200 text-sm text-center outline-none"
+                      className="w-full p-2 rounded-lg border border-border text-sm text-center outline-none"
                       onWheel={(e) => e.currentTarget.blur()}
                     />
                   </div>
                   <div className="w-24">
-                    <label className="text-[9px] font-bold text-stone-400 uppercase ml-1">Unitário</label>
+                    <label className="text-[9px] font-bold text-muted-foreground uppercase ml-1">Unitário</label>
                     <input 
                       type="number"
                       step="0.01"
                       value={newItemPrice}
                       onChange={e => setNewItemPrice(Number(e.target.value))}
-                      className="w-full p-2 rounded-lg border border-stone-200 text-sm outline-none"
+                      className="w-full p-2 rounded-lg border border-border text-sm outline-none"
                       onKeyDown={(e) => e.key === 'Enter' && handleAddItem()}
                       onWheel={(e) => e.currentTarget.blur()}
                     />
@@ -383,17 +383,17 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
 
                 <div className="max-h-40 overflow-y-auto space-y-2 pr-1">
                   {items.map((item) => (
-                    <div key={item.id} className="flex justify-between items-center bg-white p-2 rounded-lg border border-stone-100 shadow-sm">
+                    <div key={item.id} className="flex justify-between items-center bg-card p-2 rounded-lg border border-border shadow-sm">
                       <div className="flex items-center gap-2 overflow-hidden">
-                        <span className="w-6 h-6 flex-shrink-0 flex items-center justify-center bg-stone-100 text-xs font-bold rounded text-stone-500">{item.quantity}x</span>
-                        <span className="text-sm font-medium text-coffee truncate">{item.name}</span>
+                        <span className="w-6 h-6 flex-shrink-0 flex items-center justify-center bg-secondary text-xs font-bold rounded text-muted-foreground">{item.quantity}x</span>
+                        <span className="text-sm font-medium text-foreground truncate">{item.name}</span>
                       </div>
                       <div className="flex items-center gap-3 flex-shrink-0">
                         <span className="text-sm font-bold text-olive">R$ {(item.amount || 0).toFixed(2)}</span>
                         <button 
                           type="button"
                           onClick={() => handleRemoveItem(item.id!)} 
-                          className="text-stone-300 hover:text-terracotta"
+                          className="text-muted-foreground hover:text-terracotta"
                         >
                           <Trash2 size={14} />
                         </button>
@@ -401,53 +401,53 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                     </div>
                   ))}
                   {items.length === 0 && (
-                    <p className="text-center text-xs text-stone-400 py-4 italic border-2 border-dashed border-stone-200 rounded-lg">Adicione itens.</p>
+                    <p className="text-center text-xs text-muted-foreground py-4 italic border-2 border-dashed border-border rounded-lg">Adicione itens.</p>
                   )}
                 </div>
                 
-                <div className="flex justify-between items-center pt-3 border-t border-stone-200">
-                  <span className="text-xs font-bold uppercase text-stone-400">Total</span>
-                  <span className="text-xl font-bold text-coffee">R$ {formAmount || '0.00'}</span>
+                <div className="flex justify-between items-center pt-3 border-t border-border">
+                  <span className="text-xs font-bold uppercase text-muted-foreground">Total</span>
+                  <span className="text-xl font-bold text-foreground">R$ {formAmount || '0.00'}</span>
                 </div>
               </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-[10px] font-bold text-coffee uppercase tracking-widest ml-1">Descrição</label>
+                <label className="text-[10px] font-bold text-foreground uppercase tracking-widest ml-1">Descrição</label>
                 <input 
                   {...register('description')}
                   placeholder="Ex: Supermercado..."
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-sm text-coffee outline-none focus:ring-2 focus:ring-black/5"
+                  className="w-full bg-secondary border border-border rounded-xl p-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-black/5"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-bold text-coffee uppercase tracking-widest ml-1">Categoria</label>
+                <label className="text-[10px] font-bold text-foreground uppercase tracking-widest ml-1">Categoria</label>
                 <input 
                   {...register('category')}
                   placeholder="Ex: Alimentação..."
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-sm text-coffee outline-none focus:ring-2 focus:ring-black/5"
+                  className="w-full bg-secondary border border-border rounded-xl p-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-black/5"
                 />
               </div>
             </div>
 
             <div className="space-y-4 pt-2">
               <div className="flex items-center justify-between">
-                <label className="text-[10px] font-bold text-coffee uppercase tracking-widest ml-1">Origem</label>
+                <label className="text-[10px] font-bold text-foreground uppercase tracking-widest ml-1">Origem</label>
                 
                 {type === 'expense' && (
-                  <div className="flex bg-stone-100 rounded-lg p-0.5">
+                  <div className="flex bg-secondary rounded-lg p-0.5">
                     <button
                       type="button"
                       onClick={() => setValue('originType', 'account')}
-                      className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase transition-all ${originType === 'account' ? 'bg-white shadow-sm text-coffee' : 'text-stone-400'}`}
+                      className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase transition-all ${originType === 'account' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground'}`}
                     >
                       Conta
                     </button>
                     <button
                       type="button"
                       onClick={() => setValue('originType', 'card')}
-                      className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase transition-all ${originType === 'card' ? 'bg-white shadow-sm text-coffee' : 'text-stone-400'}`}
+                      className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase transition-all ${originType === 'card' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground'}`}
                     >
                       Cartão
                     </button>
@@ -459,10 +459,10 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                 <div className="flex-1">
                   {originType === 'account' ? (
                     <div className="relative">
-                      <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                      <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                       <select 
                         {...register('account_id')}
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-10 pr-4 py-3 text-sm text-coffee outline-none focus:ring-2 focus:ring-black/5 appearance-none"
+                        className="w-full bg-secondary border border-border rounded-xl pl-10 pr-4 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-black/5 appearance-none"
                       >
                         <option value="">Selecione a Conta...</option>
                         {accounts.map(acc => (
@@ -472,10 +472,10 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                     </div>
                   ) : (
                     <div className="relative">
-                      <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                      <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                       <select 
                         {...register('credit_card_id')}
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-10 pr-4 py-3 text-sm text-coffee outline-none focus:ring-2 focus:ring-black/5 appearance-none"
+                        className="w-full bg-secondary border border-border rounded-xl pl-10 pr-4 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-black/5 appearance-none"
                       >
                         <option value="">Selecione o Cartão...</option>
                         {cards.map(card => (
@@ -490,7 +490,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
 
           </form>
 
-          <div className="p-6 border-t border-stone-50 bg-white">
+          <div className="p-6 border-t border-stone-50 bg-card">
             <button 
               onClick={handleSubmit(onSubmit)}
               disabled={isSubmitting}

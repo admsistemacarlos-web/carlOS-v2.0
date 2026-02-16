@@ -37,18 +37,18 @@ const HymnSection: React.FC<HymnSectionProps> = ({
         <div className="w-full animate-fade-in mb-4">
             <button 
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between p-4 bg-stone-50 border border-stone-200/50 rounded-xl hover:bg-stone-100 transition-colors group select-none"
+                className="w-full flex items-center justify-between p-4 bg-secondary border border-border/50 rounded-xl hover:bg-secondary transition-colors group select-none"
             >
-                <div className="flex items-center gap-3 text-stone-600">
+                <div className="flex items-center gap-3 text-muted-foreground">
                     {icon}
                     <h2 className="text-sm font-bold uppercase tracking-widest">{title}</h2>
-                    <span className="bg-white px-2 py-0.5 rounded-md text-[10px] font-bold border border-stone-200 text-stone-400">
+                    <span className="bg-card px-2 py-0.5 rounded-md text-[10px] font-bold border border-border text-muted-foreground">
                         {count}
                     </span>
                 </div>
                 <ChevronDown 
                     size={20} 
-                    className={`text-stone-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
+                    className={`text-muted-foreground transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
                 />
             </button>
 
@@ -94,10 +94,10 @@ export default function HymnsPage() {
     <div 
         key={hymn.id} 
         onClick={() => navigate(`/personal/spiritual/hymns/${hymn.id}`)}
-        className="bg-white p-6 rounded-[2rem] border border-[#E6E2DE] shadow-sm hover:shadow-xl hover:border-[#D7CCC8] hover:-translate-y-1 transition-all group flex flex-col cursor-pointer relative"
+        className="bg-card p-6 rounded-[2rem] border border-border shadow-sm hover:shadow-xl hover:border-[#D7CCC8] hover:-translate-y-1 transition-all group flex flex-col cursor-pointer relative"
     >
         <div className="flex items-start justify-between mb-4">
-            <div className="p-3 bg-stone-50 rounded-full text-stone-400 group-hover:text-[#5D4037] transition-colors">
+            <div className="p-3 bg-secondary rounded-full text-muted-foreground group-hover:text-[#5D4037] transition-colors">
             <Music size={20} />
             </div>
             
@@ -108,7 +108,7 @@ export default function HymnsPage() {
                 target="_blank" 
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="text-stone-300 hover:text-red-500 transition-colors p-1"
+                className="text-muted-foreground hover:text-red-500 transition-colors p-1"
                 title="Ouvir"
                 >
                     <PlayCircle size={22} />
@@ -116,7 +116,7 @@ export default function HymnsPage() {
             )}
             <button 
                 onClick={(e) => handleDeleteRequest(hymn.id, e)}
-                className="text-stone-300 hover:text-red-500 transition-colors p-1 opacity-0 group-hover:opacity-100"
+                className="text-muted-foreground hover:text-red-500 transition-colors p-1 opacity-0 group-hover:opacity-100"
                 title="Excluir"
             >
                 <Trash2 size={20} />
@@ -124,11 +124,11 @@ export default function HymnsPage() {
             </div>
         </div>
         
-        <h3 className="text-lg font-bold text-stone-800 mb-1 leading-tight">{hymn.title}</h3>
-        <p className="text-sm text-stone-500 font-medium mb-4">{hymn.artist || 'Artista Desconhecido'}</p>
+        <h3 className="text-lg font-bold text-foreground mb-1 leading-tight">{hymn.title}</h3>
+        <p className="text-sm text-muted-foreground font-medium mb-4">{hymn.artist || 'Artista Desconhecido'}</p>
         
-        <div className="flex-1 bg-stone-50 border border-stone-100 rounded-xl p-4 relative overflow-hidden h-32">
-        <p className="text-xs text-stone-600 whitespace-pre-line font-mono opacity-80 leading-relaxed">
+        <div className="flex-1 bg-secondary border border-border rounded-xl p-4 relative overflow-hidden h-32">
+        <p className="text-xs text-muted-foreground whitespace-pre-line font-mono opacity-80 leading-relaxed">
             {hymn.lyrics ? hymn.lyrics.slice(0, 150) + '...' : 'Sem letra cadastrada.'}
         </p>
         <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-stone-50 to-transparent"></div>
@@ -137,13 +137,13 @@ export default function HymnsPage() {
   );
 
   return (
-    <div className="w-full min-h-screen pb-20 animate-fade-in font-sans bg-[#FAF9F6]">
+    <div className="w-full min-h-screen pb-20 animate-fade-in font-sans bg-card">
       <div className="px-8 pt-8 pb-6 flex flex-col md:flex-row justify-between items-start gap-4">
         <div>
-          <button onClick={() => navigate('/personal/spiritual')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-400 hover:text-stone-600 transition-colors mb-4">
+          <button onClick={() => navigate('/personal/spiritual')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-muted-foreground transition-colors mb-4">
             <ArrowLeft size={14} /> Voltar
           </button>
-          <h1 className="text-3xl font-bold text-stone-800 tracking-tight flex items-center gap-3">
+          <h1 className="text-3xl font-bold text-foreground tracking-tight flex items-center gap-3">
             <Music className="text-[#5D4037]" /> Hinos & Louvores
           </h1>
         </div>
@@ -154,11 +154,11 @@ export default function HymnsPage() {
 
       <div className="px-8 space-y-2">
         {loading ? (
-          <div className="flex justify-center py-20"><Loader2 className="animate-spin text-stone-400" size={32} /></div>
+          <div className="flex justify-center py-20"><Loader2 className="animate-spin text-muted-foreground" size={32} /></div>
         ) : hymns.length === 0 ? (
-          <div className="text-center py-20 bg-stone-50 rounded-[2rem] border border-dashed border-stone-200">
-            <Mic2 className="mx-auto text-stone-300 mb-3" size={32} />
-            <p className="text-stone-400">Seu repertório está vazio.</p>
+          <div className="text-center py-20 bg-secondary rounded-[2rem] border border-dashed border-border">
+            <Mic2 className="mx-auto text-muted-foreground mb-3" size={32} />
+            <p className="text-muted-foreground">Seu repertório está vazio.</p>
             <button onClick={() => navigate('/personal/spiritual/hymns/new')} className="text-[#5D4037] font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Adicionar Primeiro Louvor</button>
           </div>
         ) : (
@@ -181,13 +181,13 @@ export default function HymnsPage() {
             className="absolute inset-0 bg-stone-900/20 backdrop-blur-sm transition-opacity" 
             onClick={() => !isDeleting && setIsDeleteOpen(false)}
           />
-          <div className="relative bg-white w-full max-w-sm rounded-[2rem] shadow-2xl p-6 animate-fade-in border border-stone-100">
+          <div className="relative bg-card w-full max-w-sm rounded-[2rem] shadow-2xl p-6 animate-fade-in border border-border">
             <div className="flex flex-col items-center text-center">
               <div className="w-12 h-12 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4 border border-red-100">
                 <AlertTriangle size={24} />
               </div>
-              <h2 className="text-lg font-bold text-stone-800 mb-2">Excluir hino?</h2>
-              <p className="text-sm text-stone-500 leading-relaxed mb-6">
+              <h2 className="text-lg font-bold text-foreground mb-2">Excluir hino?</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-6">
                 Esta ação não pode ser desfeita.
               </p>
               
@@ -195,7 +195,7 @@ export default function HymnsPage() {
                 <button 
                   onClick={() => setIsDeleteOpen(false)}
                   disabled={isDeleting}
-                  className="flex-1 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-muted-foreground bg-secondary hover:bg-accent transition-colors disabled:opacity-50"
                 >
                   Cancelar
                 </button>

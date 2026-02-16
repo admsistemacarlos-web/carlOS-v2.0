@@ -145,7 +145,7 @@ export default function SearchPage() {
   const isIdle = !query.trim();
 
   return (
-    <div className="min-h-screen w-full bg-cream text-coffee font-sans animate-fade-in pb-20">
+    <div className="min-h-screen w-full bg-background text-foreground font-sans animate-fade-in pb-20">
       
       {/* HEADER & INPUT AREA (Static flow) */}
       <div className="max-w-4xl mx-auto px-6 pt-8">
@@ -154,19 +154,19 @@ export default function SearchPage() {
         <div className="flex items-center gap-2 mb-6">
           <button 
             onClick={() => navigate('/personal/studies')}
-            className="p-2 -ml-2 rounded-full hover:bg-stone-100 text-cappuccino transition-colors"
+            className="p-2 -ml-2 rounded-full hover:bg-secondary text-muted-foreground transition-colors"
           >
             <ArrowLeft size={20} />
           </button>
-          <span className="text-xs font-bold uppercase tracking-widest text-cappuccino">Voltar para Biblioteca</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Voltar para Biblioteca</span>
         </div>
 
         {/* Page Title */}
-        <h1 className="text-3xl font-serif italic text-coffee mb-6 tracking-tight">Buscar no Fichário</h1>
+        <h1 className="text-3xl font-serif italic text-foreground mb-6 tracking-tight">Buscar no Fichário</h1>
         
         {/* Search Input Container */}
         <div className="relative group mb-10">
-          <div className="absolute left-5 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-olive transition-colors">
+          <div className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-olive transition-colors">
             {loading ? <Loader2 size={20} className="animate-spin" /> : <Search size={20} />}
           </div>
           <input 
@@ -174,12 +174,12 @@ export default function SearchPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Pesquisar por títulos, módulos ou conteúdo..."
-            className="w-full bg-white border border-stone-200 rounded-[1.5rem] pl-14 pr-12 py-5 text-lg text-coffee placeholder-stone-300 outline-none focus:ring-2 focus:ring-olive/10 focus:border-olive/30 transition-all shadow-sm"
+            className="w-full bg-card border border-border rounded-[1.5rem] pl-14 pr-12 py-5 text-lg text-foreground placeholder-stone-300 outline-none focus:ring-2 focus:ring-olive/10 focus:border-primary/30 transition-all shadow-sm"
           />
           {query && (
             <button 
               onClick={() => { setQuery(''); setResults({ courses: [], modules: [], lessons: [] }); }}
-              className="absolute right-5 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-stone-100 text-stone-300 hover:text-coffee transition-colors"
+              className="absolute right-5 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
             >
               <X size={18} />
             </button>
@@ -192,7 +192,7 @@ export default function SearchPage() {
 
         {/* Estado Inicial */}
         {isIdle && (
-          <div className="flex flex-col items-center justify-center py-12 text-stone-300 border-2 border-dashed border-stone-100 rounded-[2rem]">
+          <div className="flex flex-col items-center justify-center py-12 text-muted-foreground border-2 border-dashed border-border rounded-[2rem]">
             <Search size={48} className="mb-4 opacity-50" />
             <p className="text-sm font-medium text-center">
               Digite acima para buscar em<br/>toda sua base de conhecimento.
@@ -203,14 +203,14 @@ export default function SearchPage() {
         {/* Sem Resultados */}
         {!isIdle && !loading && !hasResults && (
           <div className="text-center py-12">
-            <p className="text-stone-400 text-sm">Nenhum resultado encontrado para "{query}".</p>
+            <p className="text-muted-foreground text-sm">Nenhum resultado encontrado para "{query}".</p>
           </div>
         )}
 
         {/* --- SECTION: COURSES --- */}
         {results.courses.length > 0 && (
           <section className="animate-fade-in">
-            <h2 className="text-sm font-bold text-coffee uppercase tracking-widest mb-4 flex items-center gap-2">
+            <h2 className="text-sm font-bold text-foreground uppercase tracking-widest mb-4 flex items-center gap-2">
               <BookOpen size={16} className="text-olive" /> Cursos
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -218,12 +218,12 @@ export default function SearchPage() {
                 <button 
                   key={course.id}
                   onClick={() => navigate(`/personal/studies/courses/${course.id}`)}
-                  className="flex flex-col items-start p-6 bg-white hover:bg-stone-50 rounded-[1.5rem] border border-stone-100 shadow-sm hover:shadow-md transition-all text-left group w-full"
+                  className="flex flex-col items-start p-6 bg-card hover:bg-secondary rounded-[1.5rem] border border-border shadow-sm hover:shadow-md transition-all text-left group w-full"
                 >
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-stone-400 mb-1 bg-stone-100 px-2 py-0.5 rounded-md">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-1 bg-secondary px-2 py-0.5 rounded-md">
                     {course.category || 'Geral'}
                   </span>
-                  <h3 className="text-lg font-bold text-coffee group-hover:text-olive transition-colors line-clamp-1">
+                  <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                     {course.title}
                   </h3>
                 </button>
@@ -235,7 +235,7 @@ export default function SearchPage() {
         {/* --- SECTION: MODULES --- */}
         {results.modules.length > 0 && (
           <section className="animate-fade-in">
-            <h2 className="text-sm font-bold text-coffee uppercase tracking-widest mb-4 flex items-center gap-2">
+            <h2 className="text-sm font-bold text-foreground uppercase tracking-widest mb-4 flex items-center gap-2">
               <Layers size={16} className="text-olive" /> Módulos
             </h2>
             <div className="space-y-3">
@@ -243,15 +243,15 @@ export default function SearchPage() {
                 <button 
                   key={module.id}
                   onClick={() => navigate(`/personal/studies/courses/${module.course_id}`)}
-                  className="flex items-center justify-between w-full p-5 bg-white hover:bg-stone-50 rounded-[1.5rem] border border-stone-100 shadow-sm transition-all text-left group"
+                  className="flex items-center justify-between w-full p-5 bg-card hover:bg-secondary rounded-[1.5rem] border border-border shadow-sm transition-all text-left group"
                 >
                   <div>
-                    <h3 className="font-bold text-coffee group-hover:text-olive transition-colors">{module.title}</h3>
-                    <p className="text-xs text-stone-400 mt-1 flex items-center gap-1">
-                      Em: <span className="font-medium text-stone-500">{module.courses?.title}</span>
+                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors">{module.title}</h3>
+                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                      Em: <span className="font-medium text-muted-foreground">{module.courses?.title}</span>
                     </p>
                   </div>
-                  <ChevronRight size={18} className="text-stone-300 group-hover:text-olive transition-colors" />
+                  <ChevronRight size={18} className="text-muted-foreground group-hover:text-primary transition-colors" />
                 </button>
               ))}
             </div>
@@ -261,7 +261,7 @@ export default function SearchPage() {
         {/* --- SECTION: LESSONS (ANNOTATIONS) --- */}
         {results.lessons.length > 0 && (
           <section className="animate-fade-in">
-            <h2 className="text-sm font-bold text-coffee uppercase tracking-widest mb-4 flex items-center gap-2">
+            <h2 className="text-sm font-bold text-foreground uppercase tracking-widest mb-4 flex items-center gap-2">
               <FileText size={16} className="text-olive" /> Aulas & Anotações
             </h2>
             <div className="space-y-4">
@@ -272,27 +272,27 @@ export default function SearchPage() {
                   <button 
                     key={lesson.id}
                     onClick={() => navigate(`/personal/studies/lessons/${lesson.id}`)}
-                    className="flex flex-col w-full p-6 bg-white rounded-[1.5rem] border border-stone-100 shadow-sm hover:shadow-lg transition-all text-left group hover:-translate-y-0.5"
+                    className="flex flex-col w-full p-6 bg-card rounded-[1.5rem] border border-border shadow-sm hover:shadow-lg transition-all text-left group hover:-translate-y-0.5"
                   >
                     <div className="flex items-start justify-between w-full mb-3">
                       <div>
-                        <h3 className="text-lg font-bold text-coffee group-hover:text-olive transition-colors">
+                        <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
                           {lesson.title}
                         </h3>
-                        <div className="flex items-center gap-2 text-xs text-stone-400 mt-1">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
                           <span className="font-medium">{lesson.modules?.courses?.title}</span>
                           <span>•</span>
                           <span>{lesson.modules?.title}</span>
                         </div>
                       </div>
-                      <div className="bg-cream p-2 rounded-xl text-olive group-hover:bg-olive group-hover:text-white transition-colors">
+                      <div className="bg-background p-2 rounded-xl text-olive group-hover:bg-primary group-hover:text-white transition-colors">
                         <FileText size={18} />
                       </div>
                     </div>
 
                     {/* Content Snippet */}
                     {snippet && (
-                      <div className="w-full mt-2 p-3 bg-stone-50 rounded-xl border-l-2 border-olive/30 text-sm text-stone-600 font-serif italic leading-relaxed">
+                      <div className="w-full mt-2 p-3 bg-secondary rounded-xl border-l-2 border-primary/30 text-sm text-muted-foreground font-serif italic leading-relaxed">
                         "{snippet}"
                       </div>
                     )}

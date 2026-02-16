@@ -76,7 +76,7 @@ const subMonths = (date: Date, amount: number) => {
 
 // --- CONFIGURAÇÃO VISUAL ---
 const STATUS_CONFIG: Record<TaskStatus, { label: string, color: string, icon: any }> = {
-  todo: { label: 'A Fazer', color: 'text-stone-400', icon: Circle },
+  todo: { label: 'A Fazer', color: 'text-muted-foreground', icon: Circle },
   in_progress: { label: 'Em Andamento', color: 'text-[#E09B6B]', icon: Clock },
   approval: { label: 'Aprovação', color: 'text-yellow-600', icon: AlertCircle },
   ready_to_post: { label: 'Pronto p/ Postar', color: 'text-purple-400', icon: ArrowRight },
@@ -447,7 +447,7 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
                                                 onClick={(e) => { e.stopPropagation(); handleOpenEdit(task); }}
                                                 className={`text-[9px] px-1.5 py-1 rounded border truncate cursor-pointer select-none ${
                                                     task.status === 'posted' 
-                                                    ? 'bg-[#143d2d]/30 text-[#5c5c5c] border-transparent line-through' 
+                                                    ? 'bg-primary/30 text-[#5c5c5c] border-transparent line-through' 
                                                     : 'bg-[#2C2C2C] text-[#D4D4D4] border-[#404040] hover:border-[#E09B6B]'
                                                 }`}
                                                 title={task.title}

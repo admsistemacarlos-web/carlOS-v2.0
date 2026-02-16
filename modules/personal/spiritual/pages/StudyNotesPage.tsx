@@ -39,18 +39,18 @@ const StudySection: React.FC<StudySectionProps> = ({
         <div className="w-full animate-fade-in mb-4">
             <button 
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors group select-none shadow-sm"
+                className="w-full flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-slate-50 transition-colors group select-none shadow-sm"
             >
                 <div className="flex items-center gap-3 text-slate-600">
                     {icon}
                     <h2 className="text-sm font-bold uppercase tracking-widest">{title}</h2>
-                    <span className="bg-slate-100 px-2 py-0.5 rounded-md text-[10px] font-bold border border-slate-200 text-slate-400">
+                    <span className="bg-secondary px-2 py-0.5 rounded-md text-[10px] font-bold border border-border text-muted-foreground">
                         {count}
                     </span>
                 </div>
                 <ChevronDown 
                     size={20} 
-                    className={`text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
+                    className={`text-muted-foreground transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
                 />
             </button>
 
@@ -132,9 +132,9 @@ export default function StudyNotesPage() {
   };
 
   const StudyCard: React.FC<{ study: Study }> = ({ study }) => (
-    <div key={study.id} className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-lg transition-all group relative">
+    <div key={study.id} className="bg-card p-8 rounded-[2rem] border border-border shadow-sm hover:shadow-lg transition-all group relative">
         <div className="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button onClick={() => handleOpenModal(study)} className="p-2 bg-slate-100 rounded-full hover:bg-slate-200 text-slate-600"><Pencil size={14} /></button>
+            <button onClick={() => handleOpenModal(study)} className="p-2 bg-secondary rounded-full hover:bg-secondary text-slate-600"><Pencil size={14} /></button>
             <button onClick={() => deleteItem(study.id)} className="p-2 bg-red-50 rounded-full hover:bg-red-100 text-red-500"><Trash2 size={14} /></button>
         </div>
 
@@ -142,8 +142,8 @@ export default function StudyNotesPage() {
             <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">{study.topic || 'Geral'}</span>
         </div>
         
-        <h3 className="text-xl font-bold text-slate-800 mb-2">{study.title}</h3>
-        <div className="flex items-center gap-2 text-xs text-slate-400 mb-6 font-medium">
+        <h3 className="text-xl font-bold text-foreground mb-2">{study.title}</h3>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-6 font-medium">
             <Book size={14} /> {study.bible_references}
         </div>
         
@@ -159,27 +159,27 @@ export default function StudyNotesPage() {
       {/* Header */}
       <div className="px-8 pt-8 pb-6 flex flex-col md:flex-row justify-between items-start gap-4">
         <div>
-          <button onClick={() => navigate('/personal/spiritual')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors mb-4">
+          <button onClick={() => navigate('/personal/spiritual')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-blue-600 transition-colors mb-4">
             <ArrowLeft size={14} /> Voltar
           </button>
-          <h1 className="text-3xl font-bold text-slate-800 tracking-tight flex items-center gap-3">
+          <h1 className="text-3xl font-bold text-foreground tracking-tight flex items-center gap-3">
             <PenTool className="text-emerald-500" /> Meus Estudos
           </h1>
         </div>
 
         <div className="flex gap-3 w-full md:w-auto">
             <div className="relative flex-1 md:w-64 group">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" size={18} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-emerald-500 transition-colors" size={18} />
                 <input 
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Buscar anotações..."
-                    className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-10 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm placeholder:text-slate-400 text-slate-700"
+                    className="w-full bg-card border border-border rounded-xl pl-10 pr-10 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm placeholder:text-muted-foreground text-foreground"
                 />
                 {searchQuery && (
                     <button 
                         onClick={() => setSearchQuery('')}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-100 rounded-full text-slate-400 transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-secondary rounded-full text-muted-foreground transition-colors"
                     >
                         <X size={14} />
                     </button>
@@ -197,16 +197,16 @@ export default function StudyNotesPage() {
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="animate-spin text-emerald-500" size={32} /></div>
         ) : filteredTotal === 0 ? (
-          <div className="text-center py-20 bg-white rounded-[2rem] border border-dashed border-slate-200">
+          <div className="text-center py-20 bg-card rounded-[2rem] border border-dashed border-border">
             {searchQuery ? (
                 <>
                     <Search className="mx-auto text-slate-300 mb-3" size={32} />
-                    <p className="text-slate-400">Nenhum estudo encontrado para "{searchQuery}".</p>
+                    <p className="text-muted-foreground">Nenhum estudo encontrado para "{searchQuery}".</p>
                     <button onClick={() => setSearchQuery('')} className="text-emerald-600 font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Limpar Busca</button>
                 </>
             ) : (
                 <>
-                    <p className="text-slate-400">Nenhum estudo criado.</p>
+                    <p className="text-muted-foreground">Nenhum estudo criado.</p>
                     <button onClick={() => handleOpenModal()} className="text-emerald-600 font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Criar o Primeiro</button>
                 </>
             )}
@@ -226,34 +226,34 @@ export default function StudyNotesPage() {
 
       {/* Modal */}
       {isModalOpen && createPortal(
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-4xl rounded-[2rem] shadow-2xl overflow-hidden animate-fade-in flex flex-col h-[85vh]">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-emerald-50/50 shrink-0">
-              <h2 className="text-lg font-bold text-slate-800">{editingStudy ? 'Editar Estudo' : 'Novo Estudo'}</h2>
-              <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-200 rounded-full text-slate-500"><X size={20} /></button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="bg-card w-full max-w-4xl rounded-[2rem] shadow-2xl overflow-hidden animate-fade-in flex flex-col h-[85vh]">
+            <div className="p-6 border-b border-border flex justify-between items-center bg-emerald-50/50 shrink-0">
+              <h2 className="text-lg font-bold text-foreground">{editingStudy ? 'Editar Estudo' : 'Novo Estudo'}</h2>
+              <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-secondary rounded-full text-muted-foreground"><X size={20} /></button>
             </div>
             <form onSubmit={handleSubmit} className="flex flex-col h-full overflow-hidden">
-              <div className="p-6 space-y-4 border-b border-slate-100 bg-white shrink-0">
+              <div className="p-6 space-y-4 border-b border-border bg-card shrink-0">
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="text-xs font-bold uppercase text-slate-400 ml-1">Título</label>
-                        <input required value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-emerald-200 outline-none" />
+                        <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Título</label>
+                        <input required value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="w-full bg-slate-50 border border-border rounded-xl p-3 text-sm focus:ring-2 focus:ring-emerald-200 outline-none" />
                     </div>
                     <div>
-                        <label className="text-xs font-bold uppercase text-slate-400 ml-1">Tópico (Tema)</label>
-                        <input value={form.topic} onChange={e => setForm({...form, topic: e.target.value})} placeholder="Ex: Graça, Escatologia" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-emerald-200 outline-none" />
+                        <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Tópico (Tema)</label>
+                        <input value={form.topic} onChange={e => setForm({...form, topic: e.target.value})} placeholder="Ex: Graça, Escatologia" className="w-full bg-slate-50 border border-border rounded-xl p-3 text-sm focus:ring-2 focus:ring-emerald-200 outline-none" />
                     </div>
                 </div>
                 <div>
-                    <label className="text-xs font-bold uppercase text-slate-400 ml-1">Referências Bíblicas</label>
-                    <input value={form.bible_references} onChange={e => setForm({...form, bible_references: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-emerald-200 outline-none" />
+                    <label className="text-xs font-bold uppercase text-muted-foreground ml-1">Referências Bíblicas</label>
+                    <input value={form.bible_references} onChange={e => setForm({...form, bible_references: e.target.value})} className="w-full bg-slate-50 border border-border rounded-xl p-3 text-sm focus:ring-2 focus:ring-emerald-200 outline-none" />
                 </div>
               </div>
               
               {/* Editor Rico */}
               <div className="flex-1 overflow-y-auto p-6 bg-slate-50/30">
-                <label className="text-xs font-bold uppercase text-slate-400 ml-1 mb-2 block">Conteúdo do Estudo</label>
-                <div className="bg-white rounded-xl border border-slate-200 h-full overflow-hidden">
+                <label className="text-xs font-bold uppercase text-muted-foreground ml-1 mb-2 block">Conteúdo do Estudo</label>
+                <div className="bg-card rounded-xl border border-border h-full overflow-hidden">
                     <RichTextEditor 
                         content={form.content}
                         onChange={(newMarkdown) => setForm({...form, content: newMarkdown})}
@@ -263,7 +263,7 @@ export default function StudyNotesPage() {
                 </div>
               </div>
 
-              <div className="p-6 bg-white border-t border-slate-100 shrink-0">
+              <div className="p-6 bg-card border-t border-border shrink-0">
                 <button type="submit" className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-all shadow-lg active:scale-95">Salvar Estudo</button>
               </div>
             </form>

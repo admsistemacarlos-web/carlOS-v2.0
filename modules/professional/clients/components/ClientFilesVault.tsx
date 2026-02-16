@@ -50,7 +50,7 @@ export default function ClientFilesVault({ clientId }: { clientId: string }) {
         <button 
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
-          className="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-1 transition-colors disabled:opacity-50"
+          className="text-xs font-bold text-muted-foreground hover:text-white flex items-center gap-1 transition-colors disabled:opacity-50"
         >
           {isUploading ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />} 
           {isUploading ? 'Enviando...' : 'Upload'}
@@ -69,7 +69,7 @@ export default function ClientFilesVault({ clientId }: { clientId: string }) {
               </div>
               <div className="min-w-0">
                 <h4 className="text-sm font-bold text-slate-200 truncate pr-2">{file.file_name}</h4>
-                <p className="text-[10px] text-slate-500 font-mono uppercase tracking-wider">
+                <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-wider">
                     {formatFileSize(file.file_size)} • {new Date(file.created_at).toLocaleDateString()}
                 </p>
               </div>
@@ -80,7 +80,7 @@ export default function ClientFilesVault({ clientId }: { clientId: string }) {
                 href={file.file_url} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="p-2 text-slate-500 hover:text-amber-400 transition-colors"
+                className="p-2 text-muted-foreground hover:text-amber-400 transition-colors"
                 title="Baixar / Visualizar"
               >
                 <Download size={14} />
@@ -99,7 +99,7 @@ export default function ClientFilesVault({ clientId }: { clientId: string }) {
         ))}
         
         {(!files || files.length === 0) && !isLoading && (
-          <div className="text-center py-8 text-slate-500 text-xs italic border-2 border-dashed border-slate-800 rounded-xl">
+          <div className="text-center py-8 text-muted-foreground text-xs italic border-2 border-dashed border-slate-800 rounded-xl">
             Nenhum arquivo anexado.
           </div>
         )}

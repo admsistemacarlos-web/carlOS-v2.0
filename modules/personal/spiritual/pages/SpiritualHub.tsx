@@ -11,10 +11,10 @@ const HubCard: React.FC<{
 }> = ({ title, subtitle, icon, onClick }) => (
   <button 
     onClick={onClick}
-    className="group relative flex flex-col justify-between p-8 h-48 bg-[#FAF9F6] border border-[#E6E2DE] rounded-[2rem] hover:border-stone-400 hover:shadow-xl hover:shadow-stone-200/50 hover:-translate-y-1 transition-all duration-500 w-full text-left overflow-hidden"
+    className="group relative flex flex-col justify-between p-8 h-48 bg-card border border-border rounded-[2rem] hover:border-muted-foreground hover:shadow-lg hover:shadow-black/10 hover:-translate-y-1 transition-all duration-500 w-full text-left overflow-hidden"
   >
     {/* Efeito de aquecimento no hover (background sutil - Stone) */}
-    <div className="absolute inset-0 bg-stone-50/0 group-hover:bg-stone-100/50 transition-colors duration-500"></div>
+    <div className="absolute inset-0 bg-secondary/0 group-hover:bg-secondary/50 transition-colors duration-500"></div>
 
     <div className="relative z-10 flex justify-between items-start w-full">
        {/* Ícone Solto - Cor Marrom Couro -> Marrom Café */}
@@ -30,8 +30,8 @@ const HubCard: React.FC<{
 
     <div className="relative z-10 mt-auto">
       {/* Tipografia Café */}
-      <h3 className="text-xl font-bold text-stone-700 mb-1 tracking-tight group-hover:text-[#3E2723] transition-colors">{title}</h3>
-      <p className="text-sm text-stone-500 font-medium group-hover:text-stone-600 transition-colors">{subtitle}</p>
+      <h3 className="text-xl font-bold text-foreground mb-1 tracking-tight group-hover:text-primary transition-colors">{title}</h3>
+      <p className="text-sm text-muted-foreground font-medium group-hover:text-muted-foreground transition-colors">{subtitle}</p>
     </div>
   </button>
 );
@@ -40,7 +40,7 @@ export default function SpiritualHub() {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full min-h-screen animate-fade-in font-sans pb-20 bg-[#FAF9F6]">
+    <div className="w-full min-h-screen animate-fade-in font-sans pb-20 bg-card">
       
       {/* Header com Paleta Café */}
       <div className="w-full px-8 pt-10 pb-12">
@@ -48,10 +48,10 @@ export default function SpiritualHub() {
           <div className="w-8 h-1 bg-[#5D4037] rounded-full"></div>
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#5D4037]">Vida Espiritual</p>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold text-stone-800 tracking-tighter mb-3">
-          Edificação & <span className="text-stone-400 font-serif italic">Propósito</span>
+        <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tighter mb-3">
+          Edificação & <span className="text-muted-foreground font-serif italic">Propósito</span>
         </h1>
-        <p className="text-stone-500 text-sm max-w-lg leading-relaxed">
+        <p className="text-muted-foreground text-sm max-w-lg leading-relaxed">
           Gerencie sua jornada de fé, estudos e orações em um ambiente desenhado para a reflexão.
         </p>
       </div>

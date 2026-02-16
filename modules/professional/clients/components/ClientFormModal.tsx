@@ -157,7 +157,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
                 onClick={() => setFormData({...formData, status: 'active'})}
                 className={`py-2 rounded-md text-[10px] font-bold uppercase tracking-wider border transition-all ${
                   formData.status === 'active' 
-                    ? 'bg-[#143d2d]/40 border-[#20523e] text-[#60a887]' // Muted Emerald
+                    ? 'bg-primary/40 border-[#20523e] text-[#60a887]' // Muted Emerald
                     : 'bg-[#37352F] border-[#404040] text-[#737373] hover:text-[#D4D4D4]'
                 }`}
               >

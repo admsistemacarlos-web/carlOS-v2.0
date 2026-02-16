@@ -17,10 +17,10 @@ interface Book {
 // --- COMPONENTES AUXILIARES ---
 
 const BookCard: React.FC<{ book: Book, onClick: () => void, onDelete: (e: React.MouseEvent) => void }> = ({ book, onClick, onDelete }) => (
-  <div onClick={onClick} className="bg-white p-4 rounded-2xl border border-[#E6E2DE] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group relative flex gap-4 h-full">
+  <div onClick={onClick} className="bg-card p-4 rounded-2xl border border-border shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group relative flex gap-4 h-full">
     <button 
         onClick={onDelete}
-        className="absolute top-2 right-2 p-1.5 bg-white rounded-full text-stone-300 hover:text-red-500 hover:bg-red-50 shadow-sm opacity-0 group-hover:opacity-100 transition-all z-20 border border-stone-100"
+        className="absolute top-2 right-2 p-1.5 bg-card rounded-full text-muted-foreground hover:text-red-500 hover:bg-red-50 shadow-sm opacity-0 group-hover:opacity-100 transition-all z-20 border border-border"
         title="Excluir Livro"
     >
         <Trash2 size={14} />
@@ -32,17 +32,17 @@ const BookCard: React.FC<{ book: Book, onClick: () => void, onDelete: (e: React.
             <img 
             src={book.cover_url} 
             alt={book.title} 
-            className="w-16 h-24 object-cover rounded-lg shadow-sm border border-stone-100"
+            className="w-16 h-24 object-cover rounded-lg shadow-sm border border-border"
             />
         ) : (
-            <div className="w-16 h-24 bg-stone-100 rounded-lg border border-stone-200 flex items-center justify-center shadow-inner text-stone-300">
+            <div className="w-16 h-24 bg-secondary rounded-lg border border-border flex items-center justify-center shadow-inner text-muted-foreground">
                 <BookOpen size={24} />
             </div>
         )}
 
         {/* Badge de Acervo */}
         {book.owned && (
-            <div className="absolute -top-2 -left-2 bg-[#143d2d] text-white p-1 rounded-full shadow-md border-2 border-white z-10" title="Tenho este livro">
+            <div className="absolute -top-2 -left-2 bg-primary text-primary-foreground p-1 rounded-full shadow-md border-2 border-white z-10" title="Tenho este livro">
                 <Check size={10} strokeWidth={4} />
             </div>
         )}
@@ -51,8 +51,8 @@ const BookCard: React.FC<{ book: Book, onClick: () => void, onDelete: (e: React.
     {/* Informações */}
     <div className="flex flex-col justify-between flex-1 py-1 min-w-0">
         <div>
-            <h3 className="font-bold text-stone-800 text-sm leading-tight mb-1 line-clamp-2 pr-6">{book.title}</h3>
-            <p className="text-xs text-stone-500 mb-2 truncate">{book.author || 'Autor desconhecido'}</p>
+            <h3 className="font-bold text-foreground text-sm leading-tight mb-1 line-clamp-2 pr-6">{book.title}</h3>
+            <p className="text-xs text-muted-foreground mb-2 truncate">{book.author || 'Autor desconhecido'}</p>
         </div>
         
         <div className="flex items-center justify-between mt-auto">
@@ -62,7 +62,7 @@ const BookCard: React.FC<{ book: Book, onClick: () => void, onDelete: (e: React.
                 ))}
             </div>
             {book.owned && (
-                <span className="text-[9px] font-bold uppercase tracking-wider text-[#143d2d] bg-[#143d2d]/5 px-1.5 py-0.5 rounded">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-primary bg-primary/5 px-1.5 py-0.5 rounded">
                     Acervo
                 </span>
             )}
@@ -86,7 +86,7 @@ const BookSection: React.FC<BookSectionProps> = ({
     count, 
     children, 
     defaultOpen = false,
-    headerColor = "text-stone-600"
+    headerColor = "text-muted-foreground"
 }) => {
     const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -94,25 +94,25 @@ const BookSection: React.FC<BookSectionProps> = ({
         <div className="w-full animate-fade-in">
             <button 
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between p-4 bg-stone-50 border border-stone-200/50 rounded-xl hover:bg-stone-100 transition-colors group select-none"
+                className="w-full flex items-center justify-between p-4 bg-secondary border border-border/50 rounded-xl hover:bg-secondary transition-colors group select-none"
             >
                 <div className={`flex items-center gap-3 ${headerColor}`}>
                     {icon}
                     <h2 className="text-sm font-bold uppercase tracking-widest">{title}</h2>
-                    <span className="bg-white px-2 py-0.5 rounded-md text-[10px] font-bold border border-stone-200 text-stone-400">
+                    <span className="bg-card px-2 py-0.5 rounded-md text-[10px] font-bold border border-border text-muted-foreground">
                         {count}
                     </span>
                 </div>
                 <ChevronDown 
                     size={20} 
-                    className={`text-stone-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
+                    className={`text-muted-foreground transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
                 />
             </button>
 
             {isOpen && (
                 <div className="pt-4 pb-8 pl-2 animate-fade-in">
                     {count === 0 ? (
-                        <p className="text-sm text-stone-400 italic ml-2">Nenhum livro nesta lista.</p>
+                        <p className="text-sm text-muted-foreground italic ml-2">Nenhum livro nesta lista.</p>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {children}
@@ -157,15 +157,15 @@ export default function BooksPage() {
   };
 
   return (
-    <div className="w-full min-h-screen pb-20 animate-fade-in font-sans bg-[#FAF9F6]">
+    <div className="w-full min-h-screen pb-20 animate-fade-in font-sans bg-card">
       
       {/* Header */}
       <div className="px-8 pt-8 pb-6 flex flex-col md:flex-row justify-between items-start gap-4">
         <div>
-          <button onClick={() => navigate('/personal/spiritual')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-400 hover:text-stone-600 transition-colors mb-4">
+          <button onClick={() => navigate('/personal/spiritual')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-muted-foreground transition-colors mb-4">
             <ArrowLeft size={14} /> Voltar
           </button>
-          <h1 className="text-3xl font-bold text-stone-800 tracking-tight flex items-center gap-3">
+          <h1 className="text-3xl font-bold text-foreground tracking-tight flex items-center gap-3">
             <Library className="text-[#5D4037]" /> Biblioteca
           </h1>
         </div>
@@ -200,7 +200,7 @@ export default function BooksPage() {
             title="Quero Ler" 
             icon={<Bookmark size={20} />} 
             count={wantToRead.length} 
-            headerColor="text-stone-500"
+            headerColor="text-muted-foreground"
         >
             {wantToRead.map(book => (
                 <BookCard 
@@ -217,7 +217,7 @@ export default function BooksPage() {
             title="Leitura Concluída" 
             icon={<CheckCircle2 size={20} />} 
             count={read.length} 
-            headerColor="text-stone-400"
+            headerColor="text-muted-foreground"
         >
             {read.map(book => (
                 <BookCard 
@@ -238,13 +238,13 @@ export default function BooksPage() {
             className="absolute inset-0 bg-stone-900/20 backdrop-blur-sm transition-opacity" 
             onClick={() => !isDeleting && setIsDeleteOpen(false)}
           />
-          <div className="relative bg-white w-full max-w-sm rounded-[2rem] shadow-2xl p-6 animate-fade-in border border-stone-100">
+          <div className="relative bg-card w-full max-w-sm rounded-[2rem] shadow-2xl p-6 animate-fade-in border border-border">
             <div className="flex flex-col items-center text-center">
               <div className="w-12 h-12 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4 border border-red-100">
                 <AlertTriangle size={24} />
               </div>
-              <h2 className="text-lg font-bold text-stone-800 mb-2">Excluir livro?</h2>
-              <p className="text-sm text-stone-500 leading-relaxed mb-6">
+              <h2 className="text-lg font-bold text-foreground mb-2">Excluir livro?</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-6">
                 Esta ação não pode ser desfeita.
               </p>
               
@@ -252,7 +252,7 @@ export default function BooksPage() {
                 <button 
                   onClick={() => setIsDeleteOpen(false)}
                   disabled={isDeleting}
-                  className="flex-1 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-muted-foreground bg-secondary hover:bg-accent transition-colors disabled:opacity-50"
                 >
                   Cancelar
                 </button>

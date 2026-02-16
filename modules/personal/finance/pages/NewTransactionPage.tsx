@@ -46,35 +46,35 @@ const NewTransactionPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
-        <Loader2 className="animate-spin text-coffee" size={32} />
+      <div className="min-h-screen bg-secondary flex items-center justify-center">
+        <Loader2 className="animate-spin text-foreground" size={32} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 pb-24 animate-fade-in">
+    <div className="min-h-screen bg-secondary pb-24 animate-fade-in">
       <div className="max-w-4xl mx-auto p-6 space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
           <button 
             onClick={() => navigate(-1)}
-            className="p-2 hover:bg-white rounded-full transition-colors"
+            className="p-2 hover:bg-card rounded-full transition-colors"
           >
-            <ArrowLeft size={20} className="text-cappuccino" />
+            <ArrowLeft size={20} className="text-muted-foreground" />
           </button>
           <div>
-            <h1 className="text-2xl font-semibold text-coffee tracking-tighter">
+            <h1 className="text-2xl font-semibold text-foreground tracking-tighter">
               {id ? 'Editar Movimentação' : duplicateId ? 'Duplicar Movimentação' : 'Nova Movimentação'}
             </h1>
-            <p className="text-cappuccino text-xs font-bold uppercase tracking-widest mt-1">
+            <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">
               {id ? 'Atualize os dados do lançamento' : duplicateId ? 'Revise os dados para o novo lançamento' : 'Registre suas entradas e saídas'}
             </p>
           </div>
         </div>
 
         {/* Formulário em card branco */}
-        <div className="bg-white rounded-[2rem] border border-stone-100 shadow-premium p-8">
+        <div className="bg-card rounded-[2rem] border border-border shadow-premium p-8">
           <TransactionForm 
             onSuccess={handleSuccess} 
             transactionToEdit={transactionToEdit}

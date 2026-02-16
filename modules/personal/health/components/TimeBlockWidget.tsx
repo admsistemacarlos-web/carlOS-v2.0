@@ -305,7 +305,7 @@ export const TimeBlockWidget: React.FC = () => {
 
   if (loadingConfig) {
     return (
-      <div className="flex items-center justify-center h-[220px] bg-[#143d2d] rounded-[2rem] shadow-lg">
+      <div className="flex items-center justify-center h-[220px] bg-primary rounded-[2rem] shadow-lg">
         <Loader2 className="text-white/50 animate-spin" size={32} />
       </div>
     );
@@ -313,8 +313,8 @@ export const TimeBlockWidget: React.FC = () => {
 
   if (showSuccess) {
     return (
-      <div className="bg-[#143d2d] rounded-[2rem] p-8 text-white shadow-xl relative overflow-hidden animate-fade-in flex flex-col items-center justify-center min-h-[220px] text-center">
-        <div className="mb-4 p-4 bg-white/10 rounded-full animate-bounce">
+      <div className="bg-primary rounded-[2rem] p-8 text-white shadow-xl relative overflow-hidden animate-fade-in flex flex-col items-center justify-center min-h-[220px] text-center">
+        <div className="mb-4 p-4 bg-card/10 rounded-full animate-bounce">
           <Trophy size={40} className="text-yellow-400" />
         </div>
         <h2 className="text-2xl font-bold tracking-tight mb-1">Sessão Concluída!</h2>
@@ -328,9 +328,9 @@ export const TimeBlockWidget: React.FC = () => {
     const isPaused = !!activeSession.pausedAt;
 
     return (
-      <div className="bg-[#143d2d] rounded-[2rem] p-8 text-white shadow-xl relative overflow-hidden animate-fade-in flex flex-col items-center justify-center min-h-[220px]">
+      <div className="bg-primary rounded-[2rem] p-8 text-white shadow-xl relative overflow-hidden animate-fade-in flex flex-col items-center justify-center min-h-[220px]">
         {/* Background Progress Bar */}
-        <div className="absolute bottom-0 left-0 h-1.5 bg-white/10 w-full">
+        <div className="absolute bottom-0 left-0 h-1.5 bg-card/10 w-full">
            <div 
              className={`h-full transition-all duration-1000 ease-linear ${theme.activeBg}`}
              style={{ width: `${progress}%` }}
@@ -338,12 +338,12 @@ export const TimeBlockWidget: React.FC = () => {
         </div>
 
         {isConfirmingStop ? (
-          <div className="absolute inset-0 bg-[#143d2d] z-20 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
+          <div className="absolute inset-0 bg-primary z-20 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
             <AlertTriangle className="text-red-400 mb-3" size={32} />
             <h3 className="text-lg font-bold mb-1">Abandonar Foco?</h3>
             <p className="text-xs text-white/60 mb-6 max-w-[200px]">O progresso atual será perdido.</p>
             <div className="flex gap-3 w-full">
-              <button onClick={() => setIsConfirmingStop(false)} className="flex-1 py-3 rounded-xl bg-white/10 text-white text-xs font-bold uppercase hover:bg-white/20">Voltar</button>
+              <button onClick={() => setIsConfirmingStop(false)} className="flex-1 py-3 rounded-xl bg-card/10 text-white text-xs font-bold uppercase hover:bg-card/20">Voltar</button>
               <button onClick={() => { setActiveSession(null); setIsConfirmingStop(false); }} className="flex-1 py-3 rounded-xl bg-red-500 text-white text-xs font-bold uppercase hover:bg-red-600">Parar</button>
             </div>
           </div>
@@ -352,14 +352,14 @@ export const TimeBlockWidget: React.FC = () => {
             <div className="absolute top-4 right-4 animate-pulse">
               <div className="w-2 h-2 bg-red-500 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.8)]"></div>
             </div>
-            <div className={`p-3 rounded-full bg-white/10 mb-4 ${isPaused ? 'opacity-50' : 'animate-bounce-slow'}`}>{theme.icon}</div>
+            <div className={`p-3 rounded-full bg-card/10 mb-4 ${isPaused ? 'opacity-50' : 'animate-bounce-slow'}`}>{theme.icon}</div>
             <h3 className="text-sm font-bold uppercase tracking-widest text-white/60 mb-1">Modo {theme.label}</h3>
             <div className="text-5xl font-mono font-bold tracking-tighter mb-8 tabular-nums">{timeLeft}</div>
             <div className="flex gap-4">
-              <button onClick={togglePause} className="flex items-center gap-2 px-6 py-3 bg-white text-[#143d2d] rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-stone-200 transition-colors">
+              <button onClick={togglePause} className="flex items-center gap-2 px-6 py-3 bg-card text-primary rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-accent transition-colors">
                 {isPaused ? <Play size={16} /> : <Pause size={16} />} {isPaused ? 'Retomar' : 'Pausar'}
               </button>
-              <button onClick={() => setIsConfirmingStop(true)} className="p-3 bg-white/10 text-white rounded-xl hover:bg-red-500/20 hover:text-red-400 transition-colors"><Square size={16} fill="currentColor" /></button>
+              <button onClick={() => setIsConfirmingStop(true)} className="p-3 bg-card/10 text-white rounded-xl hover:bg-red-500/20 hover:text-red-400 transition-colors"><Square size={16} fill="currentColor" /></button>
             </div>
           </>
         )}
@@ -368,7 +368,7 @@ export const TimeBlockWidget: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col gap-4 bg-[#143d2d] rounded-[2rem] p-6 text-white shadow-lg relative overflow-hidden transition-all min-h-[220px]">
+    <div className="flex flex-col gap-4 bg-primary rounded-[2rem] p-6 text-white shadow-lg relative overflow-hidden transition-all min-h-[220px]">
       <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none"><Clock size={80} /></div>
       
       {/* Header */}
@@ -379,7 +379,7 @@ export const TimeBlockWidget: React.FC = () => {
         </h3>
         <button 
           onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all text-[10px] font-bold uppercase tracking-wider ${isSettingsOpen ? 'bg-white text-[#143d2d]' : 'bg-white/10 text-white hover:bg-white/20'}`}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all text-[10px] font-bold uppercase tracking-wider ${isSettingsOpen ? 'bg-card text-primary' : 'bg-card/10 text-white hover:bg-card/20'}`}
         >
           {isSettingsOpen ? <><Save size={12} /> Fechar</> : <><Settings size={12} /> Ajustar</>}
         </button>
@@ -395,7 +395,7 @@ export const TimeBlockWidget: React.FC = () => {
           if (isSettingsOpen) {
             // --- SETTINGS VIEW ---
             return (
-              <div key={type} className="bg-white/5 rounded-2xl p-3 border border-white/10 flex flex-col justify-between animate-fade-in">
+              <div key={type} className="bg-card/5 rounded-2xl p-3 border border-white/10 flex flex-col justify-between animate-fade-in">
                 <div className={`flex items-center gap-2 text-xs font-bold ${theme.color} mb-2`}>
                   {theme.icon} {theme.label}
                 </div>
@@ -428,7 +428,7 @@ export const TimeBlockWidget: React.FC = () => {
             <button 
               key={type}
               onClick={() => startSession(type)}
-              className="bg-white/5 hover:bg-white/10 rounded-2xl p-4 text-center border border-white/5 transition-all active:scale-95 group flex flex-col justify-between min-h-[140px]"
+              className="bg-card/5 hover:bg-card/10 rounded-2xl p-4 text-center border border-white/5 transition-all active:scale-95 group flex flex-col justify-between min-h-[140px]"
             >
               <div className="flex flex-col items-center gap-2">
                 <div className={`transition-colors ${theme.color}`}>{theme.icon}</div>
@@ -445,7 +445,7 @@ export const TimeBlockWidget: React.FC = () => {
                  </div>
                  <div className="h-1.5 w-full bg-black/20 rounded-full overflow-hidden">
                     <div 
-                      className={`h-full rounded-full transition-all duration-500 ${count >= userConf.frequency ? 'bg-emerald-400' : 'bg-white/30'}`}
+                      className={`h-full rounded-full transition-all duration-500 ${count >= userConf.frequency ? 'bg-emerald-400' : 'bg-card/30'}`}
                       style={{ width: `${progressPct}%` }}
                     />
                  </div>

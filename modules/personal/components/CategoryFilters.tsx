@@ -22,8 +22,8 @@ const iconMap: Record<string, any> = {
 
 export const CategoryFilters: React.FC<CategoryFiltersProps> = ({ filters, onToggle }) => {
   return (
-    <div className="bg-white rounded-[2rem] border border-stone-200 shadow-sm p-6">
-      <h3 className="text-sm font-bold text-coffee uppercase tracking-widest mb-4">
+    <div className="bg-card rounded-[2rem] border border-border shadow-sm p-6">
+      <h3 className="text-sm font-bold text-foreground uppercase tracking-widest mb-4">
         Filtrar Eventos
       </h3>
       
@@ -39,7 +39,7 @@ export const CategoryFilters: React.FC<CategoryFiltersProps> = ({ filters, onTog
                 flex items-center gap-2 p-3 rounded-xl border-2 transition-all
                 ${filter.enabled 
                   ? `${filter.color} bg-opacity-10 border-current` 
-                  : 'border-stone-200 text-stone-300 hover:border-stone-300'
+                  : 'border-border text-muted-foreground hover:border-border'
                 }
               `}
             >

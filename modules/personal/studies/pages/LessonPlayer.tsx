@@ -24,7 +24,7 @@ const LessonPlayer: React.FC = () => {
       <div className="h-16 border-b border-white/5 flex items-center justify-between px-6 bg-[#2A2522]">
         <button 
           onClick={() => navigate(`/personal/studies/courses/${lesson.courseId}`)}
-          className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-400 hover:text-white transition-colors"
+          className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-white transition-colors"
         >
           <ArrowLeft size={16} /> Voltar ao Curso
         </button>
@@ -53,22 +53,22 @@ const LessonPlayer: React.FC = () => {
               <h1 className="text-2xl font-bold text-white">{lesson.title}</h1>
               <button 
                 onClick={() => setIsCompleted(!isCompleted)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${isCompleted ? 'bg-emerald-600 text-white' : 'bg-white/10 text-stone-300 hover:bg-white/20'}`}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${isCompleted ? 'bg-emerald-600 text-white' : 'bg-card/10 text-muted-foreground hover:bg-card/20'}`}
               >
                 <CheckCircle2 size={16} />
                 {isCompleted ? 'Concluída' : 'Marcar como Vista'}
               </button>
             </div>
             
-            <p className="text-stone-400 leading-relaxed text-sm mb-8 pb-8 border-b border-white/5">
+            <p className="text-muted-foreground leading-relaxed text-sm mb-8 pb-8 border-b border-white/5">
               {lesson.description}
             </p>
 
             <div className="flex gap-4">
-              <button className="flex items-center gap-2 px-4 py-3 bg-white/5 rounded-xl text-stone-400 text-xs font-bold uppercase tracking-wide hover:bg-white/10 transition-colors">
+              <button className="flex items-center gap-2 px-4 py-3 bg-card/5 rounded-xl text-muted-foreground text-xs font-bold uppercase tracking-wide hover:bg-card/10 transition-colors">
                 <Paperclip size={16} /> Materiais (2)
               </button>
-              <button className="flex items-center gap-2 px-4 py-3 bg-white/5 rounded-xl text-stone-400 text-xs font-bold uppercase tracking-wide hover:bg-white/10 transition-colors">
+              <button className="flex items-center gap-2 px-4 py-3 bg-card/5 rounded-xl text-muted-foreground text-xs font-bold uppercase tracking-wide hover:bg-card/10 transition-colors">
                 <MessageSquare size={16} /> Comentários
               </button>
             </div>
@@ -78,27 +78,27 @@ const LessonPlayer: React.FC = () => {
         {/* Sidebar Navigation (Next/Prev) */}
         <div className="w-full lg:w-80 bg-[#241F1C] border-l border-white/5 p-6 flex flex-col justify-between">
            <div>
-             <h3 className="text-xs font-bold uppercase tracking-widest text-stone-500 mb-6">Navegação</h3>
+             <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6">Navegação</h3>
              <div className="space-y-4">
                 {/* Mock List */}
-                <div className="p-4 rounded-xl bg-white/5 border border-white/5 cursor-not-allowed opacity-50">
-                  <p className="text-xs text-stone-400 mb-1">Aula Anterior</p>
+                <div className="p-4 rounded-xl bg-card/5 border border-white/5 cursor-not-allowed opacity-50">
+                  <p className="text-xs text-muted-foreground mb-1">Aula Anterior</p>
                   <p className="text-sm font-semibold text-white">Atomic Design</p>
                 </div>
                 
-                <div className="p-4 rounded-xl bg-olive/20 border border-olive/30 relative">
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-olive rounded-l-xl"></div>
+                <div className="p-4 rounded-xl bg-primary/20 border border-primary/30 relative">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-xl"></div>
                   <p className="text-[10px] font-bold text-olive uppercase tracking-widest mb-1">Assistindo Agora</p>
                   <p className="text-sm font-semibold text-white">Variáveis no Figma</p>
                 </div>
 
                 <div 
                    onClick={() => navigate('/personal/studies/lessons/l4')}
-                   className="p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 cursor-pointer transition-colors group"
+                   className="p-4 rounded-xl bg-card/5 border border-white/5 hover:bg-card/10 cursor-pointer transition-colors group"
                 >
                   <div className="flex justify-between items-center mb-1">
-                    <p className="text-xs text-stone-400">Próxima Aula</p>
-                    <ChevronRight size={14} className="text-stone-500 group-hover:text-white transition-colors" />
+                    <p className="text-xs text-muted-foreground">Próxima Aula</p>
+                    <ChevronRight size={14} className="text-muted-foreground group-hover:text-white transition-colors" />
                   </div>
                   <p className="text-sm font-semibold text-white">Sincronização com Código</p>
                 </div>

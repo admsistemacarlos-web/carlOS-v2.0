@@ -21,7 +21,7 @@ const ModuleNavigation: React.FC = () => {
     <div className="flex items-center justify-between py-4 mb-8">
       <button 
         onClick={() => navigate(hubPath)}
-        className="flex items-center gap-1.5 text-[11px] font-bold tracking-tight text-coffee hover:text-olive transition-colors group"
+        className="flex items-center gap-1.5 text-[11px] font-bold tracking-tight text-foreground hover:text-primary transition-colors group"
       >
         <ChevronLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
         Voltar ao Hub
@@ -29,7 +29,7 @@ const ModuleNavigation: React.FC = () => {
 
       <button 
         onClick={() => navigate('/fork')}
-        className="flex items-center gap-2 px-4 py-2 rounded-full border border-stone-200 bg-white shadow-sm text-[10px] font-bold uppercase tracking-wider text-coffee hover:text-olive hover:border-stone-300 transition-all active:scale-95"
+        className="flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-card shadow-sm text-[10px] font-bold uppercase tracking-wider text-foreground hover:text-primary hover:border-border transition-all active:scale-95"
       >
         <RefreshCcw size={12} className="text-olive" />
         Profissional

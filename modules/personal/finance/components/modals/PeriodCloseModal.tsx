@@ -79,22 +79,22 @@ const PeriodCloseModal: React.FC<PeriodCloseModalProps> = ({ isOpen, onClose, on
         onClick={!isSubmitting ? onClose : undefined} 
       />
       
-      <div className="relative bg-white w-full max-w-lg rounded-[2rem] shadow-2xl border border-stone-100 overflow-hidden animate-fade-in">
+      <div className="relative bg-card w-full max-w-lg rounded-[2rem] shadow-2xl border border-border overflow-hidden animate-fade-in">
         
-        <div className="flex justify-between items-center p-6 border-b border-stone-100">
+        <div className="flex justify-between items-center p-6 border-b border-border">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-amber-50 rounded-xl text-amber-600">
               <Lock size={20} />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-coffee tracking-tight">Fechar Período</h2>
-              <p className="text-xs text-cappuccino">Reconciliar e travar transações</p>
+              <h2 className="text-lg font-bold text-foreground tracking-tight">Fechar Período</h2>
+              <p className="text-xs text-muted-foreground">Reconciliar e travar transações</p>
             </div>
           </div>
           <button 
             onClick={onClose}
             disabled={isSubmitting}
-            className="p-2 hover:bg-stone-100 rounded-full transition-colors text-cappuccino disabled:opacity-50"
+            className="p-2 hover:bg-secondary rounded-full transition-colors text-muted-foreground disabled:opacity-50"
           >
             <X size={20} />
           </button>
@@ -105,8 +105,8 @@ const PeriodCloseModal: React.FC<PeriodCloseModalProps> = ({ isOpen, onClose, on
             <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 size={32} className="text-emerald-500" />
             </div>
-            <h3 className="text-xl font-bold text-coffee mb-2">Período Fechado!</h3>
-            <p className="text-cappuccino text-sm mb-4">
+            <h3 className="text-xl font-bold text-foreground mb-2">Período Fechado!</h3>
+            <p className="text-muted-foreground text-sm mb-4">
               Todas as transações até {new Date(periodEndDate + 'T12:00:00').toLocaleDateString('pt-BR')} foram travadas.
             </p>
             {result.adjustment !== undefined && Math.abs(result.adjustment) > 0.01 && (
@@ -128,7 +128,7 @@ const PeriodCloseModal: React.FC<PeriodCloseModalProps> = ({ isOpen, onClose, on
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">
+              <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">
                 <Wallet size={12} className="inline mr-1" />
                 Conta
               </label>
@@ -136,7 +136,7 @@ const PeriodCloseModal: React.FC<PeriodCloseModalProps> = ({ isOpen, onClose, on
                 value={selectedAccountId}
                 onChange={(e) => setSelectedAccountId(e.target.value)}
                 disabled={loadingAccounts || isSubmitting}
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3.5 text-sm text-coffee outline-none focus:ring-2 focus:ring-olive/20 focus:border-olive transition-all appearance-none cursor-pointer disabled:opacity-50"
+                className="w-full bg-secondary border border-border rounded-xl p-3.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-olive/20 focus:border-primary transition-all appearance-none cursor-pointer disabled:opacity-50"
                 required
               >
                 <option value="">Selecione uma conta...</option>
@@ -149,7 +149,7 @@ const PeriodCloseModal: React.FC<PeriodCloseModalProps> = ({ isOpen, onClose, on
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">
+              <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">
                 <Calendar size={12} className="inline mr-1" />
                 Data Final do Período
               </label>
@@ -158,20 +158,20 @@ const PeriodCloseModal: React.FC<PeriodCloseModalProps> = ({ isOpen, onClose, on
                 value={periodEndDate}
                 onChange={(e) => setPeriodEndDate(e.target.value)}
                 disabled={isSubmitting}
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3.5 text-sm text-coffee outline-none focus:ring-2 focus:ring-olive/20 focus:border-olive transition-all disabled:opacity-50"
+                className="w-full bg-secondary border border-border rounded-xl p-3.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-olive/20 focus:border-primary transition-all disabled:opacity-50"
                 required
               />
-              <p className="text-[10px] text-cappuccino mt-1.5 ml-1">
+              <p className="text-[10px] text-muted-foreground mt-1.5 ml-1">
                 Todas as transações até esta data (inclusive) serão travadas.
               </p>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">
+              <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">
                 Saldo Real (Extrato Bancário)
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-cappuccino text-sm">R$</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">R$</span>
                 <input
                   type="number"
                   step="0.01"
@@ -179,27 +179,27 @@ const PeriodCloseModal: React.FC<PeriodCloseModalProps> = ({ isOpen, onClose, on
                   onChange={(e) => setConfirmedBalance(e.target.value)}
                   disabled={isSubmitting}
                   placeholder="0,00"
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3.5 pl-10 text-sm text-coffee outline-none focus:ring-2 focus:ring-olive/20 focus:border-olive transition-all disabled:opacity-50"
+                  className="w-full bg-secondary border border-border rounded-xl p-3.5 pl-10 text-sm text-foreground outline-none focus:ring-2 focus:ring-olive/20 focus:border-primary transition-all disabled:opacity-50"
                   required
                 />
               </div>
-              <p className="text-[10px] text-cappuccino mt-1.5 ml-1">
+              <p className="text-[10px] text-muted-foreground mt-1.5 ml-1">
                 Informe o saldo exato do seu extrato bancário na data acima.
               </p>
             </div>
 
             {selectedAccountId && confirmedBalance !== '' && (
-              <div className="bg-stone-50 rounded-xl p-4 space-y-3">
+              <div className="bg-secondary rounded-xl p-4 space-y-3">
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-cappuccino">Saldo Calculado (carlOS)</span>
-                  <span className="font-medium text-coffee">R$ {calculatedBalance.toFixed(2)}</span>
+                  <span className="text-muted-foreground">Saldo Calculado (carlOS)</span>
+                  <span className="font-medium text-foreground">R$ {calculatedBalance.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-cappuccino">Saldo Informado (Extrato)</span>
-                  <span className="font-medium text-coffee">R$ {(parseFloat(confirmedBalance) || 0).toFixed(2)}</span>
+                  <span className="text-muted-foreground">Saldo Informado (Extrato)</span>
+                  <span className="font-medium text-foreground">R$ {(parseFloat(confirmedBalance) || 0).toFixed(2)}</span>
                 </div>
-                <div className="border-t border-stone-200 pt-3 flex justify-between items-center">
-                  <span className="text-xs font-bold text-coffee uppercase tracking-wider">Diferença</span>
+                <div className="border-t border-border pt-3 flex justify-between items-center">
+                  <span className="text-xs font-bold text-foreground uppercase tracking-wider">Diferença</span>
                   <span className={`font-bold ${Math.abs(difference) < 0.01 ? 'text-emerald-600' : 'text-amber-600'}`}>
                     {difference >= 0 ? '+' : ''}R$ {difference.toFixed(2)}
                   </span>
@@ -218,7 +218,7 @@ const PeriodCloseModal: React.FC<PeriodCloseModalProps> = ({ isOpen, onClose, on
                 type="button"
                 onClick={onClose}
                 disabled={isSubmitting}
-                className="flex-1 py-3.5 rounded-xl text-xs font-bold uppercase tracking-widest text-stone-500 bg-stone-100 hover:bg-stone-200 transition-colors disabled:opacity-50"
+                className="flex-1 py-3.5 rounded-xl text-xs font-bold uppercase tracking-widest text-muted-foreground bg-secondary hover:bg-accent transition-colors disabled:opacity-50"
               >
                 Cancelar
               </button>

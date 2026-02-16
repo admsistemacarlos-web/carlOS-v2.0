@@ -155,17 +155,17 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[200] flex flex-col bg-[#FAF9F6] animate-fade-in">
+    <div className="fixed inset-0 z-[200] flex flex-col bg-card animate-fade-in">
       
       {/* Header Fixo */}
-      <div className="bg-white border-b border-stone-200 px-4 py-4 flex justify-between items-center shadow-sm shrink-0 z-10">
+      <div className="bg-card border-b border-border px-4 py-4 flex justify-between items-center shadow-sm shrink-0 z-10">
         <div className="flex items-center gap-3">
-            <button onClick={onClose} className="p-2 hover:bg-stone-100 rounded-full text-stone-500 transition-colors">
+            <button onClick={onClose} className="p-2 hover:bg-secondary rounded-full text-muted-foreground transition-colors">
                 <ArrowLeft size={20} />
             </button>
             <div>
-                <h2 className="text-lg font-bold text-stone-800 leading-tight">{session.name}</h2>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#143d2d] flex items-center gap-1">
+                <h2 className="text-lg font-bold text-foreground leading-tight">{session.name}</h2>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-primary flex items-center gap-1">
                     {session.ended_at ? 'Treino Finalizado' : 'Em Andamento'}
                 </p>
             </div>
@@ -174,7 +174,7 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
         {!session.ended_at && (
             <button 
                 onClick={() => setIsFinishConfirmOpen(true)}
-                className="bg-[#143d2d] hover:bg-[#0f2e22] text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest shadow-sm transition-all"
+                className="bg-primary hover:bg-[#0f2e22] text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest shadow-sm transition-all"
             >
                 Finalizar
             </button>
@@ -185,23 +185,23 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
       <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 pb-24">
         
         {groupedSets.length === 0 ? (
-            <div className="text-center py-20 text-stone-400 flex flex-col items-center">
+            <div className="text-center py-20 text-muted-foreground flex flex-col items-center">
                 <Dumbbell size={48} className="mb-4 opacity-20" />
                 <p>Nenhum exercício adicionado.</p>
                 <button 
                     onClick={() => setIsAddExOpen(true)}
-                    className="mt-4 text-[#143d2d] font-bold uppercase text-xs hover:underline"
+                    className="mt-4 text-primary font-bold uppercase text-xs hover:underline"
                 >
                     Adicionar Exercício
                 </button>
             </div>
         ) : (
             groupedSets.map((group) => (
-                <div key={group.exerciseId} className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+                <div key={group.exerciseId} className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
                     {/* Exercise Header */}
-                    <div className="px-4 py-3 bg-stone-50 border-b border-stone-100 flex justify-between items-center">
-                        <h3 className="text-sm font-bold text-stone-800">{group.exerciseName}</h3>
-                        <button className="text-stone-400 hover:text-stone-600">
+                    <div className="px-4 py-3 bg-secondary border-b border-border flex justify-between items-center">
+                        <h3 className="text-sm font-bold text-foreground">{group.exerciseName}</h3>
+                        <button className="text-muted-foreground hover:text-muted-foreground">
                             <MoreHorizontal size={16} />
                         </button>
                     </div>
@@ -209,7 +209,7 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                     {/* Sets List (Table-like) */}
                     <div className="p-2">
                         {/* Table Header */}
-                        <div className="flex text-[9px] font-bold uppercase text-stone-400 px-2 mb-2 text-center items-center">
+                        <div className="flex text-[9px] font-bold uppercase text-muted-foreground px-2 mb-2 text-center items-center">
                             <div className="w-8">Set</div>
                             <div className="flex-1">Kg</div>
                             <div className="flex-1">Reps</div>
@@ -220,10 +220,10 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                         {group.sets.map((set, idx) => (
                             <div 
                                 key={set.id} 
-                                className={`flex items-center gap-2 p-2 rounded-xl mb-1 transition-colors ${set.completed ? 'bg-emerald-50/50' : 'bg-white'}`}
+                                className={`flex items-center gap-2 p-2 rounded-xl mb-1 transition-colors ${set.completed ? 'bg-emerald-50/50' : 'bg-card'}`}
                             >
                                 {/* Set Number */}
-                                <div className="w-8 text-center text-xs font-bold text-stone-400">
+                                <div className="w-8 text-center text-xs font-bold text-muted-foreground">
                                     {idx + 1}
                                 </div>
 
@@ -232,7 +232,7 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                                     <input 
                                         type="number"
                                         placeholder="0"
-                                        className="w-full bg-stone-100 rounded-lg py-2 text-center text-sm font-bold text-stone-800 outline-none focus:ring-2 focus:ring-[#143d2d]/20 transition-all"
+                                        className="w-full bg-secondary rounded-lg py-2 text-center text-sm font-bold text-foreground outline-none focus:ring-2 focus:ring-[#143d2d]/20 transition-all"
                                         defaultValue={set.weight || ''}
                                         onBlur={(e) => handleBlur(set.id, 'weight', e.target.value)}
                                         disabled={!!session.ended_at}
@@ -244,7 +244,7 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                                     <input 
                                         type="number"
                                         placeholder="0"
-                                        className="w-full bg-stone-100 rounded-lg py-2 text-center text-sm font-bold text-stone-800 outline-none focus:ring-2 focus:ring-[#143d2d]/20 transition-all"
+                                        className="w-full bg-secondary rounded-lg py-2 text-center text-sm font-bold text-foreground outline-none focus:ring-2 focus:ring-[#143d2d]/20 transition-all"
                                         defaultValue={set.reps || ''}
                                         onBlur={(e) => handleBlur(set.id, 'reps', e.target.value)}
                                         disabled={!!session.ended_at}
@@ -259,7 +259,7 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                                         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
                                             set.completed 
                                             ? 'bg-emerald-500 text-white shadow-sm' 
-                                            : 'bg-stone-200 text-stone-400 hover:bg-stone-300'
+                                            : 'bg-accent text-muted-foreground hover:bg-stone-300'
                                         }`}
                                     >
                                         <Check size={16} strokeWidth={3} />
@@ -271,7 +271,7 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                                     {!session.ended_at && (
                                         <button 
                                             onClick={() => handleDeleteSet(set.id)}
-                                            className="text-stone-300 hover:text-red-500 p-1 transition-colors"
+                                            className="text-muted-foreground hover:text-red-500 p-1 transition-colors"
                                         >
                                             <Trash2 size={14} />
                                         </button>
@@ -285,7 +285,7 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                             <div className="mt-2 pt-2 border-t border-stone-50 flex justify-center">
                                 <button 
                                     onClick={() => addSet(group.exerciseId)}
-                                    className="w-full py-2 text-xs font-bold text-[#143d2d] bg-[#143d2d]/5 hover:bg-[#143d2d]/10 rounded-lg uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
+                                    className="w-full py-2 text-xs font-bold text-primary bg-primary/5 hover:bg-primary/10 rounded-lg uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
                                 >
                                     <Plus size={14} /> Adicionar Série
                                 </button>
@@ -300,7 +300,7 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
         {!session.ended_at && (
             <button 
                 onClick={() => setIsAddExOpen(true)}
-                className="w-full py-4 border-2 border-dashed border-stone-300 rounded-2xl text-stone-400 font-bold uppercase tracking-widest text-xs hover:border-[#143d2d] hover:text-[#143d2d] transition-all flex items-center justify-center gap-2"
+                className="w-full py-4 border-2 border-dashed border-border rounded-2xl text-muted-foreground font-bold uppercase tracking-widest text-xs hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2"
             >
                 <Plus size={16} /> Adicionar Exercício
             </button>
@@ -311,10 +311,10 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
       {/* MODAL: ADICIONAR EXERCÍCIO */}
       {isAddExOpen && (
         <div className="fixed inset-0 z-[210] flex items-end md:items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
-            <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
-                <div className="p-4 border-b border-stone-100 flex justify-between items-center">
-                    <h3 className="font-bold text-stone-800">Selecionar Exercício</h3>
-                    <button onClick={() => setIsAddExOpen(false)}><X size={20} className="text-stone-400" /></button>
+            <div className="bg-card w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
+                <div className="p-4 border-b border-border flex justify-between items-center">
+                    <h3 className="font-bold text-foreground">Selecionar Exercício</h3>
+                    <button onClick={() => setIsAddExOpen(false)}><X size={20} className="text-muted-foreground" /></button>
                 </div>
                 <div className="p-4">
                     <input 
@@ -322,7 +322,7 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                         placeholder="Buscar..." 
                         value={exerciseFilter}
                         onChange={e => setExerciseFilter(e.target.value)}
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#143d2d]"
+                        className="w-full bg-secondary border border-border rounded-xl px-4 py-3 text-sm outline-none focus:border-primary"
                     />
                 </div>
                 <div className="flex-1 overflow-y-auto p-2">
@@ -334,10 +334,10 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                                 setIsAddExOpen(false);
                                 setExerciseFilter('');
                             }}
-                            className="w-full text-left p-3 hover:bg-stone-50 rounded-xl text-sm font-semibold text-stone-700 flex justify-between items-center group"
+                            className="w-full text-left p-3 hover:bg-secondary rounded-xl text-sm font-semibold text-foreground flex justify-between items-center group"
                         >
                             {ex.name}
-                            <Plus size={16} className="text-stone-300 group-hover:text-[#143d2d]" />
+                            <Plus size={16} className="text-muted-foreground group-hover:text-primary" />
                         </button>
                     ))}
                 </div>
@@ -348,12 +348,12 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
       {/* CONFIRM FINISH & LOG */}
       {isFinishConfirmOpen && (
           <div className="fixed inset-0 z-[220] flex items-center justify-center bg-black/60 backdrop-blur-sm p-6 animate-fade-in">
-            <div className="bg-white w-full max-w-sm rounded-[2rem] shadow-2xl p-8 border border-stone-200 text-center">
-              <div className="w-16 h-16 bg-[#143d2d]/10 text-[#143d2d] rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="bg-card w-full max-w-sm rounded-[2rem] shadow-2xl p-8 border border-border text-center">
+              <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
                 <Check size={32} />
               </div>
-              <h3 className="text-xl font-bold text-stone-800 mb-2">Treino Concluído?</h3>
-              <p className="text-stone-500 text-sm mb-6 leading-relaxed">
+              <h3 className="text-xl font-bold text-foreground mb-2">Treino Concluído?</h3>
+              <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
                 Selecione o tipo para registrar no seu check-in diário.
               </p>
               
@@ -365,8 +365,8 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                     onClick={() => setSelectedWorkoutType(type.id)}
                     className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${
                       selectedWorkoutType === type.id 
-                      ? 'border-[#143d2d] bg-[#143d2d]/5 text-[#143d2d]' 
-                      : 'border-stone-100 bg-stone-50 text-stone-400 hover:bg-stone-100'
+                      ? 'border-primary bg-primary/5 text-primary' 
+                      : 'border-border bg-secondary text-muted-foreground hover:bg-secondary'
                     }`}
                   >
                     {type.icon}
@@ -379,14 +379,14 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                 <button 
                   onClick={handleFinish}
                   disabled={isSavingLog}
-                  className="w-full py-4 bg-[#143d2d] hover:bg-[#0f2e22] text-white rounded-xl font-bold text-sm uppercase tracking-widest shadow-lg transition-all active:scale-95 disabled:opacity-50"
+                  className="w-full py-4 bg-primary hover:bg-[#0f2e22] text-white rounded-xl font-bold text-sm uppercase tracking-widest shadow-lg transition-all active:scale-95 disabled:opacity-50"
                 >
                   {isSavingLog ? 'Salvando...' : 'Finalizar e Salvar'}
                 </button>
                 <button 
                   onClick={() => setIsFinishConfirmOpen(false)}
                   disabled={isSavingLog}
-                  className="w-full py-4 bg-stone-100 hover:bg-stone-200 text-stone-500 rounded-xl font-bold text-sm uppercase tracking-widest transition-all"
+                  className="w-full py-4 bg-secondary hover:bg-accent text-muted-foreground rounded-xl font-bold text-sm uppercase tracking-widest transition-all"
                 >
                   Voltar
                 </button>

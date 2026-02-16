@@ -204,7 +204,7 @@ export default function ServicesPage() {
             className={`
               px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium border transition-all whitespace-nowrap
               ${seedStatus === 'success' 
-                ? 'bg-[#143d2d] text-[#60a887] border-[#20523e]' 
+                ? 'bg-primary text-[#60a887] border-[#20523e]' 
                 : seedStatus === 'error'
                   ? 'bg-[#3d1414] text-[#a86060] border-[#522020]'
                   : 'bg-[#2C2C2C] text-[#9ca3af] border-[#404040] hover:bg-[#37352F] hover:text-[#E09B6B]'

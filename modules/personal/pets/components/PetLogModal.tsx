@@ -152,13 +152,13 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
   const showFinanceOption = !isMeasurement && !logToEdit;
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-md rounded-[2rem] p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-        <button onClick={onClose} className="absolute top-6 right-6 text-stone-400 hover:text-stone-600">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+      <div className="bg-card w-full max-w-md rounded-[2rem] p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+        <button onClick={onClose} className="absolute top-6 right-6 text-muted-foreground hover:text-muted-foreground">
           <X size={20} />
         </button>
         
-        <h2 className="text-xl font-bold text-stone-800 mb-6">
+        <h2 className="text-xl font-bold text-foreground mb-6">
           {logToEdit ? 'Editar: ' : 'Novo: '} 
           <span className="text-olive">{categoryLabel}</span>
         </h2>
@@ -166,11 +166,11 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isMeasurement && (
             <div>
-              <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Título / Detalhe</label>
+              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Título / Detalhe</label>
               <input 
                 value={formData.title}
                 onChange={e => setFormData({...formData, title: e.target.value})}
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-700 outline-none focus:ring-2 focus:ring-olive/20"
+                className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground outline-none focus:ring-2 focus:ring-olive/20"
                 autoFocus={!logToEdit} 
               />
             </div>
@@ -178,14 +178,14 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Data</label>
+              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Data</label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                 <input 
                   type="date"
                   value={formData.event_date}
                   onChange={e => setFormData({...formData, event_date: e.target.value})}
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 pl-10 text-stone-700 outline-none focus:ring-2 focus:ring-olive/20"
+                  className="w-full bg-secondary border border-border rounded-xl p-3 pl-10 text-foreground outline-none focus:ring-2 focus:ring-olive/20"
                 />
               </div>
             </div>
@@ -193,9 +193,9 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
             {/* Campo Custo - Oculto se for Medição de Peso */}
             {!isMeasurement && (
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Custo (R$)</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Custo (R$)</label>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                   <input 
                     type="number"
                     step="0.01"
@@ -203,7 +203,7 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
                     onChange={e => setFormData({...formData, cost: e.target.value})}
                     placeholder="0.00"
                     onWheel={(e) => e.currentTarget.blur()}
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 pl-10 text-stone-700 outline-none focus:ring-2 focus:ring-olive/20"
+                    className="w-full bg-secondary border border-border rounded-xl p-3 pl-10 text-foreground outline-none focus:ring-2 focus:ring-olive/20"
                   />
                 </div>
               </div>
@@ -213,14 +213,14 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
           {/* Campo de Local */}
           {!isMeasurement && (
             <div>
-              <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Local / Fornecedor</label>
+              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Local / Fornecedor</label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                 <input 
                   value={formData.location}
                   onChange={e => setFormData({...formData, location: e.target.value})}
                   placeholder="Ex: Petz, Clínica Vet..."
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 pl-10 text-stone-700 outline-none focus:ring-2 focus:ring-olive/20"
+                  className="w-full bg-secondary border border-border rounded-xl p-3 pl-10 text-foreground outline-none focus:ring-2 focus:ring-olive/20"
                 />
               </div>
             </div>
@@ -229,11 +229,11 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
           {/* Campo Dinâmico de Valor (Peso/Qtd) */}
           {unitConfig && (
             <div className={isMeasurement ? 'mt-0' : 'pt-2 border-t border-stone-50'}>
-              <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">
                 {unitConfig.label}
               </label>
               <div className="relative mt-1">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                   {unitConfig.icon}
                 </div>
                 <input 
@@ -243,10 +243,10 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
                   onChange={e => setFormData({...formData, value: e.target.value})}
                   placeholder="0"
                   onWheel={(e) => e.currentTarget.blur()}
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 pl-10 pr-12 text-stone-700 outline-none focus:ring-2 focus:ring-olive/20"
+                  className="w-full bg-secondary border border-border rounded-xl p-3 pl-10 pr-12 text-foreground outline-none focus:ring-2 focus:ring-olive/20"
                   autoFocus={isMeasurement && !logToEdit}
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-stone-400">
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">
                   {unitConfig.suffix}
                 </span>
               </div>
@@ -260,35 +260,35 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
                   type="date"
                   value={formData.next_due_date}
                   onChange={e => setFormData({...formData, next_due_date: e.target.value})}
-                  className="w-full bg-olive/5 border border-olive/10 rounded-xl p-3 text-stone-700 outline-none focus:ring-2 focus:ring-olive/20 mt-1"
+                  className="w-full bg-primary/5 border border-primary/10 rounded-xl p-3 text-foreground outline-none focus:ring-2 focus:ring-olive/20 mt-1"
                 />
             </div>
           )}
 
           {/* INTEGRACAO FINANCEIRA (SEMPRE VISÍVEL SE FOR POSSÍVEL TER CUSTO) */}
           {showFinanceOption && (
-             <div className={`mt-4 bg-[#5F6F52]/5 border border-[#5F6F52]/10 rounded-xl p-4 transition-all ${!formData.cost || Number(formData.cost) === 0 ? 'opacity-50' : 'opacity-100'}`}>
+             <div className={`mt-4 bg-primary/5 border border-primary/10 rounded-xl p-4 transition-all ${!formData.cost || Number(formData.cost) === 0 ? 'opacity-50' : 'opacity-100'}`}>
                 <div className="flex items-center gap-2 mb-3 cursor-pointer" onClick={() => setAddToFinance(!addToFinance)}>
-                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${addToFinance ? 'bg-[#5F6F52] border-[#5F6F52] text-white' : 'bg-white border-stone-300'}`}>
+                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${addToFinance ? 'bg-primary border-primary text-white' : 'bg-card border-border'}`}>
                         {addToFinance && <span className="text-[10px]">✓</span>}
                     </div>
-                    <span className="text-xs font-bold text-[#5F6F52] uppercase tracking-wide">Lançar no Financeiro?</span>
+                    <span className="text-xs font-bold text-primary uppercase tracking-wide">Lançar no Financeiro?</span>
                 </div>
 
                 {addToFinance && (
                     <div className="space-y-3 animate-fade-in">
-                        <div className="flex bg-white rounded-lg p-1 border border-[#5F6F52]/10">
+                        <div className="flex bg-card rounded-lg p-1 border border-primary/10">
                             <button 
                                 type="button" 
                                 onClick={() => { setPaymentMethod('account'); setSelectedCardId(''); }}
-                                className={`flex-1 py-1.5 rounded-md text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-1 ${paymentMethod === 'account' ? 'bg-[#5F6F52] text-white shadow-sm' : 'text-stone-400 hover:text-stone-600'}`}
+                                className={`flex-1 py-1.5 rounded-md text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-1 ${paymentMethod === 'account' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}
                             >
                                 <Wallet size={12} /> Conta
                             </button>
                             <button 
                                 type="button" 
                                 onClick={() => { setPaymentMethod('card'); setSelectedAccountId(''); }}
-                                className={`flex-1 py-1.5 rounded-md text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-1 ${paymentMethod === 'card' ? 'bg-[#5F6F52] text-white shadow-sm' : 'text-stone-400 hover:text-stone-600'}`}
+                                className={`flex-1 py-1.5 rounded-md text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-1 ${paymentMethod === 'card' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}
                             >
                                 <CreditCard size={12} /> Cartão
                             </button>
@@ -298,7 +298,7 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
                             <select 
                                 value={selectedAccountId} 
                                 onChange={e => setSelectedAccountId(e.target.value)}
-                                className="w-full p-2 bg-white border border-stone-200 rounded-lg text-xs outline-none focus:border-[#5F6F52]"
+                                className="w-full p-2 bg-card border border-border rounded-lg text-xs outline-none focus:border-primary"
                             >
                                 <option value="">Selecione a Conta...</option>
                                 {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance.toFixed(2)})</option>)}
@@ -307,7 +307,7 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
                             <select 
                                 value={selectedCardId} 
                                 onChange={e => setSelectedCardId(e.target.value)}
-                                className="w-full p-2 bg-white border border-stone-200 rounded-lg text-xs outline-none focus:border-[#5F6F52]"
+                                className="w-full p-2 bg-card border border-border rounded-lg text-xs outline-none focus:border-primary"
                             >
                                 <option value="">Selecione o Cartão...</option>
                                 {cards.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -315,7 +315,7 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
                         )}
                         
                         {(!formData.cost || Number(formData.cost) === 0) && (
-                            <p className="text-[10px] text-stone-400 italic text-center pt-1">
+                            <p className="text-[10px] text-muted-foreground italic text-center pt-1">
                                 Preencha o campo "Custo" acima para habilitar o lançamento.
                             </p>
                         )}
@@ -327,7 +327,7 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
           <button 
             type="submit" 
             disabled={isSubmitting}
-            className="w-full bg-olive text-white py-4 rounded-xl font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#4a5740] transition-all mt-6 shadow-lg active:scale-95"
+            className="w-full bg-primary text-primary-foreground py-4 rounded-xl font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#4a5740] transition-all mt-6 shadow-lg active:scale-95"
           >
             {isSubmitting ? <Loader2 className="animate-spin" /> : <Save size={18} />}
             {logToEdit ? 'Atualizar Registro' : 'Salvar Registro'}

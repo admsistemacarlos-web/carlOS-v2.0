@@ -40,20 +40,20 @@ const TherapySection: React.FC<TherapySectionProps> = ({
         <div className="w-full animate-fade-in mb-4">
             <button 
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between p-4 bg-white border border-stone-200 rounded-xl hover:bg-stone-50 transition-colors group select-none shadow-sm"
+                className="w-full flex items-center justify-between p-4 bg-card border border-border rounded-xl hover:bg-secondary transition-colors group select-none shadow-sm"
             >
-                <div className="flex items-center gap-3 text-stone-600">
-                    <div className="text-[#143d2d]">
+                <div className="flex items-center gap-3 text-muted-foreground">
+                    <div className="text-primary">
                         {icon}
                     </div>
                     <h2 className="text-sm font-bold uppercase tracking-widest">{title}</h2>
-                    <span className="bg-stone-100 px-2 py-0.5 rounded-md text-[10px] font-bold border border-stone-200 text-stone-400">
+                    <span className="bg-secondary px-2 py-0.5 rounded-md text-[10px] font-bold border border-border text-muted-foreground">
                         {count}
                     </span>
                 </div>
                 <ChevronDown 
                     size={20} 
-                    className={`text-stone-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
+                    className={`text-muted-foreground transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
                 />
             </button>
 
@@ -117,49 +117,49 @@ export default function TherapyPage() {
     return (
         <div 
             onClick={() => navigate(`/personal/health/therapy/${session.id}`)}
-            className="bg-white p-6 rounded-[1.5rem] border border-stone-200 shadow-sm hover:shadow-md hover:border-[#143d2d]/30 hover:-translate-y-0.5 transition-all group flex flex-col h-full cursor-pointer relative"
+            className="bg-card p-6 rounded-[1.5rem] border border-border shadow-sm hover:shadow-md hover:border-primary/30 hover:-translate-y-0.5 transition-all group flex flex-col h-full cursor-pointer relative"
         >
             <div className="flex justify-between items-start mb-4">
-                <span className="bg-stone-100 border border-stone-200 text-[#143d2d] text-[10px] font-bold uppercase px-3 py-1 rounded-md tracking-wider flex items-center gap-1">
+                <span className="bg-secondary border border-border text-primary text-[10px] font-bold uppercase px-3 py-1 rounded-md tracking-wider flex items-center gap-1">
                     <Calendar size={10} />
                     {formatDateBr(session.date)}
                 </span>
                 <button 
                     onClick={(e) => handleDeleteRequest(session.id, e)} 
-                    className="p-2 bg-white rounded-full hover:bg-red-50 text-stone-300 hover:text-red-500 transition-colors shadow-sm border border-stone-100 opacity-0 group-hover:opacity-100 absolute top-6 right-6"
+                    className="p-2 bg-card rounded-full hover:bg-red-50 text-muted-foreground hover:text-red-500 transition-colors shadow-sm border border-border opacity-0 group-hover:opacity-100 absolute top-6 right-6"
                     title="Excluir sessão"
                 >
                     <Trash2 size={14} />
                 </button>
             </div>
             
-            <div className="flex items-center gap-2 mb-4 text-stone-600">
-                <User size={16} className="text-[#143d2d]" />
-                <h3 className="font-bold text-sm text-stone-800">{session.professional || 'Profissional'}</h3>
+            <div className="flex items-center gap-2 mb-4 text-muted-foreground">
+                <User size={16} className="text-primary" />
+                <h3 className="font-bold text-sm text-foreground">{session.professional || 'Profissional'}</h3>
             </div>
             
             {/* Insights Preview */}
-            <div className="flex-1 bg-stone-50 border border-stone-100 rounded-xl p-4 relative overflow-hidden mb-4">
-                <div className="flex items-center gap-2 mb-2 text-[10px] font-bold uppercase tracking-widest text-[#143d2d]">
+            <div className="flex-1 bg-secondary border border-border rounded-xl p-4 relative overflow-hidden mb-4">
+                <div className="flex items-center gap-2 mb-2 text-[10px] font-bold uppercase tracking-widest text-primary">
                     <Brain size={12} /> Insights
                 </div>
-                <p className="text-xs text-stone-500 leading-relaxed line-clamp-3">
+                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
                     {session.insights || 'Sem insights registrados.'}
                 </p>
             </div>
 
             {/* Next Appointment Badge if exists */}
             {isFuture && nextAppt && (
-                <div className="flex items-center justify-between bg-[#143d2d]/5 px-3 py-2 rounded-lg border border-[#143d2d]/10">
-                    <span className="text-[10px] font-bold uppercase text-[#143d2d]">Próxima Sessão</span>
-                    <span className="text-xs font-bold text-[#143d2d] flex items-center gap-1">
+                <div className="flex items-center justify-between bg-primary/5 px-3 py-2 rounded-lg border border-primary/10">
+                    <span className="text-[10px] font-bold uppercase text-primary">Próxima Sessão</span>
+                    <span className="text-xs font-bold text-primary flex items-center gap-1">
                         {nextAppt.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })} <Clock size={10} />
                     </span>
                 </div>
             )}
 
             <div className="mt-4 flex justify-end">
-                <span className="text-[#143d2d] text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="text-primary text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     Ver Detalhes <ArrowRight size={10} />
                 </span>
             </div>
@@ -173,14 +173,14 @@ export default function TherapyPage() {
       {/* Header */}
       <div className="px-8 pt-8 pb-6 flex flex-col md:flex-row justify-between items-start gap-4">
         <div>
-          <button onClick={() => navigate('/personal/health')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-400 hover:text-[#143d2d] transition-colors mb-4">
+          <button onClick={() => navigate('/personal/health')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors mb-4">
             <ArrowLeft size={14} /> Voltar
           </button>
-          <h1 className="text-3xl font-bold text-stone-800 tracking-tight flex items-center gap-3">
-            <Brain className="text-[#143d2d]" /> Minhas Terapias
+          <h1 className="text-3xl font-bold text-foreground tracking-tight flex items-center gap-3">
+            <Brain className="text-primary" /> Minhas Terapias
           </h1>
         </div>
-        <button onClick={() => navigate('/personal/health/therapy/new')} className="bg-[#143d2d] hover:bg-[#0f2e22] text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-sm transition-all active:scale-95">
+        <button onClick={() => navigate('/personal/health/therapy/new')} className="bg-primary hover:bg-[#0f2e22] text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-sm transition-all active:scale-95">
           <Plus size={18} /> Nova Sessão
         </button>
       </div>
@@ -188,12 +188,12 @@ export default function TherapyPage() {
       {/* Content */}
       <div className="px-8 space-y-2">
         {loading ? (
-          <div className="flex justify-center py-20"><Loader2 className="animate-spin text-[#143d2d]" size={32} /></div>
+          <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" size={32} /></div>
         ) : sessions.length === 0 ? (
-          <div className="text-center py-20 bg-stone-50 rounded-[2rem] border border-dashed border-stone-200">
-            <Brain className="mx-auto text-stone-300 mb-3" size={32} />
-            <p className="text-stone-400">Nenhuma sessão registrada.</p>
-            <button onClick={() => navigate('/personal/health/therapy/new')} className="text-[#143d2d] font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Registrar Primeira</button>
+          <div className="text-center py-20 bg-secondary rounded-[2rem] border border-dashed border-border">
+            <Brain className="mx-auto text-muted-foreground mb-3" size={32} />
+            <p className="text-muted-foreground">Nenhuma sessão registrada.</p>
+            <button onClick={() => navigate('/personal/health/therapy/new')} className="text-primary font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Registrar Primeira</button>
           </div>
         ) : (
           <>
@@ -225,20 +225,20 @@ export default function TherapyPage() {
             className="absolute inset-0 bg-[#1c1917]/20 backdrop-blur-sm transition-opacity" 
             onClick={() => setIsDeleteOpen(false)}
           />
-          <div className="relative bg-white w-full max-w-sm rounded-[1.5rem] shadow-2xl p-6 animate-fade-in border border-stone-200">
+          <div className="relative bg-card w-full max-w-sm rounded-[1.5rem] shadow-2xl p-6 animate-fade-in border border-border">
             <div className="flex flex-col items-center text-center">
               <div className="w-12 h-12 bg-red-50 text-red-600 rounded-full flex items-center justify-center mb-4 border border-red-100">
                 <AlertTriangle size={24} />
               </div>
-              <h2 className="text-lg font-bold text-stone-800 mb-2">Excluir sessão?</h2>
-              <p className="text-sm text-stone-500 leading-relaxed mb-6">
+              <h2 className="text-lg font-bold text-foreground mb-2">Excluir sessão?</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-6">
                 Essa ação não pode ser desfeita.
               </p>
               
               <div className="flex gap-3 w-full">
                 <button 
                   onClick={() => setIsDeleteOpen(false)}
-                  className="flex-1 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 transition-colors"
+                  className="flex-1 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-muted-foreground bg-secondary hover:bg-accent transition-colors"
                 >
                   Cancelar
                 </button>

@@ -13,16 +13,16 @@ import { useAnalyticsData, AnalyticsPeriod, CHART_COLORS } from '../hooks/useAna
 import { formatDateBr } from '../utils/dateHelpers';
 
 const KPICard = ({ title, value, subtext, icon, trend }: { title: string, value: string, subtext?: string, icon: React.ReactNode, trend?: 'up' | 'down' | 'stable' }) => (
-  <div className="bg-white p-5 rounded-[2rem] border border-stone-100 shadow-sm flex items-start justify-between min-h-[120px]">
+  <div className="bg-card p-5 rounded-[2rem] border border-border shadow-sm flex items-start justify-between min-h-[120px]">
     <div>
-      <p className="text-[10px] font-bold uppercase tracking-widest text-cappuccino mb-2">{title}</p>
-      <h3 className="text-2xl font-bold text-coffee mb-1">{value}</h3>
-      {subtext && <p className="text-xs text-stone-400 font-medium">{subtext}</p>}
+      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">{title}</p>
+      <h3 className="text-2xl font-bold text-foreground mb-1">{value}</h3>
+      {subtext && <p className="text-xs text-muted-foreground font-medium">{subtext}</p>}
     </div>
     <div className={`p-3 rounded-xl ${
       trend === 'up' ? 'bg-red-50 text-red-500' : 
       trend === 'down' ? 'bg-emerald-50 text-emerald-500' : 
-      'bg-stone-50 text-stone-400'
+      'bg-secondary text-muted-foreground'
     }`}>
       {icon}
     </div>
@@ -35,7 +35,7 @@ const TabButton = ({ active, onClick, children }: { active: boolean, onClick: ()
     className={`px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
       active 
         ? 'bg-coffee text-white shadow-lg scale-105' 
-        : 'bg-white text-cappuccino border border-stone-100 hover:bg-stone-50'
+        : 'bg-card text-muted-foreground border border-border hover:bg-secondary'
     }`}
   >
     {children}
@@ -80,13 +80,13 @@ export default function AnalyticsPage() {
         <div className="flex items-center gap-4 mb-6">
           <button 
             onClick={() => navigate('/personal/finance')}
-            className="p-2 -ml-2 hover:bg-stone-200 rounded-full text-stone-500 transition-colors"
+            className="p-2 -ml-2 hover:bg-accent rounded-full text-muted-foreground transition-colors"
           >
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-coffee tracking-tight">Analytics & Inteligência</h1>
-            <p className="text-xs font-bold uppercase tracking-widest text-cappuccino mt-1">Insights Financeiros</p>
+            <h1 className="text-2xl font-bold text-foreground tracking-tight">Analytics & Inteligência</h1>
+            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mt-1">Insights Financeiros</p>
           </div>
         </div>
 
@@ -102,13 +102,13 @@ export default function AnalyticsPage() {
       {activeTab === 'categories' && (
         <div className="px-6 space-y-6 animate-fade-in">
           {loading ? (
-            <div className="h-64 flex items-center justify-center text-stone-400">Carregando dados...</div>
+            <div className="h-64 flex items-center justify-center text-muted-foreground">Carregando dados...</div>
           ) : macroData.categoryData.length === 0 ? (
-            <div className="text-center py-12 text-stone-400">Nenhum dado financeiro encontrado.</div>
+            <div className="text-center py-12 text-muted-foreground">Nenhum dado financeiro encontrado.</div>
           ) : (
             <>
               {/* Gráfico de Rosca */}
-              <div className="bg-white p-6 rounded-[2.5rem] border border-stone-100 shadow-sm flex flex-col md:flex-row items-center gap-8">
+              <div className="bg-card p-6 rounded-[2.5rem] border border-border shadow-sm flex flex-col md:flex-row items-center gap-8">
                 <div className="w-full md:w-1/2 h-[300px] relative">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -134,21 +134,21 @@ export default function AnalyticsPage() {
                   </ResponsiveContainer>
                   {/* Centro da Rosca */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-[10px] font-bold uppercase text-stone-400">Total</span>
-                    <span className="text-lg font-bold text-coffee">{formatCurrency(macroData.totalExpense)}</span>
+                    <span className="text-[10px] font-bold uppercase text-muted-foreground">Total</span>
+                    <span className="text-lg font-bold text-foreground">{formatCurrency(macroData.totalExpense)}</span>
                   </div>
                 </div>
 
                 {/* Legenda Lateral */}
                 <div className="w-full md:w-1/2 space-y-3">
-                  <h3 className="text-sm font-bold text-coffee uppercase tracking-widest mb-4">Top Categorias</h3>
+                  <h3 className="text-sm font-bold text-foreground uppercase tracking-widest mb-4">Top Categorias</h3>
                   {macroData.categoryData.slice(0, 5).map((cat, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-3 rounded-xl hover:bg-stone-50 transition-colors">
+                    <div key={idx} className="flex items-center justify-between p-3 rounded-xl hover:bg-secondary transition-colors">
                       <div className="flex items-center gap-3">
                         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cat.color }} />
-                        <span className="text-sm font-medium text-stone-600">{cat.name}</span>
+                        <span className="text-sm font-medium text-muted-foreground">{cat.name}</span>
                       </div>
-                      <span className="text-sm font-bold text-coffee">{formatCurrency(cat.value)}</span>
+                      <span className="text-sm font-bold text-foreground">{formatCurrency(cat.value)}</span>
                     </div>
                   ))}
                 </div>
@@ -164,28 +164,28 @@ export default function AnalyticsPage() {
           
           {/* Busca */}
           <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-stone-400" size={20} />
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
             <input 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Digite um item (ex: Netflix, Omo, Gasolina)..."
-              className="w-full bg-white border-2 border-stone-100 rounded-2xl pl-14 pr-4 py-4 text-lg text-coffee font-medium outline-none focus:border-coffee/20 transition-all shadow-sm placeholder:text-stone-300"
+              className="w-full bg-card border-2 border-border rounded-2xl pl-14 pr-4 py-4 text-lg text-foreground font-medium outline-none focus:border-coffee/20 transition-all shadow-sm placeholder:text-muted-foreground"
               autoFocus
             />
             <button type="submit" className="hidden">Buscar</button>
           </form>
 
           {isSearching ? (
-            <div className="py-20 text-center text-stone-400 animate-pulse">Analisando histórico de compras...</div>
+            <div className="py-20 text-center text-muted-foreground animate-pulse">Analisando histórico de compras...</div>
           ) : !itemData ? (
-            <div className="py-20 text-center text-stone-300">
+            <div className="py-20 text-center text-muted-foreground">
               <ShoppingBag size={48} className="mx-auto mb-4 opacity-20" />
               <p>Digite algo acima para descobrir padrões de consumo.</p>
             </div>
           ) : !itemData.found ? (
-            <div className="py-12 text-center bg-white rounded-[2rem] border border-dashed border-stone-200">
-              <AlertCircle className="mx-auto mb-2 text-stone-300" />
-              <p className="text-stone-500">Nenhum registro encontrado para "{searchTerm}".</p>
+            <div className="py-12 text-center bg-card rounded-[2rem] border border-dashed border-border">
+              <AlertCircle className="mx-auto mb-2 text-muted-foreground" />
+              <p className="text-muted-foreground">Nenhum registro encontrado para "{searchTerm}".</p>
             </div>
           ) : (
             /* RESULTADOS DA BUSCA */
@@ -215,8 +215,8 @@ export default function AnalyticsPage() {
               </div>
 
               {/* Gráfico de Tendência */}
-              <div className="bg-white p-6 rounded-[2rem] border border-stone-100 shadow-sm">
-                <h3 className="text-sm font-bold text-coffee uppercase tracking-widest mb-6">Tendência de Preço</h3>
+              <div className="bg-card p-6 rounded-[2rem] border border-border shadow-sm">
+                <h3 className="text-sm font-bold text-foreground uppercase tracking-widest mb-6">Tendência de Preço</h3>
                 <div className="h-[250px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={[...itemData.history].reverse()}> {/* Reverte para cronológico no gráfico */}
@@ -254,25 +254,25 @@ export default function AnalyticsPage() {
               </div>
 
               {/* Histórico Recente */}
-              <div className="bg-white p-6 rounded-[2rem] border border-stone-100 shadow-sm">
-                <h3 className="text-sm font-bold text-coffee uppercase tracking-widest mb-4">Últimas Aquisições</h3>
+              <div className="bg-card p-6 rounded-[2rem] border border-border shadow-sm">
+                <h3 className="text-sm font-bold text-foreground uppercase tracking-widest mb-4">Últimas Aquisições</h3>
                 <div className="space-y-3">
                   {itemData.history.slice(0, 5).map((item: any, idx: number) => (
-                    <div key={idx} className="flex justify-between items-center p-3 hover:bg-stone-50 rounded-xl transition-colors border-b border-stone-50 last:border-0">
+                    <div key={idx} className="flex justify-between items-center p-3 hover:bg-secondary rounded-xl transition-colors border-b border-stone-50 last:border-0">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <Calendar size={12} className="text-olive" />
-                          <span className="text-xs font-bold text-stone-600">
+                          <span className="text-xs font-bold text-muted-foreground">
                             {formatDateBr(item.date)}
                           </span>
                         </div>
-                        <div className="flex items-center gap-1 text-[10px] text-stone-400 uppercase tracking-wide">
+                        <div className="flex items-center gap-1 text-[10px] text-muted-foreground uppercase tracking-wide">
                           <MapPin size={10} /> {item.location}
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-bold text-coffee">{formatCurrency(item.price)}</p>
-                        {item.quantity > 1 && <p className="text-xs text-stone-400">Qtd: {item.quantity}</p>}
+                        <p className="text-sm font-bold text-foreground">{formatCurrency(item.price)}</p>
+                        {item.quantity > 1 && <p className="text-xs text-muted-foreground">Qtd: {item.quantity}</p>}
                       </div>
                     </div>
                   ))}
@@ -288,12 +288,12 @@ export default function AnalyticsPage() {
       {activeTab === 'locations' && (
         <div className="px-6 space-y-6 animate-fade-in">
            {loading ? (
-            <div className="h-64 flex items-center justify-center text-stone-400">Carregando dados...</div>
+            <div className="h-64 flex items-center justify-center text-muted-foreground">Carregando dados...</div>
           ) : macroData.locationData.length === 0 ? (
-            <div className="text-center py-12 text-stone-400">Sem dados de localização.</div>
+            <div className="text-center py-12 text-muted-foreground">Sem dados de localização.</div>
           ) : (
-            <div className="bg-white p-6 rounded-[2.5rem] border border-stone-100 shadow-sm h-[600px] flex flex-col">
-               <h3 className="text-sm font-bold text-coffee uppercase tracking-widest mb-6">Top 10 Fornecedores (Por Valor)</h3>
+            <div className="bg-card p-6 rounded-[2.5rem] border border-border shadow-sm h-[600px] flex flex-col">
+               <h3 className="text-sm font-bold text-foreground uppercase tracking-widest mb-6">Top 10 Fornecedores (Por Valor)</h3>
                <div className="flex-1 w-full min-h-0">
                  <ResponsiveContainer width="100%" height="100%">
                     <BarChart

@@ -82,31 +82,31 @@ const InvoicePaymentDialog: React.FC<InvoicePaymentDialogProps> = ({ isOpen, onC
 
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-coffee/40 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-md rounded-[2rem] shadow-2xl border border-stone-100 overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-card w-full max-w-md rounded-[2rem] shadow-2xl border border-border overflow-hidden flex flex-col max-h-[90vh]">
         <div className="p-8 overflow-y-auto">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h2 className="text-2xl font-semibold text-coffee tracking-tighter">Pagar Conta</h2>
-              <p className="text-cappuccino text-[10px] font-bold uppercase tracking-widest mt-1">{bill.description}</p>
-              <span className="text-[10px] text-stone-400 bg-stone-100 px-2 py-0.5 rounded mt-1 inline-block">{bill.category}</span>
+              <h2 className="text-2xl font-semibold text-foreground tracking-tighter">Pagar Conta</h2>
+              <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mt-1">{bill.description}</p>
+              <span className="text-[10px] text-muted-foreground bg-secondary px-2 py-0.5 rounded mt-1 inline-block">{bill.category}</span>
             </div>
-            <button onClick={onClose} className="p-2 hover:bg-cream rounded-full transition-colors text-cappuccino">
+            <button onClick={onClose} className="p-2 hover:bg-background rounded-full transition-colors text-muted-foreground">
               <X size={20} />
             </button>
           </div>
 
-          <div className="bg-stone-50 rounded-xl p-6 mb-6 text-center border border-stone-100">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-cappuccino mb-2">Valor do Pagamento</p>
-            <p className="text-3xl font-bold text-coffee">R$ {bill.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+          <div className="bg-secondary rounded-xl p-6 mb-6 text-center border border-border">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Valor do Pagamento</p>
+            <p className="text-3xl font-bold text-foreground">R$ {bill.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
             {installments > 1 && (
-                <p className="text-xs text-olive font-bold mt-2 bg-olive/10 inline-block px-3 py-1 rounded-lg">
+                <p className="text-xs text-olive font-bold mt-2 bg-primary/10 inline-block px-3 py-1 rounded-lg">
                     {installments}x de R$ {installmentValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </p>
             )}
           </div>
 
           <div className="space-y-4">
-            <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest ml-1">Forma de Pagamento</label>
+            <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest ml-1">Forma de Pagamento</label>
             
             {isLoading ? (
               <div className="flex justify-center py-4"><Loader2 className="animate-spin text-olive" /></div>
@@ -115,24 +115,24 @@ const InvoicePaymentDialog: React.FC<InvoicePaymentDialogProps> = ({ isOpen, onC
                 
                 {/* LISTA DE CONTAS */}
                 <div className="space-y-2">
-                  <p className="text-[9px] font-bold text-stone-400 uppercase tracking-widest ml-1">Contas Bancárias</p>
+                  <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Contas Bancárias</p>
                   {accounts?.filter(a => a.type !== 'investment').map(acc => (
                     <button
                       key={acc.id}
                       onClick={() => { setSelectedSourceId(acc.id); setSelectedSourceType('account'); setInstallments(1); setError(''); }}
                       className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${
                         selectedSourceId === acc.id 
-                          ? 'bg-olive/5 border-olive ring-1 ring-olive' 
-                          : 'bg-white border-stone-200 hover:border-olive/50'
+                          ? 'bg-primary/5 border-primary ring-1 ring-olive' 
+                          : 'bg-card border-border hover:border-primary/50'
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-full ${selectedSourceId === acc.id ? 'bg-olive text-white' : 'bg-stone-100 text-stone-400'}`}>
+                        <div className={`p-2 rounded-full ${selectedSourceId === acc.id ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'}`}>
                           <Wallet size={16} />
                         </div>
                         <div className="text-left">
-                          <p className="text-sm font-bold text-coffee">{acc.name}</p>
-                          <p className="text-[10px] text-cappuccino">Saldo: R$ {acc.balance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                          <p className="text-sm font-bold text-foreground">{acc.name}</p>
+                          <p className="text-[10px] text-muted-foreground">Saldo: R$ {acc.balance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                         </div>
                       </div>
                       {selectedSourceId === acc.id && <CheckCircle2 size={18} className="text-olive" />}
@@ -143,7 +143,7 @@ const InvoicePaymentDialog: React.FC<InvoicePaymentDialogProps> = ({ isOpen, onC
                 {/* LISTA DE CARTÕES */}
                 {cards && cards.length > 0 && (
                   <div className="space-y-2">
-                    <p className="text-[9px] font-bold text-stone-400 uppercase tracking-widest ml-1">Cartões de Crédito</p>
+                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Cartões de Crédito</p>
                     {cards.map(card => (
                       <button
                         key={card.id}
@@ -151,16 +151,16 @@ const InvoicePaymentDialog: React.FC<InvoicePaymentDialogProps> = ({ isOpen, onC
                         className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${
                           selectedSourceId === card.id 
                             ? 'bg-blue-500/5 border-blue-500 ring-1 ring-blue-500' 
-                            : 'bg-white border-stone-200 hover:border-blue-500/50'
+                            : 'bg-card border-border hover:border-blue-500/50'
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-full ${selectedSourceId === card.id ? 'bg-blue-500 text-white' : 'bg-stone-100 text-stone-400'}`}>
+                          <div className={`p-2 rounded-full ${selectedSourceId === card.id ? 'bg-blue-500 text-white' : 'bg-secondary text-muted-foreground'}`}>
                             <CreditCard size={16} />
                           </div>
                           <div className="text-left">
-                            <p className="text-sm font-bold text-coffee">{card.name}</p>
-                            <p className="text-[10px] text-cappuccino">
+                            <p className="text-sm font-bold text-foreground">{card.name}</p>
+                            <p className="text-[10px] text-muted-foreground">
                                 Vence dia {card.due_day}
                             </p>
                           </div>
@@ -178,15 +178,15 @@ const InvoicePaymentDialog: React.FC<InvoicePaymentDialogProps> = ({ isOpen, onC
           {/* Seletor de Parcelas (Apenas se for Cartão) */}
           {selectedSourceType === 'card' && selectedSourceId && (
              <div className="mt-4 animate-fade-in">
-                <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest ml-1 mb-2">
+                <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest ml-1 mb-2">
                   Parcelamento
                 </label>
                 <div className="relative">
-                    <List size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-cappuccino" />
+                    <List size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                     <select
                         value={installments}
                         onChange={(e) => setInstallments(Number(e.target.value))}
-                        className="w-full bg-white border border-stone-200 rounded-xl py-3.5 pl-9 pr-4 text-coffee text-sm focus:ring-2 focus:ring-blue-500/10 outline-none transition-all cursor-pointer appearance-none"
+                        className="w-full bg-card border border-border rounded-xl py-3.5 pl-9 pr-4 text-foreground text-sm focus:ring-2 focus:ring-blue-500/10 outline-none transition-all cursor-pointer appearance-none"
                     >
                         <option value={1}>À vista (1x)</option>
                         {[...Array(11)].map((_, i) => (
@@ -200,16 +200,16 @@ const InvoicePaymentDialog: React.FC<InvoicePaymentDialogProps> = ({ isOpen, onC
           )}
 
           <div className="mt-4">
-            <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest ml-1 mb-2">
+            <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest ml-1 mb-2">
               Data do Pagamento
             </label>
             <div className="relative">
-                <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-cappuccino" />
+                <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input
                     type="date"
                     value={paymentDate}
                     onChange={(e) => setPaymentDate(e.target.value)}
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3.5 pl-9 pr-4 text-coffee text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all"
+                    className="w-full bg-secondary border border-border rounded-xl py-3.5 pl-9 pr-4 text-foreground text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all"
                 />
             </div>
           </div>
@@ -230,7 +230,7 @@ const InvoicePaymentDialog: React.FC<InvoicePaymentDialogProps> = ({ isOpen, onC
           <button 
             onClick={handlePayment}
             disabled={isSubmitting || !selectedSourceId || (selectedSourceType === 'account' && !hasBalance)}
-            className="w-full mt-6 bg-olive hover:bg-black text-white py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-6 bg-primary hover:bg-black text-white py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
             {isSubmitting ? 'Processando...' : 'Confirmar Pagamento'}

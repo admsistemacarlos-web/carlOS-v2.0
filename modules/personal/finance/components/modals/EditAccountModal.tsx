@@ -53,18 +53,18 @@ const EditAccountModal: React.FC<EditAccountModalProps> = ({
 
   return createPortal(
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4 animate-fade-in">
-      <div className="bg-cream rounded-[2rem] shadow-2xl w-full max-w-md border border-stone-200 animate-scale-in">
+      <div className="bg-background rounded-[2rem] shadow-2xl w-full max-w-md border border-border animate-scale-in">
         {/* Header */}
-        <div className="p-6 border-b border-stone-200 flex justify-between items-center">
+        <div className="p-6 border-b border-border flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold text-coffee tracking-tight">Editar Conta</h2>
-            <p className="text-xs text-cappuccino mt-1">Atualize as informações da conta</p>
+            <h2 className="text-2xl font-bold text-foreground tracking-tight">Editar Conta</h2>
+            <p className="text-xs text-muted-foreground mt-1">Atualize as informações da conta</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-stone-100 rounded-full transition-colors"
+            className="p-2 hover:bg-secondary rounded-full transition-colors"
           >
-            <X size={20} className="text-cappuccino" />
+            <X size={20} className="text-muted-foreground" />
           </button>
         </div>
 
@@ -78,7 +78,7 @@ const EditAccountModal: React.FC<EditAccountModalProps> = ({
 
           {/* Nome da Conta */}
           <div>
-            <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">
+            <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">
               <Wallet size={12} className="inline mr-1" />
               Nome da Conta
             </label>
@@ -87,20 +87,20 @@ const EditAccountModal: React.FC<EditAccountModalProps> = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Nubank, Investimentos..."
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3.5 text-sm text-coffee placeholder-stone-300 focus:ring-2 focus:ring-olive/20 focus:border-olive outline-none transition-all"
+              className="w-full bg-secondary border border-border rounded-xl p-3.5 text-sm text-foreground placeholder-stone-300 focus:ring-2 focus:ring-olive/20 focus:border-primary outline-none transition-all"
               required
             />
           </div>
 
           {/* Tipo de Conta */}
           <div>
-            <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">
+            <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">
               Tipo de Conta
             </label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value as any)}
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3.5 text-sm text-coffee focus:ring-2 focus:ring-olive/20 focus:border-olive outline-none transition-all cursor-pointer appearance-none"
+              className="w-full bg-secondary border border-border rounded-xl p-3.5 text-sm text-foreground focus:ring-2 focus:ring-olive/20 focus:border-primary outline-none transition-all cursor-pointer appearance-none"
             >
               <option value="checking">Conta Corrente</option>
               <option value="investment">Investimentos</option>
@@ -110,7 +110,7 @@ const EditAccountModal: React.FC<EditAccountModalProps> = ({
 
           {/* Saldo Inicial */}
           <div>
-            <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">
+            <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">
               <DollarSign size={12} className="inline mr-1" />
               Saldo Inicial (R$)
             </label>
@@ -121,10 +121,10 @@ const EditAccountModal: React.FC<EditAccountModalProps> = ({
               onChange={(e) => setBalance(e.target.value)}
               placeholder="0.00"
               onWheel={(e) => e.currentTarget.blur()}
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3.5 text-sm text-coffee font-semibold placeholder-stone-300 focus:ring-2 focus:ring-olive/20 focus:border-olive outline-none transition-all"
+              className="w-full bg-secondary border border-border rounded-xl p-3.5 text-sm text-foreground font-semibold placeholder-stone-300 focus:ring-2 focus:ring-olive/20 focus:border-primary outline-none transition-all"
               required
             />
-            <p className="text-[10px] text-cappuccino mt-1.5 ml-1">
+            <p className="text-[10px] text-muted-foreground mt-1.5 ml-1">
               ⚠️ Alterar este valor afetará o saldo atual da conta
             </p>
           </div>
@@ -135,14 +135,14 @@ const EditAccountModal: React.FC<EditAccountModalProps> = ({
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="flex-1 px-6 py-3.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-cappuccino hover:bg-stone-50 transition-colors disabled:opacity-50"
+              className="flex-1 px-6 py-3.5 rounded-xl text-[11px] font-bold uppercase tracking-widest text-muted-foreground hover:bg-secondary transition-colors disabled:opacity-50"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-olive hover:bg-black text-white px-6 py-3.5 rounded-xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              className="flex-1 bg-primary hover:bg-black text-white px-6 py-3.5 rounded-xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isSubmitting ? (
                 <>

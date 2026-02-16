@@ -39,44 +39,44 @@ export const PetFormModal: React.FC<PetFormModalProps> = ({ isOpen, onClose, onS
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-md rounded-[2rem] p-8 shadow-2xl relative">
-        <button onClick={onClose} className="absolute top-6 right-6 text-stone-400 hover:text-stone-600">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+      <div className="bg-card w-full max-w-md rounded-[2rem] p-8 shadow-2xl relative">
+        <button onClick={onClose} className="absolute top-6 right-6 text-muted-foreground hover:text-muted-foreground">
           <X size={20} />
         </button>
         
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-3 bg-stone-100 rounded-full text-stone-500">
+          <div className="p-3 bg-secondary rounded-full text-muted-foreground">
             <Dog size={24} />
           </div>
-          <h2 className="text-xl font-bold text-stone-800">Novo Pet</h2>
+          <h2 className="text-xl font-bold text-foreground">Novo Pet</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Nome</label>
+            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Nome</label>
             <input 
               value={formData.name}
               onChange={e => setFormData({...formData, name: e.target.value})}
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-700 outline-none focus:ring-2 focus:ring-stone-200"
+              className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground outline-none focus:ring-2 focus:ring-stone-200"
               autoFocus
             />
           </div>
           <div>
-            <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Raça</label>
+            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Raça</label>
             <input 
               value={formData.breed}
               onChange={e => setFormData({...formData, breed: e.target.value})}
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-700 outline-none focus:ring-2 focus:ring-stone-200"
+              className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground outline-none focus:ring-2 focus:ring-stone-200"
             />
           </div>
           <div>
-            <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400 ml-1">Data de Nascimento</label>
+            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">Data de Nascimento</label>
             <input 
               type="date"
               value={formData.birth_date}
               onChange={e => setFormData({...formData, birth_date: e.target.value})}
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-700 outline-none focus:ring-2 focus:ring-stone-200"
+              className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground outline-none focus:ring-2 focus:ring-stone-200"
             />
           </div>
 

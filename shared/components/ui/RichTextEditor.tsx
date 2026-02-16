@@ -39,7 +39,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       Typography,
       Placeholder.configure({
         placeholder: placeholder,
-        emptyEditorClass: 'is-editor-empty before:content-[attr(data-placeholder)] before:text-stone-300 before:float-left before:pointer-events-none',
+        emptyEditorClass: 'is-editor-empty before:content-[attr(data-placeholder)] before:text-muted-foreground before:float-left before:pointer-events-none',
       }),
     ],
     content: content, // Hidratação inicial
@@ -47,9 +47,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     editorProps: {
       attributes: {
         class: classNames(
-          'prose prose-stone max-w-none focus:outline-none min-h-[150px] font-serif leading-loose text-lg text-stone-700', // Estética de escrita premium
-          'prose-headings:font-sans prose-headings:font-bold prose-headings:text-stone-800',
-          'prose-p:my-2 prose-blockquote:border-l-4 prose-blockquote:border-[#143d2d] prose-blockquote:bg-stone-50 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:not-italic',
+          'prose prose-stone max-w-none focus:outline-none min-h-[150px] font-serif leading-loose text-lg text-foreground', // Estética de escrita premium
+          'prose-headings:font-sans prose-headings:font-bold prose-headings:text-foreground',
+          'prose-p:my-2 prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-secondary prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:not-italic',
           'prose-ul:list-disc prose-ol:list-decimal',
           className
         ),

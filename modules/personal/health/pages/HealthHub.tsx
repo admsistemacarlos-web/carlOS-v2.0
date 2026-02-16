@@ -18,10 +18,10 @@ const HubCard: React.FC<{
     onClick={isPlaceholder ? undefined : onClick}
     className={`group relative flex flex-col justify-between p-8 h-56 border rounded-[1.5rem] transition-all duration-300 w-full text-left overflow-hidden ${
       isPlaceholder 
-        ? 'bg-stone-50 border-stone-200 opacity-60 cursor-not-allowed' 
+        ? 'bg-secondary border-border opacity-60 cursor-not-allowed' 
         : variant === 'success' 
-          ? 'bg-[#143d2d] border-[#143d2d] text-white shadow-md' 
-          : 'bg-white border-stone-200 hover:border-[#143d2d]/30 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer'
+          ? 'bg-primary border-primary text-white shadow-md' 
+          : 'bg-card border-border hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer'
     }`}
   >
     {/* Background Pattern Sutil para o card Detox */}
@@ -31,13 +31,13 @@ const HubCard: React.FC<{
 
     <div className="relative z-10 flex justify-between items-start w-full">
        <div className={`bg-transparent p-0 transition-colors duration-300 ${
-         isPlaceholder ? 'text-stone-400' : variant === 'success' ? 'text-emerald-100' : 'text-[#143d2d]'
+         isPlaceholder ? 'text-muted-foreground' : variant === 'success' ? 'text-primary-foreground' : 'text-primary'
        }`}>
          {React.cloneElement(icon as React.ReactElement<any>, { size: 32, strokeWidth: 1.5 })}
        </div>
 
        {!isPlaceholder && (
-         <div className={`opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-500 ${variant === 'success' ? 'text-emerald-100' : 'text-[#143d2d]'}`}>
+         <div className={`opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-500 ${variant === 'success' ? 'text-primary-foreground' : 'text-primary'}`}>
            <ArrowRight size={20} />
          </div>
        )}
@@ -50,12 +50,12 @@ const HubCard: React.FC<{
         </div>
       )}
       <h3 className={`text-xl font-bold mb-1 tracking-tight ${
-        isPlaceholder ? 'text-stone-400' : variant === 'success' ? 'text-white' : 'text-stone-800 group-hover:text-[#143d2d]'
+        isPlaceholder ? 'text-muted-foreground' : variant === 'success' ? 'text-white' : 'text-foreground group-hover:text-primary'
       }`}>
         {title}
       </h3>
       <p className={`text-sm font-medium ${
-        isPlaceholder ? 'text-stone-300' : variant === 'success' ? 'text-emerald-100/80' : 'text-stone-500 group-hover:text-stone-700'
+        isPlaceholder ? 'text-muted-foreground' : variant === 'success' ? 'text-primary-foreground/80' : 'text-muted-foreground group-hover:text-foreground'
       }`}>
         {subtitle}
       </p>
@@ -157,13 +157,13 @@ export default function HealthHub() {
     <div className="w-full min-h-screen animate-fade-in font-sans pb-20 bg-transparent">
       <div className="w-full px-8 pt-10 pb-12">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-1 bg-[#143d2d] rounded-full"></div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#143d2d]">Saúde Integral</p>
+          <div className="w-8 h-1 bg-primary rounded-full"></div>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Saúde Integral</p>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold text-stone-800 tracking-tighter mb-3">
-          Corpo & <span className="text-[#143d2d] font-serif italic">Mente</span>
+        <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tighter mb-3">
+          Corpo & <span className="text-primary font-serif italic">Mente</span>
         </h1>
-        <p className="text-stone-500 text-sm max-w-lg leading-relaxed">
+        <p className="text-muted-foreground text-sm max-w-lg leading-relaxed">
           Gestão de vitalidade e longevidade. Monitore seu progresso físico e mental.
         </p>
       </div>
@@ -178,7 +178,7 @@ export default function HealthHub() {
           onClick={() => navigate('/personal/health/wellness')}
           variant="success"
           highlight={
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 text-white rounded-md text-xs font-bold uppercase tracking-wider backdrop-blur-sm border border-white/10">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-background/20 text-foreground rounded-md text-xs font-bold uppercase tracking-wider backdrop-blur-sm border border-foreground/20">
               R$ {detoxSavings.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} Economizados
             </span>
           }
@@ -190,7 +190,7 @@ export default function HealthHub() {
           icon={<Activity />}
           onClick={() => navigate('/personal/health/wellness')}
           highlight={lastWeight && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-100 text-[#143d2d] rounded-md text-xs font-bold uppercase tracking-wider border border-stone-200">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-secondary text-primary rounded-md text-xs font-bold uppercase tracking-wider border border-border">
               <Scale size={12} /> Peso Atual: {lastWeight}kg
             </span>
           )}
@@ -202,7 +202,7 @@ export default function HealthHub() {
           icon={<Dumbbell />}
           onClick={() => navigate('/personal/health/workouts')}
           highlight={lastWorkout && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-100 text-[#143d2d] rounded-md text-xs font-bold uppercase tracking-wider border border-stone-200 truncate max-w-full">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-secondary text-primary rounded-md text-xs font-bold uppercase tracking-wider border border-border truncate max-w-full">
               <Activity size={12} /> {lastWorkout}
             </span>
           )}
@@ -214,7 +214,7 @@ export default function HealthHub() {
           icon={<Brain />}
           onClick={() => navigate('/personal/health/therapy')}
           highlight={nextTherapy && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-100 text-[#143d2d] rounded-md text-xs font-bold uppercase tracking-wider border border-stone-200">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-secondary text-primary rounded-md text-xs font-bold uppercase tracking-wider border border-border">
               <Calendar size={12} /> {nextTherapy}
             </span>
           )}
@@ -227,11 +227,11 @@ export default function HealthHub() {
           icon={<Target />}
           onClick={() => navigate('/personal/health/planning/new')}
           highlight={activeCycleWeek ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-100 text-[#143d2d] rounded-md text-xs font-bold uppercase tracking-wider border border-stone-200">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-secondary text-primary rounded-md text-xs font-bold uppercase tracking-wider border border-border">
               <Flag size={12} /> Semana {activeCycleWeek} de 12
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-stone-100 text-stone-500 rounded-md text-xs font-bold uppercase tracking-wider border border-stone-200">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-secondary text-muted-foreground rounded-md text-xs font-bold uppercase tracking-wider border border-border">
               Iniciar Novo Ciclo
             </span>
           )}

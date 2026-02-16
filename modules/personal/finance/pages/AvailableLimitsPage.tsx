@@ -64,34 +64,34 @@ const AvailableLimitsPage: React.FC = () => {
         <div className="flex items-center gap-4">
           <button 
             onClick={() => navigate(-1)}
-            className="p-2 -ml-2 hover:bg-stone-100 rounded-full transition-colors text-cappuccino"
+            className="p-2 -ml-2 hover:bg-secondary rounded-full transition-colors text-muted-foreground"
           >
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-2xl font-semibold text-coffee tracking-tighter">Limites Disponíveis</h1>
-            <p className="text-cappuccino text-xs font-bold uppercase tracking-widest mt-1">Poder de Compra</p>
+            <h1 className="text-2xl font-semibold text-foreground tracking-tighter">Limites Disponíveis</h1>
+            <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">Poder de Compra</p>
           </div>
         </div>
       </div>
 
       {/* Resumo Principal */}
-      <div className="bg-olive/5 rounded-[2rem] p-8 border border-olive/10 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="bg-primary/5 rounded-[2rem] p-8 border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-6">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-olive mb-2">Total Disponível para Compra</p>
           {loading ? (
-             <div className="h-10 w-48 bg-stone-200 animate-pulse rounded-lg"/>
+             <div className="h-10 w-48 bg-accent animate-pulse rounded-lg"/>
           ) : (
-            <h2 className="text-4xl font-bold text-coffee tracking-tighter">
+            <h2 className="text-4xl font-bold text-foreground tracking-tighter">
               R$ {totalMetrics.totalAvailable.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </h2>
           )}
         </div>
-        <div className="flex items-center gap-3 bg-white px-4 py-3 rounded-xl border border-olive/10 shadow-sm">
+        <div className="flex items-center gap-3 bg-card px-4 py-3 rounded-xl border border-primary/10 shadow-sm">
           <ShieldCheck className="text-olive" size={24} />
           <div className="text-right">
-             <p className="text-[9px] font-bold text-cappuccino uppercase">Limite Global</p>
-             <p className="text-sm font-bold text-coffee">R$ {totalMetrics.totalLimit.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+             <p className="text-[9px] font-bold text-muted-foreground uppercase">Limite Global</p>
+             <p className="text-sm font-bold text-foreground">R$ {totalMetrics.totalLimit.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
           </div>
         </div>
       </div>
@@ -99,9 +99,9 @@ const AvailableLimitsPage: React.FC = () => {
       {/* Lista de Cartões */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {loading ? (
-           [1, 2].map(i => <div key={i} className="h-40 bg-stone-100 rounded-[2rem] animate-pulse" />)
+           [1, 2].map(i => <div key={i} className="h-40 bg-secondary rounded-[2rem] animate-pulse" />)
         ) : cards.length === 0 ? (
-           <div className="col-span-full text-center text-cappuccino py-10">Nenhum cartão cadastrado.</div>
+           <div className="col-span-full text-center text-muted-foreground py-10">Nenhum cartão cadastrado.</div>
         ) : (
           cards.map(card => {
             const used = usageMap[card.id] || 0;
@@ -112,28 +112,28 @@ const AvailableLimitsPage: React.FC = () => {
               <div 
                 key={card.id} 
                 onClick={() => navigate(`/personal/finance/cards/${card.id}`)}
-                className="bg-white p-6 rounded-[2rem] border border-stone-100 shadow-sm hover:shadow-xl transition-all relative overflow-hidden group cursor-pointer"
+                className="bg-card p-6 rounded-[2rem] border border-border shadow-sm hover:shadow-xl transition-all relative overflow-hidden group cursor-pointer"
               >
                 <div className="flex justify-between items-start mb-6 relative z-10">
                   <div className="flex items-center gap-3">
-                    <div className="p-3 bg-stone-50 rounded-xl text-coffee group-hover:bg-olive group-hover:text-white transition-colors">
+                    <div className="p-3 bg-secondary rounded-xl text-foreground group-hover:bg-primary group-hover:text-white transition-colors">
                       <CardIcon size={20} />
                     </div>
                     <div>
-                      <h3 className="font-bold text-coffee">{card.name}</h3>
-                      <p className="text-[10px] font-bold text-cappuccino uppercase tracking-wider">Limite: R$ {card.limit_amount.toLocaleString('pt-BR')}</p>
+                      <h3 className="font-bold text-foreground">{card.name}</h3>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Limite: R$ {card.limit_amount.toLocaleString('pt-BR')}</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="relative z-10">
                    <div className="flex justify-between text-sm mb-2">
-                     <span className="text-cappuccino font-medium">Usado</span>
-                     <span className="text-coffee font-bold">R$ {used.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                     <span className="text-muted-foreground font-medium">Usado</span>
+                     <span className="text-foreground font-bold">R$ {used.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                    </div>
                    
                    {/* Progress Bar */}
-                   <div className="h-2 w-full bg-stone-100 rounded-full overflow-hidden mb-4">
+                   <div className="h-2 w-full bg-secondary rounded-full overflow-hidden mb-4">
                      <div 
                        className={`h-full rounded-full transition-all duration-500 ${percentageUsed > 90 ? 'bg-terracotta' : 'bg-coffee'}`}
                        style={{ width: `${percentageUsed}%` }}

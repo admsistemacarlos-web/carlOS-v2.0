@@ -98,22 +98,22 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ card, transactions, onClose, 
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 w-full md:w-[480px] bg-cream shadow-2xl z-[100] border-l border-stone-200 transform transition-transform animate-fade-in flex flex-col">
+    <div className="fixed inset-y-0 right-0 w-full md:w-[480px] bg-background shadow-2xl z-[100] border-l border-border transform transition-transform animate-fade-in flex flex-col">
       {/* Header */}
-      <div className="p-8 bg-white border-b border-stone-100 flex justify-between items-start">
+      <div className="p-8 bg-card border-b border-border flex justify-between items-start">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-cappuccino mb-1">Detalhes do Cartão</p>
-          <h2 className="text-3xl font-semibold text-coffee tracking-tighter">{card.name}</h2>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Detalhes do Cartão</p>
+          <h2 className="text-3xl font-semibold text-foreground tracking-tighter">{card.name}</h2>
           <div className="flex gap-4 mt-4">
-             <div className="flex items-center gap-2 text-xs font-medium text-stone-500">
+             <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
                <Calendar size={14} /> Fecha dia {card.closing_day}
              </div>
-             <div className="flex items-center gap-2 text-xs font-medium text-stone-500">
+             <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
                <FileText size={14} /> Vence dia {card.due_day}
              </div>
           </div>
         </div>
-        <button onClick={onClose} className="p-2 hover:bg-stone-50 rounded-full transition-colors">
+        <button onClick={onClose} className="p-2 hover:bg-secondary rounded-full transition-colors">
           <CheckCircle2 size={24} className="text-olive" />
         </button>
       </div>
@@ -121,39 +121,39 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ card, transactions, onClose, 
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto p-8">
         {/* Card Summary */}
-        <div className="bg-olive/5 rounded-2xl p-6 border border-olive/10 mb-8">
+        <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10 mb-8">
            <p className="text-[10px] font-bold uppercase tracking-widest text-olive mb-1">Fatura Atual (Aberta)</p>
-           <h3 className="text-4xl font-bold text-coffee tracking-tighter">
+           <h3 className="text-4xl font-bold text-foreground tracking-tighter">
              R$ {currentInvoiceData.totalOpen.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
            </h3>
-           <p className="text-xs text-cappuccino mt-2">
+           <p className="text-xs text-muted-foreground mt-2">
              Limite disponível estimado: R$ {(card.limit_amount - currentInvoiceData.totalOpen).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
            </p>
         </div>
 
         {/* Transactions List */}
-        <h4 className="text-sm font-bold text-coffee uppercase tracking-widest mb-4 flex items-center gap-2">
+        <h4 className="text-sm font-bold text-foreground uppercase tracking-widest mb-4 flex items-center gap-2">
           <ShoppingBag size={14} /> Lançamentos
         </h4>
         
         <div className="space-y-3">
           {currentInvoiceData.openTransactions.length === 0 ? (
-            <p className="text-center text-cappuccino text-sm py-10 italic">Nenhuma compra em aberto.</p>
+            <p className="text-center text-muted-foreground text-sm py-10 italic">Nenhuma compra em aberto.</p>
           ) : (
             currentInvoiceData.openTransactions.map(t => (
-              <div key={t.id} className="bg-white p-4 rounded-xl border border-stone-100 flex justify-between items-center shadow-sm">
+              <div key={t.id} className="bg-card p-4 rounded-xl border border-border flex justify-between items-center shadow-sm">
                 <div>
-                   <p className="text-sm font-semibold text-coffee">{t.description}</p>
-                   <div className="flex gap-2 text-[10px] text-cappuccino mt-1">
+                   <p className="text-sm font-semibold text-foreground">{t.description}</p>
+                   <div className="flex gap-2 text-[10px] text-muted-foreground mt-1">
                       <span>{new Date(t.date).toLocaleDateString('pt-BR')}</span>
                       {t.installment_total && t.installment_total > 1 && (
-                        <span className="bg-stone-100 px-1.5 rounded text-stone-500 font-bold">
+                        <span className="bg-secondary px-1.5 rounded text-muted-foreground font-bold">
                           {t.installment_current}/{t.installment_total}
                         </span>
                       )}
                    </div>
                 </div>
-                <span className="font-bold text-coffee text-sm">
+                <span className="font-bold text-foreground text-sm">
                   R$ {t.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </span>
               </div>
@@ -163,7 +163,7 @@ const InvoiceView: React.FC<InvoiceViewProps> = ({ card, transactions, onClose, 
       </div>
 
       {/* Footer Actions */}
-      <div className="p-6 bg-white border-t border-stone-100 pb-10">
+      <div className="p-6 bg-card border-t border-border pb-10">
         <button 
           onClick={handleCloseInvoice}
           disabled={closing || currentInvoiceData.totalOpen === 0}

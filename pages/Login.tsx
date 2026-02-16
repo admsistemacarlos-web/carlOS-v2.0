@@ -102,13 +102,13 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cream px-4">
-      <div className="w-full max-w-md bg-white p-10 rounded-[2.5rem] border border-stone-100 shadow-premium animate-fade-in">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <div className="w-full max-w-md bg-card p-10 rounded-[2.5rem] border border-border shadow-premium animate-fade-in">
         <div className="text-center mb-10">
-          <h1 className="text-5xl font-semibold text-coffee mb-3 tracking-tighter">
+          <h1 className="text-5xl font-semibold text-foreground mb-3 tracking-tighter">
             carlOS
           </h1>
-          <p className="text-cappuccino font-medium text-sm tracking-tight">
+          <p className="text-muted-foreground font-medium text-sm tracking-tight">
             {isSignUp ? 'Crie sua conta para começar' : 'Faça login para continuar'}
           </p>
         </div>
@@ -127,7 +127,7 @@ const Login: React.FC = () => {
           )}
 
           <div>
-            <label htmlFor="email" className="block text-[11px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">
+            <label htmlFor="email" className="block text-[11px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">
               Email
             </label>
             <input
@@ -138,13 +138,13 @@ const Login: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full bg-stone-50 border border-stone-200 rounded-2xl p-4 text-coffee placeholder-stone-400 focus:ring-2 focus:ring-olive/20 focus:border-olive/30 outline-none transition-all"
+              className="w-full bg-secondary border border-border rounded-2xl p-4 text-foreground placeholder-stone-400 focus:ring-2 focus:ring-olive/20 focus:border-primary/30 outline-none transition-all"
               placeholder="exemplo@email.com"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-[11px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">
+            <label htmlFor="password" className="block text-[11px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">
               Senha
             </label>
             <input
@@ -157,7 +157,7 @@ const Login: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full bg-stone-50 border border-stone-200 rounded-2xl p-4 text-coffee placeholder-stone-400 focus:ring-2 focus:ring-olive/20 focus:border-olive/30 outline-none transition-all"
+              className="w-full bg-secondary border border-border rounded-2xl p-4 text-foreground placeholder-stone-400 focus:ring-2 focus:ring-olive/20 focus:border-primary/30 outline-none transition-all"
               placeholder="******"
             />
           </div>
@@ -169,9 +169,9 @@ const Login: React.FC = () => {
               id="rememberEmail"
               checked={rememberEmail}
               onChange={(e) => setRememberEmail(e.target.checked)}
-              className="w-4 h-4 rounded border-stone-300 text-deep-blue focus:ring-olive/30 cursor-pointer"
+              className="w-4 h-4 rounded border-border text-deep-blue focus:ring-olive/30 cursor-pointer"
             />
-            <label htmlFor="rememberEmail" className="text-xs font-medium text-stone-400 cursor-pointer select-none">
+            <label htmlFor="rememberEmail" className="text-xs font-medium text-muted-foreground cursor-pointer select-none">
               Lembrar meu e-mail neste dispositivo
             </label>
           </div>
@@ -195,7 +195,7 @@ const Login: React.FC = () => {
         </div>
 
         <div className="mt-10 text-center">
-          <p className="text-[10px] font-bold text-stone-300 uppercase tracking-widest leading-relaxed px-4">
+          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-relaxed px-4">
             Dica: Salve a senha no navegador para usar biometria no próximo acesso.
           </p>
         </div>

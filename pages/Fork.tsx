@@ -20,7 +20,7 @@ const ContextCard: React.FC<{
         transition-all duration-700 ease-out overflow-hidden
         ${
           isPersonal
-            ? 'bg-cream text-coffee border border-stone-100 hover:border-olive/30 shadow-sm hover:shadow-xl'
+            ? 'bg-background text-foreground border border-border hover:border-primary/30 shadow-sm hover:shadow-xl'
             : 'bg-[#0f172a] text-blue-500 border border-slate-800 hover:border-blue-500/30 shadow-2xl hover:shadow-blue-500/10'
         }
       `}
@@ -29,7 +29,7 @@ const ContextCard: React.FC<{
         <h3
           className={`
           text-lg md:text-2xl font-medium tracking-[0.3em] uppercase mb-1 md:mb-4 transition-transform duration-700 group-hover:-translate-y-1
-          ${isPersonal ? 'text-coffee' : 'text-blue-500'}
+          ${isPersonal ? 'text-foreground' : 'text-blue-500'}
         `}
         >
           {title}
@@ -37,7 +37,7 @@ const ContextCard: React.FC<{
         <p
           className={`
           text-[8px] md:text-[10px] font-bold tracking-[0.4em] uppercase transition-all duration-700 delay-75 opacity-50 group-hover:opacity-100 group-hover:translate-y-1
-          ${isPersonal ? 'text-cappuccino' : 'text-slate-500'}
+          ${isPersonal ? 'text-muted-foreground' : 'text-muted-foreground'}
         `}
         >
           {subtitle}
@@ -70,10 +70,10 @@ const Fork: React.FC = () => {
   };
 
   return (
-    <div className="h-[100dvh] w-full bg-black flex flex-col items-center justify-center p-4 md:p-12 overflow-hidden selection:bg-olive/20 relative">
+    <div className="h-[100dvh] w-full bg-black flex flex-col items-center justify-center p-4 md:p-12 overflow-hidden selection:bg-primary/20 relative">
       {/* Background Ambience */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/2 left-1/4 w-[40vw] h-[40vw] bg-olive/5 rounded-full blur-[80px] md:blur-[150px] -translate-y-1/2"></div>
+        <div className="absolute top-1/2 left-1/4 w-[40vw] h-[40vw] bg-primary/5 rounded-full blur-[80px] md:blur-[150px] -translate-y-1/2"></div>
         <div className="absolute top-1/2 right-1/4 w-[40vw] h-[40vw] bg-blue-500/5 rounded-full blur-[80px] md:blur-[150px] -translate-y-1/2"></div>
       </div>
 
@@ -83,7 +83,7 @@ const Fork: React.FC = () => {
           <h2 className="text-[9px] font-bold tracking-[0.8em] text-white/20 uppercase mb-2">
             Context Selection
           </h2>
-          <div className="h-[1px] w-6 bg-white/10 mx-auto"></div>
+          <div className="h-[1px] w-6 bg-card/10 mx-auto"></div>
           {user?.email && (
             <p className="text-[8px] text-zinc-700 mt-4 tracking-wider">
               Conectado como: {user.email}

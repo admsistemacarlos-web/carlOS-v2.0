@@ -18,7 +18,7 @@ const IncomeExpenseChart: React.FC<IncomeExpenseChartProps> = ({ data = [] }) =>
 
   return (
     <div className="w-full">
-      <h3 className="text-lg font-semibold mb-6 text-coffee tracking-tight">Receitas vs Despesas</h3>
+      <h3 className="text-lg font-semibold mb-6 text-foreground tracking-tight">Receitas vs Despesas</h3>
       {/* Container pai com altura explícita para o ResponsiveContainer */}
       <div className="h-[250px] w-full min-w-0">
         <ResponsiveContainer width="100%" height="100%">

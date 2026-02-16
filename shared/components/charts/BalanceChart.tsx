@@ -17,7 +17,7 @@ const BalanceChart: React.FC<BalanceChartProps> = ({ data = [] }) => {
 
   return (
     <div className="w-full">
-      <h3 className="text-lg font-semibold mb-6 text-coffee tracking-tight">Evolução do Saldo</h3>
+      <h3 className="text-lg font-semibold mb-6 text-foreground tracking-tight">Evolução do Saldo</h3>
       {/* Container pai com altura explícita para o ResponsiveContainer */}
       <div className="h-[250px] w-full min-w-0">
         <ResponsiveContainer width="100%" height="100%">

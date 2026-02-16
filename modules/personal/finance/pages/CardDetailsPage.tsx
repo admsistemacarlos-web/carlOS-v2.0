@@ -170,7 +170,7 @@ export default function CardDetailsPage() {
           {card && (
             <button 
               onClick={() => setIsCardFormOpen(true)}
-              className="p-2 text-gray-400 hover:text-olive hover:bg-olive/10 rounded-full transition-all"
+              className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-all"
               title="Editar Cartão"
             >
               <Settings className="w-4 h-4" />
@@ -182,32 +182,32 @@ export default function CardDetailsPage() {
       </div>
 
       {/* NAV DE MÊS */}
-      <div className="flex items-center justify-center space-x-4 mb-8 bg-white p-3 rounded-2xl shadow-sm border border-stone-100">
-        <button onClick={prevMonth} className="p-2 hover:bg-gray-100 rounded-full text-gray-500">
+      <div className="flex items-center justify-center space-x-4 mb-8 bg-card p-3 rounded-2xl shadow-sm border border-border">
+        <button onClick={prevMonth} className="p-2 hover:bg-secondary rounded-full text-muted-foreground">
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <span className="font-semibold text-lg capitalize text-coffee">
+        <span className="font-semibold text-lg capitalize text-foreground">
           {currentDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
         </span>
-        <button onClick={nextMonth} className="p-2 hover:bg-gray-100 rounded-full text-gray-500">
+        <button onClick={nextMonth} className="p-2 hover:bg-secondary rounded-full text-muted-foreground">
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>
 
       {/* TOTAL DA FATURA */}
       <div className="text-center mb-8 animate-fade-in relative">
-        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2">
+        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-2">
           Fatura Estimada do Mês
         </p>
         <h2 className="text-4xl font-bold text-[#2C3E50]">
           {totalInvoice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
         </h2>
-        <div className="flex items-center justify-center gap-3 mt-3 text-xs font-medium text-gray-400">
-          <div className="flex items-center gap-1 bg-white px-3 py-1 rounded-full border border-stone-100">
+        <div className="flex items-center justify-center gap-3 mt-3 text-xs font-medium text-muted-foreground">
+          <div className="flex items-center gap-1 bg-card px-3 py-1 rounded-full border border-border">
             <Calendar className="w-3 h-3 text-olive" />
             <span>Fecha dia {card?.closing_day}</span>
           </div>
-          <div className="flex items-center gap-1 bg-white px-3 py-1 rounded-full border border-stone-100">
+          <div className="flex items-center gap-1 bg-card px-3 py-1 rounded-full border border-border">
              <CreditCardIcon className="w-3 h-3 text-terracotta" />
              <span>Vence dia {card?.due_day}</span>
           </div>
@@ -216,7 +216,7 @@ export default function CardDetailsPage() {
         <div className="mt-6 flex justify-center">
           <button 
             onClick={() => navigate(`/personal/finance/cards/${id}/invoices`)}
-            className="flex items-center gap-2 bg-cream border border-olive/20 text-olive px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-olive hover:text-white transition-all shadow-sm"
+            className="flex items-center gap-2 bg-background border border-primary/20 text-olive px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm"
           >
             <FileText size={14} /> Gerenciar Faturas
           </button>
@@ -235,18 +235,18 @@ export default function CardDetailsPage() {
       </div>
 
       {/* LISTA DE TRANSAÇÕES */}
-      <div className="bg-white rounded-[2rem] p-6 shadow-premium border border-stone-100 min-h-[300px]">
-        <h3 className="font-bold text-lg mb-6 flex items-center gap-2 text-coffee">
+      <div className="bg-card rounded-[2rem] p-6 shadow-premium border border-border min-h-[300px]">
+        <h3 className="font-bold text-lg mb-6 flex items-center gap-2 text-foreground">
           <CreditCardIcon className="w-5 h-5 text-olive" />
           Extrato
         </h3>
 
         {loading ? (
           <div className="flex justify-center py-10">
-             <div className="w-6 h-6 border-2 border-olive border-t-transparent rounded-full animate-spin"></div>
+             <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : transactions.length === 0 ? (
-          <div className="text-center py-12 text-gray-400">
+          <div className="text-center py-12 text-muted-foreground">
             <p className="text-sm">Nenhuma compra encontrada neste mês.</p>
           </div>
         ) : (
@@ -254,7 +254,7 @@ export default function CardDetailsPage() {
             {transactions.map((t) => (
               <div 
                 key={t.id} 
-                className="group relative flex items-center justify-between py-3 border-b border-gray-50 last:border-0 hover:bg-stone-50/50 rounded-xl px-2 -mx-2 transition-colors cursor-pointer"
+                className="group relative flex items-center justify-between py-3 border-b border-gray-50 last:border-0 hover:bg-secondary/50 rounded-xl px-2 -mx-2 transition-colors cursor-pointer"
                 onClick={() => handleOpenEditTransaction(t)}
               >
                 {/* Info da Compra */}
@@ -264,9 +264,9 @@ export default function CardDetailsPage() {
                     <span className="text-[10px] font-bold uppercase tracking-wider text-white bg-stone-300 px-1.5 rounded-md">
                       {formatDateBr(t.date)}
                     </span>
-                    <span className="text-xs text-gray-400 truncate">{t.category}</span>
+                    <span className="text-xs text-muted-foreground truncate">{t.category}</span>
                     {t.installment_total && t.installment_total > 1 && (
-                      <span className="text-[10px] font-bold text-stone-400 bg-stone-100 px-1.5 rounded-md">
+                      <span className="text-[10px] font-bold text-muted-foreground bg-secondary px-1.5 rounded-md">
                         {t.installment_current}/{t.installment_total}
                       </span>
                     )}
@@ -284,7 +284,7 @@ export default function CardDetailsPage() {
                     <button 
                       type="button"
                       onClick={(e) => handleDuplicate(t, e)}
-                      className="p-2 text-gray-300 hover:text-stone-500 hover:bg-stone-100 rounded-full transition-all cursor-pointer"
+                      className="p-2 text-gray-300 hover:text-muted-foreground hover:bg-secondary rounded-full transition-all cursor-pointer"
                       title="Duplicar"
                     >
                       <Copy className="w-4 h-4" />
@@ -335,14 +335,14 @@ export default function CardDetailsPage() {
       {/* MODAL EDITAR CARTÃO */}
       {isCardFormOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-coffee/40 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white w-full max-w-md rounded-[2rem] p-8 shadow-2xl relative">
+          <div className="bg-card w-full max-w-md rounded-[2rem] p-8 shadow-2xl relative">
             <button 
               onClick={() => setIsCardFormOpen(false)}
-              className="absolute top-6 right-6 p-2 hover:bg-stone-100 rounded-full transition-colors text-cappuccino"
+              className="absolute top-6 right-6 p-2 hover:bg-secondary rounded-full transition-colors text-muted-foreground"
             >
               <X size={20} />
             </button>
-            <h2 className="text-xl font-semibold text-coffee mb-6">
+            <h2 className="text-xl font-semibold text-foreground mb-6">
               Editar Cartão
             </h2>
             <CardForm 

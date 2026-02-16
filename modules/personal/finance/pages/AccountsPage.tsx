@@ -61,18 +61,18 @@ const AccountsPage: React.FC = () => {
         <div className="flex items-center gap-4">
           <button 
             onClick={() => navigate(-1)}
-            className="p-2 -ml-2 hover:bg-stone-100 rounded-full transition-colors text-cappuccino"
+            className="p-2 -ml-2 hover:bg-secondary rounded-full transition-colors text-muted-foreground"
           >
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-2xl font-semibold text-coffee tracking-tighter">Minhas Contas</h1>
-            <p className="text-cappuccino text-xs font-bold uppercase tracking-widest mt-1">Patrimônio Líquido</p>
+            <h1 className="text-2xl font-semibold text-foreground tracking-tighter">Minhas Contas</h1>
+            <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">Patrimônio Líquido</p>
           </div>
         </div>
         <button 
           onClick={(e) => { e.stopPropagation(); handleOpenForm(); }}
-          className="bg-olive hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all"
+          className="bg-primary hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all"
         >
           <Plus size={14} /> Nova Conta
         </button>
@@ -81,7 +81,7 @@ const AccountsPage: React.FC = () => {
       {/* Grid */}
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1,2,3].map(i => <div key={i} className="h-48 bg-stone-100 rounded-3xl animate-pulse" />)}
+          {[1,2,3].map(i => <div key={i} className="h-48 bg-secondary rounded-3xl animate-pulse" />)}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -89,30 +89,30 @@ const AccountsPage: React.FC = () => {
             <div 
               key={acc.id} 
               onClick={() => handleAccountClick(acc.id)}
-              className="group bg-white p-8 rounded-[2rem] border border-stone-100 shadow-sm relative hover:shadow-lg hover:border-olive/30 transition-all cursor-pointer overflow-hidden"
+              className="group bg-card p-8 rounded-[2rem] border border-border shadow-sm relative hover:shadow-lg hover:border-primary/30 transition-all cursor-pointer overflow-hidden"
             >
               {/* Efeito de hover decorativo */}
               <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <ArrowRight size={20} className="text-stone-300" />
+                <ArrowRight size={20} className="text-muted-foreground" />
               </div>
 
               <div className="flex justify-between items-start mb-6">
-                <div className="p-4 bg-cream rounded-2xl text-olive group-hover:bg-olive group-hover:text-white transition-colors">
+                <div className="p-4 bg-background rounded-2xl text-olive group-hover:bg-primary group-hover:text-white transition-colors">
                   <Landmark size={24} />
                 </div>
                 <div className="relative" onClick={e => e.stopPropagation()}>
                   <button 
                     onClick={(e) => { e.stopPropagation(); setActiveMenuId(activeMenuId === acc.id ? null : acc.id); }}
-                    className="p-2 hover:bg-stone-50 rounded-full text-stone-300 hover:text-coffee transition-colors"
+                    className="p-2 hover:bg-secondary rounded-full text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <MoreHorizontal size={20} />
                   </button>
                   
                   {activeMenuId === acc.id && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-xl border border-stone-100 z-10 overflow-hidden animate-fade-in">
+                    <div className="absolute right-0 mt-2 w-40 bg-card rounded-xl shadow-xl border border-border z-10 overflow-hidden animate-fade-in">
                       <button 
                         onClick={(e) => { e.stopPropagation(); setEditingAccountForModal(acc); }} 
-                        className="w-full text-left px-4 py-3 text-xs font-bold text-coffee hover:bg-stone-50 flex items-center gap-2"
+                        className="w-full text-left px-4 py-3 text-xs font-bold text-foreground hover:bg-secondary flex items-center gap-2"
                       >
                         <Pencil size={12} /> Editar
                       </button>
@@ -127,14 +127,14 @@ const AccountsPage: React.FC = () => {
                 </div>
               </div>
               
-              <p className="text-[10px] font-bold uppercase tracking-widest text-cappuccino mb-1">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
                 {acc.type === 'checking' ? 'Corrente' : acc.type === 'investment' ? 'Investimento' : 'Espécie'}
               </p>
-              <h3 className="text-xl font-semibold text-coffee mb-6">{acc.name}</h3>
+              <h3 className="text-xl font-semibold text-foreground mb-6">{acc.name}</h3>
               
               <div className="pt-6 border-t border-stone-50">
-                <p className="text-[10px] text-cappuccino font-medium uppercase tracking-widest mb-1">Saldo Atual</p>
-                <p className="text-2xl font-medium text-coffee tracking-tighter">
+                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest mb-1">Saldo Atual</p>
+                <p className="text-2xl font-medium text-foreground tracking-tighter">
                   R$ {acc.balance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </p>
               </div>
@@ -146,8 +146,8 @@ const AccountsPage: React.FC = () => {
       {/* Overlay Modal para o Form */}
       {isFormOpen && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-coffee/40 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white w-full max-w-md rounded-[2rem] p-8 shadow-2xl" onClick={e => e.stopPropagation()}>
-            <h2 className="text-xl font-semibold text-coffee mb-6">
+          <div className="bg-card w-full max-w-md rounded-[2rem] p-8 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <h2 className="text-xl font-semibold text-foreground mb-6">
               {editingAccount ? 'Editar Conta' : 'Nova Conta'}
             </h2>
             <AccountForm 

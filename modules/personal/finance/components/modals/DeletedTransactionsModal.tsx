@@ -127,38 +127,38 @@ const DeletedTransactionsModal: React.FC<DeletedTransactionsModalProps> = ({
         onClick={onClose} 
       />
       
-      <div className="relative bg-white w-full max-w-2xl max-h-[85vh] rounded-[2rem] shadow-2xl border border-stone-100 flex flex-col overflow-hidden animate-fade-in">
+      <div className="relative bg-card w-full max-w-2xl max-h-[85vh] rounded-[2rem] shadow-2xl border border-border flex flex-col overflow-hidden animate-fade-in">
         
-        <div className="flex justify-between items-center p-6 border-b border-stone-100 flex-shrink-0">
+        <div className="flex justify-between items-center p-6 border-b border-border flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-red-50 rounded-xl text-red-500">
               <Trash2 size={20} />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-coffee tracking-tight">Lixeira</h2>
-              <p className="text-xs text-cappuccino">
+              <h2 className="text-lg font-bold text-foreground tracking-tight">Lixeira</h2>
+              <p className="text-xs text-muted-foreground">
                 {deletedTransactions.length} transação(ões) deletada(s)
               </p>
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-stone-100 rounded-full transition-colors text-cappuccino"
+            className="p-2 hover:bg-secondary rounded-full transition-colors text-muted-foreground"
           >
             <X size={20} />
           </button>
         </div>
 
         {deletedTransactions.length > 0 && (
-          <div className="px-6 py-4 border-b border-stone-100 flex-shrink-0">
+          <div className="px-6 py-4 border-b border-border flex-shrink-0">
             <div className="relative">
-              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 placeholder="Buscar na lixeira..."
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl py-2.5 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-stone-200 transition-all"
+                className="w-full bg-secondary border border-border rounded-xl py-2.5 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-stone-200 transition-all"
               />
             </div>
           </div>
@@ -166,7 +166,7 @@ const DeletedTransactionsModal: React.FC<DeletedTransactionsModalProps> = ({
 
         <div className="flex-1 overflow-y-auto p-6">
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-cappuccino">
+            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
               <Loader2 size={32} className="animate-spin mb-3" />
               <p className="text-sm">Carregando...</p>
             </div>
@@ -175,15 +175,15 @@ const DeletedTransactionsModal: React.FC<DeletedTransactionsModalProps> = ({
               <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-4">
                 <CheckCircle2 size={32} className="text-emerald-500" />
               </div>
-              <h3 className="text-lg font-medium text-coffee mb-1">Lixeira vazia</h3>
-              <p className="text-sm text-cappuccino">
+              <h3 className="text-lg font-medium text-foreground mb-1">Lixeira vazia</h3>
+              <p className="text-sm text-muted-foreground">
                 Nenhuma transação foi excluída recentemente.
               </p>
             </div>
           ) : filteredTransactions.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <AlertCircle size={32} className="text-stone-300 mb-3" />
-              <p className="text-sm text-cappuccino">
+              <AlertCircle size={32} className="text-muted-foreground mb-3" />
+              <p className="text-sm text-muted-foreground">
                 Nenhuma transação encontrada para "{searchText}"
               </p>
             </div>
@@ -192,7 +192,7 @@ const DeletedTransactionsModal: React.FC<DeletedTransactionsModalProps> = ({
               {filteredTransactions.map((transaction) => (
                 <div 
                   key={transaction.id}
-                  className="bg-stone-50 rounded-xl p-4 border border-stone-100 hover:border-stone-200 transition-colors"
+                  className="bg-secondary rounded-xl p-4 border border-border hover:border-border transition-colors"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-3 min-w-0 flex-1">
@@ -207,21 +207,21 @@ const DeletedTransactionsModal: React.FC<DeletedTransactionsModalProps> = ({
                         }
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="font-medium text-coffee text-sm truncate">
+                        <p className="font-medium text-foreground text-sm truncate">
                           {transaction.description}
                         </p>
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
-                          <span className="text-xs text-cappuccino flex items-center gap-1">
+                          <span className="text-xs text-muted-foreground flex items-center gap-1">
                             <Calendar size={10} />
                             {formatDate(transaction.date)}
                           </span>
                           {transaction.category && (
-                            <span className="text-xs text-cappuccino bg-stone-200 px-2 py-0.5 rounded-full">
+                            <span className="text-xs text-muted-foreground bg-accent px-2 py-0.5 rounded-full">
                               {transaction.category}
                             </span>
                           )}
                         </div>
-                        <p className="text-[10px] text-stone-400 mt-1.5">
+                        <p className="text-[10px] text-muted-foreground mt-1.5">
                           Deletado {formatDeletedAt(transaction.deleted_at!)}
                         </p>
                       </div>
@@ -269,8 +269,8 @@ const DeletedTransactionsModal: React.FC<DeletedTransactionsModalProps> = ({
         </div>
 
         {deletedTransactions.length > 0 && (
-          <div className="px-6 py-4 border-t border-stone-100 bg-stone-50 flex-shrink-0">
-            <p className="text-[10px] text-stone-400 text-center">
+          <div className="px-6 py-4 border-t border-border bg-secondary flex-shrink-0">
+            <p className="text-[10px] text-muted-foreground text-center">
               💡 Transações na lixeira ainda afetam relatórios de auditoria. 
               Para remover completamente, use "Excluir permanentemente".
             </p>

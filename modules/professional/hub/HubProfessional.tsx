@@ -28,7 +28,7 @@ const KPICard = ({ label, value, icon, subtext, accentColor }: any) => (
 
 const ProjectStatusBadge = ({ status }: { status: string }) => {
   const config: Record<string, { color: string, label: string }> = {
-    video_received: { color: 'text-stone-400 bg-stone-400/10 border-stone-400/20', label: 'Recebido' },
+    video_received: { color: 'text-muted-foreground bg-stone-400/10 border-stone-400/20', label: 'Recebido' },
     editing: { color: 'text-blue-400 bg-blue-400/10 border-blue-400/20', label: 'Em Edição' },
     approval: { color: 'text-yellow-500 bg-yellow-500/10 border-yellow-500/20', label: 'Aprovação' },
     changes: { color: 'text-red-400 bg-red-400/10 border-red-400/20', label: 'Alterações' },

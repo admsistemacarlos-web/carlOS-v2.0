@@ -82,18 +82,18 @@ export default function HymnEditor() {
     }
   };
 
-  if (loading) return <div className="h-screen flex items-center justify-center bg-[#FAF9F6]"><Loader2 className="animate-spin text-stone-400" /></div>;
+  if (loading) return <div className="h-screen flex items-center justify-center bg-card"><Loader2 className="animate-spin text-muted-foreground" /></div>;
 
   return (
-    <div className="h-screen flex flex-col bg-[#FAF9F6] font-sans text-stone-800 animate-fade-in overflow-hidden">
+    <div className="h-screen flex flex-col bg-card font-sans text-foreground animate-fade-in overflow-hidden">
       
       {/* 1. Header Fixo */}
-      <header className="flex-none w-full bg-[#FAF9F6] border-b border-stone-200 px-6 py-4 flex justify-between items-center z-10">
+      <header className="flex-none w-full bg-card border-b border-border px-6 py-4 flex justify-between items-center z-10">
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate('/personal/spiritual/hymns')} className="p-2 -ml-2 hover:bg-stone-200 rounded-full text-stone-500 transition-colors">
+          <button onClick={() => navigate('/personal/spiritual/hymns')} className="p-2 -ml-2 hover:bg-accent rounded-full text-muted-foreground transition-colors">
             <ArrowLeft size={20} />
           </button>
-          <h1 className="text-sm font-bold uppercase tracking-widest text-stone-500 hidden md:block">
+          <h1 className="text-sm font-bold uppercase tracking-widest text-muted-foreground hidden md:block">
             {id ? 'Editando Hino' : 'Novo Hino'}
           </h1>
         </div>
@@ -101,7 +101,7 @@ export default function HymnEditor() {
           {id && (
             <button 
               onClick={() => setIsDeleteOpen(true)}
-              className="p-2 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+              className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
             >
               <Trash2 size={20} />
             </button>
@@ -118,43 +118,43 @@ export default function HymnEditor() {
         <div className="max-w-4xl mx-auto p-4 md:p-8 flex flex-col gap-6 min-h-full">
           
           {/* Metadados */}
-          <div className="flex-none bg-white p-6 rounded-[1.5rem] border border-stone-100 shadow-sm space-y-4">
+          <div className="flex-none bg-card p-6 rounded-[1.5rem] border border-border shadow-sm space-y-4">
             <div className="flex items-center gap-3 mb-2">
-               <div className="p-2 bg-stone-50 rounded-lg text-[#8D6E63]"><Music size={20} /></div>
-               <h2 className="text-lg font-bold text-stone-800">Detalhes da Canção</h2>
+               <div className="p-2 bg-secondary rounded-lg text-[#8D6E63]"><Music size={20} /></div>
+               <h2 className="text-lg font-bold text-foreground">Detalhes da Canção</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-stone-500 ml-1">Título</label>
-                <input value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} placeholder="Ex: Amazing Grace" className="flex h-12 w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-stone-400 transition-all text-stone-800" autoFocus={!id} />
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Título</label>
+                <input value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} placeholder="Ex: Amazing Grace" className="flex h-12 w-full rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-stone-400 transition-all text-foreground" autoFocus={!id} />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-stone-500 ml-1">Artista / Autor</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Artista / Autor</label>
                 <div className="relative">
-                    <Mic2 className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
-                    <input value={formData.artist} onChange={(e) => setFormData({...formData, artist: e.target.value})} placeholder="Ex: Hillsong United" className="flex h-12 w-full rounded-xl border border-stone-200 bg-white pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-stone-400 transition-all text-stone-800" />
+                    <Mic2 className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+                    <input value={formData.artist} onChange={(e) => setFormData({...formData, artist: e.target.value})} placeholder="Ex: Hillsong United" className="flex h-12 w-full rounded-xl border border-border bg-card pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-stone-400 transition-all text-foreground" />
                 </div>
               </div>
               <div className="space-y-2 md:col-span-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-stone-500 ml-1">Link (YouTube/Spotify)</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Link (YouTube/Spotify)</label>
                 <div className="relative">
-                    <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
-                    <input value={formData.link} onChange={(e) => setFormData({...formData, link: e.target.value})} placeholder="https://..." className="flex h-12 w-full rounded-xl border border-stone-200 bg-white pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-stone-400 transition-all text-stone-800" />
+                    <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+                    <input value={formData.link} onChange={(e) => setFormData({...formData, link: e.target.value})} placeholder="https://..." className="flex h-12 w-full rounded-xl border border-border bg-card pl-11 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-stone-400 transition-all text-foreground" />
                 </div>
               </div>
             </div>
           </div>
 
           {/* Área de Letra (Monoespaçada ou Serifada) */}
-          <div className="flex-1 flex flex-col bg-white rounded-[1.5rem] border border-stone-100 shadow-sm relative overflow-hidden min-h-[500px]">
-            <div className="p-4 border-b border-stone-50 bg-stone-50/30 flex justify-between items-center">
-                <span className="text-xs font-bold uppercase tracking-widest text-stone-400">Letra / Cifra</span>
+          <div className="flex-1 flex flex-col bg-card rounded-[1.5rem] border border-border shadow-sm relative overflow-hidden min-h-[500px]">
+            <div className="p-4 border-b border-stone-50 bg-secondary/30 flex justify-between items-center">
+                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Letra / Cifra</span>
             </div>
             <textarea 
               value={formData.lyrics}
               onChange={(e) => setFormData({...formData, lyrics: e.target.value})}
               placeholder="Cole a letra ou cifra aqui..."
-              className="flex-1 w-full h-full resize-none outline-none text-base text-stone-700 font-mono leading-relaxed bg-transparent placeholder-stone-300 p-8 border-none focus:ring-0 whitespace-pre"
+              className="flex-1 w-full h-full resize-none outline-none text-base text-foreground font-mono leading-relaxed bg-transparent placeholder-stone-300 p-8 border-none focus:ring-0 whitespace-pre"
               spellCheck={false}
             />
           </div>
@@ -169,13 +169,13 @@ export default function HymnEditor() {
             className="absolute inset-0 bg-stone-900/20 backdrop-blur-sm transition-opacity" 
             onClick={() => !isDeleting && setIsDeleteOpen(false)}
           />
-          <div className="relative bg-white w-full max-w-sm rounded-[2rem] shadow-2xl p-6 animate-fade-in border border-stone-100">
+          <div className="relative bg-card w-full max-w-sm rounded-[2rem] shadow-2xl p-6 animate-fade-in border border-border">
             <div className="flex flex-col items-center text-center">
               <div className="w-12 h-12 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4 border border-red-100">
                 <AlertTriangle size={24} />
               </div>
-              <h2 className="text-lg font-bold text-stone-800 mb-2">Excluir este hino?</h2>
-              <p className="text-sm text-stone-500 leading-relaxed mb-6">
+              <h2 className="text-lg font-bold text-foreground mb-2">Excluir este hino?</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-6">
                 Esta ação não pode ser desfeita. O hino será removido permanentemente da sua coleção.
               </p>
               
@@ -183,7 +183,7 @@ export default function HymnEditor() {
                 <button 
                   onClick={() => setIsDeleteOpen(false)}
                   disabled={isDeleting}
-                  className="flex-1 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-stone-600 bg-stone-100 hover:bg-stone-200 transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-muted-foreground bg-secondary hover:bg-accent transition-colors disabled:opacity-50"
                 >
                   Cancelar
                 </button>

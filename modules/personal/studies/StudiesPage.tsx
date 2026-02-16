@@ -10,12 +10,12 @@ const HubCard: React.FC<{
   icon: React.ReactNode;
   onClick: () => void;
   color?: string;
-}> = ({ title, subtitle, icon, onClick, color = "text-[#3C3633]" }) => (
+}> = ({ title, subtitle, icon, onClick, color = "text-foreground" }) => (
   <button 
     onClick={onClick}
-    className="group relative flex flex-col justify-between p-8 h-56 bg-[#FAF9F6] border border-[#E6E2DE] rounded-[2rem] hover:border-stone-300 hover:shadow-xl hover:shadow-stone-200/50 hover:-translate-y-1 transition-all duration-500 w-full text-left overflow-hidden"
+    className="group relative flex flex-col justify-between p-8 h-56 bg-card border border-border rounded-[2rem] hover:border-border hover:shadow-xl hover:shadow-stone-200/50 hover:-translate-y-1 transition-all duration-500 w-full text-left overflow-hidden"
   >
-    <div className="absolute inset-0 bg-stone-50/0 group-hover:bg-stone-100/50 transition-colors duration-500"></div>
+    <div className="absolute inset-0 bg-secondary/0 group-hover:bg-secondary/50 transition-colors duration-500"></div>
 
     <div className="relative z-10 flex justify-between items-start w-full">
        <div className={`${color} group-hover:opacity-80 transition-opacity duration-300`}>
@@ -28,8 +28,8 @@ const HubCard: React.FC<{
     </div>
 
     <div className="relative z-10 mt-auto">
-      <h3 className="text-xl font-bold text-stone-700 mb-1 tracking-tight group-hover:text-[#3E2723] transition-colors">{title}</h3>
-      <p className="text-sm text-stone-500 font-medium group-hover:text-stone-600 transition-colors">{subtitle}</p>
+      <h3 className="text-xl font-bold text-foreground mb-1 tracking-tight group-hover:text-[#3E2723] transition-colors">{title}</h3>
+      <p className="text-sm text-muted-foreground font-medium group-hover:text-muted-foreground transition-colors">{subtitle}</p>
     </div>
   </button>
 );
@@ -38,7 +38,7 @@ export default function StudiesPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full min-h-screen animate-fade-in font-sans pb-20 bg-[#FAF9F6]">
+    <div className="w-full min-h-screen animate-fade-in font-sans pb-20 bg-card">
       <div className="max-w-7xl mx-auto px-8 pt-8">
         <ModuleHeader 
           title="Biblioteca de Estudos" 
@@ -51,7 +51,7 @@ export default function StudiesPage() {
             subtitle="Acompanhe aulas, módulos e progresso."
             icon={<Library />}
             onClick={() => navigate('/personal/studies/courses')}
-            color="text-[#5F6F52]"
+            color="text-primary"
           />
 
           <HubCard 
@@ -64,13 +64,13 @@ export default function StudiesPage() {
 
           {/* Placeholder para futuras features ou livros */}
           <button 
-            className="flex flex-col items-center justify-center p-8 h-56 border-2 border-dashed border-stone-200 rounded-[2rem] hover:bg-stone-50 hover:border-stone-300 transition-all group"
+            className="flex flex-col items-center justify-center p-8 h-56 border-2 border-dashed border-border rounded-[2rem] hover:bg-secondary hover:border-border transition-all group"
             onClick={() => {}}
           >
-            <div className="p-4 bg-stone-50 rounded-full text-stone-300 group-hover:text-stone-400 mb-4 transition-colors">
+            <div className="p-4 bg-secondary rounded-full text-muted-foreground group-hover:text-muted-foreground mb-4 transition-colors">
                <BookOpen size={24} />
             </div>
-            <p className="text-stone-400 text-sm font-bold uppercase tracking-widest group-hover:text-stone-500">Em Breve: Leitura</p>
+            <p className="text-muted-foreground text-sm font-bold uppercase tracking-widest group-hover:text-muted-foreground">Em Breve: Leitura</p>
           </button>
         </div>
       </div>

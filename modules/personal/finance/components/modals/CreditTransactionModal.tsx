@@ -168,63 +168,63 @@ const CreditTransactionModal: React.FC<CreditTransactionDialogProps> = ({
       
       {/* CONTENT: Centered Absoluted */}
       <div className="fixed left-[50%] top-[50%] z-50 w-full max-w-md translate-x-[-50%] translate-y-[-50%] p-4">
-        <div className="bg-white w-full rounded-[2rem] shadow-2xl border border-stone-100 overflow-hidden transform transition-all relative">
+        <div className="bg-card w-full rounded-[2rem] shadow-2xl border border-border overflow-hidden transform transition-all relative">
           <div className="p-8">
             <div className="flex justify-between items-start mb-6">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <div className={`p-2 rounded-full ${isEditing ? 'bg-orange-100 text-orange-600' : 'bg-olive/10 text-olive'}`}>
+                  <div className={`p-2 rounded-full ${isEditing ? 'bg-orange-100 text-orange-600' : 'bg-primary/10 text-olive'}`}>
                     {isEditing ? <Pencil size={18} /> : <ShoppingBag size={18} />}
                   </div>
-                  <h2 className="text-xl font-semibold text-coffee tracking-tighter">
+                  <h2 className="text-xl font-semibold text-foreground tracking-tighter">
                     {isEditing ? 'Editar Transação' : 'Nova Compra'}
                   </h2>
                 </div>
-                <div className="flex items-center gap-2 text-[10px] uppercase font-bold text-cappuccino tracking-widest ml-1">
+                <div className="flex items-center gap-2 text-[10px] uppercase font-bold text-muted-foreground tracking-widest ml-1">
                   <CardIcon size={12} />
                   {card ? card.name : 'Cartão'}
                 </div>
               </div>
-              <button onClick={onClose} className="p-2 hover:bg-stone-100 rounded-full transition-colors text-cappuccino">
+              <button onClick={onClose} className="p-2 hover:bg-secondary rounded-full transition-colors text-muted-foreground">
                 <X size={20} />
               </button>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div>
-                <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Descrição</label>
+                <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Descrição</label>
                 <input 
                   {...register('description')} 
                   placeholder="Ex: Jantar, Uber, Mercado..." 
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3.5 text-coffee text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all placeholder:text-stone-300" 
+                  className="w-full bg-secondary border border-border rounded-xl p-3.5 text-foreground text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all placeholder:text-muted-foreground" 
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">
+                  <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">
                     {isEditing ? 'Valor (R$)' : 'Valor Total (R$)'}
                   </label>
                   <div className="relative">
-                    <DollarSign size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-cappuccino" />
+                    <DollarSign size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                     <input 
                       type="number" 
                       step="0.01" 
                       {...register('amount')} 
                       placeholder="0.00" 
                       onWheel={(e) => e.currentTarget.blur()}
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3.5 pl-9 pr-3 text-coffee font-semibold text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all" 
+                      className="w-full bg-secondary border border-border rounded-xl py-3.5 pl-9 pr-3 text-foreground font-semibold text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all" 
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Data</label>
+                  <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Data</label>
                   <div className="relative">
-                    <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-cappuccino" />
+                    <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                     <input 
                       type="date" 
                       {...register('date')} 
-                      className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3.5 pl-9 pr-3 text-coffee text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all" 
+                      className="w-full bg-secondary border border-border rounded-xl py-3.5 pl-9 pr-3 text-foreground text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all" 
                     />
                   </div>
                 </div>
@@ -232,22 +232,22 @@ const CreditTransactionModal: React.FC<CreditTransactionDialogProps> = ({
 
               <div className="grid grid-cols-2 gap-4">
                 <div className={isEditing ? 'col-span-2' : ''}>
-                  <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Categoria</label>
+                  <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Categoria</label>
                   <input 
                     {...register('category')} 
                     placeholder="Ex: Lazer" 
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3.5 text-coffee text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all" 
+                    className="w-full bg-secondary border border-border rounded-xl p-3.5 text-foreground text-sm focus:ring-2 focus:ring-olive/10 outline-none transition-all" 
                   />
                 </div>
                 
                 {!isEditing && (
                   <div>
-                    <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Parcelas</label>
+                    <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Parcelas</label>
                     <div className="relative">
-                      <List size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-cappuccino" />
+                      <List size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                       <select 
                         {...register('installments')} 
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3.5 pl-9 pr-3 text-coffee text-sm focus:ring-2 focus:ring-olive/10 outline-none cursor-pointer appearance-none bg-white"
+                        className="w-full bg-secondary border border-border rounded-xl py-3.5 pl-9 pr-3 text-foreground text-sm focus:ring-2 focus:ring-olive/10 outline-none cursor-pointer appearance-none bg-card"
                       >
                         <option value="1">À vista (1x)</option>
                         {[...Array(23)].map((_, i) => (
@@ -262,7 +262,7 @@ const CreditTransactionModal: React.FC<CreditTransactionDialogProps> = ({
               <button 
                 type="submit" 
                 disabled={isSubmitting} 
-                className={`w-full text-white px-6 py-4 rounded-xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed ${isEditing ? 'bg-coffee hover:bg-black' : 'bg-olive hover:bg-black'}`}
+                className={`w-full text-white px-6 py-4 rounded-xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed ${isEditing ? 'bg-coffee hover:bg-black' : 'bg-primary hover:bg-black'}`}
               >
                 {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : (isEditing ? <Save size={16} /> : <ShoppingBag size={16} />)}
                 {isSubmitting ? 'Processando...' : (isEditing ? 'Salvar Alterações' : 'Lançar no Cartão')}

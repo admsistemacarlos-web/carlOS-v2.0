@@ -140,15 +140,15 @@ const CardInvoicesPage: React.FC = () => {
       
       {/* Header */}
       <div className="max-w-4xl mx-auto mb-8 flex items-center gap-4">
-        <button onClick={() => navigate(-1)} className="p-2 hover:bg-stone-200 rounded-full transition-colors">
+        <button onClick={() => navigate(-1)} className="p-2 hover:bg-accent rounded-full transition-colors">
           <ArrowLeft size={20} />
         </button>
         <div>
-          <h1 className="text-2xl font-bold text-coffee flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <CardIcon className="text-olive" />
             {card.name}
           </h1>
-          <p className="text-xs font-bold uppercase tracking-widest text-cappuccino mt-1">Gestão de Faturas</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mt-1">Gestão de Faturas</p>
         </div>
       </div>
 
@@ -158,16 +158,16 @@ const CardInvoicesPage: React.FC = () => {
         <div className="space-y-6">
           <div className="flex items-center gap-2 mb-2">
             <Unlock size={18} className="text-olive" />
-            <h2 className="text-lg font-bold text-coffee uppercase tracking-wide">Fatura Aberta</h2>
+            <h2 className="text-lg font-bold text-foreground uppercase tracking-wide">Fatura Aberta</h2>
           </div>
 
-          <div className="bg-white rounded-[2rem] p-8 shadow-premium border border-olive/10 relative overflow-hidden">
+          <div className="bg-card rounded-[2rem] p-8 shadow-premium border border-primary/10 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-6 opacity-10">
               <ShoppingBag size={80} className="text-olive" />
             </div>
 
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cappuccino mb-2">Total Atual</p>
-            <h3 className="text-4xl font-bold text-coffee tracking-tighter mb-1">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2">Total Atual</p>
+            <h3 className="text-4xl font-bold text-foreground tracking-tighter mb-1">
               R$ {totalOpen.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </h3>
             <p className="text-xs text-olive font-medium mb-6 flex items-center gap-1">
@@ -178,7 +178,7 @@ const CardInvoicesPage: React.FC = () => {
             <button 
               onClick={handleCloseInvoice}
               disabled={closing || totalOpen === 0}
-              className="w-full bg-olive hover:bg-black text-white py-4 rounded-xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-primary hover:bg-black text-white py-4 rounded-xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {closing ? <Loader2 className="animate-spin" size={16} /> : <Lock size={16} />}
               {closing ? 'Fechando...' : 'Fechar Fatura Agora'}
@@ -186,19 +186,19 @@ const CardInvoicesPage: React.FC = () => {
           </div>
 
           {/* Lista de Transações da Fatura Aberta */}
-          <div className="bg-white rounded-[2rem] p-6 border border-stone-100 min-h-[200px]">
-            <h4 className="text-xs font-bold text-cappuccino uppercase tracking-widest mb-4">Lançamentos Pendentes</h4>
+          <div className="bg-card rounded-[2rem] p-6 border border-border min-h-[200px]">
+            <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4">Lançamentos Pendentes</h4>
             <div className="space-y-3">
               {openTransactions.length === 0 ? (
-                <p className="text-center text-stone-400 text-sm py-4 italic">Nenhuma compra em aberto.</p>
+                <p className="text-center text-muted-foreground text-sm py-4 italic">Nenhuma compra em aberto.</p>
               ) : (
                 openTransactions.slice(0, 10).map((t, idx) => (
                   <div key={`${t.id}-${idx}`} className="flex justify-between items-center py-2 border-b border-stone-50 last:border-0">
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-coffee truncate">{t.description}</p>
-                      <p className="text-[10px] text-stone-400">{formatDateBr(t.date)}</p>
+                      <p className="text-sm font-semibold text-foreground truncate">{t.description}</p>
+                      <p className="text-[10px] text-muted-foreground">{formatDateBr(t.date)}</p>
                     </div>
-                    <span className="text-sm font-bold text-coffee">
+                    <span className="text-sm font-bold text-foreground">
                       R$ {t.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
@@ -216,29 +216,29 @@ const CardInvoicesPage: React.FC = () => {
         {/* COLUNA 2: HISTÓRICO DE FATURAS (FECHADAS) */}
         <div className="space-y-6">
           <div className="flex items-center gap-2 mb-2">
-            <History size={18} className="text-coffee" />
-            <h2 className="text-lg font-bold text-coffee uppercase tracking-wide">Histórico</h2>
+            <History size={18} className="text-foreground" />
+            <h2 className="text-lg font-bold text-foreground uppercase tracking-wide">Histórico</h2>
           </div>
 
           <div className="space-y-4">
             {bills.map(bill => (
-              <div key={bill.id} className="bg-white rounded-2xl p-6 border border-stone-100 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4 group hover:border-olive/30 transition-all">
+              <div key={bill.id} className="bg-card rounded-2xl p-6 border border-border shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4 group hover:border-primary/30 transition-all">
                 <div className="flex-1 text-center sm:text-left">
                   <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
-                    <p className="text-sm font-bold text-coffee">{bill.description}</p>
+                    <p className="text-sm font-bold text-foreground">{bill.description}</p>
                     {bill.status === 'paid' ? (
                        <CheckCircle2 size={14} className="text-olive" />
                     ) : (
                        <AlertCircle size={14} className="text-terracotta" />
                     )}
                   </div>
-                  <p className="text-[10px] uppercase font-bold text-cappuccino tracking-widest">
+                  <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">
                     Vencimento: {formatDateBr(bill.due_date)}
                   </p>
                 </div>
 
                 <div className="text-center sm:text-right">
-                  <p className={`text-xl font-bold tracking-tight mb-2 ${bill.status === 'paid' ? 'text-olive' : 'text-coffee'}`}>
+                  <p className={`text-xl font-bold tracking-tight mb-2 ${bill.status === 'paid' ? 'text-olive' : 'text-foreground'}`}>
                     R$ {bill.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </p>
                   
@@ -250,7 +250,7 @@ const CardInvoicesPage: React.FC = () => {
                       Pagar
                     </button>
                   ) : (
-                    <span className="px-3 py-1 bg-olive/10 text-olive rounded-full text-[10px] font-bold uppercase tracking-wider">
+                    <span className="px-3 py-1 bg-primary/10 text-olive rounded-full text-[10px] font-bold uppercase tracking-wider">
                       Pago
                     </span>
                   )}
@@ -259,8 +259,8 @@ const CardInvoicesPage: React.FC = () => {
             ))}
 
             {bills.length === 0 && (
-              <div className="text-center py-12 bg-white rounded-[2rem] border border-dashed border-stone-200">
-                <p className="text-cappuccino text-sm italic">Nenhuma fatura fechada encontrada no histórico.</p>
+              <div className="text-center py-12 bg-card rounded-[2rem] border border-dashed border-border">
+                <p className="text-muted-foreground text-sm italic">Nenhuma fatura fechada encontrada no histórico.</p>
               </div>
             )}
           </div>

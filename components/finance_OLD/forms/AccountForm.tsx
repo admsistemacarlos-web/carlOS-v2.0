@@ -91,19 +91,19 @@ const AccountForm: React.FC<AccountFormProps> = ({ onSuccess, onCancel, accountT
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
-        <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Nome da Conta</label>
+        <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Nome da Conta</label>
         <input
           {...register('name')}
           placeholder="Ex: Nubank, Investimentos..."
-          className="w-full bg-stone-50 border border-stone-200 rounded-2xl p-4 text-coffee placeholder-stone-300 focus:ring-2 focus:ring-olive/10 focus:border-olive/30 outline-none transition-all"
+          className="w-full bg-secondary border border-border rounded-2xl p-4 text-foreground placeholder-stone-300 focus:ring-2 focus:ring-olive/10 focus:border-primary/30 outline-none transition-all"
         />
       </div>
 
       <div>
-        <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Tipo de Conta</label>
+        <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Tipo de Conta</label>
         <select
           {...register('type')}
-          className="w-full bg-stone-50 border border-stone-200 rounded-2xl p-4 text-coffee focus:ring-2 focus:ring-olive/10 focus:border-olive/30 outline-none transition-all cursor-pointer"
+          className="w-full bg-secondary border border-border rounded-2xl p-4 text-foreground focus:ring-2 focus:ring-olive/10 focus:border-primary/30 outline-none transition-all cursor-pointer"
         >
           <option value="checking">Conta Corrente</option>
           <option value="investment">Investimentos</option>
@@ -112,14 +112,14 @@ const AccountForm: React.FC<AccountFormProps> = ({ onSuccess, onCancel, accountT
       </div>
 
       <div>
-        <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Saldo Inicial (R$)</label>
+        <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Saldo Inicial (R$)</label>
         <input
           type="number"
           step="0.01"
           {...register('balance')}
           placeholder="0.00"
           onWheel={(e) => e.currentTarget.blur()}
-          className="w-full bg-stone-50 border border-stone-200 rounded-2xl p-4 text-coffee font-semibold placeholder-stone-300 focus:ring-2 focus:ring-olive/10 focus:border-olive/30 outline-none transition-all"
+          className="w-full bg-secondary border border-border rounded-2xl p-4 text-foreground font-semibold placeholder-stone-300 focus:ring-2 focus:ring-olive/10 focus:border-primary/30 outline-none transition-all"
         />
       </div>
 
@@ -127,14 +127,14 @@ const AccountForm: React.FC<AccountFormProps> = ({ onSuccess, onCancel, accountT
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 px-6 py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest text-cappuccino hover:bg-stone-50 transition-colors"
+          className="flex-1 px-6 py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest text-muted-foreground hover:bg-secondary transition-colors"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex-1 bg-olive hover:bg-black text-white px-6 py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+          className="flex-1 bg-primary hover:bg-black text-white px-6 py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
         >
           {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
           {isSubmitting ? 'Salvando...' : 'Salvar Conta'}

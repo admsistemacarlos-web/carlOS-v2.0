@@ -115,25 +115,25 @@ export default function SermonEditor() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center">
-        <Loader2 className="animate-spin text-stone-400" size={32} />
+      <div className="min-h-screen bg-card flex items-center justify-center">
+        <Loader2 className="animate-spin text-muted-foreground" size={32} />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FAF9F6] font-sans text-stone-800 animate-fade-in">
+    <div className="flex flex-col min-h-screen bg-card font-sans text-foreground animate-fade-in">
       
       {/* Header Fixo */}
-      <header className="sticky top-0 z-10 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-stone-200 px-6 py-4 flex justify-between items-center transition-all">
+      <header className="sticky top-0 z-10 bg-card/90 backdrop-blur-md border-b border-border px-6 py-4 flex justify-between items-center transition-all">
         <div className="flex items-center gap-4">
           <button 
             onClick={() => navigate('/personal/spiritual/sermons')}
-            className="p-2 -ml-2 hover:bg-stone-200 rounded-full text-stone-500 transition-colors"
+            className="p-2 -ml-2 hover:bg-accent rounded-full text-muted-foreground transition-colors"
           >
             <ArrowLeft size={20} />
           </button>
-          <h1 className="text-sm font-bold uppercase tracking-widest text-stone-500 hidden md:block">
+          <h1 className="text-sm font-bold uppercase tracking-widest text-muted-foreground hidden md:block">
             {id ? 'Editando Anotação' : 'Nova Anotação'}
           </h1>
         </div>
@@ -142,7 +142,7 @@ export default function SermonEditor() {
           {id && (
             <button 
               onClick={() => setShowDeleteConfirm(true)}
-              className="p-2 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+              className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
               title="Excluir"
             >
               <Trash2 size={20} />
@@ -163,58 +163,58 @@ export default function SermonEditor() {
       <div className="flex-1 flex flex-col w-full max-w-4xl mx-auto p-4 md:p-8 gap-6">
         
         {/* Bloco de Metadados */}
-        <div className="flex-none bg-white p-6 rounded-[1.5rem] border border-stone-100 shadow-sm space-y-6">
+        <div className="flex-none bg-card p-6 rounded-[1.5rem] border border-border shadow-sm space-y-6">
           <div>
             <input 
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
               placeholder="Título da Mensagem..."
-              className="w-full text-2xl md:text-3xl font-bold text-stone-800 placeholder-stone-300 outline-none bg-transparent"
+              className="w-full text-2xl md:text-3xl font-bold text-foreground placeholder-stone-300 outline-none bg-transparent"
               autoFocus={!id}
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-stone-50">
             <div className="group">
-              <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1 group-focus-within:text-[#5D4037] transition-colors">
+              <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 group-focus-within:text-[#5D4037] transition-colors">
                 <User size={12} /> Pregador
               </label>
               <input 
                 value={formData.preacher}
                 onChange={(e) => setFormData({...formData, preacher: e.target.value})}
                 placeholder="Nome do pregador"
-                className="w-full bg-stone-50 border-b border-transparent focus:border-[#A1887F] rounded-lg px-3 py-2 text-sm text-stone-700 outline-none transition-all focus:bg-white"
+                className="w-full bg-secondary border-b border-transparent focus:border-[#A1887F] rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-all focus:bg-card"
               />
             </div>
 
             <div className="group">
-              <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1 group-focus-within:text-[#5D4037] transition-colors">
+              <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 group-focus-within:text-[#5D4037] transition-colors">
                 <Calendar size={12} /> Data
               </label>
               <input 
                 type="date"
                 value={formData.date}
                 onChange={(e) => setFormData({...formData, date: e.target.value})}
-                className="w-full bg-stone-50 border-b border-transparent focus:border-[#A1887F] rounded-lg px-3 py-2 text-sm text-stone-700 outline-none transition-all focus:bg-white"
+                className="w-full bg-secondary border-b border-transparent focus:border-[#A1887F] rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-all focus:bg-card"
               />
             </div>
 
             <div className="group">
-              <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1 group-focus-within:text-[#5D4037] transition-colors">
+              <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 group-focus-within:text-[#5D4037] transition-colors">
                 <BookOpen size={12} /> Texto Base
               </label>
               <input 
                 value={formData.bible_passage}
                 onChange={(e) => setFormData({...formData, bible_passage: e.target.value})}
                 placeholder="Ex: Romanos 8"
-                className="w-full bg-stone-50 border-b border-transparent focus:border-[#A1887F] rounded-lg px-3 py-2 text-sm text-stone-700 outline-none transition-all focus:bg-white"
+                className="w-full bg-secondary border-b border-transparent focus:border-[#A1887F] rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-all focus:bg-card"
               />
             </div>
           </div>
         </div>
 
         {/* Área de Texto Rico */}
-        <div className="flex-1 flex flex-col bg-white rounded-[1.5rem] border border-stone-100 shadow-sm relative overflow-hidden min-h-[500px]">
+        <div className="flex-1 flex flex-col bg-card rounded-[1.5rem] border border-border shadow-sm relative overflow-hidden min-h-[500px]">
           <div className="absolute top-0 left-0 w-full h-full p-8 md:p-12 overflow-y-auto">
              <RichTextEditor 
                 content={formData.content}

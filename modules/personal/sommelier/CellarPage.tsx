@@ -20,7 +20,7 @@ const TYPE_CONFIG: Record<string, { label: string, color: string, bg: string }> 
   beer: { label: 'Cerveja', color: 'text-orange-700', bg: 'bg-orange-100' },
   whisky: { label: 'Whisky', color: 'text-amber-800', bg: 'bg-amber-200' },
   gin: { label: 'Gin', color: 'text-cyan-700', bg: 'bg-cyan-100' },
-  other: { label: 'Outro', color: 'text-stone-600', bg: 'bg-stone-200' },
+  other: { label: 'Outro', color: 'text-muted-foreground', bg: 'bg-accent' },
 };
 
 export default function CellarPage() {
@@ -80,7 +80,7 @@ export default function CellarPage() {
     : '0.0';
 
   return (
-    <div className="w-full min-h-screen pb-20 animate-fade-in font-sans bg-[#FAF9F6]">
+    <div className="w-full min-h-screen pb-20 animate-fade-in font-sans bg-card">
       <div className="max-w-7xl mx-auto px-8 pt-8">
         
         <ModuleHeader 
@@ -98,18 +98,18 @@ export default function CellarPage() {
 
         {/* Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1">Rótulos Provados</p>
-                <p className="text-2xl font-bold text-stone-800">{beverages.length}</p>
+            <div className="bg-card p-4 rounded-2xl border border-border shadow-sm">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Rótulos Provados</p>
+                <p className="text-2xl font-bold text-foreground">{beverages.length}</p>
             </div>
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1">Investimento Total</p>
-                <p className="text-2xl font-bold text-stone-800">R$ {totalSpent.toLocaleString('pt-BR', { minimumFractionDigits: 0 })}</p>
+            <div className="bg-card p-4 rounded-2xl border border-border shadow-sm">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Investimento Total</p>
+                <p className="text-2xl font-bold text-foreground">R$ {totalSpent.toLocaleString('pt-BR', { minimumFractionDigits: 0 })}</p>
             </div>
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1">Nota Média</p>
+            <div className="bg-card p-4 rounded-2xl border border-border shadow-sm">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Nota Média</p>
                 <div className="flex items-center gap-2">
-                    <p className="text-2xl font-bold text-stone-800">{avgRating}</p>
+                    <p className="text-2xl font-bold text-foreground">{avgRating}</p>
                     <Star size={16} className="fill-amber-400 text-amber-400" />
                 </div>
             </div>
@@ -118,30 +118,30 @@ export default function CellarPage() {
         {/* Filters */}
         <div className="flex flex-col md:flex-row gap-4 mb-8 items-center">
             <div className="relative flex-1 w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
                 <input 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Buscar por nome, produtor..."
-                    className="w-full bg-white border border-stone-200 rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-stone-200 transition-all"
+                    className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-stone-200 transition-all"
                 />
             </div>
             <div className="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-hide">
                 <button 
                     onClick={() => setFilterType('all')}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide whitespace-nowrap transition-all border ${filterType === 'all' ? 'bg-[#3C3633] text-white border-[#3C3633]' : 'bg-white text-stone-500 border-stone-200'}`}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide whitespace-nowrap transition-all border ${filterType === 'all' ? 'bg-[#3C3633] text-white border-[#3C3633]' : 'bg-card text-muted-foreground border-border'}`}
                 >
                     Todos
                 </button>
                 <button 
                     onClick={() => setFilterType('red_wine')}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide whitespace-nowrap transition-all border ${filterType === 'red_wine' ? 'bg-rose-900 text-white border-rose-900' : 'bg-white text-stone-500 border-stone-200'}`}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide whitespace-nowrap transition-all border ${filterType === 'red_wine' ? 'bg-rose-900 text-white border-rose-900' : 'bg-card text-muted-foreground border-border'}`}
                 >
                     Tintos
                 </button>
                 <button 
                     onClick={() => setFilterType('white_wine')}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide whitespace-nowrap transition-all border ${filterType === 'white_wine' ? 'bg-amber-400 text-white border-amber-400' : 'bg-white text-stone-500 border-stone-200'}`}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide whitespace-nowrap transition-all border ${filterType === 'white_wine' ? 'bg-amber-400 text-white border-amber-400' : 'bg-card text-muted-foreground border-border'}`}
                 >
                     Brancos
                 </button>
@@ -150,11 +150,11 @@ export default function CellarPage() {
 
         {/* Grid */}
         {loading ? (
-            <div className="text-center py-20 text-stone-400">Carregando adega...</div>
+            <div className="text-center py-20 text-muted-foreground">Carregando adega...</div>
         ) : filteredBeverages.length === 0 ? (
-            <div className="text-center py-20 bg-white rounded-[2rem] border border-dashed border-stone-200">
-                <Wine className="mx-auto text-stone-300 mb-4" size={48} />
-                <p className="text-stone-500 font-medium">Nenhum rótulo encontrado.</p>
+            <div className="text-center py-20 bg-card rounded-[2rem] border border-dashed border-border">
+                <Wine className="mx-auto text-muted-foreground mb-4" size={48} />
+                <p className="text-muted-foreground font-medium">Nenhum rótulo encontrado.</p>
                 <button onClick={openNew} className="text-rose-900 font-bold text-xs uppercase tracking-widest mt-2 hover:underline">
                     Adicionar o primeiro
                 </button>
@@ -165,17 +165,17 @@ export default function CellarPage() {
                     const typeStyle = TYPE_CONFIG[bev.type] || TYPE_CONFIG['other'];
                     
                     return (
-                        <div key={bev.id} className="group bg-white p-5 rounded-[2rem] border border-[#E6E2DE] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all relative flex flex-col h-full">
+                        <div key={bev.id} className="group bg-card p-5 rounded-[2rem] border border-border shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all relative flex flex-col h-full">
                             
                             <div className="flex gap-4 mb-4">
                                 {/* Imagem ou Placeholder */}
-                                <div className="w-20 h-28 shrink-0 rounded-2xl overflow-hidden bg-stone-50 border border-stone-100 flex items-center justify-center relative">
+                                <div className="w-20 h-28 shrink-0 rounded-2xl overflow-hidden bg-secondary border border-border flex items-center justify-center relative">
                                     {bev.image_url ? (
                                         <img src={bev.image_url} alt={bev.name} className="w-full h-full object-cover" />
                                     ) : (
-                                        <Wine size={24} className="text-stone-300 opacity-50" />
+                                        <Wine size={24} className="text-muted-foreground opacity-50" />
                                     )}
-                                    <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm rounded-lg px-1.5 py-0.5 shadow-sm">
+                                    <div className="absolute top-2 left-2 bg-card/90 backdrop-blur-sm rounded-lg px-1.5 py-0.5 shadow-sm">
                                         <div className="flex items-center gap-0.5">
                                             <span className="font-bold text-amber-400 text-[10px]">{bev.rating}</span>
                                             <Star size={8} className="fill-amber-400 text-amber-400" />
@@ -190,12 +190,12 @@ export default function CellarPage() {
                                         </span>
                                     </div>
                                     
-                                    <h3 className="text-base font-bold text-stone-800 leading-tight mb-1 line-clamp-2">{bev.name}</h3>
+                                    <h3 className="text-base font-bold text-foreground leading-tight mb-1 line-clamp-2">{bev.name}</h3>
                                     {bev.producer && (
-                                        <p className="text-xs text-stone-500 font-medium uppercase tracking-wide truncate mb-1">{bev.producer}</p>
+                                        <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide truncate mb-1">{bev.producer}</p>
                                     )}
                                     {bev.grape && (
-                                        <div className="flex items-center gap-1.5 text-xs text-stone-400">
+                                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                             <GlassWater size={10} />
                                             <span className="truncate">{bev.grape}</span>
                                         </div>
@@ -204,26 +204,26 @@ export default function CellarPage() {
                             </div>
 
                             {bev.review && (
-                                <div className="bg-stone-50 p-3 rounded-xl border border-stone-100 mb-4 flex-1">
-                                    <p className="text-xs text-stone-500 italic line-clamp-3 leading-relaxed">"{bev.review}"</p>
+                                <div className="bg-secondary p-3 rounded-xl border border-border mb-4 flex-1">
+                                    <p className="text-xs text-muted-foreground italic line-clamp-3 leading-relaxed">"{bev.review}"</p>
                                 </div>
                             )}
 
                             <div className="flex items-center justify-between pt-4 border-t border-stone-50 mt-auto">
                                 <div className="flex flex-col">
-                                    <span className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Pago</span>
-                                    <span className="text-sm font-bold text-stone-700">R$ {bev.price.toFixed(2)}</span>
+                                    <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Pago</span>
+                                    <span className="text-sm font-bold text-foreground">R$ {bev.price.toFixed(2)}</span>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                    <span className="text-[9px] text-stone-400 mr-2 flex items-center gap-1">
+                                    <span className="text-[9px] text-muted-foreground mr-2 flex items-center gap-1">
                                         <Calendar size={10} /> {new Date(bev.consumed_date).toLocaleDateString('pt-BR')}
                                     </span>
                                     
                                     <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button onClick={() => handleEdit(bev)} className="p-1.5 bg-stone-100 rounded-lg text-stone-500 hover:text-stone-800 hover:bg-stone-200 transition-colors">
+                                        <button onClick={() => handleEdit(bev)} className="p-1.5 bg-secondary rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
                                             <Pencil size={14} />
                                         </button>
-                                        <button onClick={(e) => handleDeleteRequest(bev.id, e)} className="p-1.5 bg-stone-100 rounded-lg text-stone-500 hover:text-red-500 hover:bg-red-50 transition-colors">
+                                        <button onClick={(e) => handleDeleteRequest(bev.id, e)} className="p-1.5 bg-secondary rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors">
                                             <Trash2 size={14} />
                                         </button>
                                     </div>

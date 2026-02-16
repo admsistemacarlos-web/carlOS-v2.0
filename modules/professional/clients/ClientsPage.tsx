@@ -11,7 +11,7 @@ import { AgencyStatus } from '../types/agency.types';
 
 const StatusBadge: React.FC<{ status: AgencyStatus }> = ({ status }) => {
   const styles: Record<string, string> = {
-    active: 'bg-[#143d2d]/20 text-[#60a887] border-[#20523e]', // Muted Emerald
+    active: 'bg-primary/20 text-[#60a887] border-[#20523e]', // Muted Emerald
     lead: 'bg-[#3d2d14]/20 text-[#a88760] border-[#523e20]',   // Muted Amber
     churned: 'bg-[#2C2C2C] text-[#737373] border-[#404040]',
     archived: 'bg-[#191919] text-[#5c5c5c] border-[#2C2C2C]'

@@ -265,48 +265,48 @@ export default function LessonDetail() {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
-        <Loader2 className="animate-spin text-stone-400" size={32} />
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-card">
+        <Loader2 className="animate-spin text-muted-foreground" size={32} />
       </div>
     );
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex w-full h-full bg-white overflow-hidden font-sans text-stone-900">
+    <div className="fixed inset-0 z-50 flex w-full h-full bg-card overflow-hidden font-sans text-muted-foreground">
       
       {/* --- SIDEBAR --- */}
       <aside 
         className={`
-          flex-shrink-0 bg-gray-50 border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out absolute lg:relative z-20 h-full
+          flex-shrink-0 bg-secondary border-r border-border flex flex-col transition-all duration-300 ease-in-out absolute lg:relative z-20 h-full
           ${isSidebarOpen ? 'w-80 translate-x-0' : 'w-0 -translate-x-full lg:w-0 lg:translate-x-0 overflow-hidden opacity-0 lg:opacity-100'}
         `}
       >
         <div className="w-80 flex flex-col h-full"> 
-            <div className="p-5 border-b border-gray-200 bg-gray-50 flex-shrink-0">
+            <div className="p-5 border-b border-border bg-secondary flex-shrink-0">
             <button 
                 onClick={() => navigate(`/personal/studies/courses/${courseId || ''}`)}
-                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-colors mb-3"
+                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-muted-foreground transition-colors mb-3"
             >
                 <ArrowLeft size={12} /> Voltar ao Curso
             </button>
-            <h2 className="text-base font-bold text-stone-800 leading-tight line-clamp-2">
+            <h2 className="text-base font-bold text-foreground leading-tight line-clamp-2">
                 {courseTitle}
             </h2>
             </div>
 
-            <div className="p-4 border-b border-gray-200 bg-gray-50 flex-shrink-0">
+            <div className="p-4 border-b border-border bg-secondary flex-shrink-0">
                 <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={14} />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
                     <input 
                     value={sidebarSearch}
                     onChange={(e) => setSidebarSearch(e.target.value)}
                     placeholder="Buscar aula..."
-                    className="w-full bg-white border border-gray-200 rounded-lg pl-9 pr-8 py-2.5 text-xs font-medium text-stone-700 outline-none focus:ring-1 focus:ring-gray-300 placeholder:text-stone-400 transition-all shadow-sm"
+                    className="w-full bg-card border border-border rounded-lg pl-9 pr-8 py-2.5 text-xs font-medium text-foreground outline-none focus:ring-1 focus:ring-gray-300 placeholder:text-muted-foreground transition-all shadow-sm"
                     />
                     {sidebarSearch && (
                     <button 
                         onClick={() => setSidebarSearch('')}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 rounded-full text-stone-400 transition-colors"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 rounded-full text-muted-foreground transition-colors"
                     >
                         <X size={12} />
                     </button>
@@ -316,7 +316,7 @@ export default function LessonDetail() {
 
             <div className="flex-1 overflow-y-auto p-2 space-y-1">
             {filteredModules.length === 0 ? (
-                <p className="text-center text-xs text-stone-400 py-10">Nenhum resultado.</p>
+                <p className="text-center text-xs text-muted-foreground py-10">Nenhum resultado.</p>
             ) : (
                 filteredModules.map(module => {
                 const isOpen = openModules.has(module.id);
@@ -326,12 +326,12 @@ export default function LessonDetail() {
                         onClick={() => toggleModule(module.id)}
                         className="w-full flex items-center justify-between text-left p-2.5 rounded-lg hover:bg-gray-200/50 transition-colors group"
                     >
-                        <span className="text-xs font-bold text-stone-600 uppercase tracking-wide truncate pr-2">{module.title}</span>
-                        <ChevronDown size={14} className={`text-stone-400 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide truncate pr-2">{module.title}</span>
+                        <ChevronDown size={14} className={`text-muted-foreground transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
                     </button>
                     
                     {isOpen && (
-                        <div className="space-y-0.5 ml-3 border-l border-gray-200 pl-1">
+                        <div className="space-y-0.5 ml-3 border-l border-border pl-1">
                         {module.lessons.map(lesson => {
                             const isActive = lesson.id === lessonId;
                             return (
@@ -344,8 +344,8 @@ export default function LessonDetail() {
                                 className={`
                                 w-full text-left px-3 py-2 rounded-md text-sm transition-all flex items-start gap-2 relative
                                 ${isActive 
-                                    ? 'bg-white text-stone-900 font-semibold shadow-sm ring-1 ring-gray-200 z-10' 
-                                    : 'text-stone-500 hover:bg-gray-100 hover:text-stone-800'
+                                    ? 'bg-card text-muted-foreground font-semibold shadow-sm ring-1 ring-gray-200 z-10' 
+                                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                                 }
                                 `}
                             >
@@ -353,7 +353,7 @@ export default function LessonDetail() {
                                 {lesson.is_completed ? (
                                     <CheckCircle2 size={14} className="text-emerald-600" />
                                 ) : (
-                                    <Circle size={12} className={isActive ? "text-stone-400" : "text-stone-300"} />
+                                    <Circle size={12} className={isActive ? "text-muted-foreground" : "text-muted-foreground"} />
                                 )}
                                 </div>
                                 <span className="truncate leading-relaxed text-[13px]">{lesson.title}</span>
@@ -387,24 +387,24 @@ export default function LessonDetail() {
       )}
 
       {/* --- MAIN AREA --- */}
-      <main className="flex-1 flex flex-col h-full min-w-0 bg-white relative">
+      <main className="flex-1 flex flex-col h-full min-w-0 bg-card relative">
         
         {/* Editor Header */}
-        <header className="h-14 flex items-center justify-between px-4 md:px-6 border-b border-gray-100 bg-white z-10 shrink-0">
+        <header className="h-14 flex items-center justify-between px-4 md:px-6 border-b border-gray-100 bg-card z-10 shrink-0">
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-2 -ml-2 hover:bg-gray-100 rounded-full text-stone-500 transition-colors"
+              className="p-2 -ml-2 hover:bg-secondary rounded-full text-muted-foreground transition-colors"
               title={isSidebarOpen ? "Fechar Sidebar" : "Abrir Sidebar"}
             >
               <Menu size={20} />
             </button>
             
             <div className="flex flex-col min-w-0">
-              <h1 className="text-sm font-bold text-stone-800 truncate">
+              <h1 className="text-sm font-bold text-foreground truncate">
                 {currentLesson?.title}
               </h1>
-              <span className="text-[10px] text-stone-400 font-medium flex items-center gap-1.5">
+              <span className="text-[10px] text-muted-foreground font-medium flex items-center gap-1.5">
                 {isSaving ? (
                   <><Loader2 size={10} className="animate-spin" /> Salvando...</>
                 ) : (
@@ -420,7 +420,7 @@ export default function LessonDetail() {
               flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ml-4
               ${currentLesson?.is_completed 
                 ? 'bg-stone-800 text-white' 
-                : 'bg-white border border-gray-200 text-stone-500 hover:border-gray-300 hover:text-stone-800'
+                : 'bg-card border border-border text-muted-foreground hover:border-border hover:text-foreground'
               }
             `}
           >
@@ -430,7 +430,7 @@ export default function LessonDetail() {
         </header>
 
         {/* Content Area - Rich Text Editor */}
-        <div className="flex-1 overflow-y-auto bg-white relative">
+        <div className="flex-1 overflow-y-auto bg-card relative">
           <div className="w-full h-full max-w-4xl mx-auto px-8 md:px-12 py-8">
             <RichTextEditor 
                 key={lessonId} // Garante que o editor reinicie ao trocar de aula
@@ -446,21 +446,21 @@ export default function LessonDetail() {
       {isCreateModalOpen && createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={() => setIsCreateModalOpen(false)} />
-          <div className="relative bg-white w-full max-w-sm rounded-2xl shadow-xl p-6 animate-fade-in">
-             <h3 className="text-lg font-bold text-stone-800 mb-4">Nova Aula</h3>
+          <div className="relative bg-card w-full max-w-sm rounded-2xl shadow-xl p-6 animate-fade-in">
+             <h3 className="text-lg font-bold text-foreground mb-4">Nova Aula</h3>
              <form onSubmit={handleCreateLesson} className="space-y-4">
                 <div>
-                    <label className="text-[10px] font-bold text-stone-400 uppercase tracking-widest ml-1">Título da Aula</label>
+                    <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Título da Aula</label>
                     <input 
                         autoFocus
                         value={newLessonTitle}
                         onChange={e => setNewLessonTitle(e.target.value)}
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                        className="w-full bg-secondary border border-border rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
                         placeholder="Ex: Introdução..."
                     />
                 </div>
                 <div className="flex gap-2 pt-2">
-                    <button type="button" onClick={() => setIsCreateModalOpen(false)} className="flex-1 py-2.5 bg-stone-100 text-stone-600 font-bold text-xs rounded-xl hover:bg-stone-200 transition-colors">Cancelar</button>
+                    <button type="button" onClick={() => setIsCreateModalOpen(false)} className="flex-1 py-2.5 bg-secondary text-muted-foreground font-bold text-xs rounded-xl hover:bg-accent transition-colors">Cancelar</button>
                     <button type="submit" disabled={isCreating} className="flex-1 py-2.5 bg-blue-600 text-white font-bold text-xs rounded-xl hover:bg-blue-700 flex items-center justify-center gap-2 transition-colors">
                         {isCreating ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />} Criar
                     </button>

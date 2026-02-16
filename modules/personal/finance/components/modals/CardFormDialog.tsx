@@ -108,60 +108,60 @@ const CardFormDialog: React.FC<CardFormDialogProps> = ({ isOpen, onClose, onSucc
 
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-coffee/40 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl border border-stone-100 overflow-hidden">
+      <div className="bg-card w-full max-w-md rounded-[2.5rem] shadow-2xl border border-border overflow-hidden">
         <div className="p-8">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-semibold text-coffee tracking-tighter">
+            <h2 className="text-2xl font-semibold text-foreground tracking-tighter">
               {cardToEdit ? 'Editar Cartão' : 'Novo Cartão'}
             </h2>
-            <button onClick={onClose} className="p-2 hover:bg-cream rounded-full transition-colors text-cappuccino">
+            <button onClick={onClose} className="p-2 hover:bg-background rounded-full transition-colors text-muted-foreground">
               <X size={20} />
             </button>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div>
-              <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Nome do Cartão</label>
+              <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Nome do Cartão</label>
               <input 
                 {...register('name')} 
                 placeholder="Ex: Nubank Ultravioleta" 
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-coffee focus:ring-2 focus:ring-olive/10 outline-none" 
+                className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground focus:ring-2 focus:ring-olive/10 outline-none" 
               />
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Limite Total (R$)</label>
+              <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Limite Total (R$)</label>
               <input 
                 type="number" 
                 step="0.01" 
                 {...register('limit')} 
                 placeholder="0.00" 
                 onWheel={(e) => e.currentTarget.blur()}
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-coffee focus:ring-2 focus:ring-olive/10 outline-none" 
+                className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground focus:ring-2 focus:ring-olive/10 outline-none" 
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Dia Fechamento</label>
+                <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Dia Fechamento</label>
                 <input 
                   type="number" 
                   min="1" 
                   max="31" 
                   {...register('closing_day')} 
                   onWheel={(e) => e.currentTarget.blur()}
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-coffee focus:ring-2 focus:ring-olive/10 outline-none" 
+                  className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground focus:ring-2 focus:ring-olive/10 outline-none" 
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-coffee uppercase tracking-widest mb-2 ml-1">Dia Vencimento</label>
+                <label className="block text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 ml-1">Dia Vencimento</label>
                 <input 
                   type="number" 
                   min="1" 
                   max="31" 
                   {...register('due_day')} 
                   onWheel={(e) => e.currentTarget.blur()}
-                  className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-coffee focus:ring-2 focus:ring-olive/10 outline-none" 
+                  className="w-full bg-secondary border border-border rounded-xl p-3 text-foreground focus:ring-2 focus:ring-olive/10 outline-none" 
                 />
               </div>
             </div>
@@ -169,7 +169,7 @@ const CardFormDialog: React.FC<CardFormDialogProps> = ({ isOpen, onClose, onSucc
             <button 
               type="submit" 
               disabled={isSubmitting} 
-              className="w-full bg-olive hover:bg-black text-white px-6 py-4 rounded-xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-primary hover:bg-black text-white px-6 py-4 rounded-xl text-[11px] font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <CardIcon size={16} />}
               {isSubmitting ? 'Processando...' : 'Salvar Cartão'}

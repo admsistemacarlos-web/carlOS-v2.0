@@ -242,14 +242,14 @@ const TransactionsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate(-1)} className="p-2 -ml-2 hover:bg-stone-100 rounded-full transition-colors text-cappuccino">
+          <button onClick={() => navigate(-1)} className="p-2 -ml-2 hover:bg-secondary rounded-full transition-colors text-muted-foreground">
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-2xl font-semibold text-coffee tracking-tighter">
+            <h1 className="text-2xl font-semibold text-foreground tracking-tighter">
               {selectedAccountName ? `Extrato: ${selectedAccountName}` : 'Extrato Geral'}
             </h1>
-            <p className="text-cappuccino text-xs font-bold uppercase tracking-widest mt-1">
+            <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">
               {filteredTransactions.length} registros • Fluxo: <span className={totalPeriod >= 0 ? 'text-olive' : 'text-terracotta'}>R$ {totalPeriod.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
             </p>
           </div>
@@ -257,14 +257,14 @@ const TransactionsPage: React.FC = () => {
         <div className="flex gap-2">
             <button 
               onClick={handleExport}
-              className="p-2.5 bg-white border border-stone-200 rounded-xl text-stone-400 hover:text-olive hover:border-olive/30 transition-colors"
+              className="p-2.5 bg-card border border-border rounded-xl text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors"
               title="Exportar CSV"
             >
               <Download size={18} />
             </button>
             <button 
               onClick={() => { refresh(); refreshAccounts(); }} 
-              className="p-2.5 bg-white border border-stone-200 rounded-xl text-stone-400 hover:text-coffee transition-colors"
+              className="p-2.5 bg-card border border-border rounded-xl text-muted-foreground hover:text-foreground transition-colors"
               title="Atualizar"
             >
               <RefreshCcw size={18} className={loading ? "animate-spin" : ""} />
@@ -279,18 +279,18 @@ const TransactionsPage: React.FC = () => {
       </div>
 
       {/* --- BARRA DE FILTROS --- */}
-      <div className="bg-white p-5 rounded-[2rem] border border-stone-200 shadow-sm space-y-4">
+      <div className="bg-card p-5 rounded-[2rem] border border-border shadow-sm space-y-4">
         
         <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex bg-stone-100 p-1 rounded-xl overflow-x-auto no-scrollbar shrink-0">
-                <button onClick={() => setPeriod('last_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'last_month' ? 'bg-white text-coffee shadow-sm' : 'text-stone-400 hover:text-stone-600'}`}>Mês Passado</button>
-                <button onClick={() => setPeriod('this_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'this_month' ? 'bg-white text-coffee shadow-sm' : 'text-stone-400 hover:text-stone-600'}`}>Este Mês</button>
-                <button onClick={() => setPeriod('next_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'next_month' ? 'bg-white text-coffee shadow-sm' : 'text-stone-400 hover:text-stone-600'}`}>Próximo</button>
-                <button onClick={() => setPeriod('all')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'all' ? 'bg-white text-coffee shadow-sm' : 'text-stone-400 hover:text-stone-600'}`}>Tudo</button>
+            <div className="flex bg-secondary p-1 rounded-xl overflow-x-auto no-scrollbar shrink-0">
+                <button onClick={() => setPeriod('last_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'last_month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Mês Passado</button>
+                <button onClick={() => setPeriod('this_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'this_month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Este Mês</button>
+                <button onClick={() => setPeriod('next_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'next_month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Próximo</button>
+                <button onClick={() => setPeriod('all')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Tudo</button>
             </div>
 
             <div className="relative flex-1">
-                <Landmark className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={14} />
+                <Landmark className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
                 <select 
                     value={accountIdFilter}
                     onChange={(e) => {
@@ -299,7 +299,7 @@ const TransactionsPage: React.FC = () => {
                       if (val) setSearchParams({ accountId: val });
                       else setSearchParams({});
                     }}
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-9 pr-4 py-2.5 text-xs font-bold text-coffee outline-none focus:border-olive appearance-none cursor-pointer"
+                    className="w-full bg-secondary border border-border rounded-xl pl-9 pr-4 py-2.5 text-xs font-bold text-foreground outline-none focus:border-primary appearance-none cursor-pointer"
                 >
                     <option value="">Todas as Contas (Origem)</option>
                     {accounts.map(acc => (
@@ -309,51 +309,51 @@ const TransactionsPage: React.FC = () => {
             </div>
 
             <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={14} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
                 <input 
                     value={searchText}
                     onChange={e => setSearchText(e.target.value)}
                     placeholder="Descrição da compra..."
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-9 pr-4 py-2.5 text-xs font-medium text-coffee outline-none focus:border-olive transition-colors"
+                    className="w-full bg-secondary border border-border rounded-xl pl-9 pr-4 py-2.5 text-xs font-medium text-foreground outline-none focus:border-primary transition-colors"
                 />
             </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div className="relative">
-                <PackageSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={12} />
+                <PackageSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={12} />
                 <input 
                     value={itemSearch}
                     onChange={e => setItemSearch(e.target.value)}
                     placeholder="Produto na nota (ex: Miojo)..."
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-8 pr-3 py-2 text-xs outline-none focus:border-olive transition-colors font-bold text-olive"
+                    className="w-full bg-secondary border border-border rounded-xl pl-8 pr-3 py-2 text-xs outline-none focus:border-primary transition-colors font-bold text-olive"
                 />
             </div>
             <div className="relative">
-                <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={12} />
+                <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={12} />
                 <input 
                     value={categoryFilter}
                     onChange={e => setCategoryFilter(e.target.value)}
                     placeholder="Categoria..."
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-8 pr-3 py-2 text-xs outline-none focus:border-olive transition-colors"
+                    className="w-full bg-secondary border border-border rounded-xl pl-8 pr-3 py-2 text-xs outline-none focus:border-primary transition-colors"
                 />
             </div>
             <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={12} />
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={12} />
                 <input 
                     value={locationFilter}
                     onChange={e => setLocationFilter(e.target.value)}
                     placeholder="Local..."
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-8 pr-3 py-2 text-xs outline-none focus:border-olive transition-colors"
+                    className="w-full bg-secondary border border-border rounded-xl pl-8 pr-3 py-2 text-xs outline-none focus:border-primary transition-colors"
                 />
             </div>
             <div className="relative">
-                <Tag className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={12} />
+                <Tag className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={12} />
                 <input 
                     value={tagFilter}
                     onChange={e => setTagFilter(e.target.value)}
                     placeholder="Tag..."
-                    className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-8 pr-3 py-2 text-xs outline-none focus:border-olive transition-colors"
+                    className="w-full bg-secondary border border-border rounded-xl pl-8 pr-3 py-2 text-xs outline-none focus:border-primary transition-colors"
                 />
             </div>
         </div>
@@ -370,11 +370,11 @@ const TransactionsPage: React.FC = () => {
       {/* --- LISTAGEM --- */}
       <div className="space-y-6">
         {loading ? (
-          <div className="p-20 text-center text-cappuccino text-sm animate-pulse">Carregando transações...</div>
+          <div className="p-20 text-center text-muted-foreground text-sm animate-pulse">Carregando transações...</div>
         ) : groupedWithBalance.length === 0 ? (
-          <div className="bg-white rounded-[2rem] border border-stone-100 p-20 text-center shadow-sm">
+          <div className="bg-card rounded-[2rem] border border-border p-20 text-center shadow-sm">
             <Filter size={32} className="mx-auto text-stone-200 mb-4" />
-            <p className="text-cappuccino text-sm italic">
+            <p className="text-muted-foreground text-sm italic">
               Nenhum registro encontrado para {selectedAccountName || 'esta seleção'}.
             </p>
           </div>
@@ -382,51 +382,51 @@ const TransactionsPage: React.FC = () => {
           groupedWithBalance.map((group) => (
             <div key={group.date} className="animate-fade-in">
                 <div className="flex items-center gap-3 mb-2 ml-2">
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-coffee whitespace-nowrap">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-foreground whitespace-nowrap">
                         {formatDateBr(group.date)}
                     </h3>
                     
-                    <span className="bg-stone-100 text-stone-500 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-stone-200 whitespace-nowrap shadow-sm">
+                    <span className="bg-secondary text-muted-foreground px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-border whitespace-nowrap shadow-sm">
                         Saldo: R$ {group.dayEndBalance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </span>
 
-                    <div className="h-[1px] flex-1 bg-stone-200"></div>
+                    <div className="h-[1px] flex-1 bg-accent"></div>
                 </div>
 
-                <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-hidden">
+                <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
                     <div className="divide-y divide-stone-50">
                         {group.items.map((t) => (
                             <div 
                                 key={t.id} 
                                 onClick={() => navigate(`/personal/finance/edit/${t.id}`)}
-                                className={`group flex items-center justify-between py-3 px-4 hover:bg-stone-50 transition-colors cursor-pointer ${t.is_locked ? 'opacity-60' : ''}`}
+                                className={`group flex items-center justify-between py-3 px-4 hover:bg-secondary transition-colors cursor-pointer ${t.is_locked ? 'opacity-60' : ''}`}
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className={`p-2 rounded-full ${t.type === 'income' ? 'bg-olive/10 text-olive' : 'bg-terracotta/10 text-terracotta'}`}>
+                                    <div className={`p-2 rounded-full ${t.type === 'income' ? 'bg-primary/10 text-olive' : 'bg-terracotta/10 text-terracotta'}`}>
                                         {t.type === 'income' ? <ArrowUpRight size={16} /> : <ArrowDownLeft size={16} />}
                                     </div>
                                     <div>
                                         <div className="flex items-center gap-2">
-                                            <p className="font-semibold text-coffee text-sm">{t.description}</p>
-                                            {t.is_locked && <Lock size={12} className="text-stone-400" />}
+                                            <p className="font-semibold text-foreground text-sm">{t.description}</p>
+                                            {t.is_locked && <Lock size={12} className="text-muted-foreground" />}
                                             {(t.items && t.items.length > 0) && <ShoppingBag size={12} className="text-olive" />}
                                         </div>
                                         <div className="flex items-center gap-2 flex-wrap">
-                                            <span className="text-[10px] font-bold uppercase tracking-wider text-cappuccino">
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                                                 {t.category}
                                             </span>
                                             {t.location && (
-                                                <span className="text-[10px] text-stone-400 font-medium">
+                                                <span className="text-[10px] text-muted-foreground font-medium">
                                                     • {t.location}
                                                 </span>
                                             )}
                                             {t.account?.name && (
-                                                <span className="text-[9px] font-bold uppercase text-stone-500 bg-stone-100 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                                <span className="text-[9px] font-bold uppercase text-muted-foreground bg-secondary px-1.5 py-0.5 rounded flex items-center gap-1">
                                                     <Landmark size={8} /> {t.account.name}
                                                 </span>
                                             )}
                                             {itemSearch && t.items?.some(i => i.name.toLowerCase().includes(itemSearch.toLowerCase())) && (
-                                                <span className="text-[9px] font-bold text-olive bg-olive/10 px-1.5 py-0.5 rounded flex items-center gap-1 border border-olive/20 animate-pulse">
+                                                <span className="text-[9px] font-bold text-olive bg-primary/10 px-1.5 py-0.5 rounded flex items-center gap-1 border border-primary/20 animate-pulse">
                                                     <PackageSearch size={8} /> Inclui: {itemSearch}
                                                 </span>
                                             )}
@@ -444,14 +444,14 @@ const TransactionsPage: React.FC = () => {
                                         <div className="hidden group-hover:flex gap-1" onClick={e => e.stopPropagation()}>
                                             <button 
                                                 onClick={() => navigate(`/personal/finance/transactions/new?duplicateId=${t.id}`)}
-                                                className="p-1.5 hover:bg-stone-200 rounded-lg text-stone-400 hover:text-coffee transition-colors"
+                                                className="p-1.5 hover:bg-accent rounded-lg text-muted-foreground hover:text-foreground transition-colors"
                                                 title="Duplicar"
                                             >
                                                 <Copy size={14} />
                                             </button>
                                             <button 
                                                 onClick={() => navigate(`/personal/finance/edit/${t.id}`)}
-                                                className="p-1.5 hover:bg-stone-200 rounded-lg text-coffee transition-colors"
+                                                className="p-1.5 hover:bg-accent rounded-lg text-foreground transition-colors"
                                                 title="Editar"
                                             >
                                                 <Pencil size={14} />
