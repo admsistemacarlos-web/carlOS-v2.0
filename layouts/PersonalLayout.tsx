@@ -9,7 +9,7 @@ const SidebarItem: React.FC<{ to: string; icon: React.ReactNode; label: string; 
     to={to} 
     end={end}
     onClick={onClick}
-    className={({ isActive }) => `flex items-center gap-3 px-5 py-3 rounded-xl transition-all text-[11px] font-semibold tracking-tight ${isActive ? 'bg-card/10 text-white border border-white/10' : 'text-muted-foreground hover:bg-card/5 hover:text-white'}`}
+    className={({ isActive }) => `flex items-center gap-3 px-5 py-3 rounded-xl transition-all text-[11px] font-semibold tracking-tight ${isActive ? 'bg-accent text-accent-foreground border border-border' : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'}`}
   >
     {icon}
     <span>{label}</span>
