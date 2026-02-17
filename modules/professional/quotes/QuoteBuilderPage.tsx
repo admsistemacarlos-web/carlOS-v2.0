@@ -9,8 +9,9 @@ import { useProposalTemplate } from '../hooks/useQuotes';
 import { 
   Plus, Trash2, Save, FileText, Calculator, Loader2, 
   Layers, Tag, AlertCircle, Percent, DollarSign, ChevronDown, 
-  ChevronUp, ShieldCheck, Layout, RefreshCw 
+  ChevronUp, ShieldCheck, Layout, RefreshCw, FolderOpen 
 } from 'lucide-react';
+import QuoteResourcesTab from './QuoteResourcesTab';
 
 // ----------------------------------------------------------------------
 // TYPES EXTENSION (Local)
@@ -39,8 +40,8 @@ export default function QuoteBuilderPage() {
   // --- STATE ---
   const [loading, setLoading] = useState(false);
   const [initializing, setInitializing] = useState(true);
-  const [activeTab, setActiveTab] = useState<'scope' | 'narrative'>('scope');
-  
+  const [activeTab, setActiveTab] = useState<'scope' | 'narrative' | 'resources'>('scope');
+
   // Proposal Data
   const [selectedClientId, setSelectedClientId] = useState<string>('');
   const [quoteTitle, setQuoteTitle] = useState('');
@@ -368,10 +369,22 @@ export default function QuoteBuilderPage() {
                     <FileText size={16} /> Narrativa & Termos
                 </div>
             </button>
+            <button 
+                onClick={() => setActiveTab('resources')}
+                className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all ${
+                    activeTab === 'resources' 
+                    ? 'text-[#E09B6B] border-b-2 border-[#E09B6B]' 
+                    : 'text-[#737373] hover:text-[#D4D4D4]'
+                }`}
+            >
+                <div className="flex items-center gap-2">
+                    <FolderOpen size={16} /> Recursos
+                </div>
+            </button>
         </div>
 
         {/* 3. TAB CONTENT */}
-        {activeTab === 'scope' ? (
+        {activeTab === 'scope' && (
             <div className="space-y-8 animate-fade-in">
                 {/* CATALOG */}
                 <QuoteCatalog 
@@ -393,7 +406,9 @@ export default function QuoteBuilderPage() {
                   isSaving={loading}
                 />
             </div>
-        ) : (
+        )}
+
+        {activeTab === 'narrative' && (
             <div className="space-y-6 animate-fade-in max-w-4xl mx-auto pt-4">
                  
                  {/* BARRA DE AÇÃO DA NARRATIVA */}
@@ -460,6 +475,10 @@ export default function QuoteBuilderPage() {
                     </button>
                 </div>
             </div>
+        )}
+
+        {activeTab === 'resources' && (
+            <QuoteResourcesTab quoteId={id} />
         )}
 
       </div>
@@ -857,4 +876,4 @@ const QuoteItemsBuilder: React.FC<{
 
     </div>
   );
-} 
+}

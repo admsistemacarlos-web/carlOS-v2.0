@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -7,6 +6,7 @@ import {
   Loader2, Play, Layout
 } from 'lucide-react';
 import { useAgencyDashboard } from '../hooks/useAgencyDashboard';
+import ProfessionalResourcesWidget from './ProfessionalResourcesWidget';
 
 // --- COMPONENTES VISUAIS ---
 
@@ -206,6 +206,9 @@ export default function HubProfessional() {
         {/* COLUNA 2: COMERCIAL & ATALHOS */}
         <div className="space-y-6">
             
+            {/* NOVO: Central de Recursos */}
+            <ProfessionalResourcesWidget />
+
             {/* Card Comercial */}
             <div className="bg-[#202020] rounded-lg border border-[#404040] p-6 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:scale-110 transition-transform duration-500">
