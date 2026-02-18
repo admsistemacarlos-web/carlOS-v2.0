@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Mic2, PenTool, Heart, ArrowRight, Music, Library } from 'lucide-react';
+import { BookOpen, Mic2, PenTool, Church, ArrowRight, Music, Library } from 'lucide-react';
 
 const HubCard: React.FC<{
   title: string;
@@ -83,7 +83,7 @@ export default function SpiritualHub() {
         <HubCard 
           title="Biblioteca de Oração" 
           subtitle="Modelos e inspirações"
-          icon={<Heart />}
+          icon={<Church />}
           onClick={() => navigate('/personal/spiritual/prayers')}
         />
 

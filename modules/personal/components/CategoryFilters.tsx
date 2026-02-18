@@ -1,7 +1,7 @@
 // modules/personal/components/CategoryFilters.tsx
 
 import React from 'react';
-import { DollarSign, Calendar, BookOpen, GraduationCap, Briefcase, Dumbbell, Frown, Dog } from 'lucide-react';
+import { DollarSign, Calendar, BookOpen, GraduationCap, Briefcase, Dumbbell, Frown, PawPrint } from 'lucide-react';
 import type { CategoryFilter } from '../../../types/calendar';
 
 interface CategoryFiltersProps {
@@ -17,7 +17,7 @@ const iconMap: Record<string, any> = {
   Briefcase,
   Dumbbell,
   Frown,
-  Dog
+  PawPrint
 };
 
 export const CategoryFilters: React.FC<CategoryFiltersProps> = ({ filters, onToggle }) => {

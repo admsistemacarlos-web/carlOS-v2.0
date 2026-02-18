@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Save, Loader2, Dog } from 'lucide-react';
+import { X, Save, Loader2, PawPrint } from 'lucide-react';
 
 interface PetFormModalProps {
   isOpen: boolean;
@@ -47,7 +47,7 @@ export const PetFormModal: React.FC<PetFormModalProps> = ({ isOpen, onClose, onS
         
         <div className="flex items-center gap-3 mb-6">
           <div className="p-3 bg-secondary rounded-full text-muted-foreground">
-            <Dog size={24} />
+            <PawPrint size={24} />
           </div>
           <h2 className="text-xl font-bold text-foreground">Novo Pet</h2>
         </div>

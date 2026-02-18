@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutGrid, DollarSign, BookOpen, Heart, Dog, Menu, Repeat, Activity, Briefcase, PieChart, Wine } from 'lucide-react';
+import { LayoutGrid, DollarSign, BookOpen, Church, PawPrint, Menu, Repeat, Activity, Briefcase, PieChart, Wine } from 'lucide-react';
 import ModuleNavigation from '../shared/components/layout/ModuleNavigation';
 import { ThemeToggle } from '../shared/ThemeToggle';
 
@@ -66,9 +66,9 @@ const PersonalLayout: React.FC<PersonalLayoutProps> = ({ children }) => {
           </div>
           <SidebarItem to="/personal/finance" icon={<DollarSign size={16} />} label="Financeiro" onClick={closeSidebar} />
           <SidebarItem to="/personal/health" icon={<Activity size={16} />} label="Saúde" onClick={closeSidebar} />
-          <SidebarItem to="/personal/pet" icon={<Dog size={16} />} label="Pet Care" onClick={closeSidebar} />
+          <SidebarItem to="/personal/pet" icon={<PawPrint size={16} />} label="Pet Care" onClick={closeSidebar} />
           <SidebarItem to="/personal/studies" icon={<BookOpen size={16} />} label="Estudos" onClick={closeSidebar} />
-          <SidebarItem to="/personal/spiritual" icon={<Heart size={16} />} label="Espiritual" onClick={closeSidebar} />
+          <SidebarItem to="/personal/spiritual" icon={<Church size={16} />} label="Espiritual" onClick={closeSidebar} />
           <SidebarItem to="/personal/sommelier" icon={<Wine size={16} />} label="Sommelier" onClick={closeSidebar} />
 
           {isFinance && (

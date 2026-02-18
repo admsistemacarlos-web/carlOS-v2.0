@@ -1,7 +1,7 @@
 // DashboardCalendar.tsx
 
 import React, { useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, DollarSign, BookOpen, GraduationCap, Briefcase, Dumbbell, Frown, Dog } from 'lucide-react';
+import { ChevronLeft, ChevronRight, DollarSign, BookOpen, GraduationCap, Briefcase, Dumbbell, Frown, PawPrint } from 'lucide-react';
 import type { CalendarMarkers } from '../../../types/calendar';
 
 interface DashboardCalendarProps {

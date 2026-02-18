@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { 
-  Dog, Plus, Calendar, Activity, Syringe, Bone, 
+  PawPrint, Plus, Calendar, Activity, Syringe, Bone, 
   Scissors, Pill, Scale, Stethoscope, DollarSign, 
   Trash2, History, ArrowRight, CheckCircle2,
   Cookie, Layers, Sparkles, Filter, X, Pencil, Loader2, AlertTriangle, Clock, CalendarDays, MapPin, ArrowDown,
@@ -240,7 +240,7 @@ export default function PetPage() {
     return (
       <div className="w-full min-h-screen flex flex-col items-center justify-center p-8 bg-card">
         <div className="w-24 h-24 bg-card rounded-full flex items-center justify-center mb-6 text-muted-foreground border border-border shadow-sm">
-          <Dog size={48} />
+          <PawPrint size={48} />
         </div>
         <h2 className="text-3xl font-bold text-foreground mb-3 tracking-tight">Pet Care</h2>
         <p className="text-muted-foreground mb-10 text-center max-w-xs text-sm leading-relaxed">
@@ -288,7 +288,7 @@ export default function PetPage() {
                 }
               `}
             >
-              <Dog size={14} />
+              <PawPrint size={14} />
               {pet.name}
             </button>
           ))}

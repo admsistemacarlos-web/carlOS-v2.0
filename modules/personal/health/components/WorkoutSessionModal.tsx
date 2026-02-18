@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Check, Trash2, Plus, ArrowLeft, MoreHorizontal, Dumbbell, Activity, HeartPulse, Trophy } from 'lucide-react';
+import { X, Check, Trash2, Plus, ArrowLeft, MoreHorizontal, Dumbbell, Activity, HeartPulse, Trophy, Heart } from 'lucide-react';
 import { WorkoutSession, WorkoutSet, Exercise } from '../types';
 import { supabase } from '../../../../integrations/supabase/client';
 import { useAuth } from '../../../../contexts/AuthContext';

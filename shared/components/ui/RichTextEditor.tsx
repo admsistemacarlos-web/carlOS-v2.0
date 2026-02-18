@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -6,9 +5,7 @@ import { Markdown } from 'tiptap-markdown';
 import Placeholder from '@tiptap/extension-placeholder';
 import Typography from '@tiptap/extension-typography';
 import { Bold, Italic, Strikethrough, Heading1, Heading2, List, ListOrdered } from 'lucide-react';
-import { cn } from '../../../lib/utils'; // Assumindo que você tem um utilitário cn, se não, use clsx/tailwind-merge direto ou crie um simples
 
-// Fallback simples para cn se não existir
 function classNames(...classes: (string | undefined | null | false)[]) {
   return classes.filter(Boolean).join(' ');
 }
@@ -31,23 +28,25 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        heading: {
-          levels: [1, 2, 3],
-        },
+        heading: { levels: [1, 2, 3] },
       }),
-      Markdown, // Permite entrada/saída em Markdown
+      Markdown.configure({
+        html: false,
+        transformPastedText: true,
+        transformCopiedText: true,
+      }),
       Typography,
       Placeholder.configure({
         placeholder: placeholder,
         emptyEditorClass: 'is-editor-empty before:content-[attr(data-placeholder)] before:text-muted-foreground before:float-left before:pointer-events-none',
       }),
     ],
-    content: content, // Hidratação inicial
+    content: '', // Começa vazio, conteúdo é injetado via useEffect abaixo
     editable: editable,
     editorProps: {
       attributes: {
         class: classNames(
-          'prose prose-stone max-w-none focus:outline-none min-h-[150px] font-serif leading-loose text-lg text-foreground', // Estética de escrita premium
+          'prose prose-stone max-w-none focus:outline-none min-h-[150px] font-serif leading-loose text-lg text-foreground',
           'prose-headings:font-sans prose-headings:font-bold prose-headings:text-foreground',
           'prose-p:my-2 prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-secondary prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:not-italic',
           'prose-ul:list-disc prose-ol:list-decimal',
@@ -56,33 +55,30 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       },
     },
     onUpdate: ({ editor }) => {
-      // Extrai o conteúdo como Markdown para salvar no banco
       const markdownOutput = editor.storage.markdown.getMarkdown();
       onChange(markdownOutput);
     },
   });
 
-  // Atualiza o conteúdo se a prop mudar externamente (ex: carregamento assíncrono ou troca de documento)
+  // Injeta o conteúdo markdown corretamente quando o editor estiver pronto
   useEffect(() => {
-    if (editor && content !== editor.storage.markdown.getMarkdown()) {
-      // Verifica se o editor está focado para evitar pular o cursor enquanto digita
-      if (!editor.isFocused) {
-         editor.commands.setContent(content);
-      }
-    }
-  }, [content, editor]);
+    if (!editor) return;
 
-  if (!editor) {
-    return null;
-  }
+    // Usa setContent do tiptap-markdown para parsear corretamente
+    const currentMarkdown = editor.storage.markdown?.getMarkdown?.() ?? '';
+    if (content !== currentMarkdown && !editor.isFocused) {
+      editor.commands.setContent(content);
+    }
+  }, [editor, content]);
+
+  if (!editor) return null;
 
   return (
     <div className="relative w-full h-full group">
-      {/* MENU FLUTUANTE (Bubble Menu) - Aparece ao selecionar texto */}
       {editable && (
-        <BubbleMenu 
-          editor={editor} 
-          tippyOptions={{ duration: 100 }} 
+        <BubbleMenu
+          editor={editor}
+          tippyOptions={{ duration: 100 }}
           className="flex items-center gap-1 bg-stone-900 text-stone-100 p-1 rounded-lg shadow-xl border border-stone-700 overflow-hidden"
         >
           <button
@@ -103,7 +99,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           >
             <Strikethrough size={14} />
           </button>
-          
+
           <div className="w-px h-4 bg-stone-700 mx-1" />
 
           <button
@@ -127,7 +123,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           >
             <List size={14} />
           </button>
-           <button
+          <button
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
             className={classNames("p-1.5 rounded hover:bg-stone-700 transition-colors", editor.isActive('orderedList') && "bg-stone-700 text-white")}
           >

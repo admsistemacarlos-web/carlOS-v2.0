@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Wallet, Dog, BookOpen, Heart, ChevronRight, Activity, 
+  Wallet, PawPrint, BookOpen, Church, ChevronRight, Activity, 
   CheckCircle2, Dumbbell, Check,
   Zap, Frown,
   Wine, Loader2, Scale, AlertCircle, Calendar, XCircle, Circle, Bell
@@ -323,7 +323,7 @@ export default function HubPersonal() {
   const [categoryFilters, setCategoryFilters] = useState<CategoryFilter[]>([
     { category: 'workout', label: 'Treino', color: 'text-emerald-600', icon: 'Dumbbell', enabled: true },
     { category: 'headache', label: 'Sintoma', color: 'text-red-600', icon: 'Frown', enabled: true },
-    { category: 'pet', label: 'Pet', color: 'text-purple-600', icon: 'Dog', enabled: true },
+    { category: 'pet', label: 'Pet', color: 'text-purple-600', icon: 'PawPrint', enabled: true },
     { category: 'bill', label: 'Contas', color: 'text-red-600', icon: 'DollarSign', enabled: true },
     { category: 'invoice', label: 'Faturas', color: 'text-orange-600', icon: 'DollarSign', enabled: true },
     { category: 'spiritual', label: 'Espiritual', color: 'text-purple-600', icon: 'BookOpen', enabled: true },
@@ -517,12 +517,12 @@ export default function HubPersonal() {
         <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
            <NavCard title="Financeiro" icon={<Wallet />} onClick={() => navigate('/personal/finance')} />
            <NavCard title="Saúde" icon={<Activity />} onClick={() => navigate('/personal/health')} />
-           <NavCard title="Espiritual" icon={<Heart />} onClick={() => navigate('/personal/spiritual')} />
+           <NavCard title="Espiritual" icon={<Church />} onClick={() => navigate('/personal/spiritual')} />
            <NavCard title="Estudos" icon={<BookOpen />} onClick={() => navigate('/personal/studies')} />
            
            {/* Pet Care com Badge de Notificação */}
            <div className="relative">
-             <NavCard title="Pet Care" icon={<Dog />} onClick={() => navigate('/personal/pet')} />
+             <NavCard title="Pet Care" icon={<PawPrint />} onClick={() => navigate('/personal/pet')} />
              {urgentPetTasks > 0 && (
                <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] font-bold shadow-lg animate-pulse">
                  {urgentPetTasks}
@@ -652,7 +652,7 @@ export default function HubPersonal() {
       {petTasks.length > 0 && (
         <div className="mb-8">
            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
-              <Dog size={16} /> Compromissos Pet
+              <PawPrint size={16} /> Compromissos Pet
               {urgentPetTasks > 0 && (
                 <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold rounded-full flex items-center gap-1">
                   <Bell size={10} /> {urgentPetTasks} urgente{urgentPetTasks > 1 ? 's' : ''}
@@ -670,7 +670,7 @@ export default function HubPersonal() {
                    <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3 flex-1">
                         <div className={`w-10 h-10 rounded-full ${style.bg} flex items-center justify-center ${style.icon} border ${style.border}`}>
-                          <Dog size={20} />
+                          <PawPrint size={20} />
                         </div>
                         <div className="flex-1 min-w-0">
                            <h4 className={`font-bold ${style.text} text-sm truncate`}>{task.title}</h4>

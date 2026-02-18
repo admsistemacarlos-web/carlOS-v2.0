@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Heart, CheckCircle2, Loader2, X, Trash2, Clock } from 'lucide-react';
+import { ArrowLeft, Plus, Church, CheckCircle2, Loader2, X, Trash2, Clock } from 'lucide-react';
 import { useSpiritual } from '../hooks/useSpiritual';
 import { formatDateBr } from '../../finance/utils/dateHelpers';
 
@@ -49,7 +49,7 @@ export default function PrayersPage() {
             <ArrowLeft size={14} /> Voltar
           </button>
           <h1 className="text-3xl font-bold text-foreground tracking-tight flex items-center gap-3">
-            <Heart className="text-rose-500 fill-rose-500" /> Lista de Oração
+            <Church className="text-rose-500 fill-rose-500" /> Lista de Oração
           </h1>
         </div>
         <button onClick={() => setIsModalOpen(true)} className="bg-rose-500 hover:bg-rose-600 text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-lg shadow-rose-200 transition-all active:scale-95">
