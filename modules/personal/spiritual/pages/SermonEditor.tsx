@@ -1,5 +1,4 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Save, Calendar, User, BookOpen, Loader2, Trash2 } from 'lucide-react';
 import { supabase } from '../../../../integrations/supabase/client';
@@ -14,9 +13,12 @@ export default function SermonEditor() {
 
   const [loading, setLoading] = useState(!!id);
   const [saving, setSaving] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
+  const saveTimeoutRef = useRef<any>(null);
+
   const getToday = () => new Date().toLocaleDateString('en-CA');
 
   const [formData, setFormData] = useState({
@@ -59,6 +61,24 @@ export default function SermonEditor() {
 
     fetchSermon();
   }, [id, user, navigate]);
+
+  // Auto-save do conteúdo do editor (só funciona ao editar registro existente)
+  const handleContentChange = (newMarkdown: string) => {
+    setFormData(prev => ({ ...prev, content: newMarkdown }));
+
+    if (!id) return; // Só auto-save se já existe registro salvo
+
+    setIsSaving(true);
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+
+    saveTimeoutRef.current = setTimeout(async () => {
+      await supabase
+        .from('sermon_notes')
+        .update({ content: newMarkdown })
+        .eq('id', id);
+      setIsSaving(false);
+    }, 1000);
+  };
 
   const handleSave = async () => {
     if (!formData.title.trim()) return alert("O título é obrigatório.");
@@ -133,9 +153,20 @@ export default function SermonEditor() {
           >
             <ArrowLeft size={20} />
           </button>
-          <h1 className="text-sm font-bold uppercase tracking-widest text-muted-foreground hidden md:block">
-            {id ? 'Editando Anotação' : 'Nova Anotação'}
-          </h1>
+          <div>
+            <h1 className="text-sm font-bold uppercase tracking-widest text-muted-foreground hidden md:block">
+              {id ? 'Editando Anotação' : 'Nova Anotação'}
+            </h1>
+            {id && (
+              <span className="text-[10px] text-muted-foreground font-medium flex items-center gap-1.5">
+                {isSaving ? (
+                  <><Loader2 size={10} className="animate-spin" /> Salvando...</>
+                ) : (
+                  <><Save size={10} /> Salvo</>
+                )}
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="flex gap-2">
@@ -217,8 +248,9 @@ export default function SermonEditor() {
         <div className="flex-1 flex flex-col bg-card rounded-[1.5rem] border border-border shadow-sm relative overflow-hidden min-h-[500px]">
           <div className="absolute top-0 left-0 w-full h-full p-8 md:p-12 overflow-y-auto">
              <RichTextEditor 
+                key={id}
                 content={formData.content}
-                onChange={(newMarkdown) => setFormData({...formData, content: newMarkdown})}
+                onChange={handleContentChange}
                 placeholder="# Anotações\n\nEscreva os principais pontos da mensagem..."
              />
           </div>

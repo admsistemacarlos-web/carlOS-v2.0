@@ -5,6 +5,8 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ProtectedRoute from './shared/components/Navigation/ProtectedRoute';
 import ScrollToTop from './shared/components/Navigation/ScrollToTop';
+import StudyEditor from './modules/personal/spiritual/pages/StudyEditor';
+
 
 // Layouts
 import PersonalLayout from './layouts/PersonalLayout';
@@ -172,8 +174,10 @@ const App: React.FC = () => {
                       <Route path="spiritual/sermons/new" element={<SermonEditor />} />
                       <Route path="spiritual/sermons/:id" element={<SermonEditor />} />
                       
-                      <Route path="spiritual/studies" element={<StudyNotesPage />} />
-                      
+<Route path="spiritual/studies" element={<StudyNotesPage />} />
+<Route path="spiritual/studies/new" element={<StudyEditor />} />
+<Route path="spiritual/studies/:id" element={<StudyEditor />} />
+
                       {/* Rotas de Pedidos de Oração (Lista simples) */}
                       <Route path="spiritual/prayers-list" element={<PrayersPage />} />
 
