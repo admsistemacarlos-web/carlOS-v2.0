@@ -34,6 +34,8 @@ import BillsPage from './modules/personal/finance/pages/BillsPage';
 import TransactionsPage from './modules/personal/finance/pages/TransactionsPage';
 import NewTransactionPage from './modules/personal/finance/pages/NewTransactionPage';
 import AvailableLimitsPage from './modules/personal/finance/pages/AvailableLimitsPage';
+import SubscriptionsPage from './modules/personal/finance/pages/SubscriptionsPage';
+
 
 // Container: Estudos
 import StudiesDashboard from './modules/personal/studies/pages/StudiesDashboard';
@@ -140,6 +142,8 @@ const App: React.FC = () => {
                       <Route path="finance/new" element={<NewTransactionPage />} />
                       <Route path="finance/edit/:id" element={<NewTransactionPage />} />
                       <Route path="finance/limits" element={<AvailableLimitsPage />} />
+                      <Route path="finance/subscriptions" element={<SubscriptionsPage />} />
+
                       
                       {/* Módulo: Estudos */}
                       <Route path="studies" element={<StudiesDashboard />} />

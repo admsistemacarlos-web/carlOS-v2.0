@@ -144,9 +144,46 @@ export interface Bill {
 
 export interface Subscription {
   id: string;
+  user_id?: string;
+  
+  // Informações do Serviço
   service_name: string;
+  description?: string | null;
+  category: string;
+  logo_url?: string | null;
+  service_url?: string | null;
+  
+  // Valores
   amount: number;
-  billing_cycle: 'monthly' | 'yearly';
+  currency?: string;
+  billing_cycle: 'weekly' | 'monthly' | 'quarterly' | 'semi_annual' | 'yearly';
+  
+  // Datas
+  start_date: string;
+  next_billing_date: string;
+  last_payment_date?: string | null;
+  
+  // Status
+  status: 'active' | 'paused' | 'cancelled' | 'trial';
+  
+  // Forma de Pagamento
+  payment_method?: 'credit_card' | 'account' | 'pix' | 'other';
+  credit_card_id?: string | null;
+  account_id?: string | null;
+  
+  // Notificações
+  notify_before_days?: number;
+  
+  // Notas
+  notes?: string | null;
+  
+  // Metadados
+  created_at?: string;
+  updated_at?: string;
+  
+  // Relacionamentos (Joins)
+  credit_card?: CreditCard;
+  account?: Account;
 }
 
 // ✅ NOVO: Interface para fechamento de período

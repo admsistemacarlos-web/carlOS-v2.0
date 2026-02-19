@@ -459,4 +459,3 @@ export const usePeriodLocks = () => {
 };
 
 export const useCreditCards = useCards;
-export const useSubscriptions = () => useTable<Subscription>('subscriptions');
