@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../../../integrations/supabase/client';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { Subscription } from '../types/finance.types';
+import { SubscriptionBillSync } from '../services/SubscriptionBillSync';
+
 
 export const useSubscriptions = () => {
   const { user } = useAuth();
@@ -95,16 +97,36 @@ export const useSubscriptions = () => {
 
   const yearlyTotal = monthlyTotal * 12;
 
+  /**
+ * Sincroniza assinaturas com bills (executa ao carregar a página)
+ */
+const syncWithBills = useCallback(async () => {
+  try {
+    await SubscriptionBillSync.syncAllSubscriptions();
+  } catch (error) {
+    console.error('Erro ao sincronizar assinaturas:', error);
+  }
+}, []);
+
+
+// Sincroniza bills ao montar o componente
+useEffect(() => {
+  if (subscriptions.length > 0) {
+    syncWithBills();
+  }
+}, [subscriptions.length, syncWithBills]);
+
   return {
-    subscriptions,
-    loading,
-    refresh: fetchSubscriptions,
-    addSubscription,
-    updateSubscription,
-    deleteSubscription,
-    toggleStatus,
-    activeSubscriptions,
-    monthlyTotal,
-    yearlyTotal,
-  };
+  subscriptions,
+  loading,
+  refresh: fetchSubscriptions,
+  addSubscription,
+  updateSubscription,
+  deleteSubscription,
+  toggleStatus,
+  activeSubscriptions,
+  monthlyTotal,
+  yearlyTotal,
+  syncWithBills, // ← ADICIONE ESTA LINHA
+};
 };

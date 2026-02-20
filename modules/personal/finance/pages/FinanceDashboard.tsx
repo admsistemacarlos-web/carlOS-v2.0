@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTransactions, useAccounts, useCards, useBills } from '../hooks/useFinanceData';
+import { useSubscriptions } from '../hooks/useSubscriptions';
 import { supabase } from '../../../../integrations/supabase/client';
 import { 
   Wallet, TrendingUp, TrendingDown, CreditCard, RefreshCcw, Plus, 
   ArrowUpRight, ArrowDownLeft, Lock, ShoppingBag, ShieldCheck, 
-  Clock, Filter, Pencil, Trash2, Receipt, ChevronLeft, ChevronRight, Calendar, Copy
+  Clock, Filter, Pencil, Trash2, Receipt, ChevronLeft, ChevronRight, Calendar, Copy, Repeat
 } from 'lucide-react';
 import { Transaction, Account } from '../types/finance.types';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -73,6 +74,7 @@ const FinanceDashboard: React.FC = () => {
   const { accounts, loading: loadingAccounts, refresh: refreshAccounts } = useAccounts(); // Contas são sempre saldo atual
   const { cards, loading: loadingCards, refresh: refreshCards } = useCards(); // Cartões trazem limites globais
   const { bills, loading: loadingBills, refresh: refreshBills } = useBills(); // Contas a pagar trazem tudo
+  const { subscriptions, loading: loadingSubscriptions, activeSubscriptions, monthlyTotal } = useSubscriptions(); // Hook de assinaturas
 
   // Estado para Confirmação de Exclusão
   const [deleteConfirm, setDeleteConfirm] = useState<{
@@ -274,7 +276,8 @@ const FinanceDashboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* CARDS DE RESUMO - Agora com 5 cards (incluindo Assinaturas) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <SummaryCard 
           title="Saldo Atual" 
           value={`R$ ${stats.totalBalance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`} 
@@ -298,6 +301,14 @@ const FinanceDashboard: React.FC = () => {
           color="text-terracotta"
           loading={loadingBills}
           onClick={() => navigate('/personal/finance/bills')}
+        />
+        <SummaryCard 
+          title="Assinaturas Ativas" 
+          value={`R$ ${monthlyTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}/mês`} 
+          icon={<Repeat />}
+          color="text-blue-600"
+          loading={loadingSubscriptions}
+          onClick={() => navigate('/personal/finance/subscriptions')}
         />
         <SummaryCard 
           title="Limite Total Cartões" 

@@ -376,76 +376,103 @@ const SubscriptionCard: React.FC<SubCardProps> = ({ sub, onEdit, onToggle, onDel
 
   return (
     <div className={`group bg-white border rounded-2xl p-5 transition-all hover:shadow-md ${isOverdue ? 'border-red-200 bg-red-50/30' : isUpcoming ? 'border-amber-200 bg-amber-50/30' : 'border-stone-100'}`}>
-      <div className="flex items-start justify-between gap-3">
-        {/* Info Principal */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-semibold text-coffee text-sm truncate">{sub.service_name}</h3>
-            {sub.service_url && (
-              <a href={sub.service_url} target="_blank" rel="noopener noreferrer" className="text-olive/50 hover:text-olive transition-colors flex-shrink-0">
-                <ExternalLink size={12} />
-              </a>
-            )}
-          </div>
+      
+      {/* Layout Horizontal - Linha Principal */}
+      <div className="flex items-center gap-6">
+        
+        {/* Coluna 1: Status + Nome do Serviço */}
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <span className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-semibold flex-shrink-0 ${status.color}`}>
+            {status.icon}
+          </span>
           
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${status.color}`}>
-              {status.icon} {status.label}
-            </span>
-            <span className="text-[10px] text-coffee/40 font-medium">{getCategoryLabel(sub.category)}</span>
-            <span className="text-[10px] text-coffee/40">•</span>
-            <span className="text-[10px] text-coffee/40 font-medium">{getCycleLabel(sub.billing_cycle)}</span>
-          </div>
-
-          {/* Próxima cobrança */}
-          {sub.status !== 'cancelled' && (
-            <div className={`flex items-center gap-1.5 mt-2.5 text-[11px] font-medium ${isOverdue ? 'text-red-500' : isUpcoming ? 'text-amber-600' : 'text-coffee/40'}`}>
-              {isOverdue ? <AlertCircle size={12} /> : <CalendarClock size={12} />}
-              {isOverdue
-                ? `Vencida há ${Math.abs(daysUntil)} dia${Math.abs(daysUntil) !== 1 ? 's' : ''}`
-                : daysUntil === 0
-                  ? 'Cobra hoje'
-                  : daysUntil === 1
-                    ? 'Cobra amanhã'
-                    : `Próxima cobrança em ${daysUntil} dias — ${formatDate(sub.next_billing_date)}`
-              }
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 mb-0.5">
+              <h3 className="font-semibold text-coffee text-sm truncate">{sub.service_name}</h3>
+              {sub.service_url && (
+                <a href={sub.service_url} target="_blank" rel="noopener noreferrer" className="text-olive/50 hover:text-olive transition-colors flex-shrink-0">
+                  <ExternalLink size={12} />
+                </a>
+              )}
             </div>
-          )}
-
-          {/* Pagamento */}
-          <div className="flex items-center gap-1.5 mt-1.5 text-[10px] text-coffee/30">
-            {PAYMENT_ICONS[sub.payment_method || 'other']}
-            {sub.credit_card?.name || (sub.payment_method === 'pix' ? 'PIX' : sub.payment_method === 'account' ? 'Débito em Conta' : '')}
+            <div className="flex items-center gap-2 text-[10px] text-coffee/40">
+              <span>{getCategoryLabel(sub.category)}</span>
+            </div>
           </div>
         </div>
 
-        {/* Valor */}
-        <div className="text-right flex-shrink-0">
+        {/* Coluna 2: Próxima Cobrança */}
+        <div className="hidden md:flex items-center gap-2 min-w-[180px]">
+          {sub.status !== 'cancelled' && (
+            <div className={`flex items-center gap-1.5 text-[11px] font-medium ${isOverdue ? 'text-red-500' : isUpcoming ? 'text-amber-600' : 'text-coffee/40'}`}>
+              {isOverdue ? <AlertCircle size={12} /> : <CalendarClock size={12} />}
+              <span className="whitespace-nowrap">
+                {isOverdue
+                  ? `Há ${Math.abs(daysUntil)}d atrás`
+                  : daysUntil === 0
+                    ? 'Hoje'
+                    : daysUntil === 1
+                      ? 'Amanhã'
+                      : `Em ${daysUntil} dias`
+                }
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Coluna 3: Forma de Pagamento */}
+        <div className="hidden lg:flex items-center gap-1.5 text-[10px] text-coffee/40 min-w-[140px]">
+          <span className="flex-shrink-0">{PAYMENT_ICONS[sub.payment_method || 'other']}</span>
+          <span className="truncate">
+            {sub.credit_card?.name || (sub.payment_method === 'pix' ? 'PIX' : sub.payment_method === 'account' ? 'Conta' : 'Outro')}
+          </span>
+        </div>
+
+        {/* Coluna 4: Ciclo */}
+        <div className="hidden sm:block text-[10px] text-coffee/40 font-medium min-w-[70px] text-center">
+          {getCycleLabel(sub.billing_cycle)}
+        </div>
+
+        {/* Coluna 5: Valor */}
+        <div className="text-right flex-shrink-0 min-w-[100px]">
           <p className="text-lg font-bold text-coffee tracking-tight">{formatCurrency(sub.amount)}</p>
           <p className="text-[10px] text-coffee/40 font-medium">/{getCycleLabel(sub.billing_cycle).toLowerCase().slice(0, 3)}</p>
         </div>
-      </div>
 
-      {/* Notas */}
-      {sub.notes && (
-        <p className="mt-3 text-[11px] text-coffee/40 italic border-t border-stone-50 pt-2">{sub.notes}</p>
-      )}
-
-      {/* Ações (hover) */}
-      <div className="flex items-center gap-1 mt-3 pt-3 border-t border-stone-50 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button onClick={onEdit} className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-semibold text-coffee/50 hover:text-coffee hover:bg-stone-50 rounded-lg transition-all">
-          <Edit2 size={12} /> Editar
-        </button>
-        {sub.status !== 'cancelled' && (
-          <button onClick={onToggle} className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-semibold text-coffee/50 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all">
-            {sub.status === 'paused' ? <Play size={12} /> : <Pause size={12} />}
-            {sub.status === 'paused' ? 'Retomar' : 'Pausar'}
+        {/* Coluna 6: Ações (visível no hover) */}
+        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+          <button 
+            onClick={onEdit} 
+            className="p-2 text-coffee/40 hover:text-coffee hover:bg-stone-50 rounded-lg transition-all"
+            title="Editar"
+          >
+            <Edit2 size={14} />
           </button>
-        )}
-        <button onClick={onDelete} className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-semibold text-coffee/50 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all ml-auto">
-          <Trash2 size={12} /> Excluir
-        </button>
+          {sub.status !== 'cancelled' && (
+            <button 
+              onClick={onToggle}
+              className="p-2 text-coffee/40 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all"
+              title={sub.status === 'paused' ? 'Retomar' : 'Pausar'}
+            >
+              {sub.status === 'paused' ? <Play size={14} /> : <Pause size={14} />}
+            </button>
+          )}
+          <button 
+            onClick={onDelete}
+            className="p-2 text-coffee/40 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+            title="Excluir"
+          >
+            <Trash2 size={14} />
+          </button>
+        </div>
       </div>
+
+      {/* Notas (se houver) */}
+      {sub.notes && (
+        <div className="mt-3 pt-3 border-t border-stone-50">
+          <p className="text-[11px] text-coffee/40 italic">{sub.notes}</p>
+        </div>
+      )}
     </div>
   );
 };
@@ -623,7 +650,7 @@ export default function SubscriptionsPage() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-3">
           {filteredSubs.map(sub => (
             <SubscriptionCard
               key={sub.id}
