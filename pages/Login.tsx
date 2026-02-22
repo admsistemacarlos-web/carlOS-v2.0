@@ -179,7 +179,7 @@ const Login: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-deep-blue hover:bg-black text-cream font-bold py-4 rounded-2xl transition-all mt-4 shadow-lg shadow-deep-blue/10 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-deep-blue hover:bg-black text-white font-bold py-4 rounded-2xl transition-all mt-4 shadow-lg shadow-deep-blue/10 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Processando...' : (isSignUp ? 'Criar Conta' : 'Acessar Sistema')}
           </button>

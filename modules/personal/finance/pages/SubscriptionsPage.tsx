@@ -4,42 +4,43 @@ import {
   ArrowLeft, Plus, Search, Filter, Pause, Play, Trash2,
   CreditCard, Building2, QrCode, Edit2, ExternalLink,
   CalendarClock, TrendingUp, Loader2, X, ChevronDown,
-  Repeat, AlertCircle, CheckCircle2, Clock
+  Repeat, AlertCircle, CheckCircle2, Clock, PieChart, BarChart3
 } from 'lucide-react';
 import { useSubscriptions } from '../hooks/useSubscriptions';
 import { useCards } from '../hooks/useFinanceData';
 import { Subscription } from '../types/finance.types';
 import { createPortal } from 'react-dom';
 import { supabase } from '../../../../integrations/supabase/client';
+import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
 // ============================================
 // CONSTANTES
 // ============================================
 
 const CATEGORIES = [
-  { value: 'streaming', label: 'Streaming' },
-  { value: 'music', label: 'Música' },
-  { value: 'gaming', label: 'Games' },
-  { value: 'productivity', label: 'Produtividade' },
-  { value: 'ai', label: 'Inteligência Artificial' },
-  { value: 'cloud', label: 'Cloud / Storage' },
-  { value: 'education', label: 'Educação' },
-  { value: 'news', label: 'Notícias' },
-  { value: 'health', label: 'Saúde / Fitness' },
-  { value: 'finance', label: 'Finanças' },
-  { value: 'design', label: 'Design' },
-  { value: 'development', label: 'Desenvolvimento' },
-  { value: 'communication', label: 'Comunicação' },
-  { value: 'security', label: 'Segurança' },
-  { value: 'other', label: 'Outros' },
+  { value: 'streaming', label: 'Streaming', color: '#E09B6B' },
+  { value: 'music', label: 'Música', color: '#8B7355' },
+  { value: 'gaming', label: 'Games', color: '#A0826D' },
+  { value: 'productivity', label: 'Produtividade', color: '#6B8E23' },
+  { value: 'ai', label: 'Inteligência Artificial', color: '#4169E1' },
+  { value: 'cloud', label: 'Cloud / Storage', color: '#87CEEB' },
+  { value: 'education', label: 'Educação', color: '#FFD700' },
+  { value: 'news', label: 'Notícias', color: '#DC143C' },
+  { value: 'health', label: 'Saúde / Fitness', color: '#32CD32' },
+  { value: 'finance', label: 'Finanças', color: '#228B22' },
+  { value: 'design', label: 'Design', color: '#FF69B4' },
+  { value: 'development', label: 'Desenvolvimento', color: '#4B0082' },
+  { value: 'communication', label: 'Comunicação', color: '#00CED1' },
+  { value: 'security', label: 'Segurança', color: '#B22222' },
+  { value: 'other', label: 'Outros', color: '#808080' },
 ];
 
-const BILLING_CYCLES: { value: Subscription['billing_cycle']; label: string }[] = [
-  { value: 'weekly', label: 'Semanal' },
-  { value: 'monthly', label: 'Mensal' },
-  { value: 'quarterly', label: 'Trimestral' },
-  { value: 'semi_annual', label: 'Semestral' },
-  { value: 'yearly', label: 'Anual' },
+const BILLING_CYCLES: { value: Subscription['billing_cycle']; label: string; multiplier: number }[] = [
+  { value: 'weekly', label: 'Semanal', multiplier: 4.33 },
+  { value: 'monthly', label: 'Mensal', multiplier: 1 },
+  { value: 'quarterly', label: 'Trimestral', multiplier: 0.333 },
+  { value: 'semi_annual', label: 'Semestral', multiplier: 0.167 },
+  { value: 'yearly', label: 'Anual', multiplier: 0.083 },
 ];
 
 const STATUS_MAP: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
@@ -57,7 +58,9 @@ const PAYMENT_ICONS: Record<string, React.ReactNode> = {
 };
 
 const getCategoryLabel = (value: string) => CATEGORIES.find(c => c.value === value)?.label || value;
+const getCategoryColor = (value: string) => CATEGORIES.find(c => c.value === value)?.color || '#808080';
 const getCycleLabel = (value: string) => BILLING_CYCLES.find(c => c.value === value)?.label || value;
+const getCycleMultiplier = (value: string) => BILLING_CYCLES.find(c => c.value === value)?.multiplier || 1;
 
 const formatCurrency = (value: number) =>
   value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -171,21 +174,21 @@ const SubscriptionFormModal: React.FC<FormModalProps> = ({ isOpen, onClose, onSa
 
   if (!isOpen) return null;
 
-  const inputClass = "w-full px-4 py-3 bg-coffee/5 border border-stone-200 rounded-xl text-sm text-coffee focus:outline-none focus:ring-2 focus:ring-olive/30 focus:border-olive transition-all";
-  const labelClass = "block text-[11px] font-semibold text-coffee/60 mb-1.5 uppercase tracking-wider";
+  const inputClass = "w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-olive/30 focus:border-olive transition-all";
+  const labelClass = "block text-[11px] font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider";
   const selectClass = `${inputClass} appearance-none`;
 
   return createPortal(
     <div className="fixed inset-0 bg-coffee/30 backdrop-blur-sm flex items-center justify-center z-[9999] p-4" onClick={onClose}>
-      <div className="bg-cream border border-stone-200 rounded-[2rem] shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+      <div className="bg-card border border-border rounded-[2rem] shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         
         {/* Header */}
-        <div className="flex items-center justify-between p-6 pb-4 border-b border-stone-100">
-          <h2 className="text-lg font-semibold tracking-tight text-coffee">
+        <div className="flex items-center justify-between p-6 pb-4 border-b border-border">
+          <h2 className="text-lg font-semibold tracking-tight text-foreground">
             {editingItem ? 'Editar Assinatura' : 'Nova Assinatura'}
           </h2>
           <button onClick={onClose} className="p-2 hover:bg-stone-100 rounded-xl transition-colors">
-            <X size={18} className="text-coffee/40" />
+            <X size={18} className="text-foreground/40" />
           </button>
         </div>
 
@@ -345,7 +348,7 @@ const SubscriptionFormModal: React.FC<FormModalProps> = ({ isOpen, onClose, onSa
           <button
             type="submit"
             disabled={saving}
-            className="w-full py-3.5 bg-coffee text-cream rounded-xl font-semibold text-sm tracking-wide hover:bg-coffee/90 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full py-3.5 bg-coffee text-white rounded-xl font-semibold text-sm tracking-wide hover:bg-coffee/90 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {saving ? <Loader2 size={16} className="animate-spin" /> : null}
             {editingItem ? 'Salvar Alterações' : 'Adicionar Assinatura'}
@@ -358,7 +361,7 @@ const SubscriptionFormModal: React.FC<FormModalProps> = ({ isOpen, onClose, onSa
 };
 
 // ============================================
-// COMPONENTE: CARD DE ASSINATURA
+// COMPONENTE: CARD DE ASSINATURA (REDESIGN)
 // ============================================
 
 interface SubCardProps {
@@ -375,104 +378,107 @@ const SubscriptionCard: React.FC<SubCardProps> = ({ sub, onEdit, onToggle, onDel
   const isOverdue = daysUntil < 0 && sub.status === 'active';
 
   return (
-    <div className={`group bg-white border rounded-2xl p-5 transition-all hover:shadow-md ${isOverdue ? 'border-red-200 bg-red-50/30' : isUpcoming ? 'border-amber-200 bg-amber-50/30' : 'border-stone-100'}`}>
+    <div className={`group bg-card border rounded-2xl p-4 transition-all hover:shadow-md ${isOverdue ? 'border-red-200 bg-red-50/30' : isUpcoming ? 'border-amber-200 bg-amber-50/30' : 'border-border'}`}>
       
-      {/* Layout Horizontal - Linha Principal */}
-      <div className="flex items-center gap-6">
+      {/* LINHA 1: Status + Nome + Valor */}
+      <div className="flex items-start gap-3 mb-3">
+        {/* Status Icon */}
+        <span className={`inline-flex items-center justify-center w-8 h-8 rounded-lg text-[10px] font-semibold flex-shrink-0 ${status.color}`}>
+          {status.icon}
+        </span>
         
-        {/* Coluna 1: Status + Nome do Serviço */}
-        <div className="flex items-center gap-3 min-w-0 flex-1">
-          <span className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-semibold flex-shrink-0 ${status.color}`}>
-            {status.icon}
-          </span>
-          
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 mb-0.5">
-              <h3 className="font-semibold text-coffee text-sm truncate">{sub.service_name}</h3>
-              {sub.service_url && (
-                <a href={sub.service_url} target="_blank" rel="noopener noreferrer" className="text-olive/50 hover:text-olive transition-colors flex-shrink-0">
-                  <ExternalLink size={12} />
-                </a>
-              )}
-            </div>
-            <div className="flex items-center gap-2 text-[10px] text-coffee/40">
-              <span>{getCategoryLabel(sub.category)}</span>
-            </div>
+        {/* Nome e Categoria */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="font-semibold text-foreground text-sm truncate">{sub.service_name}</h3>
+            {sub.service_url && (
+              <a 
+                href={sub.service_url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-olive/50 hover:text-olive transition-colors flex-shrink-0"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <ExternalLink size={11} />
+              </a>
+            )}
+          </div>
+          <div className="text-[9px] text-foreground/40 font-medium">
+            {getCategoryLabel(sub.category)} • {getCycleLabel(sub.billing_cycle)}
           </div>
         </div>
 
-        {/* Coluna 2: Próxima Cobrança */}
-        <div className="hidden md:flex items-center gap-2 min-w-[180px]">
-          {sub.status !== 'cancelled' && (
-            <div className={`flex items-center gap-1.5 text-[11px] font-medium ${isOverdue ? 'text-red-500' : isUpcoming ? 'text-amber-600' : 'text-coffee/40'}`}>
-              {isOverdue ? <AlertCircle size={12} /> : <CalendarClock size={12} />}
-              <span className="whitespace-nowrap">
-                {isOverdue
-                  ? `Há ${Math.abs(daysUntil)}d atrás`
-                  : daysUntil === 0
-                    ? 'Hoje'
-                    : daysUntil === 1
-                      ? 'Amanhã'
-                      : `Em ${daysUntil} dias`
-                }
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Coluna 3: Forma de Pagamento */}
-        <div className="hidden lg:flex items-center gap-1.5 text-[10px] text-coffee/40 min-w-[140px]">
-          <span className="flex-shrink-0">{PAYMENT_ICONS[sub.payment_method || 'other']}</span>
-          <span className="truncate">
-            {sub.credit_card?.name || (sub.payment_method === 'pix' ? 'PIX' : sub.payment_method === 'account' ? 'Conta' : 'Outro')}
-          </span>
-        </div>
-
-        {/* Coluna 4: Ciclo */}
-        <div className="hidden sm:block text-[10px] text-coffee/40 font-medium min-w-[70px] text-center">
-          {getCycleLabel(sub.billing_cycle)}
-        </div>
-
-        {/* Coluna 5: Valor */}
-        <div className="text-right flex-shrink-0 min-w-[100px]">
-          <p className="text-lg font-bold text-coffee tracking-tight">{formatCurrency(sub.amount)}</p>
-          <p className="text-[10px] text-coffee/40 font-medium">/{getCycleLabel(sub.billing_cycle).toLowerCase().slice(0, 3)}</p>
-        </div>
-
-        {/* Coluna 6: Ações (visível no hover) */}
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-          <button 
-            onClick={onEdit} 
-            className="p-2 text-coffee/40 hover:text-coffee hover:bg-stone-50 rounded-lg transition-all"
-            title="Editar"
-          >
-            <Edit2 size={14} />
-          </button>
-          {sub.status !== 'cancelled' && (
-            <button 
-              onClick={onToggle}
-              className="p-2 text-coffee/40 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all"
-              title={sub.status === 'paused' ? 'Retomar' : 'Pausar'}
-            >
-              {sub.status === 'paused' ? <Play size={14} /> : <Pause size={14} />}
-            </button>
-          )}
-          <button 
-            onClick={onDelete}
-            className="p-2 text-coffee/40 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
-            title="Excluir"
-          >
-            <Trash2 size={14} />
-          </button>
+        {/* Valor (Destaque) */}
+        <div className="text-right flex-shrink-0">
+          <p className="text-base font-bold text-foreground tracking-tight leading-none">
+            {formatCurrency(sub.amount)}
+          </p>
+          <p className="text-[9px] text-foreground/40 font-medium mt-0.5">
+            /{getCycleLabel(sub.billing_cycle).toLowerCase().slice(0, 3)}
+          </p>
         </div>
       </div>
 
-      {/* Notas (se houver) */}
-      {sub.notes && (
-        <div className="mt-3 pt-3 border-t border-stone-50">
-          <p className="text-[11px] text-coffee/40 italic">{sub.notes}</p>
+      {/* LINHA 2: Próxima Cobrança */}
+      {sub.status !== 'cancelled' && (
+        <div className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-[10px] font-medium mb-2 ${isOverdue ? 'bg-red-50 text-red-600' : isUpcoming ? 'bg-amber-50 text-amber-700' : 'bg-secondary text-foreground/50'}`}>
+          {isOverdue ? <AlertCircle size={11} /> : <CalendarClock size={11} />}
+          <span>
+            {isOverdue
+              ? `Vencida há ${Math.abs(daysUntil)} dia${Math.abs(daysUntil) !== 1 ? 's' : ''}`
+              : daysUntil === 0
+                ? 'Cobra hoje'
+                : daysUntil === 1
+                  ? 'Cobra amanhã'
+                  : `Em ${daysUntil} dias — ${formatDate(sub.next_billing_date)}`
+            }
+          </span>
         </div>
       )}
+
+      {/* LINHA 3: Pagamento */}
+      <div className="flex items-center gap-1.5 px-2 py-1 text-[9px] text-foreground/30 mb-3">
+        <span className="flex-shrink-0">{PAYMENT_ICONS[sub.payment_method || 'other']}</span>
+        <span className="truncate">
+          {sub.credit_card?.name || (sub.payment_method === 'pix' ? 'PIX' : sub.payment_method === 'account' ? 'Débito em Conta' : 'Outro')}
+        </span>
+      </div>
+
+      {/* LINHA 4: Notas (se houver) */}
+      {sub.notes && (
+        <div className="px-2 py-1.5 mb-3 bg-secondary rounded-lg border border-border">
+          <p className="text-[10px] text-foreground/40 italic line-clamp-2">{sub.notes}</p>
+        </div>
+      )}
+
+      {/* LINHA 5: Ações (SEMPRE VISÍVEL) */}
+      <div className="flex items-center gap-1 pt-2 border-t border-border">
+        <button 
+          onClick={onEdit} 
+          className="flex items-center gap-1.5 px-3 py-1.5 text-[9px] font-semibold text-foreground/50 hover:text-foreground hover:bg-secondary rounded-lg transition-all flex-1 justify-center"
+        >
+          <Edit2 size={11} /> 
+          <span className="hidden sm:inline">Editar</span>
+        </button>
+        
+        {sub.status !== 'cancelled' && (
+          <button 
+            onClick={onToggle}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-[9px] font-semibold text-foreground/50 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all flex-1 justify-center"
+          >
+            {sub.status === 'paused' ? <Play size={11} /> : <Pause size={11} />}
+            <span className="hidden sm:inline">{sub.status === 'paused' ? 'Retomar' : 'Pausar'}</span>
+          </button>
+        )}
+        
+        <button 
+          onClick={onDelete}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-[9px] font-semibold text-foreground/50 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all flex-1 justify-center"
+        >
+          <Trash2 size={11} /> 
+          <span className="hidden sm:inline">Excluir</span>
+        </button>
+      </div>
     </div>
   );
 };
@@ -495,6 +501,50 @@ export default function SubscriptionsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterCategory, setFilterCategory] = useState<string>('all');
+
+  // ============================================
+  // ANALYTICS POR CATEGORIA
+  // ============================================
+  
+  const categoryStats = useMemo(() => {
+    // Agrupa assinaturas ativas por categoria
+    const active = activeSubscriptions;
+    const byCategory: Record<string, { count: number; total: number; subs: Subscription[] }> = {};
+
+    active.forEach(sub => {
+      if (!byCategory[sub.category]) {
+        byCategory[sub.category] = { count: 0, total: 0, subs: [] };
+      }
+      // Converte tudo para custo mensal equivalente
+      const monthlyEquivalent = sub.amount * getCycleMultiplier(sub.billing_cycle);
+      byCategory[sub.category].count += 1;
+      byCategory[sub.category].total += monthlyEquivalent;
+      byCategory[sub.category].subs.push(sub);
+    });
+
+    // Converte para array e ordena por gasto
+    const categoriesArray = Object.entries(byCategory).map(([category, data]) => ({
+      category,
+      label: getCategoryLabel(category),
+      color: getCategoryColor(category),
+      count: data.count,
+      monthlyTotal: data.total,
+      yearlyTotal: data.total * 12,
+      percentage: (data.total / monthlyTotal) * 100,
+      subscriptions: data.subs
+    })).sort((a, b) => b.monthlyTotal - a.monthlyTotal);
+
+    return categoriesArray;
+  }, [activeSubscriptions, monthlyTotal]);
+
+  // Dados para o gráfico de pizza
+  const pieChartData = useMemo(() => {
+    return categoryStats.map(cat => ({
+      name: cat.label,
+      value: cat.monthlyTotal,
+      color: cat.color
+    }));
+  }, [categoryStats]);
 
   // Filtragem
   const filteredSubs = useMemo(() => {
@@ -551,16 +601,16 @@ export default function SubscriptionsPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button onClick={() => navigate('/personal/finance')} className="p-2 hover:bg-stone-100 rounded-xl transition-colors">
-            <ArrowLeft size={20} className="text-coffee/40" />
+            <ArrowLeft size={20} className="text-foreground/40" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-coffee">Assinaturas</h1>
-            <p className="text-xs text-coffee/40 mt-0.5">Controle seus serviços recorrentes</p>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">Assinaturas</h1>
+            <p className="text-xs text-foreground/40 mt-0.5">Controle seus serviços recorrentes</p>
           </div>
         </div>
         <button
           onClick={openNewModal}
-          className="flex items-center gap-2 px-5 py-2.5 bg-coffee text-cream rounded-xl text-xs font-semibold hover:bg-coffee/90 active:scale-95 transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 bg-coffee text-white rounded-xl text-xs font-semibold hover:bg-coffee/90 active:scale-95 transition-all"
         >
           <Plus size={14} /> Nova Assinatura
         </button>
@@ -568,50 +618,112 @@ export default function SubscriptionsPage() {
 
       {/* Cards de Resumo */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white border border-stone-100 rounded-2xl p-5">
-          <div className="flex items-center gap-2 text-coffee/40 mb-2">
+        <div className="bg-card border border-border rounded-2xl p-5">
+          <div className="flex items-center gap-2 text-foreground/40 mb-2">
             <Repeat size={14} />
             <span className="text-[10px] font-semibold uppercase tracking-wider">Ativas</span>
           </div>
-          <p className="text-2xl font-bold text-coffee">{activeSubscriptions.length}</p>
-          <p className="text-[10px] text-coffee/30 mt-1">de {subscriptions.length} total</p>
+          <p className="text-2xl font-bold text-foreground">{activeSubscriptions.length}</p>
+          <p className="text-[10px] text-foreground/30 mt-1">de {subscriptions.length} total</p>
         </div>
 
-        <div className="bg-white border border-stone-100 rounded-2xl p-5">
-          <div className="flex items-center gap-2 text-coffee/40 mb-2">
+        <div className="bg-card border border-border rounded-2xl p-5">
+          <div className="flex items-center gap-2 text-foreground/40 mb-2">
             <CalendarClock size={14} />
             <span className="text-[10px] font-semibold uppercase tracking-wider">Custo Mensal</span>
           </div>
-          <p className="text-2xl font-bold text-coffee">{formatCurrency(monthlyTotal)}</p>
-          <p className="text-[10px] text-coffee/30 mt-1">equivalente mensal</p>
+          <p className="text-2xl font-bold text-foreground">{formatCurrency(monthlyTotal)}</p>
+          <p className="text-[10px] text-foreground/30 mt-1">equivalente mensal</p>
         </div>
 
-        <div className="bg-white border border-stone-100 rounded-2xl p-5">
-          <div className="flex items-center gap-2 text-coffee/40 mb-2">
+        <div className="bg-card border border-border rounded-2xl p-5">
+          <div className="flex items-center gap-2 text-foreground/40 mb-2">
             <TrendingUp size={14} />
             <span className="text-[10px] font-semibold uppercase tracking-wider">Custo Anual</span>
           </div>
-          <p className="text-2xl font-bold text-coffee">{formatCurrency(yearlyTotal)}</p>
-          <p className="text-[10px] text-coffee/30 mt-1">projeção 12 meses</p>
+          <p className="text-2xl font-bold text-foreground">{formatCurrency(yearlyTotal)}</p>
+          <p className="text-[10px] text-foreground/30 mt-1">projeção 12 meses</p>
         </div>
       </div>
+
+      {/* ANALYTICS POR CATEGORIA */}
+      {categoryStats.length > 0 && (
+        <div className="bg-card border border-border rounded-2xl p-6">
+          <div className="flex items-center gap-2 mb-6">
+            <PieChart size={18} className="text-olive" />
+            <h2 className="text-sm font-bold uppercase tracking-widest text-foreground">Análise por Categoria</h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            {/* Gráfico de Pizza */}
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <RechartsPie>
+                  <Pie
+                    data={pieChartData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {pieChartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                </RechartsPie>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Lista Detalhada */}
+            <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+              {categoryStats.map((cat) => (
+                <div 
+                  key={cat.category}
+                  className="flex items-center justify-between p-3 bg-secondary rounded-xl border border-border hover:border-border transition-colors cursor-pointer"
+                  onClick={() => setFilterCategory(cat.category)}
+                >
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div 
+                      className="w-3 h-3 rounded-full flex-shrink-0" 
+                      style={{ backgroundColor: cat.color }}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-sm font-semibold text-foreground truncate">{cat.label}</h3>
+                      <p className="text-[10px] text-foreground/40">{cat.count} assinatura{cat.count !== 1 ? 's' : ''}</p>
+                    </div>
+                  </div>
+                  <div className="text-right flex-shrink-0 ml-3">
+                    <p className="text-sm font-bold text-foreground">{formatCurrency(cat.monthlyTotal)}</p>
+                    <p className="text-[9px] text-foreground/40">/mês</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Barra de Busca e Filtros */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-coffee/30" />
+          <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/30" />
           <input
             type="text"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder="Buscar assinatura..."
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-stone-100 rounded-xl text-sm text-coffee focus:outline-none focus:ring-2 focus:ring-olive/20 transition-all"
+            className="w-full pl-10 pr-4 py-2.5 bg-card border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-olive/20 transition-all"
           />
         </div>
         <select
           value={filterStatus}
           onChange={e => setFilterStatus(e.target.value)}
-          className="px-4 py-2.5 bg-white border border-stone-100 rounded-xl text-xs font-medium text-coffee/60 focus:outline-none focus:ring-2 focus:ring-olive/20 appearance-none"
+          className="px-4 py-2.5 bg-card border border-border rounded-xl text-xs font-medium text-foreground/60 focus:outline-none focus:ring-2 focus:ring-olive/20 appearance-none"
         >
           <option value="all">Todos os Status</option>
           <option value="active">Ativas</option>
@@ -623,7 +735,7 @@ export default function SubscriptionsPage() {
           <select
             value={filterCategory}
             onChange={e => setFilterCategory(e.target.value)}
-            className="px-4 py-2.5 bg-white border border-stone-100 rounded-xl text-xs font-medium text-coffee/60 focus:outline-none focus:ring-2 focus:ring-olive/20 appearance-none"
+            className="px-4 py-2.5 bg-card border border-border rounded-xl text-xs font-medium text-foreground/60 focus:outline-none focus:ring-2 focus:ring-olive/20 appearance-none"
           >
             <option value="all">Todas as Categorias</option>
             {usedCategories.map(c => (
@@ -631,26 +743,34 @@ export default function SubscriptionsPage() {
             ))}
           </select>
         )}
+        {filterCategory !== 'all' && (
+          <button
+            onClick={() => setFilterCategory('all')}
+            className="px-4 py-2.5 bg-stone-100 hover:bg-accent text-foreground/60 rounded-xl text-xs font-semibold transition-colors flex items-center gap-2"
+          >
+            <X size={12} /> Limpar Filtro
+          </button>
+        )}
       </div>
 
       {/* Lista de Assinaturas */}
       {filteredSubs.length === 0 ? (
         <div className="text-center py-16">
-          <Repeat size={40} className="mx-auto text-coffee/10 mb-4" />
-          <h3 className="text-sm font-semibold text-coffee/40 mb-1">
+          <Repeat size={40} className="mx-auto text-foreground/10 mb-4" />
+          <h3 className="text-sm font-semibold text-foreground/40 mb-1">
             {subscriptions.length === 0 ? 'Nenhuma assinatura cadastrada' : 'Nenhum resultado encontrado'}
           </h3>
-          <p className="text-xs text-coffee/30">
+          <p className="text-xs text-foreground/30">
             {subscriptions.length === 0 ? 'Comece adicionando seus serviços recorrentes.' : 'Tente ajustar os filtros.'}
           </p>
           {subscriptions.length === 0 && (
-            <button onClick={openNewModal} className="mt-4 px-5 py-2.5 bg-coffee text-cream rounded-xl text-xs font-semibold hover:bg-coffee/90 transition-all">
+            <button onClick={openNewModal} className="mt-4 px-5 py-2.5 bg-coffee text-white rounded-xl text-xs font-semibold hover:bg-coffee/90 transition-all">
               <Plus size={14} className="inline mr-1" /> Adicionar primeira
             </button>
           )}
         </div>
       ) : (
-            <div className="space-y-3">
+        <div className="space-y-3">
           {filteredSubs.map(sub => (
             <SubscriptionCard
               key={sub.id}

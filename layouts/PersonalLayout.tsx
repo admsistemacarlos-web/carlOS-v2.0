@@ -116,7 +116,7 @@ const PersonalLayout: React.FC<PersonalLayoutProps> = ({ children }) => {
                 <NavLink 
                   to="/personal/finance/subscriptions" 
                   onClick={closeSidebar} 
-                  className={({ isActive }) => `block px-3 py-2 text-[10px] font-medium rounded-lg transition-colors ${isActive ? 'text-white bg-white/10' : 'text-cappuccino hover:text-white'}`}
+                  className={({ isActive }) => `block px-3 py-2 text-[10px] font-medium rounded-lg transition-colors ${isActive ? 'text-white bg-card/10' : 'text-cappuccino hover:text-white'}`}
                 >
                   Assinaturas
                 </NavLink>
