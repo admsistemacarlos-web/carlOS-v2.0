@@ -176,7 +176,7 @@ export default function ProposalView() {
                     <div className="bg-[#202020] rounded-2xl p-6 border border-[#333] shadow-lg print:bg-card print:border-border print:shadow-none">
                         <div className="flex justify-between items-center mb-6 border-b border-[#333] pb-4 print:border-border">
                             <h3 className="font-bold text-white uppercase tracking-wider print:text-black">Implementação (Setup)</h3>
-                            <span className="text-[10px] bg-[#333] text-[#999] px-2 py-1 rounded print:bg-gray-200 print:text-black">Pagamento Único</span>
+                            <span className="text-[10px] bg-[#333] text-[#999] px-2 py-1 rounded print:bg-secondary print:text-black">Pagamento Único</span>
                         </div>
                         <ul className="space-y-4">
                             {oneTimeItems.map(item => (
@@ -207,7 +207,7 @@ export default function ProposalView() {
                         
                         <div className="flex justify-between items-center mb-6 border-b border-[#333] pb-4 print:border-border">
                             <h3 className="font-bold text-[#E09B6B] uppercase tracking-wider print:text-black">Recorrência Mensal</h3>
-                            <span className="text-[10px] bg-[#E09B6B]/20 text-[#E09B6B] px-2 py-1 rounded print:bg-gray-200 print:text-black">Mensalidade</span>
+                            <span className="text-[10px] bg-[#E09B6B]/20 text-[#E09B6B] px-2 py-1 rounded print:bg-secondary print:text-black">Mensalidade</span>
                         </div>
                         <ul className="space-y-4">
                             {monthlyItems.map(item => (

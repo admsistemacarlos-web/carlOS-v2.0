@@ -209,7 +209,7 @@ export default function CellarPage() {
                                 </div>
                             )}
 
-                            <div className="flex items-center justify-between pt-4 border-t border-stone-50 mt-auto">
+                            <div className="flex items-center justify-between pt-4 border-t border-border mt-auto">
                                 <div className="flex flex-col">
                                     <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Pago</span>
                                     <span className="text-sm font-bold text-foreground">R$ {bev.price.toFixed(2)}</span>

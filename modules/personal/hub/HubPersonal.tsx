@@ -632,7 +632,7 @@ export default function HubPersonal() {
                 <div key={task.id} className="bg-secondary/50 rounded-xl p-2.5 flex items-center gap-3 border border-border">
                     <button 
                       onClick={() => updateTask(task.id, 'completed', !task.completed)}
-                      className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all flex-shrink-0 ${task.completed ? 'bg-stone-300 border-border text-white' : 'border-border'}`}
+                      className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all flex-shrink-0 ${task.completed ? 'bg-muted-foreground border-border text-white' : 'border-border'}`}
                     >
                       {task.completed && <Check size={8} strokeWidth={3} />}
                     </button>

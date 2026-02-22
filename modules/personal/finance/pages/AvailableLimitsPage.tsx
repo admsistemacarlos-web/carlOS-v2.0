@@ -140,7 +140,7 @@ const AvailableLimitsPage: React.FC = () => {
                      />
                    </div>
 
-                   <div className="flex justify-between items-end pt-2 border-t border-stone-50">
+                   <div className="flex justify-between items-end pt-2 border-t border-border">
                      <span className="text-[10px] font-bold uppercase tracking-widest text-olive">Disponível</span>
                      <span className="text-2xl font-bold text-olive">R$ {available.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                    </div>

@@ -53,7 +53,7 @@ export const TestamentSection: React.FC<TestamentSectionProps> = ({
         className={`w-full flex items-center justify-between group p-3 rounded-xl transition-colors mb-3 select-none ${highlight ? 'bg-blue-50/50' : 'hover:bg-secondary'}`}
       >
         <h2 className="text-lg font-bold text-foreground flex items-center gap-3 px-1">
-          <span className={`w-1.5 h-6 rounded-full transition-colors ${highlight ? 'bg-blue-500 shadow-blue-200 shadow-sm' : (isSectionExpanded ? 'bg-primary' : 'bg-stone-300')}`}></span>
+          <span className={`w-1.5 h-6 rounded-full transition-colors ${highlight ? 'bg-blue-500 shadow-blue-200 shadow-sm' : (isSectionExpanded ? 'bg-primary' : 'bg-muted-foreground')}`}></span>
           {title}
           <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${highlight ? 'bg-blue-100 text-blue-600' : 'bg-secondary text-muted-foreground'}`}>
             {books.length} {books.length === 1 ? 'livro' : 'livros'}
@@ -122,7 +122,7 @@ export const TestamentSection: React.FC<TestamentSectionProps> = ({
                             {/* Mini barra visual apenas em telas maiores */}
                             <div className="hidden sm:block w-12 h-1 bg-secondary rounded-full overflow-hidden">
                             <div 
-                                className={`h-full rounded-full transition-all duration-500 ${isComplete ? 'bg-primary' : 'bg-stone-300'}`}
+                                className={`h-full rounded-full transition-all duration-500 ${isComplete ? 'bg-primary' : 'bg-muted-foreground'}`}
                                 style={{ width: `${stats.percentage}%` }}
                             />
                             </div>
@@ -155,7 +155,7 @@ export const TestamentSection: React.FC<TestamentSectionProps> = ({
 
                 {/* Content / Grid de Capítulos */}
                 {isExpanded && (
-                  <div className={`border-t border-stone-50 p-6 animate-fade-in ${highlight ? 'bg-blue-50/10' : 'bg-secondary/30'}`}>
+                  <div className={`border-t border-border p-6 animate-fade-in ${highlight ? 'bg-blue-50/10' : 'bg-secondary/30'}`}>
                     <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-3">
                       {Array.from({ length: book.chapters }, (_, i) => i + 1).map((chapter) => {
                         const read = isChapterRead(book.name, chapter);

@@ -228,7 +228,7 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
 
           {/* Campo Dinâmico de Valor (Peso/Qtd) */}
           {unitConfig && (
-            <div className={isMeasurement ? 'mt-0' : 'pt-2 border-t border-stone-50'}>
+            <div className={isMeasurement ? 'mt-0' : 'pt-2 border-t border-border'}>
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">
                 {unitConfig.label}
               </label>
@@ -254,7 +254,7 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
           )}
 
           {showDueDate && (
-            <div className="pt-2 border-t border-stone-50">
+            <div className="pt-2 border-t border-border">
                <label className="text-[10px] font-bold uppercase tracking-widest text-olive ml-1">Próximo Vencimento (Opcional)</label>
                <input 
                   type="date"

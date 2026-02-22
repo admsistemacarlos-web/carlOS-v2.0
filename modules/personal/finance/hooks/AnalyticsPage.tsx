@@ -80,7 +80,7 @@ export default function AnalyticsPage() {
   }, [activeTab]);
 
   return (
-    <div className="min-h-screen bg-[#FAFAF9] pb-24 animate-fade-in font-sans">
+    <div className="min-h-screen bg-background pb-24 animate-fade-in font-sans">
       
       {/* Header */}
       <div className="px-6 pt-8 pb-6">
@@ -265,7 +265,7 @@ export default function AnalyticsPage() {
                 <h3 className="text-sm font-bold text-foreground uppercase tracking-widest mb-4">Últimas Aquisições</h3>
                 <div className="space-y-3">
                   {itemData.history.slice(0, 5).map((item: any, idx: number) => (
-                    <div key={idx} className="flex justify-between items-center p-3 hover:bg-secondary rounded-xl transition-colors border-b border-stone-50 last:border-0">
+                    <div key={idx} className="flex justify-between items-center p-3 hover:bg-secondary rounded-xl transition-colors border-b border-border last:border-0">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <Calendar size={12} className="text-olive" />

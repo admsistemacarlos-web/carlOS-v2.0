@@ -251,7 +251,7 @@ const TransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClose,
       <div className="fixed left-[50%] top-[50%] z-50 w-full max-w-2xl translate-x-[-50%] translate-y-[-50%] p-4">
         <div className="bg-card w-full rounded-[2rem] shadow-2xl border border-border flex flex-col max-h-[90vh] overflow-hidden animate-fade-in">
           
-          <div className="flex justify-between items-center p-6 border-b border-stone-50">
+          <div className="flex justify-between items-center p-6 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground tracking-tight">
               {transactionToEdit ? 'Editar Movimentação' : 'Nova Movimentação'}
             </h2>
@@ -478,7 +478,7 @@ const TransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClose,
 
           </form>
 
-          <div className="p-6 border-t border-stone-50 bg-card">
+          <div className="p-6 border-t border-border bg-card">
             <button 
               onClick={handleSubmit(onSubmit)}
               disabled={isSubmitting}

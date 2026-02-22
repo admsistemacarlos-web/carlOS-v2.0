@@ -252,7 +252,7 @@ export default function WorkoutsPage() {
                             {editingExerciseId && (
                                 <button 
                                     onClick={handleCancelEdit} 
-                                    className="bg-accent text-muted-foreground px-4 rounded-xl font-bold text-xs uppercase hover:bg-stone-300 transition-colors"
+                                    className="bg-accent text-muted-foreground px-4 rounded-xl font-bold text-xs uppercase hover:bg-muted-foreground transition-colors"
                                 >
                                     <X size={16} />
                                 </button>

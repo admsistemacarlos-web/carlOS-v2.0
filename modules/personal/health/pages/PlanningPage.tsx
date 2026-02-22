@@ -585,7 +585,7 @@ export default function PlanningPage() {
               {isMenuOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-card rounded-xl shadow-xl border border-border overflow-hidden z-50 animate-fade-in">
                   <button onClick={handleEditCycle} className="w-full text-left px-4 py-3 text-sm text-foreground hover:bg-secondary flex items-center gap-2 font-medium"><Pencil size={14} /> Editar Planejamento</button>
-                  <button onClick={handleDeleteCycle} className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 font-medium border-t border-stone-50"><Trash2 size={14} /> Excluir Ciclo</button>
+                  <button onClick={handleDeleteCycle} className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 font-medium border-t border-border"><Trash2 size={14} /> Excluir Ciclo</button>
                 </div>
               )}
             </div>
@@ -642,7 +642,7 @@ export default function PlanningPage() {
                         {weekDays.map(day => {
                             const isTodayDate = isToday(day);
                             return (
-                                <div key={day.toISOString()} className={`p-3 text-center border-l border-stone-50 flex flex-col items-center justify-center ${isTodayDate ? 'bg-primary/5' : ''}`}>
+                                <div key={day.toISOString()} className={`p-3 text-center border-l border-border flex flex-col items-center justify-center ${isTodayDate ? 'bg-primary/5' : ''}`}>
                                     <span className={`text-[10px] font-bold uppercase tracking-widest mb-1 ${isTodayDate ? 'text-primary' : 'text-muted-foreground'}`}>
                                         {format(day, 'EEE')}
                                     </span>
@@ -658,7 +658,7 @@ export default function PlanningPage() {
                     <div className="divide-y divide-stone-50">
                         {recurringActions.map(action => (
                             <div key={action.id} className="grid grid-cols-[1.8fr_repeat(7,1fr)] hover:bg-secondary/30 transition-colors group">
-                                <div className="p-4 flex flex-col justify-center border-r border-stone-50/50 relative">
+                                <div className="p-4 flex flex-col justify-center border-r border-border/50 relative">
                                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                     <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mb-1">{action.goalArea}</span>
                                     <span className="text-sm font-bold text-foreground leading-tight">{action.title}</span>
@@ -669,7 +669,7 @@ export default function PlanningPage() {
                                     const isFutureDay = isFuture(day) && !isToday(day);
 
                                     return (
-                                        <div key={day.toISOString()} className="border-l border-stone-50 flex items-center justify-center p-2">
+                                        <div key={day.toISOString()} className="border-l border-border flex items-center justify-center p-2">
                                             <button
                                                 disabled={isFutureDay}
                                                 onClick={() => toggleDailyLog(action.id, day)}
@@ -754,7 +754,7 @@ export default function PlanningPage() {
                         <div key={task.id} className="bg-secondary border border-border rounded-xl p-3 flex items-center gap-3">
                             <button 
                                 onClick={() => update123Task(task.id, 'completed', !task.completed)}
-                                className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all flex-shrink-0 ${task.completed ? 'bg-stone-300 border-border text-white' : 'border-border bg-card hover:border-muted-foreground'}`}
+                                className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all flex-shrink-0 ${task.completed ? 'bg-muted-foreground border-border text-white' : 'border-border bg-card hover:border-muted-foreground'}`}
                             >
                                 {task.completed && <Check size={10} strokeWidth={4} />}
                             </button>

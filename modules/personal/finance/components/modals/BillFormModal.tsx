@@ -236,7 +236,7 @@ const BillFormModal: React.FC<BillFormModalProps> = ({ isOpen, onClose, onSucces
                       <button
                         key={i}
                         type="button"
-                        className="w-full text-left px-4 py-2.5 text-xs hover:bg-secondary text-foreground flex justify-between items-center transition-colors border-b border-stone-50 last:border-0"
+                        className="w-full text-left px-4 py-2.5 text-xs hover:bg-secondary text-foreground flex justify-between items-center transition-colors border-b border-border last:border-0"
                         onClick={() => handleSelectSuggestion(s)}
                       >
                         <span className="font-medium">{s.name}</span>

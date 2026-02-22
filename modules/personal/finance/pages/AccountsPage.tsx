@@ -132,7 +132,7 @@ const AccountsPage: React.FC = () => {
               </p>
               <h3 className="text-xl font-semibold text-foreground mb-6">{acc.name}</h3>
               
-              <div className="pt-6 border-t border-stone-50">
+              <div className="pt-6 border-t border-border">
                 <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest mb-1">Saldo Atual</p>
                 <p className="text-2xl font-medium text-foreground tracking-tighter">
                   R$ {acc.balance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}

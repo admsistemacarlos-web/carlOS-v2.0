@@ -225,7 +225,7 @@ export default function StudiesDashboard() {
           </div>
         ) : Object.keys(groupedCourses).length === 0 ? (
           <div className="text-center py-20 bg-card rounded-2xl border border-border border-dashed">
-            <Book className="mx-auto h-12 w-12 text-gray-300 mb-3" />
+            <Book className="mx-auto h-12 w-12 text-muted-foreground/40 mb-3" />
             <h3 className="text-lg font-medium text-foreground">Nenhum curso encontrado</h3>
             <p className="text-muted-foreground text-sm mb-6">Comece adicionando seu primeiro material de estudo.</p>
             <button onClick={handleOpenCreate} className="text-blue-600 hover:underline text-sm font-medium">
@@ -239,7 +239,7 @@ export default function StudiesDashboard() {
               <div className="flex items-center gap-2 mb-3 px-1">
                 <Folder size={16} className="text-muted-foreground" />
                 <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">{category}</h2>
-                <div className="h-px bg-gray-200 flex-1 ml-2"></div>
+                <div className="h-px bg-secondary flex-1 ml-2"></div>
               </div>
 
               {/* Courses List */}
@@ -285,7 +285,7 @@ export default function StudiesDashboard() {
                       >
                         <Trash2 size={16} />
                       </button>
-                      <div className="text-gray-300">
+                      <div className="text-muted-foreground/40">
                         <ChevronRight size={20} />
                       </div>
                     </div>
@@ -395,7 +395,7 @@ export default function StudiesDashboard() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-3 bg-secondary hover:bg-gray-200 text-foreground font-semibold rounded-lg transition-colors text-sm"
+                  className="flex-1 py-3 bg-secondary hover:bg-secondary text-foreground font-semibold rounded-lg transition-colors text-sm"
                 >
                   Cancelar
                 </button>

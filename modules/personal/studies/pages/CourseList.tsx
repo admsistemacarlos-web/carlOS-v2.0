@@ -330,7 +330,7 @@ const CourseList: React.FC = () => {
                 </p>
               )}
 
-              <div className="mt-auto pt-4 border-t border-stone-50">
+              <div className="mt-auto pt-4 border-t border-border">
                 <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
                   <span>Progresso</span>
                   <span>{course.progress}%</span>
@@ -353,7 +353,7 @@ const CourseList: React.FC = () => {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={closeModal} />
           
           <div className="relative bg-card w-full max-w-lg rounded-[2rem] shadow-2xl border border-border flex flex-col max-h-[90vh] overflow-hidden animate-fade-in">
-             <div className="flex justify-between items-center p-6 border-b border-stone-50">
+             <div className="flex justify-between items-center p-6 border-b border-border">
                 <h2 className="text-xl font-semibold text-foreground tracking-tight">
                   {editingCourse ? 'Editar Curso' : 'Novo Curso'}
                 </h2>

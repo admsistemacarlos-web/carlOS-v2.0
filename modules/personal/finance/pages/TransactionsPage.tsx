@@ -359,7 +359,7 @@ const TransactionsPage: React.FC = () => {
         </div>
 
         {hasActiveFilters && (
-            <div className="flex justify-end pt-2 border-t border-stone-50">
+            <div className="flex justify-end pt-2 border-t border-border">
                 <button onClick={clearFilters} className="text-[10px] font-bold text-terracotta uppercase tracking-wider hover:underline flex items-center gap-1">
                     <X size={10} /> Limpar Filtros
                 </button>

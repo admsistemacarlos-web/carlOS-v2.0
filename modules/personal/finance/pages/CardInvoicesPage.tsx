@@ -136,7 +136,7 @@ const CardInvoicesPage: React.FC = () => {
   if (!card) return <div>Cartão não encontrado</div>;
 
   return (
-    <div className="min-h-screen bg-[#FAFAF9] text-[#4A4036] p-4 md:p-8 pb-24 font-sans animate-fade-in">
+    <div className="min-h-screen bg-background text-foreground p-4 md:p-8 pb-24 font-sans animate-fade-in">
       
       {/* Header */}
       <div className="max-w-4xl mx-auto mb-8 flex items-center gap-4">
@@ -193,7 +193,7 @@ const CardInvoicesPage: React.FC = () => {
                 <p className="text-center text-muted-foreground text-sm py-4 italic">Nenhuma compra em aberto.</p>
               ) : (
                 openTransactions.slice(0, 10).map((t, idx) => (
-                  <div key={`${t.id}-${idx}`} className="flex justify-between items-center py-2 border-b border-stone-50 last:border-0">
+                  <div key={`${t.id}-${idx}`} className="flex justify-between items-center py-2 border-b border-border last:border-0">
                     <div className="flex-1">
                       <p className="text-sm font-semibold text-foreground truncate">{t.description}</p>
                       <p className="text-[10px] text-muted-foreground">{formatDateBr(t.date)}</p>
@@ -205,7 +205,7 @@ const CardInvoicesPage: React.FC = () => {
                 ))
               )}
               {openTransactions.length > 10 && (
-                 <p className="text-center text-[10px] text-olive font-bold uppercase cursor-pointer mt-2 pt-2 border-t border-stone-50">
+                 <p className="text-center text-[10px] text-olive font-bold uppercase cursor-pointer mt-2 pt-2 border-t border-border">
                    + {openTransactions.length - 10} outros lançamentos
                  </p>
               )}

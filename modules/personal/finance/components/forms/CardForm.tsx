@@ -187,7 +187,7 @@ const CardForm: React.FC<CardFormProps> = ({ onSuccess, cardToEdit }) => {
                 <button
                   type="button"
                   onClick={() => setShowDeleteConfirm(false)}
-                  className="flex-1 bg-accent hover:bg-stone-300 text-foreground py-2 rounded-lg text-xs font-bold uppercase"
+                  className="flex-1 bg-accent hover:bg-muted-foreground text-foreground py-2 rounded-lg text-xs font-bold uppercase"
                 >
                   Cancelar
                 </button>

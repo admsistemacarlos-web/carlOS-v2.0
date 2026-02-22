@@ -306,7 +306,7 @@ export default function LessonDetail() {
                     {sidebarSearch && (
                     <button 
                         onClick={() => setSidebarSearch('')}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 rounded-full text-muted-foreground transition-colors"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-secondary rounded-full text-muted-foreground transition-colors"
                     >
                         <X size={12} />
                     </button>
@@ -324,7 +324,7 @@ export default function LessonDetail() {
                     <div key={module.id} className="space-y-0.5">
                     <button 
                         onClick={() => toggleModule(module.id)}
-                        className="w-full flex items-center justify-between text-left p-2.5 rounded-lg hover:bg-gray-200/50 transition-colors group"
+                        className="w-full flex items-center justify-between text-left p-2.5 rounded-lg hover:bg-secondary/50 transition-colors group"
                     >
                         <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide truncate pr-2">{module.title}</span>
                         <ChevronDown size={14} className={`text-muted-foreground transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />

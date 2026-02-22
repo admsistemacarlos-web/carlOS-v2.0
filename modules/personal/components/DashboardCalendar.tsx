@@ -203,7 +203,7 @@ export const DashboardCalendar: React.FC<DashboardCalendarProps> = ({
                     <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-emerald-300' : 'bg-emerald-500'}`}></div>
                   )}
                   {marker?.hasGeneral && shouldShowMarker(dateKey, 'hasGeneral') && (
-                    <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-stone-300' : 'bg-secondary0'}`}></div>
+                    <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-muted-foreground' : 'bg-secondary0'}`}></div>
                   )}
                 </div>
               </button>

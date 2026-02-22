@@ -360,7 +360,7 @@ export default function CourseDetail() {
         {/* Access Info Card */}
         {(course.course_url || course.access_email || course.access_password) && (
           <div className="bg-card p-6 rounded-[2rem] border border-border shadow-sm space-y-4">
-            <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-b border-stone-50 pb-2">Credenciais de Acesso</h3>
+            <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-b border-border pb-2">Credenciais de Acesso</h3>
             
             {course.course_url && (
                 <div className="flex items-center gap-3">
@@ -532,7 +532,7 @@ export default function CourseDetail() {
 
                         {/* Lessons List (Index Style) */}
                         {isOpen && (
-                            <div className="border-t border-stone-50 divide-y divide-stone-50 bg-secondary/30">
+                            <div className="border-t border-border divide-y divide-stone-50 bg-secondary/30">
                                 {module.lessons.length === 0 ? (
                                     <p className="text-xs text-muted-foreground text-center py-6 italic">Nenhuma aula cadastrada neste módulo.</p>
                                 ) : (

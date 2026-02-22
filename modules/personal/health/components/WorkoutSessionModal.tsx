@@ -259,7 +259,7 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
                                         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
                                             set.completed 
                                             ? 'bg-emerald-500 text-white shadow-sm' 
-                                            : 'bg-accent text-muted-foreground hover:bg-stone-300'
+                                            : 'bg-accent text-muted-foreground hover:bg-muted-foreground'
                                         }`}
                                     >
                                         <Check size={16} strokeWidth={3} />
@@ -282,7 +282,7 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
 
                         {/* Actions Footer */}
                         {!session.ended_at && (
-                            <div className="mt-2 pt-2 border-t border-stone-50 flex justify-center">
+                            <div className="mt-2 pt-2 border-t border-border flex justify-center">
                                 <button 
                                     onClick={() => addSet(group.exerciseId)}
                                     className="w-full py-2 text-xs font-bold text-primary bg-primary/5 hover:bg-primary/10 rounded-lg uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"

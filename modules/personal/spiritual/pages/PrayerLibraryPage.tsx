@@ -126,7 +126,7 @@ export default function PrayerLibraryPage() {
         <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent"></div>
         </div>
 
-        <div className="mt-6 pt-4 border-t border-stone-50 flex justify-end">
+        <div className="mt-6 pt-4 border-t border-border flex justify-end">
             <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 group-hover:text-[#5D4037] transition-colors">
             Ler Oração <BookOpen size={10} />
             </span>

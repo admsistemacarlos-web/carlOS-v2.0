@@ -205,7 +205,7 @@ export default function SermonEditor() {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-stone-50">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-border">
             <div className="group">
               <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 group-focus-within:text-[#5D4037] transition-colors">
                 <User size={12} /> Pregador

@@ -157,11 +157,11 @@ export default function CardDetailsPage() {
   const totalInvoice = transactions.reduce((acc, t) => acc + t.amount, 0);
 
   return (
-    <div className="min-h-screen bg-[#FAFAF9] text-[#4A4036] p-4 pb-24 font-sans">
+    <div className="min-h-screen bg-background text-foreground p-4 pb-24 font-sans">
       
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
-        <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-200 rounded-full transition-colors">
+        <button onClick={() => navigate(-1)} className="p-2 hover:bg-secondary rounded-full transition-colors">
           <ArrowLeft className="w-6 h-6" />
         </button>
         
@@ -199,7 +199,7 @@ export default function CardDetailsPage() {
         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-2">
           Fatura Estimada do Mês
         </p>
-        <h2 className="text-4xl font-bold text-[#2C3E50]">
+        <h2 className="text-4xl font-bold text-foreground">
           {totalInvoice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
         </h2>
         <div className="flex items-center justify-center gap-3 mt-3 text-xs font-medium text-muted-foreground">
@@ -227,7 +227,7 @@ export default function CardDetailsPage() {
       <div className="flex gap-4 mb-8">
         <button 
           onClick={handleOpenNewTransaction}
-          className="flex-1 bg-[#4A4036] text-white py-4 rounded-2xl font-semibold shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform hover:bg-[#3E352D]"
+          className="flex-1 bg-coffee text-white py-4 rounded-2xl font-semibold shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform hover:bg-coffee/90"
         >
           <Plus className="w-5 h-5" />
           NOVA COMPRA
@@ -254,14 +254,14 @@ export default function CardDetailsPage() {
             {transactions.map((t) => (
               <div 
                 key={t.id} 
-                className="group relative flex items-center justify-between py-3 border-b border-gray-50 last:border-0 hover:bg-secondary/50 rounded-xl px-2 -mx-2 transition-colors cursor-pointer"
+                className="group relative flex items-center justify-between py-3 border-b border-border last:border-0 hover:bg-secondary/50 rounded-xl px-2 -mx-2 transition-colors cursor-pointer"
                 onClick={() => handleOpenEditTransaction(t)}
               >
                 {/* Info da Compra */}
                 <div className="flex-1 min-w-0 pr-4">
-                  <p className="font-semibold text-[#4A4036] truncate">{t.description}</p>
+                  <p className="font-semibold text-foreground truncate">{t.description}</p>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-white bg-stone-300 px-1.5 rounded-md">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-white bg-muted-foreground px-1.5 rounded-md">
                       {formatDateBr(t.date)}
                     </span>
                     <span className="text-xs text-muted-foreground truncate">{t.category}</span>
@@ -284,7 +284,7 @@ export default function CardDetailsPage() {
                     <button 
                       type="button"
                       onClick={(e) => handleDuplicate(t, e)}
-                      className="p-2 text-gray-300 hover:text-muted-foreground hover:bg-secondary rounded-full transition-all cursor-pointer"
+                      className="p-2 text-muted-foreground/40 hover:text-muted-foreground hover:bg-secondary rounded-full transition-all cursor-pointer"
                       title="Duplicar"
                     >
                       <Copy className="w-4 h-4" />
@@ -296,7 +296,7 @@ export default function CardDetailsPage() {
                         e.stopPropagation();
                         handleOpenEditTransaction(t);
                       }}
-                      className="p-2 text-gray-300 hover:text-blue-500 hover:bg-blue-50 rounded-full transition-all cursor-pointer"
+                      className="p-2 text-muted-foreground/40 hover:text-blue-500 hover:bg-blue-50 rounded-full transition-all cursor-pointer"
                       title="Editar"
                     >
                       <Pencil className="w-4 h-4 pointer-events-none" />
@@ -305,7 +305,7 @@ export default function CardDetailsPage() {
                     <button 
                       type="button"
                       onClick={(e) => handleDeleteTransaction(t.id, e)}
-                      className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all cursor-pointer"
+                      className="p-2 text-muted-foreground/40 hover:text-red-500 hover:bg-red-50 rounded-full transition-all cursor-pointer"
                       title="Excluir"
                     >
                       <Trash2 className="w-4 h-4 pointer-events-none" />
