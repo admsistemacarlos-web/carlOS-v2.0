@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutGrid, Briefcase, Users, TrendingUp, BarChart3, ArrowLeft, Menu, X, RefreshCcw, Film, FileText, Tag } from 'lucide-react';
+import { LayoutGrid, Briefcase, Users, TrendingUp, BarChart3, ArrowLeft, Menu, X, RefreshCcw, Film, FileText, Tag, Calendar } from 'lucide-react';
 import ModuleHeader from '../shared/components/Navigation/ModuleHeader';
 import { ThemeToggle } from '../shared/ThemeToggle';
 
@@ -82,10 +82,12 @@ const ProfessionalLayout: React.FC<ProfessionalLayoutProps> = ({ children }) => 
              <p className="text-[10px] uppercase font-bold text-[#5c5c5c] tracking-widest">Operação</p>
           </div>
           
+          
           <SidebarItem to="/professional/crm" icon={<Users />} label="Clientes" onClick={closeSidebar} />
           <SidebarItem to="/professional/quotes" icon={<FileText />} label="Propostas" onClick={closeSidebar} />
           <SidebarItem to="/professional/services" icon={<Tag />} label="Serviços" onClick={closeSidebar} />
           <SidebarItem to="/professional/projects" icon={<Briefcase />} label="Projetos" onClick={closeSidebar} />
+          <SidebarItem to="/professional/calendar" icon={<Calendar />} label="Calendário" onClick={closeSidebar} />
           <SidebarItem to="/professional/video-editor" icon={<Film />} label="Vídeos" onClick={closeSidebar} />
           <SidebarItem to="/professional/traffic" icon={<TrendingUp />} label="Tráfego" onClick={closeSidebar} />
           <SidebarItem to="/professional/finance" icon={<BarChart3 />} label="Financeiro" onClick={closeSidebar} />

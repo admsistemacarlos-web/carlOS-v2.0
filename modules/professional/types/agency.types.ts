@@ -93,3 +93,44 @@ export interface AgencyProject {
   created_at?: string;
   client?: AgencyClient;
 }
+// --- REUNIÕES (MEETINGS) ---
+export type MeetingStatus = 'scheduled' | 'completed' | 'cancelled';
+
+export interface AgencyMeeting {
+  id: string;
+  user_id: string;
+  client_id: string;
+  client?: AgencyClient; // Expansão do cliente
+  
+  title: string;
+  description?: string;
+  meeting_date: string; // ISO timestamp
+  duration_minutes: number;
+  location?: string; // Ex: "Presencial", "Zoom", "Google Meet"
+  meeting_link?: string;
+  
+  status: MeetingStatus;
+  notes?: string; // Notas pós-reunião
+  
+  created_at?: string;
+  updated_at?: string;
+}
+
+// Tipo auxiliar para eventos do calendário (unifica projetos + reuniões)
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  date: string; // ISO date
+  type: 'project' | 'meeting'; // Para diferenciar no calendário
+  status?: string;
+  client?: {
+    name: string;
+    logo_url?: string;
+  };
+  // Campos específicos de projeto
+  deadline?: string;
+  // Campos específicos de reunião
+  duration_minutes?: number;
+  location?: string;
+  meeting_link?: string;
+}

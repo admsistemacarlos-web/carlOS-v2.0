@@ -98,6 +98,10 @@ import ProposalView from './modules/professional/quotes/ProposalView';
 // Container: Serviços
 import ServicesPage from './modules/professional/services/ServicesPage';
 
+import CalendarPage from './modules/professional/calendar/CalendarPage';
+
+
+
 // ════════════════════════════════════════════════════
 
 // Inicializando o React Query Client
@@ -212,6 +216,7 @@ const App: React.FC = () => {
                   <ProfessionalLayout>
                     <Routes>
                       <Route path="" element={<HubProfessional />} />
+                      <Route path="calendar" element={<CalendarPage />} />
                       
                       {/* Módulo: Projetos */}
                       <Route path="projects" element={<AgencyDashboard />} />
