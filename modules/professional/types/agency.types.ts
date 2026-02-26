@@ -4,7 +4,55 @@ export type CrmStatus = 'novo_lead' | 'primeiro_contato' | 'proposta_enviada' | 
 export type QuoteStatus = 'draft' | 'sent' | 'approved' | 'rejected';
 export type ProjectStatus = 'pendente' | 'em_andamento' | 'aprovacao' | 'concluido';
 export type PaymentMethod = 'pix' | 'boleto' | 'cartao' | 'transferencia';
-export type ChargeType = 'unique' | 'monthly'; // Importante para diferenciar recorrente de pontual
+export type ChargeType = 'unique' | 'monthly'; 
+export type MeetingStatus = 'scheduled' | 'completed' | 'cancelled' | 'rescheduled';
+
+
+// --- EVENTOS E CALENDÁRIO (NOVOS) ---
+export type AgencyEventType = 'meeting' | 'call' | 'deadline' | 'other';
+
+export interface AgencyEvent {
+  id: string;
+  user_id: string;
+  client_id: string;
+  title: string;
+  description?: string;
+  event_type: AgencyEventType;
+  start_time: string;
+  end_time?: string;
+  meeting_link?: string;
+  created_at?: string;
+}
+
+export interface GlobalCalendarItem {
+  item_id: string;
+  user_id: string;
+  client_id: string;
+  client_name: string;
+  client_logo: string | null;
+  title: string;
+  event_date: string;
+  item_type: 'task' | 'meeting';
+  item_status: string;
+}
+
+// --- REUNIÕES ---
+export interface AgencyMeeting {
+  id: string;
+  user_id: string;
+  client_id: string;
+  title: string;
+  description?: string;
+  meeting_date: string;
+  duration_minutes?: number;
+  location?: string;
+  meeting_link?: string;
+  status?: MeetingStatus;
+  notes?: string;
+  created_at?: string;
+  updated_at?: string;
+  client?: AgencyClient;
+}
 
 // --- CLIENTE (Mantido com sua estrutura rica) ---
 export interface AgencyClient {
@@ -29,7 +77,7 @@ export interface AgencyClient {
 // --- SERVIÇO (Catálogo Base - Tabela 'services') ---
 export interface AgencyServiceCatalog {
   id: string;
-  name: string; // Refatorado: Banco usa 'name', não 'title'
+  name: string; 
   category: string;
   description?: string;
   default_price: number;
@@ -38,45 +86,33 @@ export interface AgencyServiceCatalog {
   user_id: string;
 }
 
-// --- ITEM DA PROPOSTA (O Snapshot Editável - Tabela 'quote_items') ---
+// --- ITEM DA PROPOSTA ---
 export interface AgencyQuoteItem {
   id?: string; 
   quote_id?: string;
-  service_id?: string; // Link opcional ao catálogo original
-  
-  // Dados copiados (Snapshot)
-  title: string; // Na proposta chamamos de title (item da lista)
+  service_id?: string; 
+  title: string; 
   description?: string;
-  unit_price: number; // O PREÇO EDITÁVEL FICA AQUI
+  unit_price: number; 
   quantity: number;
-  total_price?: number; // Novo: Preço total da linha (unit * qtd)
+  total_price?: number; 
   charge_type: ChargeType;
   order_index?: number;
 }
 
-// --- PROPOSTA (Cabeçalho - Tabela 'quotes') ---
+// --- PROPOSTA ---
 export interface AgencyQuote {
   id: string;
-  quote_number?: number; // Novo campo sequencial
+  quote_number?: number; 
   client_id: string;
-  client?: AgencyClient; // Expansão do cliente
-  
+  client?: AgencyClient; 
   title: string;
   status: QuoteStatus;
   valid_until?: string;
   notes?: string;
-
-  // Campos de Narrativa (Novos)
-  introduction_text?: string;
-  strategy_text?: string;
-  terms_conditions?: string;
-  
-  // Totais calculados no Frontend
   total_one_time?: number;
   total_monthly?: number;
-  
-  items?: AgencyQuoteItem[]; // Array com os itens
-  
+  items?: AgencyQuoteItem[]; 
   user_id: string;
   created_at?: string;
 }
@@ -92,45 +128,4 @@ export interface AgencyProject {
   priority: 'baixa' | 'media' | 'alta';
   created_at?: string;
   client?: AgencyClient;
-}
-// --- REUNIÕES (MEETINGS) ---
-export type MeetingStatus = 'scheduled' | 'completed' | 'cancelled';
-
-export interface AgencyMeeting {
-  id: string;
-  user_id: string;
-  client_id: string;
-  client?: AgencyClient; // Expansão do cliente
-  
-  title: string;
-  description?: string;
-  meeting_date: string; // ISO timestamp
-  duration_minutes: number;
-  location?: string; // Ex: "Presencial", "Zoom", "Google Meet"
-  meeting_link?: string;
-  
-  status: MeetingStatus;
-  notes?: string; // Notas pós-reunião
-  
-  created_at?: string;
-  updated_at?: string;
-}
-
-// Tipo auxiliar para eventos do calendário (unifica projetos + reuniões)
-export interface CalendarEvent {
-  id: string;
-  title: string;
-  date: string; // ISO date
-  type: 'project' | 'meeting'; // Para diferenciar no calendário
-  status?: string;
-  client?: {
-    name: string;
-    logo_url?: string;
-  };
-  // Campos específicos de projeto
-  deadline?: string;
-  // Campos específicos de reunião
-  duration_minutes?: number;
-  location?: string;
-  meeting_link?: string;
 }
