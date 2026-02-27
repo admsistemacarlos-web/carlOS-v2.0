@@ -353,6 +353,7 @@ userId: user?.id || ''
                 </div>
             </div>
 
+
             {/* Quick Links */}
             <div className="bg-[#2C2C2C] rounded-lg border border-[#404040] p-5">
                 <h3 className="text-[10px] font-bold text-[#737373] uppercase tracking-widest mb-4">Acesso Rápido</h3>

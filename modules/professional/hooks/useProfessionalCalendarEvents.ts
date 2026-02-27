@@ -45,7 +45,7 @@ export const useProfessionalCalendarEvents = ({
       // 1. Buscar Tasks de Clientes
       const { data: tasks } = await supabase
         .from('agency_client_tasks')
-        .select('id, title, due_date, status, priority, agency_clients(name)')
+        .select('id, title, due_date, status, priority, client_id, agency_clients!inner(id,name)')
         .eq('user_id', userId)
         .not('due_date', 'is', null)
         .gte('due_date', startDate.toISOString())
@@ -60,12 +60,14 @@ export const useProfessionalCalendarEvents = ({
             markers[dateKey] = { events: [], eventCount: 0 };
           }
 
+              const clientName = task.agency_clients?.name || 'Sem cliente';
+
           markers[dateKey].events!.push({
             id: `task-${task.id}`,
             title: task.title,
             category: 'task',
             date: dateKey,
-            description: task.agency_clients?.[0]?.name || 'Sem cliente'
+            description: clientName
           });
 
           markers[dateKey].hasTask = true;
@@ -76,7 +78,7 @@ export const useProfessionalCalendarEvents = ({
       // 2. Buscar Reuniões
       const { data: meetings } = await supabase
         .from('agency_meetings')
-        .select('id, title, meeting_date, agency_clients(name)')
+        .select('id, title, meeting_date, client_id, agency_clients!inner(id, name)')
         .eq('user_id', userId)
         .gte('meeting_date', startDate.toISOString())
         .lte('meeting_date', endDate.toISOString());
@@ -89,12 +91,15 @@ export const useProfessionalCalendarEvents = ({
             markers[dateKey] = { events: [], eventCount: 0 };
           }
 
+            const clientName = meeting.agency_clients?.name || 'Sem cliente';
+  
+
           markers[dateKey].events!.push({
             id: `meeting-${meeting.id}`,
             title: meeting.title,
             category: 'meeting',
             date: dateKey,
-            description: meeting.agency_clients?.[0]?.name || 'Sem cliente'
+            description: clientName
           });
 
           markers[dateKey].hasMeeting = true;
@@ -105,7 +110,7 @@ export const useProfessionalCalendarEvents = ({
       // 3. Buscar Projetos com Deadline
       const { data: projects } = await supabase
         .from('agency_projects')
-        .select('id, title, deadline, status, agency_clients(name)')
+        .select('id, title, deadline, status, client_id, agency_clients!inner(id,name)')
         .eq('user_id', userId)
         .not('deadline', 'is', null)
         .gte('deadline', startDate.toISOString())
@@ -120,12 +125,15 @@ export const useProfessionalCalendarEvents = ({
             markers[dateKey] = { events: [], eventCount: 0 };
           }
 
+              const clientName = project.agency_clients?.name || 'Sem cliente';
+
+
           markers[dateKey].events!.push({
             id: `project-${project.id}`,
             title: project.title,
             category: 'project',
             date: dateKey,
-            description: project.agency_clients?.[0]?.name || 'Sem cliente'
+            description: clientName
           });
 
           markers[dateKey].hasProject = true;

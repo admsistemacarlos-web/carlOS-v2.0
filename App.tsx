@@ -97,7 +97,6 @@ import ProposalView from './modules/professional/quotes/ProposalView';
 
 // Container: Serviços
 import ServicesPage from './modules/professional/services/ServicesPage';
-
 import CalendarPage from './modules/professional/calendar/CalendarPage';
 
 
