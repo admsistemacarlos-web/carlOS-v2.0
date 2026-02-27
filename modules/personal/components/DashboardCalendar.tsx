@@ -1,8 +1,13 @@
 // DashboardCalendar.tsx
 
 import React, { useMemo, useState } from 'react';
+import { Calendar } from 'lucide-react';
 import { ChevronLeft, ChevronRight, DollarSign, BookOpen, GraduationCap, Briefcase, Dumbbell, Frown, PawPrint } from 'lucide-react';
 import type { CalendarMarkers } from '../../../types/calendar';
+
+type Props = {
+  events?: any[];
+};
 
 interface DashboardCalendarProps {
   selectedDate: Date;
@@ -14,6 +19,8 @@ interface DashboardCalendarProps {
 }
 
 const WEEKDAYS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+
+
 
 export const DashboardCalendar: React.FC<DashboardCalendarProps> = ({
   selectedDate,

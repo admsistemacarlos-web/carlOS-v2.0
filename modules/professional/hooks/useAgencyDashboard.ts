@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../../integrations/supabase/client';
+import { GlobalCalendarItem } from '../types/agency.types';
 
 export function useAgencyDashboard() {
   return useQuery({
@@ -17,21 +18,16 @@ export function useAgencyDashboard() {
         .order('deadline', { ascending: true })
         .limit(5);
 
-      // 2. Tarefas de Clientes (Pendentes) - CORRIGIDO
-      // Agora mostra TODAS as tasks não finalizadas, ordenadas por data
-      const tasksPromise = supabase
-  .from('agency_client_tasks')
-  .select(`
-    id, 
-    title, 
-    priority, 
-    due_date, 
-    status,
-    agency_clients(id, name)
-  `)
-  .neq('status', 'posted')
-  .order('due_date', { ascending: true, nullsFirst: false })
-  .limit(10);
+      // 2. Calendário Global (Tarefas e Reuniões unificadas pela View)
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const calendarPromise = supabase
+        .from('view_global_agency_calendar')
+        .select('*')
+        .gte('event_date', today.toISOString())
+        .order('event_date', { ascending: true })
+        .limit(10);
 
       // 3. Propostas Comerciais (Abertas)
       const quotesPromise = supabase
@@ -46,27 +42,11 @@ export function useAgencyDashboard() {
         .select('id', { count: 'exact', head: true })
         .eq('status', 'active');
 
-      // 5. NOVO: Buscar TODAS as tasks com datas para o calendário
-      const allTasksPromise = supabase
-  .from('agency_client_tasks')
-  .select(`
-    id,
-    title,
-    due_date,
-    status,
-    priority,
-    agency_clients(id, name)
-  `)
-        .not('due_date', 'is', null)
-        .neq('status', 'posted')
-        .order('due_date', { ascending: true });
-
-      const [projectsRes, tasksRes, quotesRes, clientsRes, allTasksRes] = await Promise.all([
+      const [projectsRes, calendarRes, quotesRes, clientsRes] = await Promise.all([
         projectsPromise,
-        tasksPromise,
+        calendarPromise,
         quotesPromise,
-        clientsCountPromise,
-        allTasksPromise
+        clientsCountPromise
       ]);
 
       // Cálculos de Totais
@@ -75,16 +55,12 @@ export function useAgencyDashboard() {
       }, 0);
 
       return {
-  activeProjects: projectsRes.data || [],
-  pendingTasks: tasksRes.data || [],
-  openQuotes: quotesRes.data || [],
-  totalPipelineValue,
-  activeClientsCount: clientsRes.count || 0,
-  allTasks: (allTasksRes.data || []).map((task: any) => ({
-    ...task,
-    client: task.agency_clients?.[0] || { id: '', name: 'Cliente não encontrado' }
-  }))
-};
+        activeProjects: projectsRes.data || [],
+        globalCalendar: (calendarRes.data || []) as GlobalCalendarItem[],
+        openQuotes: quotesRes.data || [],
+        totalPipelineValue,
+        activeClientsCount: clientsRes.count || 0
+      };
     },
     refetchOnWindowFocus: true
   });
