@@ -12,6 +12,8 @@ import { useProfessionalCalendarEvents } from '../hooks/useProfessionalCalendarE
 import { useState, useMemo } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
 import CalendarEventsSidebar from './components/CalendarEventsSidebar';
+import ProfessionalResourcesWidget from './ProfessionalResourcesWidget';
+
 
 
 
@@ -311,6 +313,9 @@ userId: user?.id || ''
 
         {/* COLUNA 2: COMERCIAL & ATALHOS */}
         <div className="space-y-6">
+
+            {/* NOVO: Central de Recursos */}
+            <ProfessionalResourcesWidget />
             
             {/* Card Comercial */}
             <div className="bg-[#202020] rounded-lg border border-[#404040] p-6 relative overflow-hidden group">
