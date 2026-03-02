@@ -94,33 +94,36 @@ export default function CalendarPage() {
 
       {/* Navegação do Calendário */}
       <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 mb-6 shadow-premium">
-        <div className="flex items-center justify-between mb-6">
-          <button
-            onClick={goToPreviousMonth}
-            className="px-4 py-2 bg-[#2C2C2C] hover:bg-[#37352F] border border-[#404040] rounded-lg text-[#D4D4D4] transition-colors"
-          >
-            ← Anterior
-          </button>
-          
-          <div className="flex items-center gap-4">
-            <h2 className="text-2xl font-bold text-white">
-              {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-            </h2>
-            <button
-              onClick={goToToday}
-              className="px-4 py-2 bg-[#E09B6B]/10 hover:bg-[#E09B6B]/20 border border-[#E09B6B]/30 rounded-lg text-[#E09B6B] text-sm font-bold transition-colors"
-            >
-              Hoje
-            </button>
-          </div>
+        <div className="flex flex-col items-center gap-3 mb-6">
+  {/* Mês e Ano centralizados */}
+  <h2 className="text-2xl font-bold text-white">
+    {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+  </h2>
 
-          <button
-            onClick={goToNextMonth}
-            className="px-4 py-2 bg-[#2C2C2C] hover:bg-[#37352F] border border-[#404040] rounded-lg text-[#D4D4D4] transition-colors"
-          >
-            Próximo →
-          </button>
-        </div>
+  {/* Botões de navegação */}
+  <div className="flex items-center justify-between w-full gap-2">
+    <button
+      onClick={goToPreviousMonth}
+      className="flex items-center gap-1 px-3 py-2 bg-[#2C2C2C] hover:bg-[#37352F] border border-[#404040] rounded-lg text-[#D4D4D4] text-xs font-bold transition-colors"
+    >
+      ← Anterior
+    </button>
+
+    <button
+      onClick={goToToday}
+      className="px-4 py-2 bg-[#E09B6B]/10 hover:bg-[#E09B6B]/20 border border-[#E09B6B]/30 rounded-lg text-[#E09B6B] text-xs font-bold transition-colors"
+    >
+      Hoje
+    </button>
+
+    <button
+      onClick={goToNextMonth}
+      className="flex items-center gap-1 px-3 py-2 bg-[#2C2C2C] hover:bg-[#37352F] border border-[#404040] rounded-lg text-[#D4D4D4] text-xs font-bold transition-colors"
+    >
+      Próximo →
+    </button>
+  </div>
+</div>
 
         {/* Grade do Calendário */}
         <div className="grid grid-cols-7 gap-2">
