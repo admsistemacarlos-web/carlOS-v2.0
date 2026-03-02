@@ -136,21 +136,24 @@ const BioTrackerCard: React.FC<BioTrackerCardProps> = ({
     <button 
       onClick={handleClick}
       className={`
-        w-full p-4 rounded-2xl border transition-all duration-200 flex items-center justify-between group
+        w-full p-4 rounded-2xl border transition-all duration-200 overflow-hidden
+        flex flex-col justify-between gap-2 h-24
         ${cardStyle}
         hover:scale-[1.01] active:scale-[0.98]
       `}
     >
-      <div className="flex items-center gap-3">
-        <div className={`p-2 rounded-full bg-card/50 ${iconStyle}`}>
+      {/* Topo: Ícone + Label */}
+      <div className="flex items-center gap-2">
+        <div className={`p-1.5 rounded-full bg-white/50 flex-shrink-0 ${iconStyle}`}>
           {icon}
         </div>
         <span className="font-bold text-sm">{label}</span>
       </div>
-      
-      <div className="flex items-center gap-2">
+
+      {/* Rodapé: Status + Ícone */}
+      <div className="flex items-center justify-between">
         <span className="text-[10px] font-bold uppercase tracking-wider opacity-70">{statusText}</span>
-        {statusIcon}
+        <div className="flex-shrink-0">{statusIcon}</div>
       </div>
     </button>
   );
@@ -236,7 +239,6 @@ export default function HubPersonal() {
     const daysUntil = getDaysUntil(task.next_due_date);
     
     if (daysUntil === 0) {
-      // Hoje - Vermelho
       return {
         bg: 'bg-red-50',
         border: 'border-red-300',
@@ -246,7 +248,6 @@ export default function HubPersonal() {
         label: '🔴 HOJE!'
       };
     } else if (daysUntil <= 3) {
-      // Próximos 3 dias - Amarelo
       return {
         bg: 'bg-amber-50',
         border: 'border-amber-300',
@@ -256,7 +257,6 @@ export default function HubPersonal() {
         label: `⚠️ Em ${daysUntil} dia${daysUntil > 1 ? 's' : ''}`
       };
     } else {
-      // Futuro - Neutro
       return {
         bg: 'bg-card',
         border: 'border-border',
@@ -332,7 +332,6 @@ export default function HubPersonal() {
     { category: 'general', label: 'Geral', color: 'text-muted-foreground', icon: 'Calendar', enabled: true },
   ]);
   
-  // Hook para buscar eventos financeiros do Supabase
   const getMonthRange = (date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -349,19 +348,16 @@ export default function HubPersonal() {
     userId: user?.id || ''
   });
 
-  // Função para alternar filtros
   const handleToggleCategory = (category: string) => {
     setCategoryFilters(prev => 
       prev.map(f => f.category === category ? { ...f, enabled: !f.enabled } : f)
     );
   };
 
-  // Atualizar categorias habilitadas
   useEffect(() => {
     setEnabledCategories(categoryFilters.filter(f => f.enabled).map(f => f.category));
   }, [categoryFilters]);
 
-  // Combinar markers antigos (wellness/pet) com novos (financeiro)
   const combinedMarkers = useMemo(() => {
     const combined = { ...calendarMarkers };
     
@@ -380,7 +376,6 @@ export default function HubPersonal() {
     return combined;
   }, [calendarMarkers, financialMarkers]);
 
-  // Obter eventos do dia selecionado
   const selectedDateKey = formatDateDB(selectedDate);
   const eventsOfSelectedDay = combinedMarkers[selectedDateKey]?.events || [];
   const filteredEvents = eventsOfSelectedDay.filter(event => 
@@ -497,7 +492,6 @@ export default function HubPersonal() {
   const importantTasks = dailyTasks.filter(t => t.type === '2');
   const routineTasks = dailyTasks.filter(t => t.type === '3');
 
-  // Contar notificações urgentes (não feitas e com urgência)
   const urgentPetTasks = petTasks.filter(task => !task.done && getDaysUntil(task.next_due_date) <= 3).length;
 
   return (
@@ -520,7 +514,6 @@ export default function HubPersonal() {
            <NavCard title="Espiritual" icon={<Church />} onClick={() => navigate('/personal/spiritual')} />
            <NavCard title="Estudos" icon={<BookOpen />} onClick={() => navigate('/personal/studies')} />
            
-           {/* Pet Care com Badge de Notificação */}
            <div className="relative">
              <NavCard title="Pet Care" icon={<PawPrint />} onClick={() => navigate('/personal/pet')} />
              {urgentPetTasks > 0 && (
@@ -648,7 +641,7 @@ export default function HubPersonal() {
           </div>
       </div>
 
-      {/* 5. PET REMINDERS - ATUALIZADO COM SISTEMA DE CORES E TOGGLE */}
+      {/* 5. PET REMINDERS */}
       {petTasks.length > 0 && (
         <div className="mb-8">
            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
@@ -680,7 +673,6 @@ export default function HubPersonal() {
                         </div>
                       </div>
                       
-                      {/* Toggle Button */}
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -733,7 +725,6 @@ export default function HubPersonal() {
          </h3>
          
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* Calendário - 2 colunas em desktop */}
             <div className="lg:col-span-2 h-[450px]">
                <DashboardCalendar 
                   selectedDate={selectedDate}
@@ -745,7 +736,6 @@ export default function HubPersonal() {
                />
             </div>
             
-            {/* Painel de Eventos - 1 coluna em desktop, lista abaixo em mobile */}
             <div className="h-[450px]">
                <DashboardEventsSidebar 
                   selectedDate={selectedDate}
@@ -762,7 +752,6 @@ export default function HubPersonal() {
                 <Activity size={16} /> Bio-Data • {formatShortDate(selectedDate)}
             </h3>
             
-            {/* Feedback Visual */}
             <div className="flex items-center gap-2">
               {saveStatus === 'saving' && <span className="text-[10px] text-muted-foreground font-medium flex gap-1"><Loader2 size={12} className="animate-spin" /></span>}
               {saveStatus === 'saved' && <span className="text-[10px] text-emerald-600 font-bold flex gap-1 animate-fade-in"><CheckCircle2 size={12} /></span>}
