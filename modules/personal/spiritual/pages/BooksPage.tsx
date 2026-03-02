@@ -63,11 +63,11 @@ const BookCard: React.FC<{ book: Book, onClick: () => void, onDelete: (e: React.
             </div>
             {book.owned ? (
     <span className="text-[9px] font-bold uppercase tracking-wider text-primary bg-primary/5 px-1.5 py-0.5 rounded">
-        Acervo
+        Tenho
     </span>
 ) : (
     <span className="text-[9px] font-bold uppercase tracking-wider text-stone-400 bg-stone-100 px-1.5 py-0.5 rounded">
-        Sem acervo
+        Não tenho
     </span>
 )}
         </div>
