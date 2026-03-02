@@ -61,11 +61,15 @@ const BookCard: React.FC<{ book: Book, onClick: () => void, onDelete: (e: React.
                     <Star key={i} size={12} className={i < book.rating ? "fill-[#8D6E63] text-[#8D6E63]" : "text-stone-200"} />
                 ))}
             </div>
-            {book.owned && (
-                <span className="text-[9px] font-bold uppercase tracking-wider text-primary bg-primary/5 px-1.5 py-0.5 rounded">
-                    Acervo
-                </span>
-            )}
+            {book.owned ? (
+    <span className="text-[9px] font-bold uppercase tracking-wider text-primary bg-primary/5 px-1.5 py-0.5 rounded">
+        Acervo
+    </span>
+) : (
+    <span className="text-[9px] font-bold uppercase tracking-wider text-stone-400 bg-stone-100 px-1.5 py-0.5 rounded">
+        Sem acervo
+    </span>
+)}
         </div>
     </div>
   </div>
