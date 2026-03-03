@@ -111,11 +111,17 @@ export const WorkoutSessionModal: React.FC<WorkoutSessionModalProps> = ({
         const dateToSave = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0).toISOString();
 
         // Verifica se já existe log hoje
-        const { data: existingLog } = await supabase
-          .from('health_wellness_logs')
-          .select('id')
-          .eq('date', dateToSave)
-          .maybeSingle();
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+
+const { data: existingLog } = await supabase
+  .from('health_wellness_logs')
+  .select('id')
+  .eq('user_id', user.id)
+  .gte('date', startOfDay.toISOString())
+  .lte('date', endOfDay.toISOString())
+  .maybeSingle();
+
 
         if (existingLog) {
           // Atualiza
