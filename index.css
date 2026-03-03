@@ -5,23 +5,23 @@
 @layer base {
   :root {
     /* LIGHT MODE - Fundo claro, texto escuro */
-    --background: 0 0% 98%; /* Quase branco */
-    --foreground: 0 0% 10%; /* Quase preto */
-    --card: 0 0% 100%; /* Branco puro */
-    --card-foreground: 0 0% 10%; /* Quase preto */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
     --primary: 24 9.8% 10%;
     --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 0 0% 96%; /* Cinza muito claro */
+    --secondary: 0 0% 96%;
     --secondary-foreground: 0 0% 10%;
     --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%; /* Cinza médio */
+    --muted-foreground: 0 0% 45%;
     --accent: 0 0% 94%;
     --accent-foreground: 0 0% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 90%; /* Borda clara */
+    --border: 0 0% 90%;
     --input: 0 0% 90%;
     --ring: 0 0% 10%;
     --radius: 0.5rem;
@@ -29,52 +29,76 @@
 
   .dark {
     /* DARK MODE - Fundo escuro, texto claro */
-    --background: 0 0% 10%; /* Quase preto */
-    --foreground: 0 0% 98%; /* Quase branco */
-    --card: 0 0% 14%; /* Cinza muito escuro */
-    --card-foreground: 0 0% 98%; /* Quase branco */
+    --background: 0 0% 10%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 14%;
+    --card-foreground: 0 0% 98%;
     --popover: 0 0% 14%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 10%;
-    --secondary: 0 0% 18%; /* Cinza escuro */
+    --secondary: 0 0% 18%;
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 18%;
-    --muted-foreground: 0 0% 60%; /* Cinza médio claro */
+    --muted-foreground: 0 0% 60%;
     --accent: 0 0% 22%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 25%; /* Borda escura */
+    --border: 0 0% 25%;
     --input: 0 0% 25%;
     --ring: 0 0% 83%;
   }
 
   /* ============================================
-     MÓDULO PROFISSIONAL — Tema escuro fixo
-     Aplicado via classe .professional-theme
-     no ProfessionalLayout
+     MÓDULO PROFISSIONAL — Light Mode
   ============================================ */
   .professional-theme {
-    --background: 0 0% 7%;              /* #111111 */
-    --foreground: 0 0% 90%;             /* #E5E5E5 */
-    --card: 0 0% 12%;                   /* #1E1E1E */
+    --background: 0 0% 97%;           /* #F7F7F7 */
+    --foreground: 0 0% 10%;           /* #1A1A1A */
+    --card: 0 0% 100%;                /* #FFFFFF */
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 24 100% 54%;           /* #F97316 Orange — mantido em ambos os modos */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 93%;            /* #EDEDED */
+    --secondary-foreground: 0 0% 10%;
+    --muted: 0 0% 93%;
+    --muted-foreground: 0 0% 45%;     /* #737373 */
+    --accent: 0 0% 93%;
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 88%;               /* #E0E0E0 */
+    --input: 0 0% 88%;
+    --ring: 24 100% 54%;
+  }
+
+  /* ============================================
+     MÓDULO PROFISSIONAL — Dark Mode
+     .dark está no <html>, .professional-theme no div filho
+  ============================================ */
+  .dark .professional-theme {
+    --background: 0 0% 7%;            /* #111111 */
+    --foreground: 0 0% 90%;           /* #E5E5E5 */
+    --card: 0 0% 12%;                 /* #1E1E1E */
     --card-foreground: 0 0% 90%;
     --popover: 0 0% 12%;
     --popover-foreground: 0 0% 90%;
-    --primary: 24 100% 54%;             /* #F97316 Orange */
+    --primary: 24 100% 54%;           /* #F97316 Orange */
     --primary-foreground: 0 0% 7%;
-    --secondary: 0 0% 16%;              /* #292929 */
+    --secondary: 0 0% 16%;            /* #292929 */
     --secondary-foreground: 0 0% 90%;
     --muted: 0 0% 16%;
-    --muted-foreground: 0 0% 55%;       /* #8C8C8C */
+    --muted-foreground: 0 0% 55%;     /* #8C8C8C */
     --accent: 0 0% 16%;
     --accent-foreground: 0 0% 90%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 20%;                 /* #333333 */
+    --border: 0 0% 20%;               /* #333333 */
     --input: 0 0% 20%;
-    --ring: 24 100% 54%;               /* Orange */
+    --ring: 24 100% 54%;
   }
 }
 
