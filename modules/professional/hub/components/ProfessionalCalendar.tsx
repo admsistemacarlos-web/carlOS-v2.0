@@ -79,7 +79,7 @@ export default function ProfessionalCalendar({
   const isCurrentMonth = today.getMonth() === currentMonth.getMonth() && today.getFullYear() === currentMonth.getFullYear();
 
   return (
-    <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 shadow-lg">
+    <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
       {/* Navegação */}
 <div className="flex flex-col items-center gap-3 mb-6">
   {/* Mês e Ano centralizados */}
@@ -91,21 +91,21 @@ export default function ProfessionalCalendar({
   <div className="flex items-center justify-between w-full gap-2">
     <button
       onClick={goToPreviousMonth}
-      className="flex items-center gap-1 px-3 py-2 bg-[#2C2C2C] hover:bg-[#37352F] border border-[#404040] rounded-lg text-[#D4D4D4] text-xs font-bold transition-colors"
+      className="flex items-center gap-1 px-3 py-2 bg-secondary hover:bg-secondary border border-border rounded-lg text-foreground text-xs font-bold transition-colors"
     >
       <ChevronLeft size={14} /> Anterior
     </button>
 
     <button
       onClick={goToToday}
-      className="px-4 py-2 bg-[#E09B6B]/10 hover:bg-[#E09B6B]/20 border border-[#E09B6B]/30 rounded-lg text-[#E09B6B] text-xs font-bold transition-colors"
+      className="px-4 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-lg text-primary text-xs font-bold transition-colors"
     >
       Hoje
     </button>
 
     <button
       onClick={goToNextMonth}
-      className="flex items-center gap-1 px-3 py-2 bg-[#2C2C2C] hover:bg-[#37352F] border border-[#404040] rounded-lg text-[#D4D4D4] text-xs font-bold transition-colors"
+      className="flex items-center gap-1 px-3 py-2 bg-secondary hover:bg-secondary border border-border rounded-lg text-foreground text-xs font-bold transition-colors"
     >
       Próximo <ChevronRight size={14} />
     </button>
@@ -116,7 +116,7 @@ export default function ProfessionalCalendar({
       <div className="grid grid-cols-7 gap-2">
         {/* Cabeçalho dos dias da semana */}
         {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
-          <div key={day} className="text-center text-xs font-bold text-[#737373] uppercase tracking-wider py-2">
+          <div key={day} className="text-center text-xs font-bold text-muted-foreground uppercase tracking-wider py-2">
             {day}
           </div>
         ))}
@@ -142,12 +142,12 @@ export default function ProfessionalCalendar({
               className={`
                 aspect-square p-2 rounded-xl border cursor-pointer transition-all
                 ${isToday 
-                  ? 'bg-[#E09B6B]/20 border-[#E09B6B] ring-2 ring-[#E09B6B]/50' 
-                  : 'bg-[#2C2C2C] border-[#404040] hover:bg-[#37352F] hover:border-[#E09B6B]/30'
+                  ? 'bg-primary/20 border-primary ring-2 ring-primary/50' 
+                  : 'bg-secondary border-border hover:bg-secondary hover:border-primary/30'
                 }
               `}
             >
-              <div className={`text-sm font-bold mb-1 ${isToday ? 'text-[#E09B6B]' : 'text-[#D4D4D4]'}`}>
+              <div className={`text-sm font-bold mb-1 ${isToday ? 'text-primary' : 'text-foreground'}`}>
                 {day}
               </div>
               
@@ -158,7 +158,7 @@ export default function ProfessionalCalendar({
                     key={event.id}
                     className={`text-[10px] px-1.5 py-0.5 rounded truncate ${
                       event.category === 'task' 
-                        ? 'bg-[#E09B6B]/10 text-[#E09B6B] border border-[#E09B6B]/30' 
+                        ? 'bg-primary/10 text-primary border border-primary/30' 
                         : event.category === 'meeting'
                         ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
                         : 'bg-blue-500/10 text-blue-400 border border-blue-500/30'
@@ -169,7 +169,7 @@ export default function ProfessionalCalendar({
                   </div>
                 ))}
                 {dayEvents.length > 2 && (
-                  <div className="text-[10px] text-[#737373] font-bold">
+                  <div className="text-[10px] text-muted-foreground font-bold">
                     +{dayEvents.length - 2} mais
                   </div>
                 )}

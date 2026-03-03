@@ -45,7 +45,7 @@ const configs: Record<string, { icon: React.ReactElement; color: string; label: 
   };
 
   return (
-    <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 h-full flex flex-col">
+    <div className="bg-card border border-[#404040] rounded-2xl p-6 h-full flex flex-col">
       <div className="mb-4 pb-4 border-b border-[#404040]">
         <h3 className="text-lg font-bold text-white flex items-center gap-2">
           <Calendar size={20} className="text-[#E09B6B]" />
@@ -69,7 +69,7 @@ const configs: Record<string, { icon: React.ReactElement; color: string; label: 
               <div
                 key={event.id}
                 onClick={() => navigate(config.path)}
-                className="p-4 bg-[#2C2C2C] hover:bg-[#37352F] border border-[#404040] hover:border-[#E09B6B]/30 rounded-xl cursor-pointer transition-all group"
+                className="p-4 bg-secondary hover:bg-secondary border border-[#404040] hover:border-[#E09B6B]/30 rounded-xl cursor-pointer transition-all group"
               >
                 <div className="flex items-start gap-3">
                   <div className={`p-2 rounded-lg border ${config.color}`}>

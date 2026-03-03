@@ -140,7 +140,7 @@ export default function ProfessionalResourcesWidget() {
   return (
     <>
       {/* CARD WIDGET */}
-      <div className="bg-[#2C2C2C] rounded-lg border border-[#404040] p-5">
+      <div className="bg-secondary rounded-lg border border-[#404040] p-5">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
             <Folder size={18} className="text-[#E09B6B]" />
@@ -176,7 +176,7 @@ export default function ProfessionalResourcesWidget() {
             {resources.map((resource) => (
               <div
                 key={resource.id}
-                className="group bg-[#202020] border border-[#404040] hover:border-[#E09B6B]/30 rounded-lg p-3 transition-all"
+                className="group bg-card border border-[#404040] hover:border-[#E09B6B]/30 rounded-lg p-3 transition-all"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
@@ -237,7 +237,7 @@ export default function ProfessionalResourcesWidget() {
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => handleOpenModal(resource)}
-                      className="p-1.5 hover:bg-[#2C2C2C] text-[#737373] hover:text-[#E09B6B] rounded transition-colors"
+                      className="p-1.5 hover:bg-secondary text-[#737373] hover:text-[#E09B6B] rounded transition-colors"
                       title="Editar"
                     >
                       <Edit2 size={14} />
@@ -260,14 +260,14 @@ export default function ProfessionalResourcesWidget() {
       {/* MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-card border border-[#404040] rounded-2xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-bold text-white">
                 {editingResource ? 'Editar Recurso' : 'Novo Recurso'}
               </h3>
               <button
                 onClick={handleCloseModal}
-                className="p-2 hover:bg-[#2C2C2C] text-[#737373] hover:text-white rounded-lg transition-colors"
+                className="p-2 hover:bg-secondary text-[#737373] hover:text-white rounded-lg transition-colors"
               >
                 <X size={20} />
               </button>
@@ -282,7 +282,7 @@ export default function ProfessionalResourcesWidget() {
                     className={`flex-1 py-3 rounded-lg border text-sm font-bold uppercase tracking-wider transition-all ${
                       formType === 'link'
                         ? 'bg-[#E09B6B] text-[#1a1a1a] border-[#E09B6B]'
-                        : 'bg-[#2C2C2C] text-[#737373] border-[#404040] hover:border-[#E09B6B]/50'
+                        : 'bg-secondary text-[#737373] border-[#404040] hover:border-[#E09B6B]/50'
                     }`}
                   >
                     <LinkIcon size={16} className="inline mr-2" />
@@ -293,7 +293,7 @@ export default function ProfessionalResourcesWidget() {
                     className={`flex-1 py-3 rounded-lg border text-sm font-bold uppercase tracking-wider transition-all ${
                       formType === 'note'
                         ? 'bg-[#E09B6B] text-[#1a1a1a] border-[#E09B6B]'
-                        : 'bg-[#2C2C2C] text-[#737373] border-[#404040] hover:border-[#E09B6B]/50'
+                        : 'bg-secondary text-[#737373] border-[#404040] hover:border-[#E09B6B]/50'
                     }`}
                   >
                     <FileText size={16} className="inline mr-2" />
@@ -312,7 +312,7 @@ export default function ProfessionalResourcesWidget() {
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
                   placeholder="Ex: Proposta Comercial HTML, PDF Institucional"
-                  className="w-full bg-[#2C2C2C] border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
+                  className="w-full bg-secondary border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
                 />
               </div>
 
@@ -326,7 +326,7 @@ export default function ProfessionalResourcesWidget() {
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
                   placeholder="Breve descrição"
-                  className="w-full bg-[#2C2C2C] border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
+                  className="w-full bg-secondary border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
                 />
               </div>
 
@@ -341,7 +341,7 @@ export default function ProfessionalResourcesWidget() {
                     value={formUrl}
                     onChange={(e) => setFormUrl(e.target.value)}
                     placeholder="https://..."
-                    className="w-full bg-[#2C2C2C] border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
+                    className="w-full bg-secondary border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
                   />
                 </div>
               )}
@@ -357,7 +357,7 @@ export default function ProfessionalResourcesWidget() {
                     onChange={(e) => setFormNote(e.target.value)}
                     placeholder="Escreva suas anotações aqui..."
                     rows={8}
-                    className="w-full bg-[#2C2C2C] border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B] resize-none"
+                    className="w-full bg-secondary border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B] resize-none"
                   />
                 </div>
               )}
@@ -377,7 +377,7 @@ export default function ProfessionalResourcesWidget() {
                 </button>
                 <button
                   onClick={handleCloseModal}
-                  className="px-6 py-2.5 bg-[#2C2C2C] hover:bg-[#333] text-[#737373] rounded-lg text-sm font-bold transition-colors"
+                  className="px-6 py-2.5 bg-secondary hover:bg-[#333] text-[#737373] rounded-lg text-sm font-bold transition-colors"
                 >
                   Cancelar
                 </button>

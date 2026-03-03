@@ -29,7 +29,7 @@ export default function ClientFilesManager({ clientId }: { clientId: string }) {
   };
 
   return (
-    <div className="bg-[#202020] p-6 rounded-lg border border-[#404040] shadow-sm">
+    <div className="bg-card p-6 rounded-lg border border-[#404040] shadow-sm">
       
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
@@ -39,7 +39,7 @@ export default function ClientFilesManager({ clientId }: { clientId: string }) {
         <button 
           disabled={isUploading}
           onClick={() => fileInputRef.current?.click()}
-          className="bg-[#37352F] hover:bg-[#404040] text-[#D4D4D4] text-[10px] font-bold px-3 py-1.5 rounded-md flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 border border-[#404040]"
+          className="bg-secondary hover:bg-[#404040] text-[#D4D4D4] text-[10px] font-bold px-3 py-1.5 rounded-md flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 border border-[#404040]"
         >
           {isUploading ? <Loader2 size={12} className="animate-spin" /> : <UploadCloud size={12} />}
           {isUploading ? '...' : 'Upload'}
@@ -56,7 +56,7 @@ export default function ClientFilesManager({ clientId }: { clientId: string }) {
       <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
         {files?.map(file => (
           <div key={file.id} className="group relative bg-[#1A1A1A] p-3 rounded-md border border-[#404040] hover:border-[#737373] transition-all flex items-center gap-3">
-            <div className="p-1.5 bg-[#2C2C2C] rounded-md shrink-0">
+            <div className="p-1.5 bg-secondary rounded-md shrink-0">
               {getFileIcon(file.file_type)}
             </div>
             

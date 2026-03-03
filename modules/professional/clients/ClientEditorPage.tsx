@@ -19,7 +19,7 @@ const InputGroup = ({ label, name, value, onChange, type = "text", icon }: any) 
         name={name}
         value={value || ''}
         onChange={onChange}
-        className="w-full bg-[#37352F] border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none transition-all placeholder-[#5c5c5c]"
+        className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none transition-all placeholder-[#5c5c5c]"
       />
       <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#737373] group-focus-within:text-[#E09B6B] transition-colors">
         {icon}
@@ -106,7 +106,7 @@ export default function ClientEditorPage() {
       
       {/* HEADER */}
       <div className="flex items-center gap-4 mb-6 pt-6">
-        <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-[#2C2C2C] text-[#737373] hover:text-[#D4D4D4] transition-colors">
+        <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-secondary text-[#737373] hover:text-[#D4D4D4] transition-colors">
           <ArrowLeft size={20} />
         </button>
         <div>
@@ -180,9 +180,9 @@ export default function ClientEditorPage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
 
                     {/* Logo Upload */}
-                    <div className="bg-[#2C2C2C] p-6 rounded-lg border border-[#404040] shadow-sm flex flex-col items-center justify-center">
+                    <div className="bg-secondary p-6 rounded-lg border border-[#404040] shadow-sm flex flex-col items-center justify-center">
                         <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/png, image/jpeg, image/jpg" className="hidden" />
-                        <div onClick={() => fileInputRef.current?.click()} className={`relative w-64 h-40 rounded-lg border-2 border-dashed flex items-center justify-center cursor-pointer transition-all overflow-hidden group ${previewUrl ? 'border-[#E09B6B]/50 bg-black/20' : 'border-[#404040] hover:border-[#E09B6B] hover:bg-[#37352F]'}`}>
+                        <div onClick={() => fileInputRef.current?.click()} className={`relative w-64 h-40 rounded-lg border-2 border-dashed flex items-center justify-center cursor-pointer transition-all overflow-hidden group ${previewUrl ? 'border-[#E09B6B]/50 bg-black/20' : 'border-[#404040] hover:border-[#E09B6B] hover:bg-secondary'}`}>
                             {previewUrl ? (
                                 <>
                                     <img src={previewUrl} alt="Logo Preview" className="w-full h-full object-contain p-4" />
@@ -201,7 +201,7 @@ export default function ClientEditorPage() {
                     </div>
 
                     {/* Identidade */}
-                    <div className="bg-[#2C2C2C] p-6 rounded-lg border border-[#404040] shadow-sm">
+                    <div className="bg-secondary p-6 rounded-lg border border-[#404040] shadow-sm">
                         <h3 className="text-xs font-bold uppercase tracking-widest text-[#E09B6B] mb-6 flex items-center gap-2">
                             <User size={14} /> Identidade
                         </h3>
@@ -212,7 +212,7 @@ export default function ClientEditorPage() {
                             <div>
                                 <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">Status</label>
                                 <div className="relative">
-                                    <select name="status" value={formData.status} onChange={handleChange} className="w-full bg-[#37352F] border border-[#404040] rounded-md px-4 py-3 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none appearance-none cursor-pointer">
+                                    <select name="status" value={formData.status} onChange={handleChange} className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none appearance-none cursor-pointer">
                                         <option value="active">Ativo (Cliente)</option>
                                         <option value="lead">Lead (Negociação)</option>
                                         <option value="churned">Churned (Ex-Cliente)</option>
@@ -223,7 +223,7 @@ export default function ClientEditorPage() {
                     </div>
 
                     {/* Contato */}
-                    <div className="bg-[#2C2C2C] p-6 rounded-lg border border-[#404040] shadow-sm">
+                    <div className="bg-secondary p-6 rounded-lg border border-[#404040] shadow-sm">
                         <h3 className="text-xs font-bold uppercase tracking-widest text-[#E09B6B] mb-6 flex items-center gap-2">
                             <Globe size={14} /> Contato Digital
                         </h3>
@@ -236,7 +236,7 @@ export default function ClientEditorPage() {
                     </div>
 
                     {/* Operacional */}
-                    <div className="bg-[#2C2C2C] p-6 rounded-lg border border-[#404040] shadow-sm">
+                    <div className="bg-secondary p-6 rounded-lg border border-[#404040] shadow-sm">
                         <h3 className="text-xs font-bold uppercase tracking-widest text-[#E09B6B] mb-6 flex items-center gap-2">
                             <MapPin size={14} /> Operacional
                         </h3>
@@ -245,14 +245,14 @@ export default function ClientEditorPage() {
                             <InputGroup label="Endereço Completo" name="address" value={formData.address} onChange={handleChange} icon={<MapPin size={16}/>} />
                             <div>
                                 <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">Notas Internas</label>
-                                <textarea name="notes" rows={4} value={formData.notes || ''} onChange={handleChange} className="w-full bg-[#37352F] border border-[#404040] rounded-md px-4 py-3 text-sm text-[#D4D4D4] placeholder-[#5c5c5c] focus:border-[#E09B6B] outline-none transition-all resize-none" />
+                                <textarea name="notes" rows={4} value={formData.notes || ''} onChange={handleChange} className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 text-sm text-[#D4D4D4] placeholder-[#5c5c5c] focus:border-[#E09B6B] outline-none transition-all resize-none" />
                             </div>
                         </div>
                     </div>
 
                     {/* Footer Actions */}
                     <div className="flex justify-end gap-4 pt-4">
-                        <button type="button" onClick={() => navigate(-1)} className="px-6 py-3 rounded-md text-xs font-bold uppercase tracking-widest text-[#9ca3af] hover:bg-[#37352F] transition-colors">Cancelar</button>
+                        <button type="button" onClick={() => navigate(-1)} className="px-6 py-3 rounded-md text-xs font-bold uppercase tracking-widest text-[#9ca3af] hover:bg-secondary transition-colors">Cancelar</button>
                         <button type="submit" disabled={isLoading} className="bg-[#5D4037] hover:bg-[#4E342E] text-[#FFFFFF] px-8 py-3 rounded-md text-xs font-bold uppercase tracking-widest flex items-center gap-2 shadow-sm border border-[#5D4037] transition-all disabled:opacity-50 active:scale-95">
                             {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
                             Salvar Dados

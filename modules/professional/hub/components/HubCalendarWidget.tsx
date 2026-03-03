@@ -47,7 +47,7 @@ export default function HubCalendarWidget({ tasks }: HubCalendarWidgetProps) {
 
   if (upcomingTasks.length === 0) {
     return (
-      <div className="bg-[#202020] rounded-lg border border-[#404040] p-6">
+      <div className="bg-card rounded-lg border border-[#404040] p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-bold text-[#D4D4D4] uppercase tracking-wider flex items-center gap-2">
             <Calendar size={16} className="text-[#E09B6B]" /> Próximos Eventos
@@ -68,7 +68,7 @@ export default function HubCalendarWidget({ tasks }: HubCalendarWidgetProps) {
   }
 
   return (
-    <div className="bg-[#202020] rounded-lg border border-[#404040] overflow-hidden">
+    <div className="bg-card rounded-lg border border-[#404040] overflow-hidden">
       {/* Header */}
       <div className="p-5 border-b border-[#404040] flex justify-between items-center bg-[#252525]">
         <h3 className="text-sm font-bold text-[#D4D4D4] uppercase tracking-wider flex items-center gap-2">
@@ -91,7 +91,7 @@ export default function HubCalendarWidget({ tasks }: HubCalendarWidgetProps) {
             <div
               key={task.id}
               onClick={() => navigate('/professional/calendar')}
-              className="flex items-center gap-3 p-3 hover:bg-[#2C2C2C] rounded-md cursor-pointer group transition-colors border border-transparent hover:border-[#404040]"
+              className="flex items-center gap-3 p-3 hover:bg-secondary rounded-md cursor-pointer group transition-colors border border-transparent hover:border-[#404040]"
             >
               {/* Data */}
               <div className="shrink-0 text-center">

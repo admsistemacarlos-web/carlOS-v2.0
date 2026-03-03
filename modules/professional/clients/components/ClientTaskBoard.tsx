@@ -161,7 +161,7 @@ const TaskModal = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-[#202020] w-full max-w-md rounded-lg border border-[#404040] shadow-2xl overflow-hidden">
+      <div className="bg-card w-full max-w-md rounded-lg border border-[#404040] shadow-2xl overflow-hidden">
         <div className="flex justify-between items-center p-5 border-b border-[#404040]">
           <h3 className="text-base font-bold text-[#D4D4D4]">{task ? 'Editar Demanda' : 'Nova Demanda'}</h3>
           <button onClick={onClose} className="text-[#737373] hover:text-[#D4D4D4]"><X size={18} /></button>
@@ -174,7 +174,7 @@ const TaskModal = ({
               autoFocus
               value={formData.title}
               onChange={e => setFormData({...formData, title: e.target.value})}
-              className="w-full bg-[#37352F] border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none placeholder-[#5c5c5c]"
+              className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none placeholder-[#5c5c5c]"
               placeholder="Ex: Criar Reels Institucional..."
             />
           </div>
@@ -186,7 +186,7 @@ const TaskModal = ({
                   type="date"
                   value={formData.due_date}
                   onChange={e => setFormData({...formData, due_date: e.target.value})}
-                  className="w-full bg-[#37352F] border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none [color-scheme:dark]"
+                  className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none [color-scheme:dark]"
                 />
              </div>
              <div>
@@ -194,7 +194,7 @@ const TaskModal = ({
                 <select
                   value={formData.priority}
                   onChange={e => setFormData({...formData, priority: e.target.value})}
-                  className="w-full bg-[#37352F] border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none appearance-none"
+                  className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none appearance-none"
                 >
                     <option value="low">Baixa</option>
                     <option value="medium">Média</option>
@@ -213,7 +213,7 @@ const TaskModal = ({
                         onClick={() => setFormData({...formData, status: key})}
                         className={`flex items-center gap-2 px-3 py-2 rounded-md border text-xs font-medium transition-all ${
                             formData.status === key 
-                            ? `bg-[#37352F] border-[#E09B6B] text-[#D4D4D4]` 
+                            ? `bg-secondary border-[#E09B6B] text-[#D4D4D4]` 
                             : 'bg-transparent border-[#404040] text-[#737373] hover:border-[#737373]'
                         }`}
                     >
@@ -230,7 +230,7 @@ const TaskModal = ({
               rows={3}
               value={formData.description}
               onChange={e => setFormData({...formData, description: e.target.value})}
-              className="w-full bg-[#37352F] border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none placeholder-[#5c5c5c]"
+              className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none placeholder-[#5c5c5c]"
               placeholder="Detalhes da tarefa..."
             />
           </div>
@@ -308,27 +308,27 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
   if (isLoading) return <div className="text-[#737373] text-xs p-4">Carregando tarefas...</div>;
 
   return (
-    <div className="bg-[#202020] rounded-lg border border-[#404040] shadow-sm overflow-hidden flex flex-col h-[600px]">
+    <div className="bg-card rounded-lg border border-[#404040] shadow-sm overflow-hidden flex flex-col h-[600px]">
       
       {/* HEADER DA SEÇÃO */}
-      <div className="p-5 border-b border-[#404040] flex justify-between items-center shrink-0 bg-[#202020]">
+      <div className="p-5 border-b border-[#404040] flex justify-between items-center shrink-0 bg-card">
         <div className="flex items-center gap-4">
             <h3 className="text-sm font-bold uppercase tracking-widest text-[#E09B6B] flex items-center gap-2">
             <CheckCircle2 size={16} /> Gestão de Demandas
             </h3>
             
             {/* View Toggle */}
-            <div className="flex bg-[#191919] p-0.5 rounded-md border border-[#404040]">
+            <div className="flex bg-background p-0.5 rounded-md border border-[#404040]">
                 <button 
                     onClick={() => setViewMode('list')}
-                    className={`p-1.5 rounded-sm transition-all ${viewMode === 'list' ? 'bg-[#37352F] text-[#D4D4D4] shadow-sm' : 'text-[#737373] hover:text-[#9ca3af]'}`}
+                    className={`p-1.5 rounded-sm transition-all ${viewMode === 'list' ? 'bg-secondary text-[#D4D4D4] shadow-sm' : 'text-[#737373] hover:text-[#9ca3af]'}`}
                     title="Lista"
                 >
                     <List size={14} />
                 </button>
                 <button 
                     onClick={() => setViewMode('calendar')}
-                    className={`p-1.5 rounded-sm transition-all ${viewMode === 'calendar' ? 'bg-[#37352F] text-[#D4D4D4] shadow-sm' : 'text-[#737373] hover:text-[#9ca3af]'}`}
+                    className={`p-1.5 rounded-sm transition-all ${viewMode === 'calendar' ? 'bg-secondary text-[#D4D4D4] shadow-sm' : 'text-[#737373] hover:text-[#9ca3af]'}`}
                     title="Calendário"
                 >
                     <CalendarIcon size={14} />
@@ -338,14 +338,14 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
 
         <button 
             onClick={handleOpenNew}
-            className="flex items-center gap-2 text-xs font-bold bg-[#37352F] text-[#D4D4D4] hover:text-[#FFFFFF] hover:bg-[#404040] px-3 py-1.5 rounded-md transition-colors border border-[#404040]"
+            className="flex items-center gap-2 text-xs font-bold bg-secondary text-[#D4D4D4] hover:text-[#FFFFFF] hover:bg-[#404040] px-3 py-1.5 rounded-md transition-colors border border-[#404040]"
         >
             <Plus size={14} /> Nova Demanda
         </button>
       </div>
 
       {/* CONTEÚDO PRINCIPAL */}
-      <div className="flex-1 overflow-hidden relative bg-[#191919]">
+      <div className="flex-1 overflow-hidden relative bg-background">
         
         {viewMode === 'list' ? (
             // --- LIST VIEW ---
@@ -356,7 +356,7 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
                         <div 
                             key={task.id} 
                             onClick={() => handleOpenEdit(task)}
-                            className="group flex items-center justify-between p-3 rounded-md bg-[#2C2C2C] border border-[#404040] hover:border-[#737373] transition-all cursor-pointer"
+                            className="group flex items-center justify-between p-3 rounded-md bg-secondary border border-[#404040] hover:border-[#737373] transition-all cursor-pointer"
                         >
                             <div className="flex items-center gap-3 min-w-0">
                                 <div className={`shrink-0 ${STATUS_CONFIG[task.status].color}`}>
@@ -379,7 +379,7 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
 
                             <div className="flex items-center gap-4">
                                 {task.due_date && (
-                                    <span className="text-[10px] font-mono text-[#9ca3af] bg-[#191919] px-2 py-1 rounded border border-[#404040]">
+                                    <span className="text-[10px] font-mono text-[#9ca3af] bg-background px-2 py-1 rounded border border-[#404040]">
                                         {formatDateBr(task.due_date)}
                                     </span>
                                 )}
@@ -400,19 +400,19 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
             // --- CALENDAR VIEW ---
             <div className="h-full flex flex-col">
                 {/* Calendar Nav */}
-                <div className="flex items-center justify-between px-4 py-2 border-b border-[#404040] bg-[#202020]">
+                <div className="flex items-center justify-between px-4 py-2 border-b border-[#404040] bg-card">
                     <span className="text-sm font-bold text-[#E5E5E5] capitalize">
                         {currentDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
                     </span>
                     <div className="flex items-center gap-1">
-                        <button onClick={prevMonth} className="p-1 hover:bg-[#37352F] rounded text-[#9ca3af]"><ChevronLeft size={16} /></button>
+                        <button onClick={prevMonth} className="p-1 hover:bg-secondary rounded text-[#9ca3af]"><ChevronLeft size={16} /></button>
                         <button onClick={goToToday} className="text-[10px] font-bold uppercase text-[#9ca3af] hover:text-[#E09B6B] px-2">Hoje</button>
-                        <button onClick={nextMonth} className="p-1 hover:bg-[#37352F] rounded text-[#9ca3af]"><ChevronRight size={16} /></button>
+                        <button onClick={nextMonth} className="p-1 hover:bg-secondary rounded text-[#9ca3af]"><ChevronRight size={16} /></button>
                     </div>
                 </div>
 
                 {/* Calendar Grid */}
-                <div className="flex-1 grid grid-rows-[auto_1fr] bg-[#202020]">
+                <div className="flex-1 grid grid-rows-[auto_1fr] bg-card">
                     {/* Weekdays */}
                     <div className="grid grid-cols-7 border-b border-[#404040]">
                         {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((d, i) => (
@@ -433,7 +433,7 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
                             return (
                                 <div 
                                     key={dateKey} 
-                                    className={`bg-[#191919] p-1 flex flex-col transition-colors hover:bg-[#202020] min-h-[80px] ${!isCurrentMonth ? 'opacity-30 bg-[#151515]' : ''}`}
+                                    className={`bg-background p-1 flex flex-col transition-colors hover:bg-card min-h-[80px] ${!isCurrentMonth ? 'opacity-30 bg-[#151515]' : ''}`}
                                     onClick={() => isCurrentMonth && handleOpenNew()} // Pode abrir para criar nova com data pré-setada futuramente
                                 >
                                     <span className={`text-[10px] font-bold mb-1 w-5 h-5 flex items-center justify-center rounded-full ${isTodayDate ? 'bg-[#E09B6B] text-[#191919]' : 'text-[#737373]'}`}>
@@ -448,7 +448,7 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
                                                 className={`text-[9px] px-1.5 py-1 rounded border truncate cursor-pointer select-none ${
                                                     task.status === 'posted' 
                                                     ? 'bg-primary/30 text-[#5c5c5c] border-transparent line-through' 
-                                                    : 'bg-[#2C2C2C] text-[#D4D4D4] border-[#404040] hover:border-[#E09B6B]'
+                                                    : 'bg-secondary text-[#D4D4D4] border-[#404040] hover:border-[#E09B6B]'
                                                 }`}
                                                 title={task.title}
                                             >

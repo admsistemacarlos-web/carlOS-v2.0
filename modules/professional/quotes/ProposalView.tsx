@@ -40,7 +40,7 @@ export default function ProposalView() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#191919] flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="animate-spin text-[#E09B6B]" size={32} />
       </div>
     );
@@ -62,10 +62,10 @@ export default function ProposalView() {
   };
 
   return (
-    <div className="min-h-screen bg-[#191919] text-[#D4D4D4] font-sans selection:bg-[#E09B6B]/30 pb-20">
+    <div className="min-h-screen bg-background text-[#D4D4D4] font-sans selection:bg-[#E09B6B]/30 pb-20">
       
       {/* 1. TOP BAR (ACTIONS) */}
-      <div className="sticky top-0 z-50 bg-[#191919]/80 backdrop-blur-md border-b border-[#333] px-6 py-4 flex justify-between items-center print:hidden">
+      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-[#333] px-6 py-4 flex justify-between items-center print:hidden">
         <button 
           onClick={() => navigate('/professional/quotes')}
           className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-[#737373] hover:text-[#D4D4D4] transition-colors"
@@ -90,7 +90,7 @@ export default function ProposalView() {
       </div>
 
       {/* 2. DOCUMENT CONTAINER (A4-ish Width) */}
-      <div className="max-w-[900px] mx-auto bg-[#202020] mt-8 mb-12 shadow-2xl overflow-hidden print:shadow-none print:m-0 print:max-w-none print:bg-card print:text-black">
+      <div className="max-w-[900px] mx-auto bg-card mt-8 mb-12 shadow-2xl overflow-hidden print:shadow-none print:m-0 print:max-w-none print:bg-card print:text-black">
         
         {/* HEADER / BRANDING */}
         <div className="bg-[#151515] p-12 border-b border-[#333] flex justify-between items-start print:bg-card print:border-black">
@@ -173,7 +173,7 @@ export default function ProposalView() {
                 
                 {/* ONE TIME TABLE */}
                 {oneTimeItems.length > 0 && (
-                    <div className="bg-[#202020] rounded-2xl p-6 border border-[#333] shadow-lg print:bg-card print:border-border print:shadow-none">
+                    <div className="bg-card rounded-2xl p-6 border border-[#333] shadow-lg print:bg-card print:border-border print:shadow-none">
                         <div className="flex justify-between items-center mb-6 border-b border-[#333] pb-4 print:border-border">
                             <h3 className="font-bold text-white uppercase tracking-wider print:text-black">Implementação (Setup)</h3>
                             <span className="text-[10px] bg-[#333] text-[#999] px-2 py-1 rounded print:bg-secondary print:text-black">Pagamento Único</span>
@@ -202,7 +202,7 @@ export default function ProposalView() {
 
                 {/* RECURRING TABLE */}
                 {monthlyItems.length > 0 && (
-                    <div className="bg-[#202020] rounded-2xl p-6 border border-[#E09B6B]/30 shadow-[0_0_20px_rgba(224,155,107,0.05)] relative overflow-hidden print:bg-card print:border-border print:shadow-none">
+                    <div className="bg-card rounded-2xl p-6 border border-[#E09B6B]/30 shadow-[0_0_20px_rgba(224,155,107,0.05)] relative overflow-hidden print:bg-card print:border-border print:shadow-none">
                         <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-[#E09B6B]/10 to-transparent pointer-events-none print:hidden" />
                         
                         <div className="flex justify-between items-center mb-6 border-b border-[#333] pb-4 print:border-border">

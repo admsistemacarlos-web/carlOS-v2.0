@@ -179,7 +179,7 @@ export default function QuoteResourcesTab({ quoteId }: QuoteResourcesTabProps) {
 
       {/* ADD/EDIT FORM */}
       {(isAdding || editingId) && (
-        <div className="bg-[#202020] border border-[#404040] rounded-xl p-6 space-y-4">
+        <div className="bg-card border border-[#404040] rounded-xl p-6 space-y-4">
           <div className="flex justify-between items-center mb-4">
             <h4 className="text-sm font-bold text-white uppercase tracking-wider">
               {editingId ? 'Editar Recurso' : 'Novo Recurso'}
@@ -194,7 +194,7 @@ export default function QuoteResourcesTab({ quoteId }: QuoteResourcesTabProps) {
                 className={`flex-1 py-3 rounded-lg border text-sm font-bold uppercase tracking-wider transition-all ${
                   formType === 'link'
                     ? 'bg-[#E09B6B] text-[#1a1a1a] border-[#E09B6B]'
-                    : 'bg-[#2C2C2C] text-[#737373] border-[#404040] hover:border-[#E09B6B]/50'
+                    : 'bg-secondary text-[#737373] border-[#404040] hover:border-[#E09B6B]/50'
                 }`}
               >
                 <LinkIcon size={16} className="inline mr-2" />
@@ -205,7 +205,7 @@ export default function QuoteResourcesTab({ quoteId }: QuoteResourcesTabProps) {
                 className={`flex-1 py-3 rounded-lg border text-sm font-bold uppercase tracking-wider transition-all ${
                   formType === 'note'
                     ? 'bg-[#E09B6B] text-[#1a1a1a] border-[#E09B6B]'
-                    : 'bg-[#2C2C2C] text-[#737373] border-[#404040] hover:border-[#E09B6B]/50'
+                    : 'bg-secondary text-[#737373] border-[#404040] hover:border-[#E09B6B]/50'
                 }`}
               >
                 <FileText size={16} className="inline mr-2" />
@@ -224,7 +224,7 @@ export default function QuoteResourcesTab({ quoteId }: QuoteResourcesTabProps) {
               value={formTitle}
               onChange={(e) => setFormTitle(e.target.value)}
               placeholder="Ex: Briefing do Cliente, Material de Referência"
-              className="w-full bg-[#2C2C2C] border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
+              className="w-full bg-secondary border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
             />
           </div>
 
@@ -238,7 +238,7 @@ export default function QuoteResourcesTab({ quoteId }: QuoteResourcesTabProps) {
               value={formDescription}
               onChange={(e) => setFormDescription(e.target.value)}
               placeholder="Breve descrição do recurso"
-              className="w-full bg-[#2C2C2C] border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
+              className="w-full bg-secondary border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
             />
           </div>
 
@@ -253,7 +253,7 @@ export default function QuoteResourcesTab({ quoteId }: QuoteResourcesTabProps) {
                 value={formUrl}
                 onChange={(e) => setFormUrl(e.target.value)}
                 placeholder="https://..."
-                className="w-full bg-[#2C2C2C] border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
+                className="w-full bg-secondary border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
               />
             </div>
           )}
@@ -269,7 +269,7 @@ export default function QuoteResourcesTab({ quoteId }: QuoteResourcesTabProps) {
                 onChange={(e) => setFormNote(e.target.value)}
                 placeholder="Escreva suas anotações aqui..."
                 rows={6}
-                className="w-full bg-[#2C2C2C] border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B] resize-none"
+                className="w-full bg-secondary border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B] resize-none"
               />
             </div>
           )}
@@ -289,7 +289,7 @@ export default function QuoteResourcesTab({ quoteId }: QuoteResourcesTabProps) {
             </button>
             <button
               onClick={editingId ? handleCancelEdit : handleCancelAdd}
-              className="px-6 py-2.5 bg-[#2C2C2C] hover:bg-[#333] text-[#737373] rounded-lg text-sm font-bold transition-colors"
+              className="px-6 py-2.5 bg-secondary hover:bg-[#333] text-[#737373] rounded-lg text-sm font-bold transition-colors"
             >
               Cancelar
             </button>
@@ -300,7 +300,7 @@ export default function QuoteResourcesTab({ quoteId }: QuoteResourcesTabProps) {
       {/* RESOURCES LIST */}
       <div className="space-y-3">
         {!resources || resources.length === 0 ? (
-          <div className="bg-[#202020] border border-[#404040] rounded-xl p-12 text-center">
+          <div className="bg-card border border-[#404040] rounded-xl p-12 text-center">
             <div className="text-[#404040] mb-3">
               <LinkIcon size={48} className="mx-auto" />
             </div>
@@ -315,7 +315,7 @@ export default function QuoteResourcesTab({ quoteId }: QuoteResourcesTabProps) {
           resources.map((resource) => (
             <div
               key={resource.id}
-              className="bg-[#202020] border border-[#404040] hover:border-[#E09B6B]/30 rounded-xl p-5 transition-all group"
+              className="bg-card border border-[#404040] hover:border-[#E09B6B]/30 rounded-xl p-5 transition-all group"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
@@ -358,7 +358,7 @@ export default function QuoteResourcesTab({ quoteId }: QuoteResourcesTabProps) {
 
                   {/* NOTE CONTENT (if note) */}
                   {resource.resource_type === 'note' && resource.note_content && (
-                    <div className="mt-3 bg-[#2C2C2C] border border-[#404040] rounded-lg p-3">
+                    <div className="mt-3 bg-secondary border border-[#404040] rounded-lg p-3">
                       <p className="text-[#D4D4D4] text-xs whitespace-pre-wrap leading-relaxed">
                         {resource.note_content}
                       </p>
@@ -375,7 +375,7 @@ export default function QuoteResourcesTab({ quoteId }: QuoteResourcesTabProps) {
                 <div className="flex items-center gap-2 ml-4 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={() => handleStartEdit(resource)}
-                    className="p-2 hover:bg-[#2C2C2C] text-[#737373] hover:text-[#E09B6B] rounded-lg transition-colors"
+                    className="p-2 hover:bg-secondary text-[#737373] hover:text-[#E09B6B] rounded-lg transition-colors"
                     title="Editar"
                   >
                     <Edit2 size={16} />

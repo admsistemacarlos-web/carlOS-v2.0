@@ -62,7 +62,7 @@ export default function CalendarPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#E09B6B]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -74,17 +74,17 @@ export default function CalendarPage() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-              <CalendarIcon size={32} className="text-[#E09B6B]" />
+              <CalendarIcon size={32} className="text-primary" />
               Calendário Profissional
             </h1>
-            <p className="text-[#9ca3af] mt-1">Vídeos em produção e reuniões com clientes</p>
+            <p className="text-muted-foreground mt-1">Vídeos em produção e reuniões com clientes</p>
           </div>
           <button
             onClick={() => {
               setSelectedDate(new Date());
               setShowMeetingModal(true);
             }}
-            className="bg-[#E09B6B] hover:opacity-90 text-white px-6 py-3 rounded-lg flex items-center gap-2 font-bold transition-all active:scale-95 shadow-lg"
+            className="bg-primary hover:opacity-90 text-white px-6 py-3 rounded-lg flex items-center gap-2 font-bold transition-all active:scale-95 shadow-lg"
           >
             <Plus size={18} />
             Nova Reunião
@@ -93,7 +93,7 @@ export default function CalendarPage() {
       </header>
 
       {/* Navegação do Calendário */}
-      <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 mb-6 shadow-premium">
+      <div className="bg-card border border-border rounded-2xl p-6 mb-6 shadow-premium">
         <div className="flex flex-col items-center gap-3 mb-6">
   {/* Mês e Ano centralizados */}
   <h2 className="text-2xl font-bold text-white">
@@ -104,21 +104,21 @@ export default function CalendarPage() {
   <div className="flex items-center justify-between w-full gap-2">
     <button
       onClick={goToPreviousMonth}
-      className="flex items-center gap-1 px-3 py-2 bg-[#2C2C2C] hover:bg-[#37352F] border border-[#404040] rounded-lg text-[#D4D4D4] text-xs font-bold transition-colors"
+      className="flex items-center gap-1 px-3 py-2 bg-secondary hover:bg-secondary border border-border rounded-lg text-foreground text-xs font-bold transition-colors"
     >
       ← Anterior
     </button>
 
     <button
       onClick={goToToday}
-      className="px-4 py-2 bg-[#E09B6B]/10 hover:bg-[#E09B6B]/20 border border-[#E09B6B]/30 rounded-lg text-[#E09B6B] text-xs font-bold transition-colors"
+      className="px-4 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-lg text-primary text-xs font-bold transition-colors"
     >
       Hoje
     </button>
 
     <button
       onClick={goToNextMonth}
-      className="flex items-center gap-1 px-3 py-2 bg-[#2C2C2C] hover:bg-[#37352F] border border-[#404040] rounded-lg text-[#D4D4D4] text-xs font-bold transition-colors"
+      className="flex items-center gap-1 px-3 py-2 bg-secondary hover:bg-secondary border border-border rounded-lg text-foreground text-xs font-bold transition-colors"
     >
       Próximo →
     </button>
@@ -129,7 +129,7 @@ export default function CalendarPage() {
         <div className="grid grid-cols-7 gap-2">
           {/* Cabeçalho dos dias da semana */}
           {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
-            <div key={day} className="text-center text-xs font-bold text-[#737373] uppercase tracking-wider py-2">
+            <div key={day} className="text-center text-xs font-bold text-muted-foreground uppercase tracking-wider py-2">
               {day}
             </div>
           ))}
@@ -152,12 +152,12 @@ export default function CalendarPage() {
                 className={`
                   aspect-square p-2 rounded-xl border cursor-pointer transition-all
                   ${isToday 
-                    ? 'bg-[#E09B6B]/20 border-[#E09B6B] ring-2 ring-[#E09B6B]/50' 
-                    : 'bg-[#2C2C2C] border-[#404040] hover:bg-[#37352F] hover:border-[#E09B6B]/30'
+                    ? 'bg-primary/20 border-primary ring-2 ring-primary/50' 
+                    : 'bg-secondary border-border hover:bg-secondary hover:border-primary/30'
                   }
                 `}
               >
-                <div className={`text-sm font-bold mb-1 ${isToday ? 'text-[#E09B6B]' : 'text-[#D4D4D4]'}`}>
+                <div className={`text-sm font-bold mb-1 ${isToday ? 'text-primary' : 'text-foreground'}`}>
                   {day}
                 </div>
                 
@@ -168,8 +168,8 @@ export default function CalendarPage() {
                       key={event.id}
                       className={`text-[10px] px-1.5 py-0.5 rounded truncate ${
                         event.type === 'project' 
-                          ? 'bg-[#E09B6B]/10 text-[#E09B6B] border border-[#E09B6B]/30' 
-                          : 'bg-[#E09B6B]/20 text-[#E09B6B] border border-[#E09B6B]/40'
+                          ? 'bg-primary/10 text-primary border border-primary/30' 
+                          : 'bg-primary/20 text-primary border border-primary/40'
                       }`}
                       title={event.title}
                     >
@@ -177,7 +177,7 @@ export default function CalendarPage() {
                     </div>
                   ))}
                   {dayEvents.length > 2 && (
-                    <div className="text-[10px] text-[#737373] font-bold">
+                    <div className="text-[10px] text-muted-foreground font-bold">
                       +{dayEvents.length - 2} mais
                     </div>
                   )}
@@ -189,14 +189,14 @@ export default function CalendarPage() {
       </div>
 
      {/* Lista de Eventos Próximos */}
-      <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 shadow-premium">
+      <div className="bg-card border border-border rounded-2xl p-6 shadow-premium">
         <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-          <Clock size={20} className="text-[#E09B6B]" />
+          <Clock size={20} className="text-primary" />
           Próximos Eventos
         </h3>
 
         {events.length === 0 ? (
-          <p className="text-[#737373] text-sm italic">Nenhum evento agendado para este mês.</p>
+          <p className="text-muted-foreground text-sm italic">Nenhum evento agendado para este mês.</p>
         ) : (
           <div className="space-y-3">
             {events.slice(0, 10).map(event => {
@@ -208,21 +208,21 @@ export default function CalendarPage() {
                   key={event.id}
                   className={`flex items-center gap-4 p-4 rounded-lg border ${
                     isPast 
-                      ? 'bg-[#2C2C2C]/50 border-[#404040]/50 opacity-60' 
-                      : 'bg-[#2C2C2C] border-[#404040] hover:border-[#E09B6B]/30'
+                      ? 'bg-secondary/50 border-border/50 opacity-60' 
+                      : 'bg-secondary border-border hover:border-primary/30'
                   } transition-all`}
                 >
                   <div className={`p-3 rounded-lg ${
                     event.type === 'project' 
-                      ? 'bg-[#E09B6B]/10 text-[#E09B6B] border border-[#E09B6B]/30' 
-                      : 'bg-[#E09B6B]/20 text-[#E09B6B] border border-[#E09B6B]/40'
+                      ? 'bg-primary/10 text-primary border border-primary/30' 
+                      : 'bg-primary/20 text-primary border border-primary/40'
                   }`}>
                     {event.type === 'project' ? <Video size={20} /> : <Users size={20} />}
                   </div>
 
                   <div className="flex-1">
                     <h4 className="font-bold text-white">{event.title}</h4>
-                    <div className="flex items-center gap-4 mt-1 text-xs text-[#737373]">
+                    <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
                       <span>
                         {eventDate.toLocaleDateString('pt-BR', { 
                           day: '2-digit', 
@@ -251,7 +251,7 @@ export default function CalendarPage() {
                       href={(event as any).meeting_link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 bg-[#E09B6B]/10 hover:bg-[#E09B6B]/20 border border-[#E09B6B]/30 rounded-lg text-[#E09B6B] transition-colors"
+                      className="p-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-lg text-primary transition-colors"
                       title="Abrir link da reunião"
                     >
                       <ExternalLink size={16} />
@@ -260,12 +260,12 @@ export default function CalendarPage() {
 
                   <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
                     event.type === 'project' 
-                      ? 'bg-[#E09B6B]/10 text-[#E09B6B] border-[#E09B6B]/30' 
+                      ? 'bg-primary/10 text-primary border-primary/30' 
                       : (event as any).status === 'completed'
-                      ? 'bg-[#E09B6B]/15 text-[#E09B6B] border-[#E09B6B]/35'
+                      ? 'bg-primary/15 text-primary border-primary/35'
                       : (event as any).status === 'cancelled'
-                      ? 'bg-[#2C2C2C] text-[#737373] border-[#404040]'
-                      : 'bg-[#E09B6B]/20 text-[#E09B6B] border-[#E09B6B]/40'
+                      ? 'bg-secondary text-muted-foreground border-border'
+                      : 'bg-primary/20 text-primary border-primary/40'
                   }`}>
                     {event.type === 'project' ? 'Vídeo' : 
                      (event as any).status === 'completed' ? 'Concluída' :

@@ -193,7 +193,7 @@ export default function ServicesPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Buscar serviço..."
-              className="w-full bg-[#2C2C2C] border border-[#404040] rounded-md pl-9 pr-4 py-2 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-colors"
+              className="w-full bg-secondary border border-[#404040] rounded-md pl-9 pr-4 py-2 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-colors"
             />
           </div>
           
@@ -207,7 +207,7 @@ export default function ServicesPage() {
                 ? 'bg-primary text-[#60a887] border-[#20523e]' 
                 : seedStatus === 'error'
                   ? 'bg-[#3d1414] text-[#a86060] border-[#522020]'
-                  : 'bg-[#2C2C2C] text-[#9ca3af] border-[#404040] hover:bg-[#37352F] hover:text-[#E09B6B]'
+                  : 'bg-secondary text-[#9ca3af] border-[#404040] hover:bg-secondary hover:text-[#E09B6B]'
               }
             `}
             title="Inserir dados de exemplo"
@@ -230,14 +230,14 @@ export default function ServicesPage() {
       {/* Lista */}
       <div className="space-y-8">
         {Object.entries(groupedServices).length === 0 ? (
-             <div className="text-center py-20 border border-dashed border-[#404040] rounded-lg bg-[#202020]">
+             <div className="text-center py-20 border border-dashed border-[#404040] rounded-lg bg-card">
                 <Package className="mx-auto text-[#404040] mb-4" size={32} />
                 <p className="text-[#737373] text-sm">Nenhum serviço encontrado.</p>
             </div>
         ) : (
             Object.entries(groupedServices).map(([category, items]) => (
-            <div key={category} className="bg-[#2C2C2C] border border-[#404040] rounded-lg overflow-hidden">
-                <div className="px-4 py-3 bg-[#202020] border-b border-[#404040] flex items-center gap-2">
+            <div key={category} className="bg-secondary border border-[#404040] rounded-lg overflow-hidden">
+                <div className="px-4 py-3 bg-card border-b border-[#404040] flex items-center gap-2">
                     <Layers size={14} className="text-[#E09B6B]" />
                     <h3 className="text-xs font-bold text-[#E09B6B] uppercase tracking-widest">
                         {category}
@@ -253,8 +253,8 @@ export default function ServicesPage() {
                                     <h4 className="text-sm font-bold text-[#E5E5E5] truncate">{(service as any).name}</h4>
                                     <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${
                                         service.charge_type === 'monthly' 
-                                        ? 'bg-[#202020] text-[#9ca3af] border-[#404040]' 
-                                        : 'bg-[#37352F] text-[#D4D4D4] border-[#404040]'
+                                        ? 'bg-card text-[#9ca3af] border-[#404040]' 
+                                        : 'bg-secondary text-[#D4D4D4] border-[#404040]'
                                     }`}>
                                         {service.charge_type === 'monthly' ? 'Mensal' : 'Setup'}
                                     </span>
@@ -300,7 +300,7 @@ export default function ServicesPage() {
       {/* Modal */}
       {isModalOpen && createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-            <div className="bg-[#202020] w-full max-w-md rounded-lg border border-[#404040] shadow-2xl overflow-hidden">
+            <div className="bg-card w-full max-w-md rounded-lg border border-[#404040] shadow-2xl overflow-hidden">
                 <div className="flex justify-between items-center p-5 border-b border-[#404040]">
                     <h2 className="text-base font-bold text-[#FFFFFF]">
                         {editingService ? 'Editar Serviço' : 'Novo Serviço'}
@@ -316,7 +316,7 @@ export default function ServicesPage() {
                             required
                             value={formData.name} // Usando formData.name
                             onChange={e => setFormData({...formData, name: e.target.value})}
-                            className="w-full bg-[#37352F] border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none"
+                            className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none"
                             placeholder="Ex: Gestão de Tráfego"
                         />
                     </div>
@@ -329,7 +329,7 @@ export default function ServicesPage() {
                                 list="categories"
                                 value={formData.category}
                                 onChange={e => setFormData({...formData, category: e.target.value})}
-                                className="w-full bg-[#37352F] border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none"
+                                className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none"
                                 placeholder="Ex: Tráfego"
                             />
                             <datalist id="categories">
@@ -345,7 +345,7 @@ export default function ServicesPage() {
                             <select 
                                 value={formData.charge_type}
                                 onChange={e => setFormData({...formData, charge_type: e.target.value as ChargeType})}
-                                className="w-full bg-[#37352F] border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none appearance-none"
+                                className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none appearance-none"
                             >
                                 <option value="monthly">Mensal (Recorrente)</option>
                                 <option value="unique">Único (Projeto)</option>
@@ -360,7 +360,7 @@ export default function ServicesPage() {
                             required
                             value={formData.default_price}
                             onChange={e => setFormData({...formData, default_price: parseFloat(e.target.value)})}
-                            className="w-full bg-[#37352F] border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none no-spin font-mono"
+                            className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none no-spin font-mono"
                             placeholder="0.00"
                             onWheel={(e) => e.currentTarget.blur()}
                         />
@@ -372,7 +372,7 @@ export default function ServicesPage() {
                             rows={3}
                             value={formData.description}
                             onChange={e => setFormData({...formData, description: e.target.value})}
-                            className="w-full bg-[#37352F] border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none"
+                            className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none"
                             placeholder="O que está incluso?"
                         />
                     </div>

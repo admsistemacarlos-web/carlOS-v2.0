@@ -72,7 +72,7 @@ export default function VideoProjectEditor() {
     <div className="max-w-2xl mx-auto pb-20 animate-fade-in">
       <div className="flex items-center justify-between mb-8 pt-6">
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-[#2C2C2C] text-[#737373] hover:text-[#D4D4D4] transition-colors"><ArrowLeft size={20} /></button>
+          <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-secondary text-[#737373] hover:text-[#D4D4D4] transition-colors"><ArrowLeft size={20} /></button>
           <div>
             <h1 className="text-2xl font-bold text-[#FFFFFF] tracking-tight">{isEditing ? 'Editar Projeto' : 'Novo Projeto'}</h1>
             <p className="text-[#9ca3af] text-xs font-mono">{isEditing ? 'Atualize as informações.' : 'Cadastre a demanda.'}</p>
@@ -91,11 +91,11 @@ export default function VideoProjectEditor() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-[#202020] p-6 rounded-lg border border-[#404040] shadow-sm space-y-5">
+        <div className="bg-card p-6 rounded-lg border border-[#404040] shadow-sm space-y-5">
           <div>
             <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">Cliente *</label>
             <div className="relative">
-              <select value={formData.client_id} onChange={e => setFormData({...formData, client_id: e.target.value})} className="w-full bg-[#37352F] border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none appearance-none cursor-pointer" required>
+              <select value={formData.client_id} onChange={e => setFormData({...formData, client_id: e.target.value})} className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none appearance-none cursor-pointer" required>
                 <option value="">Selecione...</option>
                 {clients?.map(client => <option key={client.id} value={client.id}>{client.name} {client.company_name ? `(${client.company_name})` : ''}</option>)}
               </select>
@@ -106,7 +106,7 @@ export default function VideoProjectEditor() {
           <div>
             <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">Título do Vídeo *</label>
             <div className="relative">
-              <input value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="Ex: Reels Institucional" className="w-full bg-[#37352F] border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none" required />
+              <input value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="Ex: Reels Institucional" className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none" required />
               <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#737373]"><Film size={16} /></div>
             </div>
           </div>
@@ -115,14 +115,14 @@ export default function VideoProjectEditor() {
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">Recebimento</label>
               <div className="relative">
-                <input type="date" value={formData.received_date} onChange={e => setFormData({...formData, received_date: e.target.value})} className="w-full bg-[#37352F] border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none [color-scheme:dark]" />
+                <input type="date" value={formData.received_date} onChange={e => setFormData({...formData, received_date: e.target.value})} className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none [color-scheme:dark]" />
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#737373]"><Calendar size={16} /></div>
               </div>
             </div>
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">Envio Aprovação</label>
               <div className="relative">
-                <input type="date" value={formData.approval_sent_date} onChange={e => setFormData({...formData, approval_sent_date: e.target.value})} className="w-full bg-[#37352F] border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none [color-scheme:dark]" />
+                <input type="date" value={formData.approval_sent_date} onChange={e => setFormData({...formData, approval_sent_date: e.target.value})} className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none [color-scheme:dark]" />
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#737373]"><Calendar size={16} /></div>
               </div>
             </div>
@@ -132,13 +132,13 @@ export default function VideoProjectEditor() {
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">Prazo Entrega *</label>
               <div className="relative">
-                <input type="date" value={formData.deadline} onChange={e => setFormData({...formData, deadline: e.target.value})} className="w-full bg-[#37352F] border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none [color-scheme:dark]" required />
+                <input type="date" value={formData.deadline} onChange={e => setFormData({...formData, deadline: e.target.value})} className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none [color-scheme:dark]" required />
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#737373]"><Calendar size={16} /></div>
               </div>
             </div>
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">Prioridade</label>
-              <select value={formData.priority} onChange={e => setFormData({...formData, priority: e.target.value as any})} className="w-full bg-[#37352F] border border-[#404040] rounded-md px-4 py-3 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none appearance-none cursor-pointer">
+              <select value={formData.priority} onChange={e => setFormData({...formData, priority: e.target.value as any})} className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none appearance-none cursor-pointer">
                 <option value="low">Baixa</option>
                 <option value="medium">Média</option>
                 <option value="high">Alta 🔥</option>
@@ -150,14 +150,14 @@ export default function VideoProjectEditor() {
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">Link Preview</label>
               <div className="relative">
-                <input value={formData.preview_link} onChange={e => setFormData({...formData, preview_link: e.target.value})} placeholder="Frame.io..." className="w-full bg-[#37352F] border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none" />
+                <input value={formData.preview_link} onChange={e => setFormData({...formData, preview_link: e.target.value})} placeholder="Frame.io..." className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none" />
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#737373]"><LinkIcon size={16} /></div>
               </div>
             </div>
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">Link Arquivo Final</label>
               <div className="relative">
-                <input value={formData.drive_link} onChange={e => setFormData({...formData, drive_link: e.target.value})} placeholder="Drive/Dropbox..." className="w-full bg-[#37352F] border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none" />
+                <input value={formData.drive_link} onChange={e => setFormData({...formData, drive_link: e.target.value})} placeholder="Drive/Dropbox..." className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none" />
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#737373]"><HardDrive size={16} /></div>
               </div>
             </div>
@@ -165,12 +165,12 @@ export default function VideoProjectEditor() {
 
           <div>
             <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">Detalhes / Roteiro</label>
-            <textarea rows={4} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} placeholder="Descreva o que precisa ser feito..." className="w-full bg-[#37352F] border border-[#404040] rounded-md px-4 py-3 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none" />
+            <textarea rows={4} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} placeholder="Descreva o que precisa ser feito..." className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none" />
           </div>
         </div>
 
         <div className="flex justify-end gap-3">
-          <button type="button" onClick={() => navigate(-1)} className="px-6 py-3 rounded-md text-sm font-bold text-[#9ca3af] hover:bg-[#37352F] transition-colors uppercase tracking-widest">Cancelar</button>
+          <button type="button" onClick={() => navigate(-1)} className="px-6 py-3 rounded-md text-sm font-bold text-[#9ca3af] hover:bg-secondary transition-colors uppercase tracking-widest">Cancelar</button>
           <button type="submit" disabled={isSaving} className="bg-[#5D4037] hover:bg-[#4E342E] text-[#FFFFFF] px-8 py-3 rounded-md text-sm font-bold flex items-center gap-2 shadow-sm transition-all disabled:opacity-50 active:scale-95 border border-[#5D4037] uppercase tracking-widest">
             {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
             {isEditing ? 'Atualizar' : 'Criar'}

@@ -58,7 +58,7 @@ const BookCard: React.FC<{ book: Book, onClick: () => void, onDelete: (e: React.
         <div className="flex items-center justify-between mt-auto">
             <div className="flex gap-0.5">
                 {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={12} className={i < book.rating ? "fill-[#8D6E63] text-[#8D6E63]" : "text-stone-200"} />
+                    <Star key={i} size={12} className={i < book.rating ? "fill-primary text-primary" : "text-stone-200"} />
                 ))}
             </div>
             {book.owned ? (
@@ -170,10 +170,10 @@ export default function BooksPage() {
             <ArrowLeft size={14} /> Voltar
           </button>
           <h1 className="text-3xl font-bold text-foreground tracking-tight flex items-center gap-3">
-            <Library className="text-[#5D4037]" /> Biblioteca
+            <Library className="text-primary" /> Biblioteca
           </h1>
         </div>
-        <button onClick={() => navigate('/personal/spiritual/books/new')} className="bg-[#3E2723] hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-lg transition-all active:scale-95">
+        <button onClick={() => navigate('/personal/spiritual/books/new')} className="bg-primary hover:bg-primary/80 text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-lg transition-all active:scale-95">
           <Plus size={18} /> Novo Livro
         </button>
       </div>
@@ -187,7 +187,7 @@ export default function BooksPage() {
             icon={<BookOpen size={20} />} 
             count={reading.length} 
             defaultOpen={true}
-            headerColor="text-[#5D4037]"
+            headerColor="text-primary"
         >
             {reading.map(book => (
                 <BookCard 

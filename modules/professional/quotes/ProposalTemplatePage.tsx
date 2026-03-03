@@ -46,7 +46,7 @@ const saveTemplate = useSaveProposalTemplate();
     <div className="max-w-4xl mx-auto pb-20 animate-fade-in">
       <div className="flex items-center justify-between mb-8 pt-6">
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-[#2C2C2C] text-[#737373] transition-colors">
+          <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-secondary text-[#737373] transition-colors">
             <ArrowLeft size={20} />
           </button>
           <div>
@@ -67,7 +67,7 @@ const saveTemplate = useSaveProposalTemplate();
 
       <div className="space-y-6">
         {/* Seção Apresentação */}
-        <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 shadow-sm">
+        <div className="bg-card border border-[#404040] rounded-2xl p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-4 text-[#E09B6B]">
             <Layout size={18} />
             <h3 className="text-sm font-bold uppercase tracking-widest">Texto de Apresentação</h3>
@@ -83,7 +83,7 @@ const saveTemplate = useSaveProposalTemplate();
         </div>
 
         {/* Seção Estratégia */}
-        <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 shadow-sm">
+        <div className="bg-card border border-[#404040] rounded-2xl p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-4 text-[#E09B6B]">
             <FileText size={18} />
             <h3 className="text-sm font-bold uppercase tracking-widest">Diagnóstico Estratégico</h3>
@@ -99,7 +99,7 @@ const saveTemplate = useSaveProposalTemplate();
         </div>
 
         {/* Seção Condições */}
-        <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 shadow-sm">
+        <div className="bg-card border border-[#404040] rounded-2xl p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-4 text-[#E09B6B]">
             <ShieldCheck size={18} />
             <h3 className="text-sm font-bold uppercase tracking-widest">Termos e Condições</h3>

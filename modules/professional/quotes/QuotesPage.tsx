@@ -35,7 +35,7 @@ export default function QuotesPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#191919] text-[#D4D4D4] pb-20 animate-fade-in">
+    <div className="min-h-screen bg-background text-[#D4D4D4] pb-20 animate-fade-in">
       <ModuleHeader 
         title="Orçamentos & Propostas" 
         subtitle="Gestão comercial e geração de contratos"
@@ -52,7 +52,7 @@ export default function QuotesPage() {
               placeholder="Buscar por projeto ou cliente..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-12 bg-[#202020] border border-[#333] rounded-xl pl-10 pr-4 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none transition-all"
+              className="w-full h-12 bg-card border border-[#333] rounded-xl pl-10 pr-4 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none transition-all"
             />
           </div>
           
@@ -87,7 +87,7 @@ export default function QuotesPage() {
               <div 
                 key={quote.id}
                 onClick={() => navigate(`/professional/quotes/${quote.id}`)} // Clicar no card leva para EDIÇÃO
-                className="bg-[#202020] border border-[#333] rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:border-[#E09B6B]/50 transition-all cursor-pointer group relative overflow-hidden"
+                className="bg-card border border-[#333] rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:border-[#E09B6B]/50 transition-all cursor-pointer group relative overflow-hidden"
               >
                 {/* Status Stripe */}
                 <div className={`absolute left-0 top-0 bottom-0 w-1 ${

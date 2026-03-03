@@ -90,7 +90,7 @@ export function ModuleHeader({ title, subtitle, backLink, actions }: ModuleHeade
 
         <button 
           onClick={() => backLink ? navigate(backLink) : navigate(hubPath)}
-          className="flex items-center gap-2 px-4 py-2.5 bg-[#2C2C2C] border border-[#404040] rounded-lg text-[#D4D4D4] text-xs font-bold uppercase tracking-wider hover:bg-[#37352F] hover:text-[#E09B6B] transition-all shadow-sm"
+          className="flex items-center gap-2 px-4 py-2.5 bg-secondary border border-[#404040] rounded-lg text-[#D4D4D4] text-xs font-bold uppercase tracking-wider hover:bg-secondary hover:text-[#E09B6B] transition-all shadow-sm"
         >
           {backLink ? <ArrowLeft size={14} /> : <LayoutGrid size={14} />}
           {backLink ? 'Voltar' : 'Dashboard'}

@@ -9,9 +9,9 @@ const StatBox: React.FC<{
   icon: React.ReactNode; 
   accentColor: string 
 }> = ({ title, value, description, icon, accentColor }) => (
-  <div className="bg-[#2C2C2C] border border-[#404040] p-6 rounded-lg hover:bg-[#323232] transition-colors">
+  <div className="bg-secondary border border-[#404040] p-6 rounded-lg hover:bg-[#323232] transition-colors">
      <div className="flex items-center gap-4 mb-4">
-        <div className={`p-2 rounded-md bg-[#37352F] ${accentColor}`}>
+        <div className={`p-2 rounded-md bg-secondary ${accentColor}`}>
           {icon}
         </div>
         <h3 className="text-base font-bold text-[#FFFFFF]">{title}</h3>

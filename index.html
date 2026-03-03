@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -8,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Adicionado plugin typography na URL -->
     <script>
       tailwind.config = {
         darkMode: 'class',
@@ -19,22 +17,18 @@
               mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
             },
             colors: {
-              // Mapeando 'olive' para a nova cor primária (Café Stone) para substituição global em botões antigos
+              // Aliases legados — apontam para os tokens semânticos
               olive: 'hsl(var(--primary))',
               primary: 'hsl(var(--primary))',
-              
-              // Fundo aquecido (Stone-50)
-              cream: '#FAFAF9', 
-              
-              // Tons de Café Legado (podem ser usados explicitamente)
+
+              // Tons de Café (mantidos para compatibilidade com código legado)
               coffee: '#3C3633',
               cappuccino: '#747264',
-              
+              cream: '#FAFAF9',
+
               // Acentos
               terracotta: '#A34343',
-              
-              // Substituindo o Azul Profundo por um Stone Profundo (#1C1917) para sidebars
-              'deep-blue': '#1C1917', 
+              'deep-blue': '#1C1917',
             },
             boxShadow: {
               'premium': '0 20px 50px -12px rgba(0, 0, 0, 0.05)',
@@ -44,26 +38,7 @@
       };
     </script>
     <style>
-      :root {
-        /* Identidade Visual: Stone / Marrom Café Profundo */
-        /* HSL para Stone-900 (#1C1917) um pouco mais quente */
-        --primary: 24 5% 15%; 
-        --primary-foreground: 60 9.1% 97.8%; /* Stone-50 Off-white */
-        
-        /* Anel de foco (Stone-400) */
-        --ring: 24 5% 64%;
-        
-        /* Fundo base aquecido */
-        --background: 30 20% 98%; 
-      }
- 
-      .dark {
-        /* Modo escuro invertido para um Creme Suave se necessário */
-        --primary: 30 20% 98%;
-        --primary-foreground: 24 5% 15%;
-        --ring: 24 5% 64%;
-      }
-
+      /* Animações globais */
       @keyframes fade-in {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
@@ -71,6 +46,8 @@
       .animate-fade-in {
         animation: fade-in 0.6s ease-out forwards;
       }
+
+      /* Base — usa tokens semânticos do index.css */
       html, body {
         max-width: 100vw;
         width: 100%;
@@ -81,49 +58,38 @@
         -webkit-text-size-adjust: 100%;
         touch-action: manipulation;
         -webkit-font-smoothing: antialiased;
-        background-color: var(--background);
-        color: #1C1917; /* Stone 900 text base */
+        background-color: hsl(var(--background));
+        color: hsl(var(--foreground));
       }
       #root {
         width: 100%;
         overflow-x: hidden;
       }
-      
-      /* Ajuste de scrollbar para combinar */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #FAFAF9; 
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #D6D3D1; 
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #A8A29E; 
-      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: hsl(var(--background)); }
+      ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground)); }
 
       /* Utilitário para esconder scrollbar mantendo funcionalidade */
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
       }
 
-      /* Utilitário Global: Remover setas de inputs numéricos */
-      input[type=number]::-webkit-inner-spin-button, 
-      input[type=number]::-webkit-outer-spin-button { 
-        -webkit-appearance: none; 
-        margin: 0; 
+      /* Remover setas de inputs numéricos */
+      input[type=number]::-webkit-inner-spin-button,
+      input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
       }
       input[type=number] {
         -moz-appearance: textfield;
       }
     </style>
-  <script type="importmap">
+    <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@^19.2.3",
@@ -159,10 +125,10 @@
     "@tiptap/pm/gapcursor": "https://esm.sh/@tiptap/pm/gapcursor@2.11.5"
   }
 }
-</script>
-<link rel="stylesheet" href="/index.css">
-</head>
-  <body class="bg-cream text-coffee antialiased">
+    </script>
+    <link rel="stylesheet" href="/index.css">
+  </head>
+  <body class="antialiased">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

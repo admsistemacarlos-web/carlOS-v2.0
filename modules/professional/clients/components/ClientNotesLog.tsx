@@ -23,7 +23,7 @@ export default function ClientNotesLog({ clientId }: { clientId: string }) {
   };
 
   return (
-    <div className="bg-[#202020] p-6 rounded-lg border border-[#404040] shadow-sm h-full flex flex-col">
+    <div className="bg-card p-6 rounded-lg border border-[#404040] shadow-sm h-full flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xs font-bold uppercase tracking-widest text-[#E09B6B] flex items-center gap-2">
           <FileText size={14} /> Notas & Obs
@@ -56,7 +56,7 @@ export default function ClientNotesLog({ clientId }: { clientId: string }) {
             <p className="text-center text-[#5c5c5c] text-xs italic">Nenhuma nota registrada.</p>
         ) : (
             notes?.map(note => (
-                <div key={note.id} className="group relative bg-[#2C2C2C] p-3 rounded-md border border-[#404040] hover:border-[#737373] transition-all">
+                <div key={note.id} className="group relative bg-secondary p-3 rounded-md border border-[#404040] hover:border-[#737373] transition-all">
                     <p className="text-xs text-[#D4D4D4] whitespace-pre-wrap leading-relaxed">{note.content}</p>
                     <div className="mt-2 flex justify-between items-center border-t border-[#404040] pt-2">
                         <span className="text-[9px] text-[#737373] font-mono">

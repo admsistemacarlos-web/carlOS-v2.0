@@ -295,14 +295,14 @@ export default function QuoteBuilderPage() {
 
   if (initializing || loadingClients || loadingServices || loadingTemplate) {
     return (
-      <div className="min-h-screen bg-[#191919] flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="animate-spin text-[#E09B6B]" size={32} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#191919] pb-32 text-[#D4D4D4] animate-fade-in">
+    <div className="min-h-screen bg-background pb-32 text-[#D4D4D4] animate-fade-in">
       
       <ModuleHeader 
         title={isEditing ? "Editar Proposta" : "Nova Proposta"}
@@ -313,7 +313,7 @@ export default function QuoteBuilderPage() {
       <div className="max-w-[1200px] mx-auto px-4 md:px-8 mt-6 space-y-6">
         
         {/* 1. HEADER FIELDS */}
-        <div className="bg-[#202020] p-6 rounded-2xl border border-[#404040] shadow-sm">
+        <div className="bg-card p-6 rounded-2xl border border-[#404040] shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-2">Título do Projeto</label>
@@ -322,7 +322,7 @@ export default function QuoteBuilderPage() {
                 value={quoteTitle}
                 onChange={(e) => setQuoteTitle(e.target.value)}
                 placeholder="Ex: Identidade Visual + Tráfego"
-                className="w-full h-11 px-4 bg-[#37352F] border border-[#404040] rounded-lg text-sm text-[#D4D4D4] placeholder-[#737373] focus:border-[#E09B6B] outline-none transition-colors"
+                className="w-full h-11 px-4 bg-secondary border border-[#404040] rounded-lg text-sm text-[#D4D4D4] placeholder-[#737373] focus:border-[#E09B6B] outline-none transition-colors"
               />
             </div>
             <div>
@@ -330,7 +330,7 @@ export default function QuoteBuilderPage() {
               <select
                 value={selectedClientId}
                 onChange={(e) => setSelectedClientId(e.target.value)}
-                className="w-full h-11 px-4 bg-[#37352F] border border-[#404040] rounded-lg text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none transition-colors appearance-none cursor-pointer"
+                className="w-full h-11 px-4 bg-secondary border border-[#404040] rounded-lg text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none transition-colors appearance-none cursor-pointer"
               >
                 <option value="">Selecione um cliente...</option>
                 {clients?.map(client => (
@@ -422,7 +422,7 @@ export default function QuoteBuilderPage() {
                     </button>
                  </div>
 
-                 <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 shadow-sm">
+                 <div className="bg-card border border-[#404040] rounded-2xl p-6 shadow-sm">
                   <div className="flex items-center gap-2 mb-4 text-[#E09B6B]">
                     <Layout size={18} />
                     <h3 className="text-sm font-bold uppercase tracking-widest">Apresentação</h3>
@@ -436,7 +436,7 @@ export default function QuoteBuilderPage() {
                   />
                 </div>
 
-                <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 shadow-sm">
+                <div className="bg-card border border-[#404040] rounded-2xl p-6 shadow-sm">
                   <div className="flex items-center gap-2 mb-4 text-[#E09B6B]">
                     <FileText size={18} />
                     <h3 className="text-sm font-bold uppercase tracking-widest">Diagnóstico & Estratégia</h3>
@@ -450,7 +450,7 @@ export default function QuoteBuilderPage() {
                   />
                 </div>
 
-                <div className="bg-[#202020] border border-[#404040] rounded-2xl p-6 shadow-sm">
+                <div className="bg-card border border-[#404040] rounded-2xl p-6 shadow-sm">
                   <div className="flex items-center gap-2 mb-4 text-[#E09B6B]">
                     <ShieldCheck size={18} />
                     <h3 className="text-sm font-bold uppercase tracking-widest">Termos e Condições</h3>
@@ -524,7 +524,7 @@ const QuoteCatalog: React.FC<{
         </h3>
 
         {Object.keys(groupedServices).length === 0 ? (
-            <div className="p-8 text-center bg-[#202020] rounded-lg border border-[#404040] border-dashed text-[#737373] text-sm">
+            <div className="p-8 text-center bg-card rounded-lg border border-[#404040] border-dashed text-[#737373] text-sm">
                 Catálogo vazio ou carregando...
             </div>
         ) : (
@@ -534,7 +534,7 @@ const QuoteCatalog: React.FC<{
                     const serviceList = items as AgencyServiceCatalog[];
                     
                     return (
-                        <div key={category} className="bg-[#202020] border border-[#404040] rounded-xl overflow-hidden shadow-sm transition-all">
+                        <div key={category} className="bg-card border border-[#404040] rounded-xl overflow-hidden shadow-sm transition-all">
                             {/* Accordion Header */}
                             <button 
                                 onClick={() => toggleCategory(category)}
@@ -591,7 +591,7 @@ const QuoteCatalog: React.FC<{
                                                         <span className="text-sm font-mono font-medium text-[#E09B6B]">
                                                             R$ {service.default_price.toLocaleString('pt-BR', { minimumFractionDigits: 0 })}
                                                         </span>
-                                                        <div className={`p-1 rounded-md transition-colors ${qty > 0 ? 'bg-[#E09B6B] text-[#191919]' : 'bg-[#37352F] text-[#737373] group-hover:bg-[#404040]'}`}>
+                                                        <div className={`p-1 rounded-md transition-colors ${qty > 0 ? 'bg-[#E09B6B] text-[#191919]' : 'bg-secondary text-[#737373] group-hover:bg-[#404040]'}`}>
                                                             <Plus size={14} />
                                                         </div>
                                                     </div>
@@ -741,7 +741,7 @@ const QuoteItemsBuilder: React.FC<{
                                         type="number"
                                         value={item.unit_price === 0 ? '' : item.unit_price}
                                         onChange={(e) => onUpdateItem(item.id!, 'unit_price', e.target.value === '' ? 0 : Number(e.target.value))}
-                                        className="w-24 h-8 bg-[#2C2C2C] border border-[#404040] rounded text-sm text-right pr-2 pl-6 outline-none focus:border-[#E09B6B] font-sans tabular-nums text-[#D4D4D4] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        className="w-24 h-8 bg-secondary border border-[#404040] rounded text-sm text-right pr-2 pl-6 outline-none focus:border-[#E09B6B] font-sans tabular-nums text-[#D4D4D4] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                         onWheel={(e) => e.currentTarget.blur()}
                                     />
                                 </div>
@@ -752,7 +752,7 @@ const QuoteItemsBuilder: React.FC<{
                                         type="number"
                                         value={currentDiffPercent === 0 ? '' : Number(currentDiffPercent.toFixed(1))}
                                         onChange={(e) => handlePercentChange(item.id!, item.service_id, e.target.value === '' ? 0 : Number(e.target.value))}
-                                        className={`w-16 h-8 bg-[#2C2C2C] border border-[#404040] rounded text-xs text-center outline-none focus:border-[#E09B6B] font-sans tabular-nums font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                                        className={`w-16 h-8 bg-secondary border border-[#404040] rounded text-xs text-center outline-none focus:border-[#E09B6B] font-sans tabular-nums font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                                             currentDiffPercent < 0 ? 'text-red-400' : currentDiffPercent > 0 ? 'text-green-400' : 'text-[#737373]'
                                         }`}
                                         onWheel={(e) => e.currentTarget.blur()}
@@ -770,7 +770,7 @@ const QuoteItemsBuilder: React.FC<{
                                         type="number"
                                         value={item.quantity}
                                         onChange={(e) => onUpdateItem(item.id!, 'quantity', Number(e.target.value))}
-                                        className="w-12 h-8 bg-[#2C2C2C] border border-[#404040] rounded text-center text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        className="w-12 h-8 bg-secondary border border-[#404040] rounded text-center text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                         min="1"
                                         onWheel={(e) => e.currentTarget.blur()}
                                     />
@@ -800,7 +800,7 @@ const QuoteItemsBuilder: React.FC<{
       </div>
 
       {/* 2. FOOTER (TOTAIS) */}
-      <div className="bg-[#202020] rounded-2xl border border-[#404040] p-6 space-y-6">
+      <div className="bg-card rounded-2xl border border-[#404040] p-6 space-y-6">
           
           {/* Condições Comerciais */}
           {items.length > 0 && (

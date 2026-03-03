@@ -13,8 +13,8 @@ const StatusBadge: React.FC<{ status: AgencyStatus }> = ({ status }) => {
   const styles: Record<string, string> = {
     active: 'bg-primary/20 text-[#60a887] border-[#20523e]', // Muted Emerald
     lead: 'bg-[#3d2d14]/20 text-[#a88760] border-[#523e20]',   // Muted Amber
-    churned: 'bg-[#2C2C2C] text-[#737373] border-[#404040]',
-    archived: 'bg-[#191919] text-[#5c5c5c] border-[#2C2C2C]'
+    churned: 'bg-secondary text-[#737373] border-[#404040]',
+    archived: 'bg-background text-[#5c5c5c] border-[#2C2C2C]'
   };
 
   const labels: Record<string, string> = {
@@ -73,12 +73,12 @@ export default function ClientsPage() {
     return (
       <div className="w-full min-h-screen p-6 animate-pulse">
         <div className="flex justify-between items-center mb-8">
-          <div className="h-8 w-48 bg-[#2C2C2C] rounded-lg"></div>
-          <div className="h-10 w-32 bg-[#2C2C2C] rounded-lg"></div>
+          <div className="h-8 w-48 bg-secondary rounded-lg"></div>
+          <div className="h-10 w-32 bg-secondary rounded-lg"></div>
         </div>
         <div className="grid grid-cols-1 gap-4">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-40 bg-[#2C2C2C] rounded-lg border border-[#404040]"></div>
+            <div key={i} className="h-40 bg-secondary rounded-lg border border-[#404040]"></div>
           ))}
         </div>
       </div>
@@ -102,7 +102,7 @@ export default function ClientsPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Buscar cliente..."
-              className="w-full bg-[#2C2C2C] border border-[#404040] rounded-md pl-9 pr-4 py-2.5 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-colors"
+              className="w-full bg-secondary border border-[#404040] rounded-md pl-9 pr-4 py-2.5 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-colors"
             />
           </div>
           <button 
@@ -116,8 +116,8 @@ export default function ClientsPage() {
 
       {/* EMPTY STATE */}
       {(!clients || clients.length === 0) ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-[#202020] border border-dashed border-[#404040] rounded-lg">
-          <div className="w-12 h-12 bg-[#2C2C2C] rounded-full flex items-center justify-center mb-4 text-[#737373]">
+        <div className="flex flex-col items-center justify-center py-20 bg-card border border-dashed border-[#404040] rounded-lg">
+          <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4 text-[#737373]">
             <Users size={24} />
           </div>
           <h3 className="text-lg font-bold text-[#FFFFFF] mb-2">Sua carteira está vazia</h3>
@@ -138,10 +138,10 @@ export default function ClientsPage() {
             <div 
               key={client.id}
               onClick={() => navigate(`${client.id}`)}
-              className="group bg-[#2C2C2C] rounded-lg border border-[#404040] hover:border-[#737373] transition-all flex flex-col sm:flex-row overflow-hidden cursor-pointer"
+              className="group bg-secondary rounded-lg border border-[#404040] hover:border-[#737373] transition-all flex flex-col sm:flex-row overflow-hidden cursor-pointer"
             >
               {/* --- ESQUERDA: LOGO (1/4 Width) --- */}
-              <div className="relative w-full sm:w-48 bg-[#202020] border-b sm:border-b-0 sm:border-r border-[#404040] flex items-center justify-center shrink-0 h-40 sm:h-auto">
+              <div className="relative w-full sm:w-48 bg-card border-b sm:border-b-0 sm:border-r border-[#404040] flex items-center justify-center shrink-0 h-40 sm:h-auto">
                 {client.logo_url ? (
                   <img 
                     src={client.logo_url} 
@@ -199,7 +199,7 @@ export default function ClientsPage() {
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="p-1.5 rounded bg-[#37352F] text-[#9ca3af] hover:text-[#E09B6B] transition-all"
+                                className="p-1.5 rounded bg-secondary text-[#9ca3af] hover:text-[#E09B6B] transition-all"
                                 title="WhatsApp"
                             >
                                 <MessageCircle size={16} />
@@ -212,7 +212,7 @@ export default function ClientsPage() {
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="p-1.5 rounded bg-[#37352F] text-[#9ca3af] hover:text-[#E09B6B] transition-all"
+                                className="p-1.5 rounded bg-secondary text-[#9ca3af] hover:text-[#E09B6B] transition-all"
                                 title="Instagram"
                             >
                                 <Instagram size={16} />
@@ -225,7 +225,7 @@ export default function ClientsPage() {
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="p-1.5 rounded bg-[#37352F] text-[#9ca3af] hover:text-[#E09B6B] transition-all"
+                                className="p-1.5 rounded bg-secondary text-[#9ca3af] hover:text-[#E09B6B] transition-all"
                                 title="Drive"
                             >
                                 <Folder size={16} />
@@ -279,7 +279,7 @@ export default function ClientsPage() {
             <div className="flex items-center justify-end gap-3 mt-8">
               <button 
                 onClick={() => setClientToDelete(null)}
-                className="px-4 py-2 text-sm font-medium text-[#D4D4D4] hover:text-white hover:bg-[#2C2C2C] rounded-lg transition-colors"
+                className="px-4 py-2 text-sm font-medium text-[#D4D4D4] hover:text-white hover:bg-secondary rounded-lg transition-colors"
                 disabled={deleteClient.isPending}
               >
                 Cancelar

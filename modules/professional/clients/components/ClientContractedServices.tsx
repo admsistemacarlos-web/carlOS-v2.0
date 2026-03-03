@@ -66,14 +66,14 @@ export default function ClientContractedServices({ clientId }: { clientId: strin
   if (loading) return <div className="py-8 flex justify-center"><Loader2 className="animate-spin text-[#737373]" /></div>;
 
   return (
-    <div className="bg-[#202020] p-6 rounded-lg border border-[#404040] shadow-sm h-full">
+    <div className="bg-card p-6 rounded-lg border border-[#404040] shadow-sm h-full">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xs font-bold uppercase tracking-widest text-[#E09B6B] flex items-center gap-2">
           <CheckCircle2 size={14} /> Serviços
         </h3>
         
         {totalMonthly > 0 && (
-            <div className="bg-[#37352F] border border-[#404040] px-3 py-1 rounded text-right">
+            <div className="bg-secondary border border-[#404040] px-3 py-1 rounded text-right">
                 <span className="text-[10px] uppercase font-bold text-[#9ca3af] block">MRR</span>
                 <span className="text-sm font-bold text-[#FFFFFF] font-mono">R$ {totalMonthly.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
             </div>

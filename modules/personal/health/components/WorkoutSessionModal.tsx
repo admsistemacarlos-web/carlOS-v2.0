@@ -180,7 +180,7 @@ const { data: existingLog } = await supabase
         {!session.ended_at && (
             <button 
                 onClick={() => setIsFinishConfirmOpen(true)}
-                className="bg-primary hover:bg-[#0f2e22] text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest shadow-sm transition-all"
+                className="bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest shadow-sm transition-all"
             >
                 Finalizar
             </button>
@@ -238,7 +238,7 @@ const { data: existingLog } = await supabase
                                     <input 
                                         type="number"
                                         placeholder="0"
-                                        className="w-full bg-secondary rounded-lg py-2 text-center text-sm font-bold text-foreground outline-none focus:ring-2 focus:ring-[#143d2d]/20 transition-all"
+                                        className="w-full bg-secondary rounded-lg py-2 text-center text-sm font-bold text-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                                         defaultValue={set.weight || ''}
                                         onBlur={(e) => handleBlur(set.id, 'weight', e.target.value)}
                                         disabled={!!session.ended_at}
@@ -250,7 +250,7 @@ const { data: existingLog } = await supabase
                                     <input 
                                         type="number"
                                         placeholder="0"
-                                        className="w-full bg-secondary rounded-lg py-2 text-center text-sm font-bold text-foreground outline-none focus:ring-2 focus:ring-[#143d2d]/20 transition-all"
+                                        className="w-full bg-secondary rounded-lg py-2 text-center text-sm font-bold text-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                                         defaultValue={set.reps || ''}
                                         onBlur={(e) => handleBlur(set.id, 'reps', e.target.value)}
                                         disabled={!!session.ended_at}
@@ -385,7 +385,7 @@ const { data: existingLog } = await supabase
                 <button 
                   onClick={handleFinish}
                   disabled={isSavingLog}
-                  className="w-full py-4 bg-primary hover:bg-[#0f2e22] text-white rounded-xl font-bold text-sm uppercase tracking-widest shadow-lg transition-all active:scale-95 disabled:opacity-50"
+                  className="w-full py-4 bg-primary hover:bg-primary/80 text-white rounded-xl font-bold text-sm uppercase tracking-widest shadow-lg transition-all active:scale-95 disabled:opacity-50"
                 >
                   {isSavingLog ? 'Salvando...' : 'Finalizar e Salvar'}
                 </button>

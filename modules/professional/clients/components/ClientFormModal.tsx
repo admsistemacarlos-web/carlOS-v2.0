@@ -76,7 +76,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
       />
       
       {/* Modal Content - Notion Dark */}
-      <div className="relative bg-[#2C2C2C] w-full max-w-md rounded-lg shadow-2xl border border-[#404040] flex flex-col overflow-hidden animate-fade-in">
+      <div className="relative bg-secondary w-full max-w-md rounded-lg shadow-2xl border border-[#404040] flex flex-col overflow-hidden animate-fade-in">
         
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-[#404040]">
@@ -85,7 +85,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
           </h2>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-[#37352F] rounded-md text-[#9ca3af] hover:text-[#FFFFFF] transition-colors"
+            className="p-2 hover:bg-secondary rounded-md text-[#9ca3af] hover:text-[#FFFFFF] transition-colors"
           >
             <X size={18} />
           </button>
@@ -105,7 +105,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
               placeholder="Ex: João Silva"
-              className="w-full bg-[#37352F] border border-[#404040] rounded-md p-3 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-all"
+              className="w-full bg-secondary border border-[#404040] rounded-md p-3 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-all"
             />
           </div>
 
@@ -118,7 +118,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
               value={formData.company_name}
               onChange={(e) => setFormData({...formData, company_name: e.target.value})}
               placeholder="Ex: Tech Solutions Ltda"
-              className="w-full bg-[#37352F] border border-[#404040] rounded-md p-3 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-all"
+              className="w-full bg-secondary border border-[#404040] rounded-md p-3 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-all"
             />
           </div>
 
@@ -131,7 +131,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
               value={formData.phone}
               onChange={(e) => setFormData({...formData, phone: e.target.value})}
               placeholder="(11) 99999-9999"
-              className="w-full bg-[#37352F] border border-[#404040] rounded-md p-3 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-all"
+              className="w-full bg-secondary border border-[#404040] rounded-md p-3 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-all"
             />
           </div>
 
@@ -147,7 +147,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
                 className={`py-2 rounded-md text-[10px] font-bold uppercase tracking-wider border transition-all ${
                   formData.status === 'lead' 
                     ? 'bg-[#3d2d14]/40 border-[#523e20] text-[#E09B6B]' // Muted Amber
-                    : 'bg-[#37352F] border-[#404040] text-[#737373] hover:text-[#D4D4D4]'
+                    : 'bg-secondary border-[#404040] text-[#737373] hover:text-[#D4D4D4]'
                 }`}
               >
                 Lead
@@ -158,7 +158,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
                 className={`py-2 rounded-md text-[10px] font-bold uppercase tracking-wider border transition-all ${
                   formData.status === 'active' 
                     ? 'bg-primary/40 border-[#20523e] text-[#60a887]' // Muted Emerald
-                    : 'bg-[#37352F] border-[#404040] text-[#737373] hover:text-[#D4D4D4]'
+                    : 'bg-secondary border-[#404040] text-[#737373] hover:text-[#D4D4D4]'
                 }`}
               >
                 Ativo
@@ -168,8 +168,8 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
                 onClick={() => setFormData({...formData, status: 'churned'})}
                 className={`py-2 rounded-md text-[10px] font-bold uppercase tracking-wider border transition-all ${
                   formData.status === 'churned' 
-                    ? 'bg-[#202020] border-[#404040] text-[#D4D4D4]' 
-                    : 'bg-[#37352F] border-[#404040] text-[#737373] hover:text-[#D4D4D4]'
+                    ? 'bg-card border-[#404040] text-[#D4D4D4]' 
+                    : 'bg-secondary border-[#404040] text-[#737373] hover:text-[#D4D4D4]'
                 }`}
               >
                 Churned
@@ -183,7 +183,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest text-[#9ca3af] hover:bg-[#37352F] transition-colors disabled:opacity-50"
+              className="flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest text-[#9ca3af] hover:bg-secondary transition-colors disabled:opacity-50"
             >
               Cancelar
             </button>

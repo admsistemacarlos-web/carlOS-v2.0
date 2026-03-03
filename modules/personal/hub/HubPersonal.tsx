@@ -531,7 +531,7 @@ export default function HubPersonal() {
       <div className="mb-8">
         <div 
           onClick={() => navigate('/personal/finance')}
-          className="bg-[#1c1917] rounded-[2rem] p-6 text-white shadow-lg cursor-pointer hover:scale-[1.01] transition-transform active:scale-95"
+          className="bg-foreground rounded-[2rem] p-6 text-white shadow-lg cursor-pointer hover:scale-[1.01] transition-transform active:scale-95"
         >
           <div className="flex justify-between items-center">
             <div>
