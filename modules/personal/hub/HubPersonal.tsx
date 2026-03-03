@@ -725,7 +725,7 @@ export default function HubPersonal() {
          </h3>
          
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div className="lg:col-span-2 h-[450px]">
+<div className="lg:col-span-2 min-h-[450px]">
                <DashboardCalendar 
                   selectedDate={selectedDate}
                   onSelectDate={setSelectedDate}
@@ -736,7 +736,7 @@ export default function HubPersonal() {
                />
             </div>
             
-            <div className="h-[450px]">
+<div className="min-h-[450px]">
                <DashboardEventsSidebar 
                   selectedDate={selectedDate}
                   events={filteredEvents}
