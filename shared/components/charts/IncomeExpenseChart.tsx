@@ -47,7 +47,7 @@ const IncomeExpenseChart: React.FC<IncomeExpenseChartProps> = ({ data = [] }) =>
             <Tooltip 
                cursor={{fill: '#faf9f6'}}
                contentStyle={{ 
-                backgroundColor: '#fff', 
+                backgroundColor: 'hsl(var(--background))', 
                 borderRadius: '16px', 
                 border: '1px solid #f1f1f1', 
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.05)',
@@ -61,8 +61,8 @@ const IncomeExpenseChart: React.FC<IncomeExpenseChartProps> = ({ data = [] }) =>
               iconType="circle" 
               wrapperStyle={{ fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', paddingBottom: '20px' }}
             />
-            <Bar dataKey="income" name="Receitas" fill="#5F6F52" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="expense" name="Despesas" fill="#A34343" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="income" name="Receitas" fill="sl(var(--health-muted))" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="expense" name="Despesas" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

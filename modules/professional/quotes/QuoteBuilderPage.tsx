@@ -296,13 +296,13 @@ export default function QuoteBuilderPage() {
   if (initializing || loadingClients || loadingServices || loadingTemplate) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="animate-spin text-[#E09B6B]" size={32} />
+        <Loader2 className="animate-spin text-primary" size={32} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background pb-32 text-[#D4D4D4] animate-fade-in">
+    <div className="min-h-screen bg-background pb-32 text-foreground animate-fade-in">
       
       <ModuleHeader 
         title={isEditing ? "Editar Proposta" : "Nova Proposta"}
@@ -313,24 +313,24 @@ export default function QuoteBuilderPage() {
       <div className="max-w-[1200px] mx-auto px-4 md:px-8 mt-6 space-y-6">
         
         {/* 1. HEADER FIELDS */}
-        <div className="bg-card p-6 rounded-2xl border border-[#404040] shadow-sm">
+        <div className="bg-card p-6 rounded-2xl border border-secondary shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-2">Título do Projeto</label>
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Título do Projeto</label>
               <input
                 type="text"
                 value={quoteTitle}
                 onChange={(e) => setQuoteTitle(e.target.value)}
                 placeholder="Ex: Identidade Visual + Tráfego"
-                className="w-full h-11 px-4 bg-secondary border border-[#404040] rounded-lg text-sm text-[#D4D4D4] placeholder-[#737373] focus:border-[#E09B6B] outline-none transition-colors"
+                className="w-full h-11 px-4 bg-secondary border border-secondary rounded-lg text-sm text-foreground placeholder-muted-foreground focus:border-primary outline-none transition-colors"
               />
             </div>
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-2">Cliente</label>
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Cliente</label>
               <select
                 value={selectedClientId}
                 onChange={(e) => setSelectedClientId(e.target.value)}
-                className="w-full h-11 px-4 bg-secondary border border-[#404040] rounded-lg text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none transition-colors appearance-none cursor-pointer"
+                className="w-full h-11 px-4 bg-secondary border border-secondary rounded-lg text-sm text-foreground focus:border-primary outline-none transition-colors appearance-none cursor-pointer"
               >
                 <option value="">Selecione um cliente...</option>
                 {clients?.map(client => (
@@ -344,13 +344,13 @@ export default function QuoteBuilderPage() {
         </div>
 
         {/* 2. TABS NAVIGATION */}
-        <div className="flex border-b border-[#404040] gap-8">
+        <div className="flex border-b border-secondary gap-8">
             <button 
                 onClick={() => setActiveTab('scope')}
                 className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all ${
                     activeTab === 'scope' 
-                    ? 'text-[#E09B6B] border-b-2 border-[#E09B6B]' 
-                    : 'text-[#737373] hover:text-[#D4D4D4]'
+                    ? 'text-primary border-b-2 border-primary' 
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
             >
                 <div className="flex items-center gap-2">
@@ -361,8 +361,8 @@ export default function QuoteBuilderPage() {
                 onClick={() => setActiveTab('narrative')}
                 className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all ${
                     activeTab === 'narrative' 
-                    ? 'text-[#E09B6B] border-b-2 border-[#E09B6B]' 
-                    : 'text-[#737373] hover:text-[#D4D4D4]'
+                    ? 'text-primary border-b-2 border-primary' 
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
             >
                 <div className="flex items-center gap-2">
@@ -373,8 +373,8 @@ export default function QuoteBuilderPage() {
                 onClick={() => setActiveTab('resources')}
                 className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all ${
                     activeTab === 'resources' 
-                    ? 'text-[#E09B6B] border-b-2 border-[#E09B6B]' 
-                    : 'text-[#737373] hover:text-[#D4D4D4]'
+                    ? 'text-primary border-b-2 border-primary' 
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
             >
                 <div className="flex items-center gap-2">
@@ -415,52 +415,52 @@ export default function QuoteBuilderPage() {
                  <div className="flex justify-end">
                     <button 
                         onClick={handleImportTemplate}
-                        className="text-xs flex items-center gap-2 text-[#E09B6B] hover:text-[#E09B6B]/80 font-bold uppercase tracking-wider transition-colors"
+                        className="text-xs flex items-center gap-2 text-primary hover:text-primary/80 font-bold uppercase tracking-wider transition-colors"
                         title="Preencher com os textos definidos no Modelo de Proposta"
                     >
                         <RefreshCw size={14} /> Importar Modelo Padrão
                     </button>
                  </div>
 
-                 <div className="bg-card border border-[#404040] rounded-2xl p-6 shadow-sm">
-                  <div className="flex items-center gap-2 mb-4 text-[#E09B6B]">
+                 <div className="bg-card border border-secondary rounded-2xl p-6 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4 text-primary">
                     <Layout size={18} />
                     <h3 className="text-sm font-bold uppercase tracking-widest">Apresentação</h3>
                   </div>
-                  <p className="text-[#737373] text-xs mb-3">Introdução personalizada para este cliente.</p>
+                  <p className="text-muted-foreground text-xs mb-3">Introdução personalizada para este cliente.</p>
                   <textarea 
                     rows={6}
                     value={introText}
                     onChange={e => setIntroText(e.target.value)}
-                    className="w-full bg-[#1A1A1A] border border-[#404040] rounded-xl px-4 py-3 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none font-sans leading-relaxed"
+                    className="w-full bg-background border border-secondary rounded-xl px-4 py-3 text-sm text-foreground focus:border-primary outline-none resize-none font-sans leading-relaxed"
                   />
                 </div>
 
-                <div className="bg-card border border-[#404040] rounded-2xl p-6 shadow-sm">
-                  <div className="flex items-center gap-2 mb-4 text-[#E09B6B]">
+                <div className="bg-card border border-secondary rounded-2xl p-6 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4 text-primary">
                     <FileText size={18} />
                     <h3 className="text-sm font-bold uppercase tracking-widest">Diagnóstico & Estratégia</h3>
                   </div>
-                  <p className="text-[#737373] text-xs mb-3">O contexto do projeto e a solução proposta.</p>
+                  <p className="text-muted-foreground text-xs mb-3">O contexto do projeto e a solução proposta.</p>
                   <textarea 
                     rows={8}
                     value={strategyText}
                     onChange={e => setStrategyText(e.target.value)}
-                    className="w-full bg-[#1A1A1A] border border-[#404040] rounded-xl px-4 py-3 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none font-sans leading-relaxed"
+                    className="w-full bg-background border border-secondary rounded-xl px-4 py-3 text-sm text-foreground focus:border-primary outline-none resize-none font-sans leading-relaxed"
                   />
                 </div>
 
-                <div className="bg-card border border-[#404040] rounded-2xl p-6 shadow-sm">
-                  <div className="flex items-center gap-2 mb-4 text-[#E09B6B]">
+                <div className="bg-card border border-secondary rounded-2xl p-6 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4 text-primary">
                     <ShieldCheck size={18} />
                     <h3 className="text-sm font-bold uppercase tracking-widest">Termos e Condições</h3>
                   </div>
-                  <p className="text-[#737373] text-xs mb-3">Prazos, pagamentos e validade específicos desta proposta.</p>
+                  <p className="text-muted-foreground text-xs mb-3">Prazos, pagamentos e validade específicos desta proposta.</p>
                   <textarea 
                     rows={6}
                     value={termsText}
                     onChange={e => setTermsText(e.target.value)}
-                    className="w-full bg-[#1A1A1A] border border-[#404040] rounded-xl px-4 py-3 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none font-sans leading-relaxed"
+                    className="w-full bg-background border border-secondary rounded-xl px-4 py-3 text-sm text-foreground focus:border-primary outline-none resize-none font-sans leading-relaxed"
                   />
                 </div>
 
@@ -468,7 +468,7 @@ export default function QuoteBuilderPage() {
                     <button 
                     onClick={onSave}
                     disabled={loading || quoteItems.length === 0}
-                    className="px-8 h-12 bg-[#5D4037] hover:bg-[#4E342E] text-[#FFFFFF] font-bold uppercase tracking-widest text-xs rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed border border-[#5D4037]"
+                    className="px-8 h-12 bg-[hsl(var(--spiritual))] hover:bg-[hsl(var(--spiritual-dark))] text-foreground font-bold uppercase tracking-widest text-xs rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed border border-[hsl(var(--spiritual))]"
                     >
                     {loading ? <Loader2 className="animate-spin w-4 h-4" /> : <Save className="w-4 h-4" />}
                     {loading ? 'Salvando...' : 'Salvar Proposta'}
@@ -519,12 +519,12 @@ const QuoteCatalog: React.FC<{
 
   return (
     <div className="space-y-4">
-        <h3 className="text-sm font-bold text-[#FFFFFF] flex items-center gap-2 mb-2">
-            <Layers className="w-4 h-4 text-[#E09B6B]" /> Catálogo de Serviços
+        <h3 className="text-sm font-bold text-foreground flex items-center gap-2 mb-2">
+            <Layers className="w-4 h-4 text-primary" /> Catálogo de Serviços
         </h3>
 
         {Object.keys(groupedServices).length === 0 ? (
-            <div className="p-8 text-center bg-card rounded-lg border border-[#404040] border-dashed text-[#737373] text-sm">
+            <div className="p-8 text-center bg-card rounded-lg border border-secondary border-dashed text-muted-foreground text-sm">
                 Catálogo vazio ou carregando...
             </div>
         ) : (
@@ -534,27 +534,27 @@ const QuoteCatalog: React.FC<{
                     const serviceList = items as AgencyServiceCatalog[];
                     
                     return (
-                        <div key={category} className="bg-card border border-[#404040] rounded-xl overflow-hidden shadow-sm transition-all">
+                        <div key={category} className="bg-card border border-secondary rounded-xl overflow-hidden shadow-sm transition-all">
                             {/* Accordion Header */}
                             <button 
                                 onClick={() => toggleCategory(category)}
-                                className="w-full flex items-center justify-between px-5 py-4 bg-[#252525] hover:bg-[#2A2A2A] transition-colors"
+                                className="w-full flex items-center justify-between px-5 py-4 bg-card hover:bg-[hsl(var(--card))] transition-colors"
                             >
                                 <div className="flex items-center gap-3">
-                                    <Tag size={16} className="text-[#737373]" />
-                                    <h4 className="text-sm font-bold text-[#D4D4D4] uppercase tracking-wider">{category}</h4>
-                                    <span className="text-[10px] text-[#5c5c5c] bg-[#1e1e1e] px-2 py-0.5 rounded-full font-medium">
+                                    <Tag size={16} className="text-muted-foreground" />
+                                    <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">{category}</h4>
+                                    <span className="text-[10px] text-muted-foreground bg-card px-2 py-0.5 rounded-full font-medium">
                                         {serviceList.length}
                                     </span>
                                 </div>
-                                <div className="text-[#737373]">
+                                <div className="text-muted-foreground">
                                     {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                                 </div>
                             </button>
 
                             {/* Accordion Body (Grid) */}
                             {isExpanded && (
-                                <div className="p-4 bg-[#1e1e1e] border-t border-[#404040]">
+                                <div className="p-4 bg-card border-t border-secondary">
                                     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
                                         {serviceList.map(service => {
                                             const qty = selectedItems.find(i => i.service_id === service.id)?.quantity || 0;
@@ -566,32 +566,32 @@ const QuoteCatalog: React.FC<{
                                                     className={`
                                                         group flex flex-col justify-between p-3 rounded-lg border text-left transition-all hover:-translate-y-0.5
                                                         ${qty > 0 
-                                                            ? 'bg-[#E09B6B]/10 border-[#E09B6B] shadow-[0_0_10px_rgba(224,155,107,0.1)]' 
-                                                            : 'bg-[#252525] border-[#404040] hover:border-[#737373]'
+                                                            ? 'bg-primary/10 border-primary shadow-[0_0_10px_rgba(224,155,107,0.1)]' 
+                                                            : 'bg-card border-secondary hover:border-muted-foreground'
                                                         }
                                                     `}
                                                 >
                                                     <div>
                                                         <div className="flex justify-between items-start mb-1">
-                                                            <span className="text-[10px] uppercase font-bold text-[#737373] tracking-wider">
+                                                            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
                                                                 {service.charge_type === 'monthly' ? 'Mensal' : 'Setup'}
                                                             </span>
                                                             {qty > 0 && (
-                                                                <span className="bg-[#E09B6B] text-[#191919] text-[9px] font-black px-1.5 rounded-sm">
+                                                                <span className="bg-primary text-background text-[9px] font-black px-1.5 rounded-sm">
                                                                     {qty}x
                                                                 </span>
                                                             )}
                                                         </div>
-                                                        <h5 className="text-sm font-bold text-[#E5E5E5] leading-tight mb-3 line-clamp-2 min-h-[2.5em]">
+                                                        <h5 className="text-sm font-bold text-foreground leading-tight mb-3 line-clamp-2 min-h-[2.5em]">
                                                             {service.name}
                                                         </h5>
                                                     </div>
                                                     
                                                     <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/5 w-full">
-                                                        <span className="text-sm font-mono font-medium text-[#E09B6B]">
+                                                        <span className="text-sm font-mono font-medium text-primary">
                                                             R$ {service.default_price.toLocaleString('pt-BR', { minimumFractionDigits: 0 })}
                                                         </span>
-                                                        <div className={`p-1 rounded-md transition-colors ${qty > 0 ? 'bg-[#E09B6B] text-[#191919]' : 'bg-secondary text-[#737373] group-hover:bg-[#404040]'}`}>
+                                                        <div className={`p-1 rounded-md transition-colors ${qty > 0 ? 'bg-primary text-background' : 'bg-secondary text-muted-foreground group-hover:bg-secondary'}`}>
                                                             <Plus size={14} />
                                                         </div>
                                                     </div>
@@ -668,13 +668,13 @@ const QuoteItemsBuilder: React.FC<{
       
       {/* 1. LISTA DE ITENS */}
       <div className="space-y-4">
-        <h3 className="font-bold text-[#FFFFFF] flex items-center gap-2 text-sm">
-            <Calculator className="w-4 h-4 text-[#E09B6B]" />
+        <h3 className="font-bold text-foreground flex items-center gap-2 text-sm">
+            <Calculator className="w-4 h-4 text-primary" />
             Composição da Proposta
         </h3>
 
         {items.length === 0 ? (
-            <div className="p-12 text-center border-2 border-dashed border-[#404040] rounded-xl text-[#737373]">
+            <div className="p-12 text-center border-2 border-dashed border-secondary rounded-xl text-muted-foreground">
                 <p className="text-sm">Selecione serviços no catálogo acima para montar o orçamento.</p>
             </div>
         ) : (
@@ -708,7 +708,7 @@ const QuoteItemsBuilder: React.FC<{
 
                     // CARD DE ITEM NORMAL (WIDE ROW)
                     return (
-                        <div key={item.id} className="flex flex-col md:flex-row md:items-center justify-between bg-[#262626] border border-[#404040] p-4 rounded-xl gap-4 hover:border-[#737373] transition-all group">
+                        <div key={item.id} className="flex flex-col md:flex-row md:items-center justify-between bg-[hsl(var(--card))] border border-secondary p-4 rounded-xl gap-4 hover:border-muted-foreground transition-all group">
                             
                             {/* SECTION 1: INFO */}
                             <div className="flex-1 min-w-0 flex flex-col gap-2">
@@ -723,25 +723,25 @@ const QuoteItemsBuilder: React.FC<{
                                     <input 
                                         value={item.title}
                                         onChange={(e) => onUpdateItem(item.id!, 'title', e.target.value)}
-                                        className="bg-transparent text-white font-bold text-sm w-full outline-none focus:text-[#E09B6B] transition-colors"
+                                        className="bg-transparent text-white font-bold text-sm w-full outline-none focus:text-primary transition-colors"
                                     />
                                 </div>
-                                <div className="text-[10px] text-[#737373] flex items-center gap-2 pl-1">
+                                <div className="text-[10px] text-muted-foreground flex items-center gap-2 pl-1">
                                     <span className="uppercase font-bold tracking-wider">Tabela:</span>
                                     <span className="font-mono">R$ {listPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                                 </div>
                             </div>
 
                             {/* SECTION 2: PRICING (Middle) */}
-                            <div className="flex items-center gap-3 bg-[#1e1e1e] p-2 rounded-lg border border-[#333]">
+                            <div className="flex items-center gap-3 bg-card p-2 rounded-lg border border-border">
                                 {/* Preço Unitário */}
                                 <div className="relative group/price">
-                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[#737373] text-xs">R$</span>
+                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">R$</span>
                                     <input 
                                         type="number"
                                         value={item.unit_price === 0 ? '' : item.unit_price}
                                         onChange={(e) => onUpdateItem(item.id!, 'unit_price', e.target.value === '' ? 0 : Number(e.target.value))}
-                                        className="w-24 h-8 bg-secondary border border-[#404040] rounded text-sm text-right pr-2 pl-6 outline-none focus:border-[#E09B6B] font-sans tabular-nums text-[#D4D4D4] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        className="w-24 h-8 bg-secondary border border-secondary rounded text-sm text-right pr-2 pl-6 outline-none focus:border-primary font-sans tabular-nums text-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                         onWheel={(e) => e.currentTarget.blur()}
                                     />
                                 </div>
@@ -752,12 +752,12 @@ const QuoteItemsBuilder: React.FC<{
                                         type="number"
                                         value={currentDiffPercent === 0 ? '' : Number(currentDiffPercent.toFixed(1))}
                                         onChange={(e) => handlePercentChange(item.id!, item.service_id, e.target.value === '' ? 0 : Number(e.target.value))}
-                                        className={`w-16 h-8 bg-secondary border border-[#404040] rounded text-xs text-center outline-none focus:border-[#E09B6B] font-sans tabular-nums font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                                            currentDiffPercent < 0 ? 'text-red-400' : currentDiffPercent > 0 ? 'text-green-400' : 'text-[#737373]'
+                                        className={`w-16 h-8 bg-secondary border border-secondary rounded text-xs text-center outline-none focus:border-primary font-sans tabular-nums font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                                            currentDiffPercent < 0 ? 'text-red-400' : currentDiffPercent > 0 ? 'text-green-400' : 'text-muted-foreground'
                                         }`}
                                         onWheel={(e) => e.currentTarget.blur()}
                                     />
-                                    <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] text-[#5c5c5c]">%</span>
+                                    <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] text-muted-foreground">%</span>
                                 </div>
                             </div>
 
@@ -765,12 +765,12 @@ const QuoteItemsBuilder: React.FC<{
                             <div className="flex items-center gap-4 justify-end md:justify-start pt-2 md:pt-0 border-t md:border-t-0 border-white/5">
                                 {/* Qty */}
                                 <div className="flex items-center gap-2">
-                                    <span className="text-[10px] font-bold text-[#737373] uppercase">Qtd</span>
+                                    <span className="text-[10px] font-bold text-muted-foreground uppercase">Qtd</span>
                                     <input 
                                         type="number"
                                         value={item.quantity}
                                         onChange={(e) => onUpdateItem(item.id!, 'quantity', Number(e.target.value))}
-                                        className="w-12 h-8 bg-secondary border border-[#404040] rounded text-center text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        className="w-12 h-8 bg-secondary border border-secondary rounded text-center text-sm text-foreground focus:border-primary outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                         min="1"
                                         onWheel={(e) => e.currentTarget.blur()}
                                     />
@@ -778,15 +778,15 @@ const QuoteItemsBuilder: React.FC<{
 
                                 {/* Total */}
                                 <div className="text-right min-w-[100px]">
-                                    <span className="block text-[10px] text-[#737373] font-bold uppercase">Total</span>
-                                    <span className="text-lg font-bold text-[#E09B6B] font-sans tabular-nums">
+                                    <span className="block text-[10px] text-muted-foreground font-bold uppercase">Total</span>
+                                    <span className="text-lg font-bold text-primary font-sans tabular-nums">
                                         R$ {((item.unit_price || 0) * (item.quantity || 1)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                     </span>
                                 </div>
 
                                 <button 
                                     onClick={() => onRemoveItem(item.id!)}
-                                    className="p-2 text-[#737373] hover:text-red-400 hover:bg-red-900/10 rounded-lg transition-colors"
+                                    className="p-2 text-muted-foreground hover:text-red-400 hover:bg-red-900/10 rounded-lg transition-colors"
                                 >
                                     <Trash2 size={16} />
                                 </button>
@@ -800,30 +800,30 @@ const QuoteItemsBuilder: React.FC<{
       </div>
 
       {/* 2. FOOTER (TOTAIS) */}
-      <div className="bg-card rounded-2xl border border-[#404040] p-6 space-y-6">
+      <div className="bg-card rounded-2xl border border-secondary p-6 space-y-6">
           
           {/* Condições Comerciais */}
           {items.length > 0 && (
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 pb-6 border-b border-[#404040]">
-                <div className="flex items-center gap-2 text-[#737373]">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 pb-6 border-b border-secondary">
+                <div className="flex items-center gap-2 text-muted-foreground">
                     <AlertCircle size={16} />
                     <span className="text-xs font-bold uppercase tracking-widest">Ajuste Global</span>
                 </div>
                 <div className="flex gap-3">
                     <div className="relative">
-                        <DollarSign size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#737373]" />
+                        <DollarSign size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                         <input 
                             type="number" placeholder="R$ Desconto" value={globalFixedDisc}
-                            className="w-32 h-10 bg-[#1A1A1A] border border-[#404040] rounded-lg text-sm pl-8 pr-3 text-[#D4D4D4] outline-none focus:border-[#E09B6B] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            className="w-32 h-10 bg-background border border-secondary rounded-lg text-sm pl-8 pr-3 text-foreground outline-none focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             onChange={(e) => onFixedDiscountChange(e.target.value)}
                             onWheel={(e) => e.currentTarget.blur()}
                         />
                     </div>
                     <div className="relative">
-                        <Percent size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#737373]" />
+                        <Percent size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                         <input 
                             type="number" placeholder="% Desconto" value={globalPercentDisc}
-                            className="w-32 h-10 bg-[#1A1A1A] border border-[#404040] rounded-lg text-sm pl-8 pr-3 text-[#D4D4D4] outline-none focus:border-[#E09B6B] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            className="w-32 h-10 bg-background border border-secondary rounded-lg text-sm pl-8 pr-3 text-foreground outline-none focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             onChange={(e) => onPercentDiscountChange(e.target.value)}
                             onWheel={(e) => e.currentTarget.blur()}
                         />
@@ -835,20 +835,20 @@ const QuoteItemsBuilder: React.FC<{
           {/* Totais Finais */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
               <div>
-                 <p className="text-[10px] text-[#737373] font-bold uppercase tracking-widest mb-1">Subtotal</p>
-                 <p className="text-2xl font-bold text-[#D4D4D4] font-sans tabular-nums">
+                 <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mb-1">Subtotal</p>
+                 <p className="text-2xl font-bold text-foreground font-sans tabular-nums">
                     R$ {subTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                  </p>
               </div>
               <div>
-                 <p className="text-[10px] text-[#737373] font-bold uppercase tracking-widest mb-1">Setup (Único)</p>
-                 <p className="text-2xl font-bold text-[#FFFFFF] font-sans tabular-nums">
+                 <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mb-1">Setup (Único)</p>
+                 <p className="text-2xl font-bold text-foreground font-sans tabular-nums">
                     R$ {totalOneTime.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                  </p>
               </div>
               <div>
-                 <p className="text-[10px] text-[#737373] font-bold uppercase tracking-widest mb-1">Mensalidade Total</p>
-                 <p className="text-3xl font-bold text-[#E09B6B] font-sans tabular-nums">
+                 <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mb-1">Mensalidade Total</p>
+                 <p className="text-3xl font-bold text-primary font-sans tabular-nums">
                     R$ {totalMonthly.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                  </p>
               </div>
@@ -860,12 +860,12 @@ const QuoteItemsBuilder: React.FC<{
               placeholder="Observações internas sobre este orçamento..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="flex-1 p-3 text-sm bg-[#1A1A1A] border border-[#404040] rounded-lg text-[#D4D4D4] outline-none focus:border-[#E09B6B] resize-none h-14 focus:h-24 transition-all"
+              className="flex-1 p-3 text-sm bg-background border border-secondary rounded-lg text-foreground outline-none focus:border-primary resize-none h-14 focus:h-24 transition-all"
             />
             <button 
               onClick={onSave}
               disabled={isSaving || items.length === 0}
-              className="px-8 h-14 bg-[#5D4037] hover:bg-[#4E342E] text-[#FFFFFF] font-bold uppercase tracking-widest text-xs rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed border border-[#5D4037]"
+              className="px-8 h-14 bg-[hsl(var(--spiritual))] hover:bg-[hsl(var(--spiritual-dark))] text-foreground font-bold uppercase tracking-widest text-xs rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed border border-[hsl(var(--spiritual))]"
             >
               {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : <Save className="w-4 h-4" />}
               {isSaving ? 'Salvando...' : 'Salvar Proposta'}

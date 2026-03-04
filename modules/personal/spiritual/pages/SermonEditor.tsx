@@ -182,7 +182,7 @@ export default function SermonEditor() {
           <button 
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 bg-[#3E2723] hover:bg-black text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50"
+            className="flex items-center gap-2 bg-[hsl(var(--spiritual-darker))] hover:bg-black text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50"
           >
             {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             <span className="hidden sm:inline">Salvar</span>
@@ -207,38 +207,38 @@ export default function SermonEditor() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-border">
             <div className="group">
-              <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 group-focus-within:text-[#5D4037] transition-colors">
+              <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 group-focus-within:text-[hsl(var(--spiritual))] transition-colors">
                 <User size={12} /> Pregador
               </label>
               <input 
                 value={formData.preacher}
                 onChange={(e) => setFormData({...formData, preacher: e.target.value})}
                 placeholder="Nome do pregador"
-                className="w-full bg-secondary border-b border-transparent focus:border-[#A1887F] rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-all focus:bg-card"
+                className="w-full bg-secondary border-b border-transparent focus:border-[hsl(var(--spiritual-light))] rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-all focus:bg-card"
               />
             </div>
 
             <div className="group">
-              <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 group-focus-within:text-[#5D4037] transition-colors">
+              <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 group-focus-within:text-[hsl(var(--spiritual))] transition-colors">
                 <Calendar size={12} /> Data
               </label>
               <input 
                 type="date"
                 value={formData.date}
                 onChange={(e) => setFormData({...formData, date: e.target.value})}
-                className="w-full bg-secondary border-b border-transparent focus:border-[#A1887F] rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-all focus:bg-card"
+                className="w-full bg-secondary border-b border-transparent focus:border-[hsl(var(--spiritual-light))] rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-all focus:bg-card"
               />
             </div>
 
             <div className="group">
-              <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 group-focus-within:text-[#5D4037] transition-colors">
+              <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1 group-focus-within:text-[hsl(var(--spiritual))] transition-colors">
                 <BookOpen size={12} /> Texto Base
               </label>
               <input 
                 value={formData.bible_passage}
                 onChange={(e) => setFormData({...formData, bible_passage: e.target.value})}
                 placeholder="Ex: Romanos 8"
-                className="w-full bg-secondary border-b border-transparent focus:border-[#A1887F] rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-all focus:bg-card"
+                className="w-full bg-secondary border-b border-transparent focus:border-[hsl(var(--spiritual-light))] rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-all focus:bg-card"
               />
             </div>
           </div>

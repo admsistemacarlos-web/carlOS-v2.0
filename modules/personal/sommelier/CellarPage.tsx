@@ -89,7 +89,7 @@ export default function CellarPage() {
           actions={
             <button 
               onClick={openNew}
-              className="bg-[#3C3633] hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest shadow-lg transition-all active:scale-95"
+              className="bg-[hsl(var(--sommelier))] hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest shadow-lg transition-all active:scale-95"
             >
               <Plus size={14} /> Novo Rótulo
             </button>
@@ -129,7 +129,7 @@ export default function CellarPage() {
             <div className="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-hide">
                 <button 
                     onClick={() => setFilterType('all')}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide whitespace-nowrap transition-all border ${filterType === 'all' ? 'bg-[#3C3633] text-white border-[#3C3633]' : 'bg-card text-muted-foreground border-border'}`}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wide whitespace-nowrap transition-all border ${filterType === 'all' ? 'bg-[hsl(var(--sommelier))] text-white border-[hsl(var(--sommelier))]' : 'bg-card text-muted-foreground border-border'}`}
                 >
                     Todos
                 </button>

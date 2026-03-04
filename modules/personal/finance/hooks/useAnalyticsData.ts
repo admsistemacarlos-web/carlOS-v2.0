@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '../../../../integrations/supabase/client';
 
-export const CHART_COLORS = ['#5F6F52', '#A34343', '#8D6E63', '#B9B4C7', '#E5C3A6', '#3C3633', '#747264', '#7FB3D5', '#D2B4DE', '#F5CBA7'];
+export const CHART_COLORS = ['sl(var(--health-muted))', 'hsl(var(--destructive))', 'hsl(var(--spiritual-muted))', '#B9B4C7', '#E5C3A6', '#3C3633', '#747264', '#7FB3D5', '#D2B4DE', '#F5CBA7'];
 
 export type AnalyticsPeriod = 'month' | 'quarter' | 'semester' | 'year' | 'all';
 

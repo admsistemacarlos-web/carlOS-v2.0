@@ -175,25 +175,25 @@ export default function ServicesPage() {
     }
   };
 
-  if (isLoading) return <div className="p-10 text-[#737373] flex justify-center"><Loader2 className="animate-spin" /></div>;
+  if (isLoading) return <div className="p-10 text-muted-foreground flex justify-center"><Loader2 className="animate-spin" /></div>;
 
   return (
     <div className="animate-fade-in pb-20">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-[#FFFFFF] tracking-tight">Catálogo de Serviços</h1>
-          <p className="text-[#9ca3af] text-sm mt-1">Gerencie preços base e escopo.</p>
+          <h1 className="text-3xl font-bold text-foreground tracking-tight">Catálogo de Serviços</h1>
+          <p className="text-muted-foreground text-sm mt-1">Gerencie preços base e escopo.</p>
         </div>
 
         <div className="flex gap-3 w-full md:w-auto">
           <div className="relative flex-1 md:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#737373]" size={16} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
             <input 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Buscar serviço..."
-              className="w-full bg-secondary border border-[#404040] rounded-md pl-9 pr-4 py-2 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-colors"
+              className="w-full bg-secondary border border-secondary rounded-md pl-9 pr-4 py-2 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-primary transition-colors"
             />
           </div>
           
@@ -204,10 +204,10 @@ export default function ServicesPage() {
             className={`
               px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium border transition-all whitespace-nowrap
               ${seedStatus === 'success' 
-                ? 'bg-primary text-[#60a887] border-[#20523e]' 
+                ? 'bg-primary text-[hsl(var(--health-light))] border-[hsl(var(--health-light))]' 
                 : seedStatus === 'error'
-                  ? 'bg-[#3d1414] text-[#a86060] border-[#522020]'
-                  : 'bg-secondary text-[#9ca3af] border-[#404040] hover:bg-secondary hover:text-[#E09B6B]'
+                  ? 'bg-[hsl(var(--destructive))] text-[hsl(var(--destructive))] border-[hsl(var(--destructive))]'
+                  : 'bg-secondary text-muted-foreground border-secondary hover:bg-secondary hover:text-primary'
               }
             `}
             title="Inserir dados de exemplo"
@@ -220,7 +220,7 @@ export default function ServicesPage() {
 
           <button 
             onClick={() => handleOpenModal()}
-            className="bg-[#5D4037] hover:bg-[#4E342E] text-[#FFFFFF] px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium border border-[#5D4037] active:scale-95 transition-all whitespace-nowrap"
+            className="bg-[hsl(var(--spiritual))] hover:bg-[hsl(var(--spiritual-dark))] text-foreground px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium border border-[hsl(var(--spiritual))] active:scale-95 transition-all whitespace-nowrap"
           >
             <Plus size={16} /> <span className="hidden sm:inline">Novo</span>
           </button>
@@ -230,44 +230,44 @@ export default function ServicesPage() {
       {/* Lista */}
       <div className="space-y-8">
         {Object.entries(groupedServices).length === 0 ? (
-             <div className="text-center py-20 border border-dashed border-[#404040] rounded-lg bg-card">
-                <Package className="mx-auto text-[#404040] mb-4" size={32} />
-                <p className="text-[#737373] text-sm">Nenhum serviço encontrado.</p>
+             <div className="text-center py-20 border border-dashed border-secondary rounded-lg bg-card">
+                <Package className="mx-auto text-secondary mb-4" size={32} />
+                <p className="text-muted-foreground text-sm">Nenhum serviço encontrado.</p>
             </div>
         ) : (
             Object.entries(groupedServices).map(([category, items]) => (
-            <div key={category} className="bg-secondary border border-[#404040] rounded-lg overflow-hidden">
-                <div className="px-4 py-3 bg-card border-b border-[#404040] flex items-center gap-2">
-                    <Layers size={14} className="text-[#E09B6B]" />
-                    <h3 className="text-xs font-bold text-[#E09B6B] uppercase tracking-widest">
+            <div key={category} className="bg-secondary border border-secondary rounded-lg overflow-hidden">
+                <div className="px-4 py-3 bg-card border-b border-secondary flex items-center gap-2">
+                    <Layers size={14} className="text-primary" />
+                    <h3 className="text-xs font-bold text-primary uppercase tracking-widest">
                         {category}
                     </h3>
                 </div>
                 
-                <div className="divide-y divide-[#404040]">
+                <div className="divide-y divide-secondary">
                     {(items as AgencyServiceCatalog[]).map(service => (
-                        <div key={service.id} className="group flex items-center justify-between p-4 hover:bg-[#323232] transition-colors">
+                        <div key={service.id} className="group flex items-center justify-between p-4 hover:bg-[hsl(var(--border))] transition-colors">
                             <div className="flex-1 min-w-0 pr-4">
                                 <div className="flex items-center gap-3">
                                     {/* Exibindo 'name' corretamente */}
-                                    <h4 className="text-sm font-bold text-[#E5E5E5] truncate">{(service as any).name}</h4>
+                                    <h4 className="text-sm font-bold text-foreground truncate">{(service as any).name}</h4>
                                     <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${
                                         service.charge_type === 'monthly' 
-                                        ? 'bg-card text-[#9ca3af] border-[#404040]' 
-                                        : 'bg-secondary text-[#D4D4D4] border-[#404040]'
+                                        ? 'bg-card text-muted-foreground border-secondary' 
+                                        : 'bg-secondary text-foreground border-secondary'
                                     }`}>
                                         {service.charge_type === 'monthly' ? 'Mensal' : 'Setup'}
                                     </span>
                                 </div>
-                                <p className="text-xs text-[#737373] mt-1 truncate max-w-2xl font-mono">
+                                <p className="text-xs text-muted-foreground mt-1 truncate max-w-2xl font-mono">
                                     {service.description || 'Sem descrição.'}
                                 </p>
                             </div>
 
                             <div className="flex items-center gap-6">
                                 <div className="text-right">
-                                    <span className="text-[10px] text-[#737373] block uppercase tracking-wide">Base</span>
-                                    <span className="text-sm font-mono font-bold text-[#E09B6B]">
+                                    <span className="text-[10px] text-muted-foreground block uppercase tracking-wide">Base</span>
+                                    <span className="text-sm font-mono font-bold text-primary">
                                         R$ {service.default_price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                     </span>
                                 </div>
@@ -275,14 +275,14 @@ export default function ServicesPage() {
                                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button 
                                         onClick={() => handleOpenModal(service)}
-                                        className="p-2 text-[#737373] hover:text-[#D4D4D4] hover:bg-[#404040] rounded transition-colors"
+                                        className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded transition-colors"
                                         title="Editar"
                                     >
                                         <Edit size={14} />
                                     </button>
                                     <button 
                                         onClick={() => handleDelete(service.id)}
-                                        className="p-2 text-[#737373] hover:text-red-400 hover:bg-[#404040] rounded transition-colors"
+                                        className="p-2 text-muted-foreground hover:text-red-400 hover:bg-secondary rounded transition-colors"
                                         title="Excluir"
                                     >
                                         <Trash2 size={14} />
@@ -300,36 +300,36 @@ export default function ServicesPage() {
       {/* Modal */}
       {isModalOpen && createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-            <div className="bg-card w-full max-w-md rounded-lg border border-[#404040] shadow-2xl overflow-hidden">
-                <div className="flex justify-between items-center p-5 border-b border-[#404040]">
-                    <h2 className="text-base font-bold text-[#FFFFFF]">
+            <div className="bg-card w-full max-w-md rounded-lg border border-secondary shadow-2xl overflow-hidden">
+                <div className="flex justify-between items-center p-5 border-b border-secondary">
+                    <h2 className="text-base font-bold text-foreground">
                         {editingService ? 'Editar Serviço' : 'Novo Serviço'}
                     </h2>
-                    <button onClick={() => setIsModalOpen(false)} className="text-[#737373] hover:text-[#D4D4D4]"><X size={18} /></button>
+                    <button onClick={() => setIsModalOpen(false)} className="text-muted-foreground hover:text-foreground"><X size={18} /></button>
                 </div>
                 
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
                     {/* CORREÇÃO 3: Input de Nome */}
                     <div>
-                        <label className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mb-1.5 block">Nome do Serviço</label>
+                        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block">Nome do Serviço</label>
                         <input 
                             required
                             value={formData.name} // Usando formData.name
                             onChange={e => setFormData({...formData, name: e.target.value})}
-                            className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none"
+                            className="w-full bg-secondary border border-secondary rounded-md px-3 py-2 text-sm text-foreground focus:border-primary outline-none"
                             placeholder="Ex: Gestão de Tráfego"
                         />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mb-1.5 block">Categoria</label>
+                            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block">Categoria</label>
                             <input 
                                 required
                                 list="categories"
                                 value={formData.category}
                                 onChange={e => setFormData({...formData, category: e.target.value})}
-                                className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none"
+                                className="w-full bg-secondary border border-secondary rounded-md px-3 py-2 text-sm text-foreground focus:border-primary outline-none"
                                 placeholder="Ex: Tráfego"
                             />
                             <datalist id="categories">
@@ -341,11 +341,11 @@ export default function ServicesPage() {
                             </datalist>
                         </div>
                         <div>
-                            <label className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mb-1.5 block">Tipo de Cobrança</label>
+                            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block">Tipo de Cobrança</label>
                             <select 
                                 value={formData.charge_type}
                                 onChange={e => setFormData({...formData, charge_type: e.target.value as ChargeType})}
-                                className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none appearance-none"
+                                className="w-full bg-secondary border border-secondary rounded-md px-3 py-2 text-sm text-foreground focus:border-primary outline-none appearance-none"
                             >
                                 <option value="monthly">Mensal (Recorrente)</option>
                                 <option value="unique">Único (Projeto)</option>
@@ -354,25 +354,25 @@ export default function ServicesPage() {
                     </div>
 
                     <div>
-                        <label className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mb-1.5 block">Preço Base (R$)</label>
+                        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block">Preço Base (R$)</label>
                         <input 
                             type="number"
                             required
                             value={formData.default_price}
                             onChange={e => setFormData({...formData, default_price: parseFloat(e.target.value)})}
-                            className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none no-spin font-mono"
+                            className="w-full bg-secondary border border-secondary rounded-md px-3 py-2 text-sm text-foreground focus:border-primary outline-none no-spin font-mono"
                             placeholder="0.00"
                             onWheel={(e) => e.currentTarget.blur()}
                         />
                     </div>
 
                     <div>
-                        <label className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mb-1.5 block">Descrição (Escopo Base)</label>
+                        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block">Descrição (Escopo Base)</label>
                         <textarea 
                             rows={3}
                             value={formData.description}
                             onChange={e => setFormData({...formData, description: e.target.value})}
-                            className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none"
+                            className="w-full bg-secondary border border-secondary rounded-md px-3 py-2 text-sm text-foreground focus:border-primary outline-none resize-none"
                             placeholder="O que está incluso?"
                         />
                     </div>
@@ -381,7 +381,7 @@ export default function ServicesPage() {
                         <button 
                             type="submit" 
                             disabled={createService.isPending || updateService.isPending}
-                            className="w-full bg-[#5D4037] hover:bg-[#4E342E] text-[#FFFFFF] font-bold py-2.5 rounded-md transition-all shadow-sm flex items-center justify-center gap-2 text-sm border border-[#5D4037]"
+                            className="w-full bg-[hsl(var(--spiritual))] hover:bg-[hsl(var(--spiritual-dark))] text-foreground font-bold py-2.5 rounded-md transition-all shadow-sm flex items-center justify-center gap-2 text-sm border border-[hsl(var(--spiritual))]"
                         >
                             {(createService.isPending || updateService.isPending) ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
                             Salvar Serviço

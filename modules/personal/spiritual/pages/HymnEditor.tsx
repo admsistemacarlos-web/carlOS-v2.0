@@ -126,7 +126,7 @@ export default function HymnEditor() {
               <Trash2 size={20} />
             </button>
           )}
-          <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 bg-[#3E2723] hover:bg-black text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50">
+          <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 bg-[hsl(var(--spiritual-darker))] hover:bg-black text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50">
             {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             <span className="hidden sm:inline">Salvar</span>
           </button>
@@ -138,7 +138,7 @@ export default function HymnEditor() {
 
           <div className="flex-none bg-card p-6 rounded-[1.5rem] border border-border shadow-sm space-y-4">
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-secondary rounded-lg text-[#8D6E63]"><Music size={20} /></div>
+              <div className="p-2 bg-secondary rounded-lg text-[hsl(var(--spiritual-muted))]"><Music size={20} /></div>
               <h2 className="text-lg font-bold text-foreground">Detalhes da Canção</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

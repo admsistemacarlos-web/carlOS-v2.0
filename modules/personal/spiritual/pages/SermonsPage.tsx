@@ -131,7 +131,7 @@ export default function SermonsPage() {
   const SermonCard: React.FC<{ sermon: Sermon }> = ({ sermon }) => (
     <div 
         onClick={() => handleEdit(sermon.id)}
-        className="bg-card p-6 rounded-[2rem] border border-border shadow-sm hover:shadow-xl hover:border-[#D7CCC8] hover:-translate-y-1 transition-all group flex flex-col h-full cursor-pointer relative"
+        className="bg-card p-6 rounded-[2rem] border border-border shadow-sm hover:shadow-xl hover:border-[hsl(var(--spiritual-light))] hover:-translate-y-1 transition-all group flex flex-col h-full cursor-pointer relative"
     >
         <div className="flex justify-between items-start mb-4">
         <span className="bg-secondary border border-border text-muted-foreground text-[10px] font-bold uppercase px-3 py-1 rounded-full tracking-wider">
@@ -165,7 +165,7 @@ export default function SermonsPage() {
         </div>
 
         <div className="mt-4 flex justify-end">
-            <span className="text-[#8D6E63] text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="text-[hsl(var(--spiritual-muted))] text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 Editar <Pencil size={10} />
             </span>
         </div>
@@ -182,19 +182,19 @@ export default function SermonsPage() {
             <ArrowLeft size={14} /> Voltar
           </button>
           <h1 className="text-3xl font-bold text-foreground tracking-tight flex items-center gap-3">
-            <Mic2 className="text-[#5D4037]" /> Pregações & Cultos
+            <Mic2 className="text-[hsl(var(--spiritual))]" /> Pregações & Cultos
           </h1>
         </div>
 
         <div className="flex gap-3 w-full md:w-auto">
             {/* Barra de Pesquisa */}
             <div className="relative flex-1 md:w-64 group">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-[#5D4037] transition-colors" size={18} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-[hsl(var(--spiritual))] transition-colors" size={18} />
                 <input 
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Buscar pregações..."
-                    className="w-full bg-card border border-border rounded-xl pl-10 pr-10 py-3 text-sm outline-none focus:ring-2 focus:ring-[#5D4037]/20 focus:border-[#5D4037] transition-all shadow-sm placeholder:text-muted-foreground text-foreground"
+                    className="w-full bg-card border border-border rounded-xl pl-10 pr-10 py-3 text-sm outline-none focus:ring-2 focus:ring-[hsl(var(--spiritual))]/20 focus:border-[hsl(var(--spiritual))] transition-all shadow-sm placeholder:text-muted-foreground text-foreground"
                 />
                 {searchQuery && (
                     <button 
@@ -206,7 +206,7 @@ export default function SermonsPage() {
                 )}
             </div>
 
-            <button onClick={handleNew} className="bg-[#3E2723] hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-lg transition-all active:scale-95 shrink-0">
+            <button onClick={handleNew} className="bg-[hsl(var(--spiritual-darker))] hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-lg transition-all active:scale-95 shrink-0">
                 <Plus size={18} /> Nova Anotação
             </button>
         </div>
@@ -222,12 +222,12 @@ export default function SermonsPage() {
                 <>
                     <Search className="mx-auto text-muted-foreground mb-3" size={32} />
                     <p className="text-muted-foreground">Nenhuma pregação encontrada para "{searchQuery}".</p>
-                    <button onClick={() => setSearchQuery('')} className="text-[#5D4037] font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Limpar Busca</button>
+                    <button onClick={() => setSearchQuery('')} className="text-[hsl(var(--spiritual))] font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Limpar Busca</button>
                 </>
             ) : (
                 <>
                     <p className="text-muted-foreground">Nenhuma pregação anotada ainda.</p>
-                    <button onClick={handleNew} className="text-[#5D4037] font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Criar a primeira</button>
+                    <button onClick={handleNew} className="text-[hsl(var(--spiritual))] font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Criar a primeira</button>
                 </>
             )}
           </div>
@@ -258,7 +258,7 @@ export default function SermonsPage() {
       {isDeleteOpen && createPortal(
         <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
           <div 
-            className="absolute inset-0 bg-[#3E2723]/20 backdrop-blur-sm transition-opacity" 
+            className="absolute inset-0 bg-[hsl(var(--spiritual-darker))]/20 backdrop-blur-sm transition-opacity" 
             onClick={() => setIsDeleteOpen(false)}
           />
           <div className="relative bg-card w-full max-w-sm rounded-[1.5rem] shadow-2xl p-6 animate-fade-in border border-border">

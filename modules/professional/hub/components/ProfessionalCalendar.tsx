@@ -83,7 +83,7 @@ export default function ProfessionalCalendar({
       {/* Navegação */}
 <div className="flex flex-col items-center gap-3 mb-6">
   {/* Mês e Ano centralizados */}
-  <h2 className="text-2xl font-bold text-white">
+  <h2 className="text-2xl font-bold text-foreground">
     {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
   </h2>
 

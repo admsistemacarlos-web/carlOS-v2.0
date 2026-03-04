@@ -21,7 +21,7 @@ const ContextCard: React.FC<{
         ${
           isPersonal
             ? 'bg-background text-foreground border border-border hover:border-primary/30 shadow-sm hover:shadow-xl'
-            : 'bg-[#0f172a] text-blue-500 border border-slate-800 hover:border-blue-500/30 shadow-2xl hover:shadow-blue-500/10'
+            : 'bg-background text-blue-500 border border-slate-800 hover:border-blue-500/30 shadow-2xl hover:shadow-blue-500/10'
         }
       `}
     >

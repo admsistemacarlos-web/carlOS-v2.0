@@ -12,16 +12,16 @@ import ClientNotesLog from './components/ClientNotesLog';
 
 const InputGroup = ({ label, name, value, onChange, type = "text", icon }: any) => (
   <div>
-    <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">{label}</label>
+    <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">{label}</label>
     <div className="relative group">
       <input 
         type={type}
         name={name}
         value={value || ''}
         onChange={onChange}
-        className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 pl-10 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none transition-all placeholder-[#5c5c5c]"
+        className="w-full bg-secondary border border-secondary rounded-md px-4 py-3 pl-10 text-sm text-foreground focus:border-primary outline-none transition-all placeholder-muted-foreground"
       />
-      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#737373] group-focus-within:text-[#E09B6B] transition-colors">
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
         {icon}
       </div>
     </div>
@@ -106,24 +106,24 @@ export default function ClientEditorPage() {
       
       {/* HEADER */}
       <div className="flex items-center gap-4 mb-6 pt-6">
-        <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-secondary text-[#737373] hover:text-[#D4D4D4] transition-colors">
+        <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft size={20} />
         </button>
         <div>
-          <h1 className="text-2xl font-bold text-[#FFFFFF] tracking-tight">{isEditing ? formData.name || 'Cliente' : 'Novo Cliente'}</h1>
-          <p className="text-[#9ca3af] text-xs font-mono">{formData.company_name || 'Cadastro'}</p>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">{isEditing ? formData.name || 'Cliente' : 'Novo Cliente'}</h1>
+          <p className="text-muted-foreground text-xs font-mono">{formData.company_name || 'Cadastro'}</p>
         </div>
       </div>
 
       {/* --- MENU DE ABAS --- */}
-      <div className="flex gap-1 border-b border-[#404040] mb-8">
+      <div className="flex gap-1 border-b border-secondary mb-8">
         <button 
             onClick={() => setActiveTab('workspace')}
             disabled={!isEditing}
             className={`px-6 py-3 text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 border-b-2 ${
                 activeTab === 'workspace' 
-                ? 'border-[#E09B6B] text-[#E09B6B]' 
-                : 'border-transparent text-[#737373] hover:text-[#D4D4D4] disabled:opacity-30'
+                ? 'border-primary text-primary' 
+                : 'border-transparent text-muted-foreground hover:text-foreground disabled:opacity-30'
             }`}
         >
             <Layout size={14} /> Workspace
@@ -132,8 +132,8 @@ export default function ClientEditorPage() {
             onClick={() => setActiveTab('data')}
             className={`px-6 py-3 text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 border-b-2 ${
                 activeTab === 'data' 
-                ? 'border-[#E09B6B] text-[#E09B6B]' 
-                : 'border-transparent text-[#737373] hover:text-[#D4D4D4]'
+                ? 'border-primary text-primary' 
+                : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
         >
             <User size={14} /> Dados Cadastrais
@@ -180,9 +180,9 @@ export default function ClientEditorPage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
 
                     {/* Logo Upload */}
-                    <div className="bg-secondary p-6 rounded-lg border border-[#404040] shadow-sm flex flex-col items-center justify-center">
+                    <div className="bg-secondary p-6 rounded-lg border border-secondary shadow-sm flex flex-col items-center justify-center">
                         <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/png, image/jpeg, image/jpg" className="hidden" />
-                        <div onClick={() => fileInputRef.current?.click()} className={`relative w-64 h-40 rounded-lg border-2 border-dashed flex items-center justify-center cursor-pointer transition-all overflow-hidden group ${previewUrl ? 'border-[#E09B6B]/50 bg-black/20' : 'border-[#404040] hover:border-[#E09B6B] hover:bg-secondary'}`}>
+                        <div onClick={() => fileInputRef.current?.click()} className={`relative w-64 h-40 rounded-lg border-2 border-dashed flex items-center justify-center cursor-pointer transition-all overflow-hidden group ${previewUrl ? 'border-primary/50 bg-black/20' : 'border-secondary hover:border-primary hover:bg-secondary'}`}>
                             {previewUrl ? (
                                 <>
                                     <img src={previewUrl} alt="Logo Preview" className="w-full h-full object-contain p-4" />
@@ -192,7 +192,7 @@ export default function ClientEditorPage() {
                                     </div>
                                 </>
                             ) : (
-                                <div className="flex flex-col items-center text-[#737373] group-hover:text-[#E09B6B] transition-colors">
+                                <div className="flex flex-col items-center text-muted-foreground group-hover:text-primary transition-colors">
                                     <ImageIcon size={32} className="mb-2 opacity-50" />
                                     <span className="text-[10px] font-bold uppercase tracking-widest">Logo da Empresa</span>
                                 </div>
@@ -201,8 +201,8 @@ export default function ClientEditorPage() {
                     </div>
 
                     {/* Identidade */}
-                    <div className="bg-secondary p-6 rounded-lg border border-[#404040] shadow-sm">
-                        <h3 className="text-xs font-bold uppercase tracking-widest text-[#E09B6B] mb-6 flex items-center gap-2">
+                    <div className="bg-secondary p-6 rounded-lg border border-secondary shadow-sm">
+                        <h3 className="text-xs font-bold uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
                             <User size={14} /> Identidade
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -210,9 +210,9 @@ export default function ClientEditorPage() {
                             <InputGroup label="Empresa" name="company_name" value={formData.company_name} onChange={handleChange} icon={<Globe size={16}/>} />
                             <InputGroup label="CPF / CNPJ" name="cpf_cnpj" value={formData.cpf_cnpj} onChange={handleChange} icon={<User size={16}/>} />
                             <div>
-                                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">Status</label>
+                                <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Status</label>
                                 <div className="relative">
-                                    <select name="status" value={formData.status} onChange={handleChange} className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none appearance-none cursor-pointer">
+                                    <select name="status" value={formData.status} onChange={handleChange} className="w-full bg-secondary border border-secondary rounded-md px-4 py-3 text-sm text-foreground focus:border-primary outline-none appearance-none cursor-pointer">
                                         <option value="active">Ativo (Cliente)</option>
                                         <option value="lead">Lead (Negociação)</option>
                                         <option value="churned">Churned (Ex-Cliente)</option>
@@ -223,8 +223,8 @@ export default function ClientEditorPage() {
                     </div>
 
                     {/* Contato */}
-                    <div className="bg-secondary p-6 rounded-lg border border-[#404040] shadow-sm">
-                        <h3 className="text-xs font-bold uppercase tracking-widest text-[#E09B6B] mb-6 flex items-center gap-2">
+                    <div className="bg-secondary p-6 rounded-lg border border-secondary shadow-sm">
+                        <h3 className="text-xs font-bold uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
                             <Globe size={14} /> Contato Digital
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -236,24 +236,24 @@ export default function ClientEditorPage() {
                     </div>
 
                     {/* Operacional */}
-                    <div className="bg-secondary p-6 rounded-lg border border-[#404040] shadow-sm">
-                        <h3 className="text-xs font-bold uppercase tracking-widest text-[#E09B6B] mb-6 flex items-center gap-2">
+                    <div className="bg-secondary p-6 rounded-lg border border-secondary shadow-sm">
+                        <h3 className="text-xs font-bold uppercase tracking-widest text-primary mb-6 flex items-center gap-2">
                             <MapPin size={14} /> Operacional
                         </h3>
                         <div className="space-y-5">
                             <InputGroup label="Pasta do Drive (Link)" name="drive_folder_url" value={formData.drive_folder_url} onChange={handleChange} icon={<Globe size={16}/>} />
                             <InputGroup label="Endereço Completo" name="address" value={formData.address} onChange={handleChange} icon={<MapPin size={16}/>} />
                             <div>
-                                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#9ca3af] mb-1.5">Notas Internas</label>
-                                <textarea name="notes" rows={4} value={formData.notes || ''} onChange={handleChange} className="w-full bg-secondary border border-[#404040] rounded-md px-4 py-3 text-sm text-[#D4D4D4] placeholder-[#5c5c5c] focus:border-[#E09B6B] outline-none transition-all resize-none" />
+                                <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Notas Internas</label>
+                                <textarea name="notes" rows={4} value={formData.notes || ''} onChange={handleChange} className="w-full bg-secondary border border-secondary rounded-md px-4 py-3 text-sm text-foreground placeholder-muted-foreground focus:border-primary outline-none transition-all resize-none" />
                             </div>
                         </div>
                     </div>
 
                     {/* Footer Actions */}
                     <div className="flex justify-end gap-4 pt-4">
-                        <button type="button" onClick={() => navigate(-1)} className="px-6 py-3 rounded-md text-xs font-bold uppercase tracking-widest text-[#9ca3af] hover:bg-secondary transition-colors">Cancelar</button>
-                        <button type="submit" disabled={isLoading} className="bg-[#5D4037] hover:bg-[#4E342E] text-[#FFFFFF] px-8 py-3 rounded-md text-xs font-bold uppercase tracking-widest flex items-center gap-2 shadow-sm border border-[#5D4037] transition-all disabled:opacity-50 active:scale-95">
+                        <button type="button" onClick={() => navigate(-1)} className="px-6 py-3 rounded-md text-xs font-bold uppercase tracking-widest text-muted-foreground hover:bg-secondary transition-colors">Cancelar</button>
+                        <button type="submit" disabled={isLoading} className="bg-[hsl(var(--spiritual))] hover:bg-[hsl(var(--spiritual-dark))] text-foreground px-8 py-3 rounded-md text-xs font-bold uppercase tracking-widest flex items-center gap-2 shadow-sm border border-[hsl(var(--spiritual))] transition-all disabled:opacity-50 active:scale-95">
                             {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
                             Salvar Dados
                         </button>

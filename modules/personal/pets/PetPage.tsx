@@ -248,7 +248,7 @@ export default function PetPage() {
         </p>
         <button 
           onClick={() => setIsPetModalOpen(true)}
-          className="bg-primary hover:bg-[#4a5740] text-white px-8 py-4 rounded-2xl font-bold uppercase tracking-widest shadow-xl transition-all active:scale-95 flex items-center gap-2"
+          className="bg-primary hover:bg-[hsl(var(--pets-hover))] text-white px-8 py-4 rounded-2xl font-bold uppercase tracking-widest shadow-xl transition-all active:scale-95 flex items-center gap-2"
         >
           <Plus size={18} /> Adicionar Pet
         </button>
@@ -267,7 +267,7 @@ export default function PetPage() {
           actions={
             <button 
               onClick={() => setIsPetModalOpen(true)}
-              className="bg-[#3C3633] hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest shadow-lg transition-all active:scale-95"
+              className="bg-[hsl(var(--sommelier))] hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest shadow-lg transition-all active:scale-95"
             >
               <Plus size={14} /> Novo Pet
             </button>
@@ -454,7 +454,7 @@ export default function PetPage() {
                       onClick={() => setFilterCategory('all')}
                       className={`
                           px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest border transition-all whitespace-nowrap
-                          ${filterCategory === 'all' ? 'bg-[#3C3633] text-white border-[#3C3633] shadow-sm' : 'bg-card text-muted-foreground border-border hover:border-border'}
+                          ${filterCategory === 'all' ? 'bg-[hsl(var(--sommelier))] text-white border-[hsl(var(--sommelier))] shadow-sm' : 'bg-card text-muted-foreground border-border hover:border-border'}
                       `}
                   >
                       Todos

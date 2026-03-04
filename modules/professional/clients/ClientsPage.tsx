@@ -11,10 +11,10 @@ import { AgencyStatus } from '../types/agency.types';
 
 const StatusBadge: React.FC<{ status: AgencyStatus }> = ({ status }) => {
   const styles: Record<string, string> = {
-    active: 'bg-primary/20 text-[#60a887] border-[#20523e]', // Muted Emerald
-    lead: 'bg-[#3d2d14]/20 text-[#a88760] border-[#523e20]',   // Muted Amber
-    churned: 'bg-secondary text-[#737373] border-[#404040]',
-    archived: 'bg-background text-[#5c5c5c] border-[#2C2C2C]'
+    active: 'bg-primary/20 text-[hsl(var(--health-light))] border-[hsl(var(--health-light))]', // Muted Emerald
+    lead: 'bg-[hsl(var(--spiritual-dark))]/20 text-[hsl(var(--spiritual-light))] border-[hsl(var(--spiritual))]',   // Muted Amber
+    churned: 'bg-secondary text-muted-foreground border-secondary',
+    archived: 'bg-background text-muted-foreground border-[hsl(var(--card))]'
   };
 
   const labels: Record<string, string> = {
@@ -78,7 +78,7 @@ export default function ClientsPage() {
         </div>
         <div className="grid grid-cols-1 gap-4">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-40 bg-secondary rounded-lg border border-[#404040]"></div>
+            <div key={i} className="h-40 bg-secondary rounded-lg border border-secondary"></div>
           ))}
         </div>
       </div>
@@ -91,23 +91,23 @@ export default function ClientsPage() {
       {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-[#FFFFFF] tracking-tight">Carteira de Clientes</h1>
-          <p className="text-[#9ca3af] text-sm mt-1">Gerencie relacionamentos e dados comerciais.</p>
+          <h1 className="text-3xl font-bold text-foreground tracking-tight">Carteira de Clientes</h1>
+          <p className="text-muted-foreground text-sm mt-1">Gerencie relacionamentos e dados comerciais.</p>
         </div>
 
         <div className="flex gap-3 w-full md:w-auto">
           <div className="relative flex-1 md:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#737373]" size={16} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
             <input 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Buscar cliente..."
-              className="w-full bg-secondary border border-[#404040] rounded-md pl-9 pr-4 py-2.5 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-colors"
+              className="w-full bg-secondary border border-secondary rounded-md pl-9 pr-4 py-2.5 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-primary transition-colors"
             />
           </div>
           <button 
             onClick={handleNewClient}
-            className="bg-[#5D4037] hover:bg-[#4E342E] text-[#FFFFFF] px-4 py-2.5 rounded-md flex items-center gap-2 text-sm font-medium border border-[#5D4037] active:scale-95 transition-all whitespace-nowrap"
+            className="bg-[hsl(var(--spiritual))] hover:bg-[hsl(var(--spiritual-dark))] text-foreground px-4 py-2.5 rounded-md flex items-center gap-2 text-sm font-medium border border-[hsl(var(--spiritual))] active:scale-95 transition-all whitespace-nowrap"
           >
             <Plus size={16} /> <span className="hidden sm:inline">Novo Cliente</span>
           </button>
@@ -116,17 +116,17 @@ export default function ClientsPage() {
 
       {/* EMPTY STATE */}
       {(!clients || clients.length === 0) ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-card border border-dashed border-[#404040] rounded-lg">
-          <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4 text-[#737373]">
+        <div className="flex flex-col items-center justify-center py-20 bg-card border border-dashed border-secondary rounded-lg">
+          <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4 text-muted-foreground">
             <Users size={24} />
           </div>
-          <h3 className="text-lg font-bold text-[#FFFFFF] mb-2">Sua carteira está vazia</h3>
-          <p className="text-[#9ca3af] text-sm mb-6 max-w-xs text-center">
+          <h3 className="text-lg font-bold text-foreground mb-2">Sua carteira está vazia</h3>
+          <p className="text-muted-foreground text-sm mb-6 max-w-xs text-center">
             Cadastre seu primeiro cliente para começar a gerenciar projetos.
           </p>
           <button 
             onClick={handleNewClient}
-            className="text-[#E09B6B] font-bold text-xs uppercase tracking-widest hover:underline"
+            className="text-primary font-bold text-xs uppercase tracking-widest hover:underline"
           >
             + Cadastrar Cliente
           </button>
@@ -138,10 +138,10 @@ export default function ClientsPage() {
             <div 
               key={client.id}
               onClick={() => navigate(`${client.id}`)}
-              className="group bg-secondary rounded-lg border border-[#404040] hover:border-[#737373] transition-all flex flex-col sm:flex-row overflow-hidden cursor-pointer"
+              className="group bg-secondary rounded-lg border border-secondary hover:border-muted-foreground transition-all flex flex-col sm:flex-row overflow-hidden cursor-pointer"
             >
               {/* --- ESQUERDA: LOGO (1/4 Width) --- */}
-              <div className="relative w-full sm:w-48 bg-card border-b sm:border-b-0 sm:border-r border-[#404040] flex items-center justify-center shrink-0 h-40 sm:h-auto">
+              <div className="relative w-full sm:w-48 bg-card border-b sm:border-b-0 sm:border-r border-secondary flex items-center justify-center shrink-0 h-40 sm:h-auto">
                 {client.logo_url ? (
                   <img 
                     src={client.logo_url} 
@@ -156,7 +156,7 @@ export default function ClientsPage() {
                 ) : null}
                 
                 {/* Fallback Display */}
-                <div className={`w-full h-full flex items-center justify-center text-[#404040] font-black text-4xl group-hover:text-[#525252] transition-colors ${client.logo_url ? 'hidden' : 'flex'}`}>
+                <div className={`w-full h-full flex items-center justify-center text-secondary font-black text-4xl group-hover:text-[hsl(var(--muted-foreground))] transition-colors ${client.logo_url ? 'hidden' : 'flex'}`}>
                     {client.company_name 
                       ? client.company_name.substring(0, 2).toUpperCase() 
                       : client.name.substring(0, 2).toUpperCase()}
@@ -169,10 +169,10 @@ export default function ClientsPage() {
                 <div className="space-y-3">
                   <div className="flex flex-col-reverse sm:flex-row sm:items-start justify-between gap-4">
                     <div className="min-w-0">
-                      <h3 className="text-xl font-bold text-[#E5E5E5] group-hover:text-[#E09B6B] transition-colors truncate">
+                      <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors truncate">
                           {client.name}
                       </h3>
-                      <div className="flex items-center gap-2 text-sm text-[#9ca3af] mt-1 font-mono">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1 font-mono">
                           <Building2 size={12} className="shrink-0" />
                           <span className="truncate">{client.company_name || 'Cliente Particular'}</span>
                       </div>
@@ -183,7 +183,7 @@ export default function ClientsPage() {
                   </div>
 
                   {client.address && (
-                    <div className="flex items-start gap-2 text-xs text-[#737373] max-w-lg">
+                    <div className="flex items-start gap-2 text-xs text-muted-foreground max-w-lg">
                       <MapPin size={10} className="shrink-0 mt-0.5" /> 
                       <span className="line-clamp-1">{client.address}</span>
                     </div>
@@ -191,7 +191,7 @@ export default function ClientsPage() {
                 </div>
 
                 {/* Footer: Ações */}
-                <div className="mt-5 pt-3 border-t border-[#404040] flex flex-wrap items-center justify-between gap-4">
+                <div className="mt-5 pt-3 border-t border-secondary flex flex-wrap items-center justify-between gap-4">
                     <div className="flex items-center gap-2 flex-wrap">
                         {client.phone && (
                             <a 
@@ -199,7 +199,7 @@ export default function ClientsPage() {
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="p-1.5 rounded bg-secondary text-[#9ca3af] hover:text-[#E09B6B] transition-all"
+                                className="p-1.5 rounded bg-secondary text-muted-foreground hover:text-primary transition-all"
                                 title="WhatsApp"
                             >
                                 <MessageCircle size={16} />
@@ -212,7 +212,7 @@ export default function ClientsPage() {
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="p-1.5 rounded bg-secondary text-[#9ca3af] hover:text-[#E09B6B] transition-all"
+                                className="p-1.5 rounded bg-secondary text-muted-foreground hover:text-primary transition-all"
                                 title="Instagram"
                             >
                                 <Instagram size={16} />
@@ -225,7 +225,7 @@ export default function ClientsPage() {
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="p-1.5 rounded bg-secondary text-[#9ca3af] hover:text-[#E09B6B] transition-all"
+                                className="p-1.5 rounded bg-secondary text-muted-foreground hover:text-primary transition-all"
                                 title="Drive"
                             >
                                 <Folder size={16} />
@@ -236,7 +236,7 @@ export default function ClientsPage() {
                     <div className="flex items-center gap-2 shrink-0 ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
                         <button 
                             onClick={(e) => { e.stopPropagation(); navigate(`${client.id}`); }}
-                            className="p-1.5 text-[#9ca3af] hover:text-[#E09B6B] transition-colors"
+                            className="p-1.5 text-muted-foreground hover:text-primary transition-colors"
                             title="Editar"
                         >
                             <Edit size={16} />
@@ -244,7 +244,7 @@ export default function ClientsPage() {
 
                         <button 
                             onClick={(e) => { e.stopPropagation(); handleRequestDelete(client.id); }}
-                            className="p-1.5 text-[#9ca3af] hover:text-red-400 transition-colors"
+                            className="p-1.5 text-muted-foreground hover:text-red-400 transition-colors"
                             title="Excluir"
                         >
                             <Trash2 size={16} />
@@ -261,7 +261,7 @@ export default function ClientsPage() {
       {clientToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
           <div 
-            className="w-full max-w-md bg-[#1e1e1e] border border-[#404040] rounded-xl shadow-2xl p-6 transform transition-all scale-100"
+            className="w-full max-w-md bg-card border border-secondary rounded-xl shadow-2xl p-6 transform transition-all scale-100"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start gap-4">
@@ -270,7 +270,7 @@ export default function ClientsPage() {
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-white mb-2">Excluir Cliente?</h3>
-                <p className="text-[#9ca3af] text-sm leading-relaxed">
+                <p className="text-muted-foreground text-sm leading-relaxed">
                   Esta ação não pode ser desfeita. Todos os dados associados a este cliente serão removidos permanentemente.
                 </p>
               </div>
@@ -279,7 +279,7 @@ export default function ClientsPage() {
             <div className="flex items-center justify-end gap-3 mt-8">
               <button 
                 onClick={() => setClientToDelete(null)}
-                className="px-4 py-2 text-sm font-medium text-[#D4D4D4] hover:text-white hover:bg-secondary rounded-lg transition-colors"
+                className="px-4 py-2 text-sm font-medium text-foreground hover:text-white hover:bg-secondary rounded-lg transition-colors"
                 disabled={deleteClient.isPending}
               >
                 Cancelar

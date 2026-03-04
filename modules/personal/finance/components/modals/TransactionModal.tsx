@@ -237,7 +237,7 @@ const TransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClose,
 
   if (!isOpen) return null;
 
-  const themeHex = type === 'expense' ? '#A34343' : '#5F6F52';
+  const themeHex = type === 'expense' ? 'hsl(var(--destructive))' : 'sl(var(--health-muted))';
 
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">

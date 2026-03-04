@@ -483,12 +483,12 @@ const updateTransaction = useMutation({
 ```css
 :root {
   /* Módulo Pessoal - Paleta Stone/Cream/Olive */
-  --personal-primary: #78716c;
+  --personal-primary: hsl(var(--muted-foreground));
   --personal-accent: #84cc16;
-  --personal-bg: #fafaf9;
+  --personal-bg: hsl(var(--background));
   
   /* Módulo Profissional - Paleta Dark/Orange */
-  --professional-primary: #1c1917;
+  --professional-primary: hsl(var(--background));
   --professional-accent: #f97316;
   --professional-bg: #0c0a09;
 }

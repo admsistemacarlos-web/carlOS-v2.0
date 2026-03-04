@@ -142,7 +142,7 @@ export default function BookEditor() {
               <Trash2 size={20} />
             </button>
           )}
-          <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 bg-[#3E2723] hover:bg-black text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50">
+          <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 bg-[hsl(var(--spiritual-darker))] hover:bg-black text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50">
             {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             <span className="hidden sm:inline">Salvar</span>
           </button>
@@ -154,7 +154,7 @@ export default function BookEditor() {
 
           <div className="flex-none bg-card p-6 rounded-[1.5rem] border border-border shadow-sm space-y-4">
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-secondary rounded-lg text-[#8D6E63]"><BookIcon size={20} /></div>
+              <div className="p-2 bg-secondary rounded-lg text-[hsl(var(--spiritual-muted))]"><BookIcon size={20} /></div>
               <h2 className="text-lg font-bold text-foreground">Ficha do Livro</h2>
             </div>
 
@@ -194,7 +194,7 @@ export default function BookEditor() {
                   <div className="flex h-12 items-center gap-2 p-2 bg-secondary rounded-xl border border-border">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button key={star} type="button" onClick={() => setFormData({...formData, rating: star})} className="transition-transform hover:scale-110 p-1">
-                        <Star size={24} className={star <= formData.rating ? "fill-[#8D6E63] text-[#8D6E63]" : "text-muted-foreground"} />
+                        <Star size={24} className={star <= formData.rating ? "fill-[hsl(var(--spiritual-muted))] text-[hsl(var(--spiritual-muted))]" : "text-muted-foreground"} />
                       </button>
                     ))}
                     <span className="ml-2 text-xs text-muted-foreground font-bold uppercase tracking-widest">

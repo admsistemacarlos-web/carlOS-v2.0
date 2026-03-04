@@ -24,7 +24,7 @@ export default function CalendarEventsSidebar({ selectedDate, events }: Calendar
 const configs: Record<string, { icon: React.ReactElement; color: string; label: string; path: string }> = {
       task: { 
         icon: <CheckCircle2 size={16} />, 
-        color: 'text-[#E09B6B] bg-[#E09B6B]/10 border-[#E09B6B]/30',
+        color: 'text-primary bg-primary/10 border-primary/30',
         label: 'Demanda',
         path: '/professional/crm'
       },
@@ -45,13 +45,13 @@ const configs: Record<string, { icon: React.ReactElement; color: string; label: 
   };
 
   return (
-    <div className="bg-card border border-[#404040] rounded-2xl p-6 h-full flex flex-col">
-      <div className="mb-4 pb-4 border-b border-[#404040]">
-        <h3 className="text-lg font-bold text-white flex items-center gap-2">
-          <Calendar size={20} className="text-[#E09B6B]" />
+    <div className="bg-card border border-secondary rounded-2xl p-6 h-full flex flex-col">
+      <div className="mb-4 pb-4 border-b border-secondary">
+        <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+          <Calendar size={20} className="text-primary" />
           {format(selectedDate, "d 'de' MMMM", { locale: ptBR })}
         </h3>
-        <p className="text-xs text-[#737373] mt-1">
+        <p className="text-xs text-muted-foreground mt-1">
           {events.length} evento{events.length !== 1 ? 's' : ''} neste dia
         </p>
       </div>
@@ -59,8 +59,8 @@ const configs: Record<string, { icon: React.ReactElement; color: string; label: 
       <div className="flex-1 overflow-y-auto space-y-2">
         {events.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-8">
-            <Calendar size={48} className="text-[#404040] mb-3" />
-            <p className="text-[#737373] text-sm">Nenhum evento neste dia</p>
+            <Calendar size={48} className="text-secondary mb-3" />
+            <p className="text-muted-foreground text-sm">Nenhum evento neste dia</p>
           </div>
         ) : (
           events.map(event => {
@@ -69,18 +69,18 @@ const configs: Record<string, { icon: React.ReactElement; color: string; label: 
               <div
                 key={event.id}
                 onClick={() => navigate(config.path)}
-                className="p-4 bg-secondary hover:bg-secondary border border-[#404040] hover:border-[#E09B6B]/30 rounded-xl cursor-pointer transition-all group"
+                className="p-4 bg-secondary hover:bg-secondary border border-secondary hover:border-primary/30 rounded-xl cursor-pointer transition-all group"
               >
                 <div className="flex items-start gap-3">
                   <div className={`p-2 rounded-lg border ${config.color}`}>
                     {config.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-white text-sm group-hover:text-[#E09B6B] transition-colors truncate">
+                    <h4 className="font-bold text-foreground text-sm group-hover:text-primary transition-colors truncate">
                       {event.title}
                     </h4>
                     {event.description && (
-                      <p className="text-xs text-[#737373] mt-1 truncate">
+                      <p className="text-xs text-muted-foreground mt-1 truncate">
                         {event.description}
                       </p>
                     )}

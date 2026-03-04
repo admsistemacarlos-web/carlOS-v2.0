@@ -76,16 +76,16 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
       />
       
       {/* Modal Content - Notion Dark */}
-      <div className="relative bg-secondary w-full max-w-md rounded-lg shadow-2xl border border-[#404040] flex flex-col overflow-hidden animate-fade-in">
+      <div className="relative bg-secondary w-full max-w-md rounded-lg shadow-2xl border border-secondary flex flex-col overflow-hidden animate-fade-in">
         
         {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b border-[#404040]">
-          <h2 className="text-lg font-bold text-[#FFFFFF] tracking-tight">
+        <div className="flex justify-between items-center p-6 border-b border-secondary">
+          <h2 className="text-lg font-bold text-foreground tracking-tight">
             {clientToEdit ? 'Editar Cliente' : 'Novo Cliente'}
           </h2>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-secondary rounded-md text-[#9ca3af] hover:text-[#FFFFFF] transition-colors"
+            className="p-2 hover:bg-secondary rounded-md text-muted-foreground hover:text-foreground transition-colors"
           >
             <X size={18} />
           </button>
@@ -96,7 +96,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
           
           {/* Nome */}
           <div className="space-y-2">
-            <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#9ca3af]">
+            <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               <User size={12} /> Nome Completo <span className="text-red-400">*</span>
             </label>
             <input 
@@ -105,39 +105,39 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
               placeholder="Ex: João Silva"
-              className="w-full bg-secondary border border-[#404040] rounded-md p-3 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-all"
+              className="w-full bg-secondary border border-secondary rounded-md p-3 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-primary transition-all"
             />
           </div>
 
           {/* Empresa */}
           <div className="space-y-2">
-            <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#9ca3af]">
+            <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               <Building2 size={12} /> Empresa
             </label>
             <input 
               value={formData.company_name}
               onChange={(e) => setFormData({...formData, company_name: e.target.value})}
               placeholder="Ex: Tech Solutions Ltda"
-              className="w-full bg-secondary border border-[#404040] rounded-md p-3 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-all"
+              className="w-full bg-secondary border border-secondary rounded-md p-3 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-primary transition-all"
             />
           </div>
 
           {/* Telefone */}
           <div className="space-y-2">
-            <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#9ca3af]">
+            <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               <Phone size={12} /> Telefone / WhatsApp
             </label>
             <input 
               value={formData.phone}
               onChange={(e) => setFormData({...formData, phone: e.target.value})}
               placeholder="(11) 99999-9999"
-              className="w-full bg-secondary border border-[#404040] rounded-md p-3 text-sm text-[#D4D4D4] placeholder-[#737373] outline-none focus:border-[#E09B6B] transition-all"
+              className="w-full bg-secondary border border-secondary rounded-md p-3 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-primary transition-all"
             />
           </div>
 
           {/* Status */}
           <div className="space-y-2">
-            <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#9ca3af]">
+            <label className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               <Tag size={12} /> Status Inicial
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -146,8 +146,8 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
                 onClick={() => setFormData({...formData, status: 'lead'})}
                 className={`py-2 rounded-md text-[10px] font-bold uppercase tracking-wider border transition-all ${
                   formData.status === 'lead' 
-                    ? 'bg-[#3d2d14]/40 border-[#523e20] text-[#E09B6B]' // Muted Amber
-                    : 'bg-secondary border-[#404040] text-[#737373] hover:text-[#D4D4D4]'
+                    ? 'bg-[hsl(var(--spiritual-dark))]/40 border-[hsl(var(--spiritual))] text-primary' // Muted Amber
+                    : 'bg-secondary border-secondary text-muted-foreground hover:text-foreground'
                 }`}
               >
                 Lead
@@ -157,8 +157,8 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
                 onClick={() => setFormData({...formData, status: 'active'})}
                 className={`py-2 rounded-md text-[10px] font-bold uppercase tracking-wider border transition-all ${
                   formData.status === 'active' 
-                    ? 'bg-primary/40 border-[#20523e] text-[#60a887]' // Muted Emerald
-                    : 'bg-secondary border-[#404040] text-[#737373] hover:text-[#D4D4D4]'
+                    ? 'bg-primary/40 border-[hsl(var(--health-light))] text-[hsl(var(--health-light))]' // Muted Emerald
+                    : 'bg-secondary border-secondary text-muted-foreground hover:text-foreground'
                 }`}
               >
                 Ativo
@@ -168,8 +168,8 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
                 onClick={() => setFormData({...formData, status: 'churned'})}
                 className={`py-2 rounded-md text-[10px] font-bold uppercase tracking-wider border transition-all ${
                   formData.status === 'churned' 
-                    ? 'bg-card border-[#404040] text-[#D4D4D4]' 
-                    : 'bg-secondary border-[#404040] text-[#737373] hover:text-[#D4D4D4]'
+                    ? 'bg-card border-secondary text-foreground' 
+                    : 'bg-secondary border-secondary text-muted-foreground hover:text-foreground'
                 }`}
               >
                 Churned
@@ -183,14 +183,14 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest text-[#9ca3af] hover:bg-secondary transition-colors disabled:opacity-50"
+              className="flex-1 py-2.5 rounded-md text-xs font-bold uppercase tracking-widest text-muted-foreground hover:bg-secondary transition-colors disabled:opacity-50"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-[#5D4037] hover:bg-[#4E342E] text-[#FFFFFF] py-2.5 rounded-md text-xs font-bold uppercase tracking-widest shadow-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed border border-[#5D4037]"
+              className="flex-1 bg-[hsl(var(--spiritual))] hover:bg-[hsl(var(--spiritual-dark))] text-foreground py-2.5 rounded-md text-xs font-bold uppercase tracking-widest shadow-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed border border-[hsl(var(--spiritual))]"
             >
               {isSubmitting ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
               {isSubmitting ? 'Salvando...' : 'Salvar'}

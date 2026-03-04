@@ -196,7 +196,7 @@ export default function WellnessPage() {
               Hoje
             </button>
 
-            <button onClick={() => navigate('/personal/health/wellness/new')} className="bg-primary hover:bg-[#0f2e22] text-white px-4 py-2 rounded-xl flex items-center gap-1.5 text-xs font-bold shadow-sm transition-all active:scale-95 whitespace-nowrap">
+            <button onClick={() => navigate('/personal/health/wellness/new')} className="bg-primary hover:bg-[hsl(var(--health-hover))] text-white px-4 py-2 rounded-xl flex items-center gap-1.5 text-xs font-bold shadow-sm transition-all active:scale-95 whitespace-nowrap">
               <Plus size={16} /> Novo
             </button>
           </div>
@@ -303,19 +303,19 @@ export default function WellnessPage() {
                     <AreaChart data={weightChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                       <defs>
                         <linearGradient id="colorWeight" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#143d2d" stopOpacity={0.2} />
-                          <stop offset="95%" stopColor="#143d2d" stopOpacity={0} />
+                          <stop offset="5%" stopColor="hsl(var(--health))" stopOpacity={0.2} />
+                          <stop offset="95%" stopColor="hsl(var(--health))" stopOpacity={0} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f5f5f4" />
-                      <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#a8a29e' }} axisLine={false} tickLine={false} tickMargin={10} />
-                      <YAxis domain={['dataMin - 1', 'dataMax + 1']} tick={{ fontSize: 10, fill: '#a8a29e' }} axisLine={false} tickLine={false} />
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--secondary))" />
+                      <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} tickMargin={10} />
+                      <YAxis domain={['dataMin - 1', 'dataMax + 1']} tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} />
                       <Tooltip
-                        contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', fontSize: '12px' }}
+                        contentStyle={{ backgroundColor: 'hsl(var(--background))', borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', fontSize: '12px' }}
                         formatter={(value: any) => [`${value} kg`, 'Peso']}
                         labelFormatter={(label, payload) => payload && payload.length > 0 ? payload[0].payload.fullDate : label}
                       />
-                      <Area type="monotone" dataKey="weight" stroke="#143d2d" strokeWidth={3} fillOpacity={1} fill="url(#colorWeight)" />
+                      <Area type="monotone" dataKey="weight" stroke="hsl(var(--health))" strokeWidth={3} fillOpacity={1} fill="url(#colorWeight)" />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>

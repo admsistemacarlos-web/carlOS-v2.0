@@ -23,9 +23,9 @@ export default function ClientNotesLog({ clientId }: { clientId: string }) {
   };
 
   return (
-    <div className="bg-card p-6 rounded-lg border border-[#404040] shadow-sm h-full flex flex-col">
+    <div className="bg-card p-6 rounded-lg border border-secondary shadow-sm h-full flex flex-col">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xs font-bold uppercase tracking-widest text-[#E09B6B] flex items-center gap-2">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-primary flex items-center gap-2">
           <FileText size={14} /> Notas & Obs
         </h3>
       </div>
@@ -37,12 +37,12 @@ export default function ClientNotesLog({ clientId }: { clientId: string }) {
             onChange={e => setNewNote(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Escreva uma observação rápida... (Ctrl+Enter para salvar)"
-            className="w-full h-24 bg-[#1A1A1A] border border-[#404040] rounded-md p-3 text-sm text-[#D4D4D4] placeholder-[#5c5c5c] outline-none focus:border-[#E09B6B] resize-none"
+            className="w-full h-24 bg-background border border-secondary rounded-md p-3 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-primary resize-none"
         />
         <button 
             onClick={() => handleSave()}
             disabled={!newNote.trim()}
-            className="absolute bottom-3 right-3 p-1.5 bg-[#5D4037] hover:bg-[#4E342E] text-white rounded-md transition-all disabled:opacity-0 shadow-lg border border-[#5D4037]"
+            className="absolute bottom-3 right-3 p-1.5 bg-[hsl(var(--spiritual))] hover:bg-[hsl(var(--spiritual-dark))] text-white rounded-md transition-all disabled:opacity-0 shadow-lg border border-[hsl(var(--spiritual))]"
         >
             <Save size={14} />
         </button>
@@ -51,20 +51,20 @@ export default function ClientNotesLog({ clientId }: { clientId: string }) {
       {/* Lista de Notas (Stream) */}
       <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[500px] custom-scrollbar">
         {isLoading ? (
-            <div className="flex justify-center"><Loader2 className="animate-spin text-[#737373]" size={20} /></div>
+            <div className="flex justify-center"><Loader2 className="animate-spin text-muted-foreground" size={20} /></div>
         ) : notes?.length === 0 ? (
-            <p className="text-center text-[#5c5c5c] text-xs italic">Nenhuma nota registrada.</p>
+            <p className="text-center text-muted-foreground text-xs italic">Nenhuma nota registrada.</p>
         ) : (
             notes?.map(note => (
-                <div key={note.id} className="group relative bg-secondary p-3 rounded-md border border-[#404040] hover:border-[#737373] transition-all">
-                    <p className="text-xs text-[#D4D4D4] whitespace-pre-wrap leading-relaxed">{note.content}</p>
-                    <div className="mt-2 flex justify-between items-center border-t border-[#404040] pt-2">
-                        <span className="text-[9px] text-[#737373] font-mono">
+                <div key={note.id} className="group relative bg-secondary p-3 rounded-md border border-secondary hover:border-muted-foreground transition-all">
+                    <p className="text-xs text-foreground whitespace-pre-wrap leading-relaxed">{note.content}</p>
+                    <div className="mt-2 flex justify-between items-center border-t border-secondary pt-2">
+                        <span className="text-[9px] text-muted-foreground font-mono">
                             {formatDateBr(note.created_at)}
                         </span>
                         <button 
                             onClick={() => deleteNote.mutate(note.id)}
-                            className="text-[#737373] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="text-muted-foreground hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                             <Trash2 size={12} />
                         </button>

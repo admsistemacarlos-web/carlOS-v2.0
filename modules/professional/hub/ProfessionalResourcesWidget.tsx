@@ -140,17 +140,17 @@ export default function ProfessionalResourcesWidget() {
   return (
     <>
       {/* CARD WIDGET */}
-      <div className="bg-secondary rounded-lg border border-[#404040] p-5">
+      <div className="bg-secondary rounded-lg border border-secondary p-5">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
-            <Folder size={18} className="text-[#E09B6B]" />
-            <h3 className="text-[10px] font-bold text-[#D4D4D4] uppercase tracking-widest">
+            <Folder size={18} className="text-primary" />
+            <h3 className="text-[10px] font-bold text-foreground uppercase tracking-widest">
               Central de Recursos
             </h3>
           </div>
           <button
             onClick={() => handleOpenModal()}
-            className="p-1.5 hover:bg-[#404040] text-[#E09B6B] rounded transition-colors"
+            className="p-1.5 hover:bg-secondary text-primary rounded transition-colors"
             title="Adicionar Recurso"
           >
             <Plus size={16} />
@@ -159,14 +159,14 @@ export default function ProfessionalResourcesWidget() {
 
         {isLoading ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="animate-spin text-[#737373]" size={20} />
+            <Loader2 className="animate-spin text-muted-foreground" size={20} />
           </div>
         ) : !resources || resources.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-[#737373] text-xs mb-2">Nenhum recurso adicionado</p>
+            <p className="text-muted-foreground text-xs mb-2">Nenhum recurso adicionado</p>
             <button
               onClick={() => handleOpenModal()}
-              className="text-[#E09B6B] hover:text-[#E09B6B]/80 text-xs font-bold"
+              className="text-primary hover:text-primary/80 text-xs font-bold"
             >
               + Adicionar primeiro recurso
             </button>
@@ -176,25 +176,25 @@ export default function ProfessionalResourcesWidget() {
             {resources.map((resource) => (
               <div
                 key={resource.id}
-                className="group bg-card border border-[#404040] hover:border-[#E09B6B]/30 rounded-lg p-3 transition-all"
+                className="group bg-card border border-secondary hover:border-primary/30 rounded-lg p-3 transition-all"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
                     {/* ICON & TITLE */}
                     <div className="flex items-center gap-2 mb-1">
                       {resource.resource_type === 'link' ? (
-                        <LinkIcon size={14} className="text-[#E09B6B] flex-shrink-0" />
+                        <LinkIcon size={14} className="text-primary flex-shrink-0" />
                       ) : (
-                        <FileText size={14} className="text-[#E09B6B] flex-shrink-0" />
+                        <FileText size={14} className="text-primary flex-shrink-0" />
                       )}
-                      <span className="text-white font-bold text-sm truncate">
+                      <span className="text-foreground font-bold text-sm truncate">
                         {resource.title}
                       </span>
                     </div>
 
                     {/* DESCRIPTION */}
                     {resource.description && (
-                      <p className="text-[#737373] text-xs mb-2 line-clamp-1">
+                      <p className="text-muted-foreground text-xs mb-2 line-clamp-1">
                         {resource.description}
                       </p>
                     )}
@@ -206,7 +206,7 @@ export default function ProfessionalResourcesWidget() {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="text-[#E09B6B] hover:text-[#E09B6B]/80 text-xs flex items-center gap-1 group/link"
+                        className="text-primary hover:text-primary/80 text-xs flex items-center gap-1 group/link"
                       >
                         <span className="truncate">{resource.url}</span>
                         <ExternalLink size={10} className="flex-shrink-0 group-hover/link:translate-x-0.5 transition-transform" />
@@ -218,13 +218,13 @@ export default function ProfessionalResourcesWidget() {
                       <div>
                         <button
                           onClick={() => toggleNote(resource.id)}
-                          className="text-[#737373] hover:text-[#D4D4D4] text-xs transition-colors"
+                          className="text-muted-foreground hover:text-foreground text-xs transition-colors"
                         >
                           {expandedNotes.has(resource.id) ? '▼ Recolher' : '▶ Ver nota'}
                         </button>
                         {expandedNotes.has(resource.id) && (
-                          <div className="mt-2 bg-[#1A1A1A] border border-[#333] rounded p-2">
-                            <p className="text-[#D4D4D4] text-xs whitespace-pre-wrap leading-relaxed">
+                          <div className="mt-2 bg-background border border-border rounded p-2">
+                            <p className="text-foreground text-xs whitespace-pre-wrap leading-relaxed">
                               {resource.note_content}
                             </p>
                           </div>
@@ -237,14 +237,14 @@ export default function ProfessionalResourcesWidget() {
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => handleOpenModal(resource)}
-                      className="p-1.5 hover:bg-secondary text-[#737373] hover:text-[#E09B6B] rounded transition-colors"
+                      className="p-1.5 hover:bg-secondary text-muted-foreground hover:text-primary rounded transition-colors"
                       title="Editar"
                     >
                       <Edit2 size={14} />
                     </button>
                     <button
                       onClick={() => handleDelete(resource.id)}
-                      className="p-1.5 hover:bg-red-900/20 text-[#737373] hover:text-red-400 rounded transition-colors"
+                      className="p-1.5 hover:bg-red-900/20 text-muted-foreground hover:text-red-400 rounded transition-colors"
                       title="Excluir"
                     >
                       <Trash2 size={14} />
@@ -260,14 +260,14 @@ export default function ProfessionalResourcesWidget() {
       {/* MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-card border border-[#404040] rounded-2xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-card border border-secondary rounded-2xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-bold text-white">
+              <h3 className="text-lg font-bold text-foreground">
                 {editingResource ? 'Editar Recurso' : 'Novo Recurso'}
               </h3>
               <button
                 onClick={handleCloseModal}
-                className="p-2 hover:bg-secondary text-[#737373] hover:text-white rounded-lg transition-colors"
+                className="p-2 hover:bg-secondary text-muted-foreground hover:text-foreground rounded-lg transition-colors"
               >
                 <X size={20} />
               </button>
@@ -281,8 +281,8 @@ export default function ProfessionalResourcesWidget() {
                     onClick={() => setFormType('link')}
                     className={`flex-1 py-3 rounded-lg border text-sm font-bold uppercase tracking-wider transition-all ${
                       formType === 'link'
-                        ? 'bg-[#E09B6B] text-[#1a1a1a] border-[#E09B6B]'
-                        : 'bg-secondary text-[#737373] border-[#404040] hover:border-[#E09B6B]/50'
+                        ? 'bg-primary text-background border-primary'
+                        : 'bg-secondary text-muted-foreground border-secondary hover:border-primary/50'
                     }`}
                   >
                     <LinkIcon size={16} className="inline mr-2" />
@@ -292,8 +292,8 @@ export default function ProfessionalResourcesWidget() {
                     onClick={() => setFormType('note')}
                     className={`flex-1 py-3 rounded-lg border text-sm font-bold uppercase tracking-wider transition-all ${
                       formType === 'note'
-                        ? 'bg-[#E09B6B] text-[#1a1a1a] border-[#E09B6B]'
-                        : 'bg-secondary text-[#737373] border-[#404040] hover:border-[#E09B6B]/50'
+                        ? 'bg-primary text-background border-primary'
+                        : 'bg-secondary text-muted-foreground border-secondary hover:border-primary/50'
                     }`}
                   >
                     <FileText size={16} className="inline mr-2" />
@@ -304,7 +304,7 @@ export default function ProfessionalResourcesWidget() {
 
               {/* TITLE */}
               <div>
-                <label className="block text-xs font-bold text-[#737373] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
                   Título *
                 </label>
                 <input
@@ -312,13 +312,13 @@ export default function ProfessionalResourcesWidget() {
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
                   placeholder="Ex: Proposta Comercial HTML, PDF Institucional"
-                  className="w-full bg-secondary border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
+                  className="w-full bg-secondary border border-secondary text-foreground rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary"
                 />
               </div>
 
               {/* DESCRIPTION */}
               <div>
-                <label className="block text-xs font-bold text-[#737373] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
                   Descrição (opcional)
                 </label>
                 <input
@@ -326,14 +326,14 @@ export default function ProfessionalResourcesWidget() {
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
                   placeholder="Breve descrição"
-                  className="w-full bg-secondary border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
+                  className="w-full bg-secondary border border-secondary text-foreground rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary"
                 />
               </div>
 
               {/* URL (if link) */}
               {formType === 'link' && (
                 <div>
-                  <label className="block text-xs font-bold text-[#737373] uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
                     URL *
                   </label>
                   <input
@@ -341,7 +341,7 @@ export default function ProfessionalResourcesWidget() {
                     value={formUrl}
                     onChange={(e) => setFormUrl(e.target.value)}
                     placeholder="https://..."
-                    className="w-full bg-secondary border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B]"
+                    className="w-full bg-secondary border border-secondary text-foreground rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary"
                   />
                 </div>
               )}
@@ -349,7 +349,7 @@ export default function ProfessionalResourcesWidget() {
               {/* NOTE CONTENT (if note) */}
               {formType === 'note' && (
                 <div>
-                  <label className="block text-xs font-bold text-[#737373] uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
                     Conteúdo
                   </label>
                   <textarea
@@ -357,7 +357,7 @@ export default function ProfessionalResourcesWidget() {
                     onChange={(e) => setFormNote(e.target.value)}
                     placeholder="Escreva suas anotações aqui..."
                     rows={8}
-                    className="w-full bg-secondary border border-[#404040] text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#E09B6B] resize-none"
+                    className="w-full bg-secondary border border-secondary text-foreground rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary resize-none"
                   />
                 </div>
               )}
@@ -367,7 +367,7 @@ export default function ProfessionalResourcesWidget() {
                 <button
                   onClick={handleSubmit}
                   disabled={createResource.isPending || updateResource.isPending}
-                  className="flex-1 bg-[#E09B6B] hover:bg-[#E09B6B]/90 text-[#1a1a1a] py-2.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+                  className="flex-1 bg-primary hover:bg-primary/90 text-background py-2.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
                 >
                   {(createResource.isPending || updateResource.isPending) ? (
                     <><Loader2 size={16} className="animate-spin" /> Salvando...</>
@@ -377,7 +377,7 @@ export default function ProfessionalResourcesWidget() {
                 </button>
                 <button
                   onClick={handleCloseModal}
-                  className="px-6 py-2.5 bg-secondary hover:bg-[#333] text-[#737373] rounded-lg text-sm font-bold transition-colors"
+                  className="px-6 py-2.5 bg-secondary hover:bg-border text-muted-foreground rounded-lg text-sm font-bold transition-colors"
                 >
                   Cancelar
                 </button>

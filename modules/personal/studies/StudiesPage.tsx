@@ -22,13 +22,13 @@ const HubCard: React.FC<{
          {React.cloneElement(icon as React.ReactElement<any>, { size: 32, strokeWidth: 1.5 })}
        </div>
 
-       <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-500 text-[#8D6E63]">
+       <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-500 text-[hsl(var(--spiritual-muted))]">
          <ArrowRight size={20} />
        </div>
     </div>
 
     <div className="relative z-10 mt-auto">
-      <h3 className="text-xl font-bold text-foreground mb-1 tracking-tight group-hover:text-[#3E2723] transition-colors">{title}</h3>
+      <h3 className="text-xl font-bold text-foreground mb-1 tracking-tight group-hover:text-[hsl(var(--spiritual-darker))] transition-colors">{title}</h3>
       <p className="text-sm text-muted-foreground font-medium group-hover:text-muted-foreground transition-colors">{subtitle}</p>
     </div>
   </button>
@@ -59,7 +59,7 @@ export default function StudiesPage() {
             subtitle="Encontre anotações em todo o acervo."
             icon={<Search />}
             onClick={() => navigate('/personal/studies/search')}
-            color="text-[#8D6E63]"
+            color="text-[hsl(var(--spiritual-muted))]"
           />
 
           {/* Placeholder para futuras features ou livros */}

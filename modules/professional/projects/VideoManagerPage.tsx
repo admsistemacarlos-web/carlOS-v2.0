@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatDateBr } from '../../personal/finance/utils/dateHelpers';
 
 const COLUMNS = [
-  { id: 'video_received', label: 'Recebido', icon: <Clock size={14} className="text-[#9ca3af]" />, color: 'border-[#737373]' },
+  { id: 'video_received', label: 'Recebido', icon: <Clock size={14} className="text-muted-foreground" />, color: 'border-muted-foreground' },
   { id: 'editing', label: 'Em Edição', icon: <Film size={14} className="text-[#60a5fa]" />, color: 'border-[#60a5fa]/50' },
   { id: 'approval', label: 'Aprovação', icon: <Send size={14} className="text-[#fbbf24]" />, color: 'border-[#fbbf24]/50' },
   { id: 'posted', label: 'Postado', icon: <CheckCircle2 size={14} className="text-[#34d399]" />, color: 'border-[#34d399]/50' },
@@ -89,9 +89,9 @@ export default function VideoManagerPage() {
     const isLate = diff < 0 && !isDone;
     const isWarning = diff >= 0 && diff <= 2 && !isDone;
 
-    let cardStyle = "bg-secondary border-[#404040] hover:border-[#E09B6B]/50";
-    if (isLate) cardStyle = "bg-[#3d1414] border-[#522020] hover:border-red-500/50";
-    else if (isWarning) cardStyle = "bg-[#3d2d14] border-[#523e20] hover:border-amber-500/50";
+    let cardStyle = "bg-secondary border-secondary hover:border-primary/50";
+    if (isLate) cardStyle = "bg-[hsl(var(--destructive))] border-[hsl(var(--destructive))] hover:border-red-500/50";
+    else if (isWarning) cardStyle = "bg-[hsl(var(--spiritual-dark))] border-[hsl(var(--spiritual))] hover:border-amber-500/50";
 
     return (
       <div 
@@ -106,38 +106,38 @@ export default function VideoManagerPage() {
               {project.client?.logo_url ? (
                   <img src={project.client.logo_url} className="w-4 h-4 rounded-full object-cover" />
               ) : (
-                  <div className="w-4 h-4 rounded-full bg-secondary text-[#9ca3af] flex items-center justify-center text-[8px] font-bold">
+                  <div className="w-4 h-4 rounded-full bg-secondary text-muted-foreground flex items-center justify-center text-[8px] font-bold">
                       {project.client?.name?.[0] || '?'}
                   </div>
               )}
-              <span className="text-[10px] uppercase font-bold text-[#737373] tracking-wider truncate max-w-[100px]">
+              <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider truncate max-w-[100px]">
                   {project.client?.name}
               </span>
            </div>
            
            <div className="flex items-center gap-1">
              {project.drive_link && (
-               <a href={project.drive_link} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-[#737373] hover:text-[#E09B6B] transition-colors" title="Abrir Drive">
+               <a href={project.drive_link} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-muted-foreground hover:text-primary transition-colors" title="Abrir Drive">
                  <Folder size={12} />
                </a>
              )}
              {project.preview_link && (
-               <a href={project.preview_link} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-[#737373] hover:text-[#E09B6B] transition-colors" title="Ver Preview">
+               <a href={project.preview_link} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-muted-foreground hover:text-primary transition-colors" title="Ver Preview">
                  <ExternalLink size={12} />
                </a>
              )}
-             <button onClick={(e) => handleDeleteClick(e, project.id)} className="text-[#737373] hover:text-red-500 transition-colors p-1 rounded opacity-0 group-hover:opacity-100" title="Excluir">
+             <button onClick={(e) => handleDeleteClick(e, project.id)} className="text-muted-foreground hover:text-red-500 transition-colors p-1 rounded opacity-0 group-hover:opacity-100" title="Excluir">
                   <Trash2 size={12} />
              </button>
            </div>
         </div>
   
-        <h4 className={`text-xs font-bold leading-tight mb-2 line-clamp-2 ${isLate ? 'text-red-200' : 'text-[#E5E5E5]'}`}>
+        <h4 className={`text-xs font-bold leading-tight mb-2 line-clamp-2 ${isLate ? 'text-red-200' : 'text-foreground'}`}>
           {project.title}
         </h4>
         
-        <div className="flex items-center justify-between text-[10px] pt-2 mt-1 border-t border-[#FFFFFF]/5">
-          <span className={`${isLate ? 'text-red-400 font-bold' : isWarning ? 'text-amber-400 font-bold' : 'text-[#737373] font-mono'}`}>
+        <div className="flex items-center justify-between text-[10px] pt-2 mt-1 border-t border-[hsl(var(--background))]/5">
+          <span className={`${isLate ? 'text-red-400 font-bold' : isWarning ? 'text-amber-400 font-bold' : 'text-muted-foreground font-mono'}`}>
             {formatDateBr(project.deadline)}
             {isLate && " (!)"}
           </span>
@@ -145,14 +145,14 @@ export default function VideoManagerPage() {
           <div className="hidden md:block">
             {project.priority === 'high' && <span className="text-red-400 font-bold bg-red-900/20 px-1 rounded">Alta</span>}
             {project.priority === 'medium' && <span className="text-amber-400 font-bold bg-amber-900/20 px-1 rounded">Média</span>}
-            {project.priority === 'low' && <span className="text-[#737373] font-bold bg-secondary px-1 rounded">Baixa</span>}
+            {project.priority === 'low' && <span className="text-muted-foreground font-bold bg-secondary px-1 rounded">Baixa</span>}
           </div>
 
           <div className="md:hidden" onClick={(e) => e.stopPropagation()}>
             <select
               value={project.status}
               onChange={(e) => moveCard({ id: project.id, status: e.target.value })}
-              className="bg-background text-[9px] font-bold uppercase text-[#9ca3af] border border-[#404040] rounded px-1 py-0.5 outline-none focus:border-[#E09B6B]"
+              className="bg-background text-[9px] font-bold uppercase text-muted-foreground border border-secondary rounded px-1 py-0.5 outline-none focus:border-primary"
             >
               {COLUMNS.map(col => <option key={col.id} value={col.id}>{col.label}</option>)}
             </select>
@@ -167,30 +167,30 @@ export default function VideoManagerPage() {
       
       <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-6 shrink-0">
         <div className="w-full md:w-auto">
-          <h1 className="text-2xl font-bold text-[#FFFFFF] flex items-center gap-2">
-            <Film className="text-[#E09B6B]" /> Edição de Vídeo
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <Film className="text-primary" /> Edição de Vídeo
           </h1>
-          <p className="text-[#9ca3af] text-sm">Gerencie o fluxo de produção mensal.</p>
+          <p className="text-muted-foreground text-sm">Gerencie o fluxo de produção mensal.</p>
         </div>
 
-        <div className="flex items-center gap-2 bg-card p-1 rounded-md border border-[#404040]">
-          <button onClick={handlePrevMonth} className="p-1.5 hover:bg-secondary rounded text-[#9ca3af] hover:text-white transition-colors">
+        <div className="flex items-center gap-2 bg-card p-1 rounded-md border border-secondary">
+          <button onClick={handlePrevMonth} className="p-1.5 hover:bg-secondary rounded text-muted-foreground hover:text-white transition-colors">
             <ChevronLeft size={16} />
           </button>
           <div className="px-3 py-1 text-center min-w-[120px]">
-            <span className="text-[10px] uppercase tracking-widest text-[#5c5c5c] font-bold block">Visualizando</span>
-            <span className="text-xs font-bold text-[#E5E5E5] capitalize">
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold block">Visualizando</span>
+            <span className="text-xs font-bold text-foreground capitalize">
               {new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(currentDate)}
             </span>
           </div>
-          <button onClick={handleNextMonth} className="p-1.5 hover:bg-secondary rounded text-[#9ca3af] hover:text-white transition-colors">
+          <button onClick={handleNextMonth} className="p-1.5 hover:bg-secondary rounded text-muted-foreground hover:text-white transition-colors">
             <ChevronRight size={16} />
           </button>
         </div>
 
         <button 
           onClick={() => navigate('new')}
-          className="w-full md:w-auto bg-[#5D4037] hover:bg-[#4E342E] text-[#FFFFFF] px-4 py-2 rounded-md flex items-center justify-center gap-2 text-sm font-medium shadow-sm transition-all border border-[#5D4037]"
+          className="w-full md:w-auto bg-[hsl(var(--spiritual))] hover:bg-[hsl(var(--spiritual-dark))] text-foreground px-4 py-2 rounded-md flex items-center justify-center gap-2 text-sm font-medium shadow-sm transition-all border border-[hsl(var(--spiritual))]"
         >
           <Plus size={16} /> Novo Vídeo
         </button>
@@ -204,7 +204,7 @@ export default function VideoManagerPage() {
           return (
             <div 
               key={col.id} 
-              className="flex flex-col h-auto md:h-full flex-1 min-w-full md:min-w-0 bg-card rounded-lg border border-[#404040] overflow-hidden transition-all duration-300"
+              className="flex flex-col h-auto md:h-full flex-1 min-w-full md:min-w-0 bg-card rounded-lg border border-secondary overflow-hidden transition-all duration-300"
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, col.id)}
             >
@@ -212,22 +212,22 @@ export default function VideoManagerPage() {
                 onClick={() => toggleColumn(col.id)}
                 className={`w-full p-3 flex items-center justify-between border-b-2 ${col.color} bg-secondary cursor-pointer md:cursor-default transition-colors`}
               >
-                <div className="flex items-center gap-2 text-xs font-bold text-[#E5E5E5] uppercase tracking-wide">
+                <div className="flex items-center gap-2 text-xs font-bold text-foreground uppercase tracking-wide">
                   {col.icon}
                   {col.label}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-[#737373] bg-background px-1.5 py-0.5 rounded">
+                  <span className="text-[10px] font-bold text-muted-foreground bg-background px-1.5 py-0.5 rounded">
                     {columnProjects.length}
                   </span>
-                  <ChevronDown size={14} className={`text-[#5c5c5c] transition-transform duration-300 md:hidden ${isOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown size={14} className={`text-muted-foreground transition-transform duration-300 md:hidden ${isOpen ? 'rotate-180' : ''}`} />
                 </div>
               </button>
 
               <div className={`px-2 pt-2 pb-16 space-y-2 transition-all ${isOpen ? 'block' : 'hidden'} md:block md:overflow-y-auto md:flex-1 custom-scrollbar`}>
                 {columnProjects.map(project => renderProjectCard(project))}
                 <div className="h-full min-h-[50px] flex items-center justify-center">
-                    {columnProjects.length === 0 && <span className="text-[10px] text-[#404040] uppercase font-bold">Vazio</span>}
+                    {columnProjects.length === 0 && <span className="text-[10px] text-secondary uppercase font-bold">Vazio</span>}
                 </div>
               </div>
             </div>
@@ -237,17 +237,17 @@ export default function VideoManagerPage() {
 
       {projectToDelete && createPortal(
         <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-card border border-[#404040] w-full max-w-sm rounded-lg p-6 shadow-2xl animate-fade-in relative">
+          <div className="bg-card border border-secondary w-full max-w-sm rounded-lg p-6 shadow-2xl animate-fade-in relative">
             <div className="flex flex-col items-center text-center">
               <div className="w-10 h-10 bg-red-900/20 text-red-500 rounded-full flex items-center justify-center mb-4 border border-red-900/30">
                 <AlertTriangle size={20} />
               </div>
-              <h3 className="text-base font-bold text-[#FFFFFF] mb-2">Excluir Projeto?</h3>
-              <p className="text-[#9ca3af] text-xs mb-6 leading-relaxed">
+              <h3 className="text-base font-bold text-foreground mb-2">Excluir Projeto?</h3>
+              <p className="text-muted-foreground text-xs mb-6 leading-relaxed">
                 Tem certeza? Essa ação é irreversível.
               </p>
               <div className="flex gap-3 w-full">
-                <button onClick={() => setProjectToDelete(null)} className="flex-1 py-2 rounded-md bg-secondary text-[#D4D4D4] font-bold text-xs uppercase tracking-wider hover:bg-[#404040] transition-colors">Cancelar</button>
+                <button onClick={() => setProjectToDelete(null)} className="flex-1 py-2 rounded-md bg-secondary text-foreground font-bold text-xs uppercase tracking-wider hover:bg-secondary transition-colors">Cancelar</button>
                 <button onClick={confirmDelete} className="flex-1 py-2 rounded-md bg-red-900/50 text-red-200 font-bold text-xs uppercase tracking-wider hover:bg-red-900/70 border border-red-900 transition-colors">Confirmar</button>
               </div>
             </div>

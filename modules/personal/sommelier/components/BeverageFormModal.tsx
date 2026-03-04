@@ -244,7 +244,7 @@ export const BeverageFormModal: React.FC<BeverageFormModalProps> = ({ isOpen, on
             <button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full bg-[#3C3633] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-black transition-all shadow-lg active:scale-95"
+                className="w-full bg-[hsl(var(--sommelier))] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-black transition-all shadow-lg active:scale-95"
             >
                 {isSubmitting ? <Loader2 className="animate-spin" /> : <Save size={18} />}
                 Salvar Rótulo

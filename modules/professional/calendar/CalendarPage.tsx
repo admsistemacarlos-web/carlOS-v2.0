@@ -73,7 +73,7 @@ export default function CalendarPage() {
       <header className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+            <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
               <CalendarIcon size={32} className="text-primary" />
               Calendário Profissional
             </h1>
@@ -96,7 +96,7 @@ export default function CalendarPage() {
       <div className="bg-card border border-border rounded-2xl p-6 mb-6 shadow-premium">
         <div className="flex flex-col items-center gap-3 mb-6">
   {/* Mês e Ano centralizados */}
-  <h2 className="text-2xl font-bold text-white">
+  <h2 className="text-2xl font-bold text-foreground">
     {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
   </h2>
 
@@ -190,7 +190,7 @@ export default function CalendarPage() {
 
      {/* Lista de Eventos Próximos */}
       <div className="bg-card border border-border rounded-2xl p-6 shadow-premium">
-        <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
           <Clock size={20} className="text-primary" />
           Próximos Eventos
         </h3>
@@ -221,7 +221,7 @@ export default function CalendarPage() {
                   </div>
 
                   <div className="flex-1">
-                    <h4 className="font-bold text-white">{event.title}</h4>
+                    <h4 className="font-bold text-foreground">{event.title}</h4>
                     <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
                       <span>
                         {eventDate.toLocaleDateString('pt-BR', { 

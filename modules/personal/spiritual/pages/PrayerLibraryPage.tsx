@@ -95,10 +95,10 @@ export default function PrayerLibraryPage() {
     <div 
         key={prayer.id} 
         onClick={() => navigate(`/personal/spiritual/prayers/${prayer.id}`)}
-        className="bg-card p-8 rounded-[2rem] border border-border shadow-sm hover:shadow-xl hover:border-[#D7CCC8] hover:-translate-y-1 transition-all group flex flex-col h-full cursor-pointer relative"
+        className="bg-card p-8 rounded-[2rem] border border-border shadow-sm hover:shadow-xl hover:border-[hsl(var(--spiritual-light))] hover:-translate-y-1 transition-all group flex flex-col h-full cursor-pointer relative"
     >
         <div className="flex justify-between items-start mb-6">
-        <div className="p-3 bg-secondary rounded-2xl text-[#8D6E63]">
+        <div className="p-3 bg-secondary rounded-2xl text-[hsl(var(--spiritual-muted))]">
             <Quote size={20} />
         </div>
         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity absolute top-6 right-6">
@@ -116,8 +116,8 @@ export default function PrayerLibraryPage() {
         {prayer.title}
         </h3>
         
-        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#5D4037] mb-4">
-        <span className="w-4 h-px bg-[#5D4037]"></span>
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[hsl(var(--spiritual))] mb-4">
+        <span className="w-4 h-px bg-[hsl(var(--spiritual))]"></span>
         {prayer.reference || 'Autor Desconhecido'}
         </div>
         
@@ -127,7 +127,7 @@ export default function PrayerLibraryPage() {
         </div>
 
         <div className="mt-6 pt-4 border-t border-border flex justify-end">
-            <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 group-hover:text-[#5D4037] transition-colors">
+            <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 group-hover:text-[hsl(var(--spiritual))] transition-colors">
             Ler Oração <BookOpen size={10} />
             </span>
         </div>
@@ -144,11 +144,11 @@ export default function PrayerLibraryPage() {
             <ArrowLeft size={14} /> Voltar
           </button>
           <h1 className="text-3xl font-bold text-foreground tracking-tight flex items-center gap-3">
-            <Feather className="text-[#5D4037]" /> Biblioteca de Orações
+            <Feather className="text-[hsl(var(--spiritual))]" /> Biblioteca de Orações
           </h1>
           <p className="text-muted-foreground text-sm mt-1">Modelos bíblicos e teológicos para inspiração.</p>
         </div>
-        <button onClick={() => navigate('/personal/spiritual/prayers/new')} className="bg-[#3E2723] hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-lg transition-all active:scale-95">
+        <button onClick={() => navigate('/personal/spiritual/prayers/new')} className="bg-[hsl(var(--spiritual-darker))] hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-lg transition-all active:scale-95">
           <Plus size={18} /> Nova Oração
         </button>
       </div>
@@ -161,7 +161,7 @@ export default function PrayerLibraryPage() {
           <div className="text-center py-20 bg-secondary rounded-[2rem] border border-dashed border-border">
             <Quote className="mx-auto text-muted-foreground mb-3" size={32} />
             <p className="text-muted-foreground">Sua biblioteca de orações está vazia.</p>
-            <button onClick={() => navigate('/personal/spiritual/prayers/new')} className="text-[#5D4037] font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Adicionar Primeiro Modelo</button>
+            <button onClick={() => navigate('/personal/spiritual/prayers/new')} className="text-[hsl(var(--spiritual))] font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Adicionar Primeiro Modelo</button>
           </div>
         ) : (
           <>
@@ -180,7 +180,7 @@ export default function PrayerLibraryPage() {
       {isDeleteOpen && createPortal(
         <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
           <div 
-            className="absolute inset-0 bg-[#3E2723]/20 backdrop-blur-sm transition-opacity" 
+            className="absolute inset-0 bg-[hsl(var(--spiritual-darker))]/20 backdrop-blur-sm transition-opacity" 
             onClick={() => setIsDeleteOpen(false)}
           />
           <div className="relative bg-card w-full max-w-sm rounded-[1.5rem] shadow-2xl p-6 animate-fade-in border border-border">

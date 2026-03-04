@@ -94,10 +94,10 @@ export default function HymnsPage() {
     <div 
         key={hymn.id} 
         onClick={() => navigate(`/personal/spiritual/hymns/${hymn.id}`)}
-        className="bg-card p-6 rounded-[2rem] border border-border shadow-sm hover:shadow-xl hover:border-[#D7CCC8] hover:-translate-y-1 transition-all group flex flex-col cursor-pointer relative"
+        className="bg-card p-6 rounded-[2rem] border border-border shadow-sm hover:shadow-xl hover:border-[hsl(var(--spiritual-light))] hover:-translate-y-1 transition-all group flex flex-col cursor-pointer relative"
     >
         <div className="flex items-start justify-between mb-4">
-            <div className="p-3 bg-secondary rounded-full text-muted-foreground group-hover:text-[#5D4037] transition-colors">
+            <div className="p-3 bg-secondary rounded-full text-muted-foreground group-hover:text-[hsl(var(--spiritual))] transition-colors">
             <Music size={20} />
             </div>
             
@@ -144,10 +144,10 @@ export default function HymnsPage() {
             <ArrowLeft size={14} /> Voltar
           </button>
           <h1 className="text-3xl font-bold text-foreground tracking-tight flex items-center gap-3">
-            <Music className="text-[#5D4037]" /> Hinos & Louvores
+            <Music className="text-[hsl(var(--spiritual))]" /> Hinos & Louvores
           </h1>
         </div>
-        <button onClick={() => navigate('/personal/spiritual/hymns/new')} className="bg-[#3E2723] hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-lg transition-all active:scale-95">
+        <button onClick={() => navigate('/personal/spiritual/hymns/new')} className="bg-[hsl(var(--spiritual-darker))] hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-lg transition-all active:scale-95">
           <Plus size={18} /> Nova Hino
         </button>
       </div>
@@ -159,7 +159,7 @@ export default function HymnsPage() {
           <div className="text-center py-20 bg-secondary rounded-[2rem] border border-dashed border-border">
             <Mic2 className="mx-auto text-muted-foreground mb-3" size={32} />
             <p className="text-muted-foreground">Seu repertório está vazio.</p>
-            <button onClick={() => navigate('/personal/spiritual/hymns/new')} className="text-[#5D4037] font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Adicionar Primeiro Louvor</button>
+            <button onClick={() => navigate('/personal/spiritual/hymns/new')} className="text-[hsl(var(--spiritual))] font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Adicionar Primeiro Louvor</button>
           </div>
         ) : (
           <>

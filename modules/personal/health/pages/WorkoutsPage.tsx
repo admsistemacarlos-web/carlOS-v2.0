@@ -209,7 +209,7 @@ export default function WorkoutsPage() {
         <div className="flex gap-2">
             <button 
                 onClick={() => setIsTemplateFormOpen(true)}
-                className="bg-primary hover:bg-[#0f2e22] text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm flex items-center gap-2"
+                className="bg-primary hover:bg-[hsl(var(--health-hover))] text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm flex items-center gap-2"
             >
                 <Plus size={16} /> Criar Modelo
             </button>
@@ -259,7 +259,7 @@ export default function WorkoutsPage() {
                             )}
                             <button 
                                 onClick={handleSaveExercise} 
-                                className="bg-primary text-primary-foreground px-5 rounded-xl font-bold text-xs uppercase hover:bg-[#0f2e22] transition-colors flex items-center gap-2"
+                                className="bg-primary text-primary-foreground px-5 rounded-xl font-bold text-xs uppercase hover:bg-[hsl(var(--health-hover))] transition-colors flex items-center gap-2"
                             >
                                 {editingExerciseId ? <Save size={16} /> : <Plus size={16} />}
                                 {editingExerciseId ? 'Salvar' : 'Adicionar'}
@@ -351,7 +351,7 @@ export default function WorkoutsPage() {
                             value={newSessionName}
                             onChange={e => setNewSessionName(e.target.value)}
                             placeholder="Ex: Treino Rápido"
-                            className="w-full bg-card border border-border rounded-xl px-4 py-2 text-foreground font-bold outline-none focus:ring-2 focus:ring-[#143d2d]/20 mb-2 text-center"
+                            className="w-full bg-card border border-border rounded-xl px-4 py-2 text-foreground font-bold outline-none focus:ring-2 focus:ring-[hsl(var(--health))]/20 mb-2 text-center"
                             onKeyDown={e => e.key === 'Enter' && handleStart()}
                         />
                         <div className="flex gap-2">

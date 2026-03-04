@@ -77,7 +77,7 @@ const subMonths = (date: Date, amount: number) => {
 // --- CONFIGURAÇÃO VISUAL ---
 const STATUS_CONFIG: Record<TaskStatus, { label: string, color: string, icon: any }> = {
   todo: { label: 'A Fazer', color: 'text-muted-foreground', icon: Circle },
-  in_progress: { label: 'Em Andamento', color: 'text-[#E09B6B]', icon: Clock },
+  in_progress: { label: 'Em Andamento', color: 'text-primary', icon: Clock },
   approval: { label: 'Aprovação', color: 'text-yellow-600', icon: AlertCircle },
   ready_to_post: { label: 'Pronto p/ Postar', color: 'text-purple-400', icon: ArrowRight },
   posted: { label: 'Concluído', color: 'text-emerald-600', icon: CheckCircle2 },
@@ -161,40 +161,40 @@ const TaskModal = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-card w-full max-w-md rounded-lg border border-[#404040] shadow-2xl overflow-hidden">
-        <div className="flex justify-between items-center p-5 border-b border-[#404040]">
-          <h3 className="text-base font-bold text-[#D4D4D4]">{task ? 'Editar Demanda' : 'Nova Demanda'}</h3>
-          <button onClick={onClose} className="text-[#737373] hover:text-[#D4D4D4]"><X size={18} /></button>
+      <div className="bg-card w-full max-w-md rounded-lg border border-secondary shadow-2xl overflow-hidden">
+        <div className="flex justify-between items-center p-5 border-b border-secondary">
+          <h3 className="text-base font-bold text-foreground">{task ? 'Editar Demanda' : 'Nova Demanda'}</h3>
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground"><X size={18} /></button>
         </div>
         
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mb-1.5 block">Título</label>
+            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block">Título</label>
             <input 
               autoFocus
               value={formData.title}
               onChange={e => setFormData({...formData, title: e.target.value})}
-              className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none placeholder-[#5c5c5c]"
+              className="w-full bg-secondary border border-secondary rounded-md px-3 py-2 text-sm text-foreground focus:border-primary outline-none placeholder-muted-foreground"
               placeholder="Ex: Criar Reels Institucional..."
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
              <div>
-                <label className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mb-1.5 block">Data Entrega</label>
+                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block">Data Entrega</label>
                 <input 
                   type="date"
                   value={formData.due_date}
                   onChange={e => setFormData({...formData, due_date: e.target.value})}
-                  className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none [color-scheme:dark]"
+                  className="w-full bg-secondary border border-secondary rounded-md px-3 py-2 text-sm text-foreground focus:border-primary outline-none [color-scheme:dark]"
                 />
              </div>
              <div>
-                <label className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mb-1.5 block">Prioridade</label>
+                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block">Prioridade</label>
                 <select
                   value={formData.priority}
                   onChange={e => setFormData({...formData, priority: e.target.value})}
-                  className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none appearance-none"
+                  className="w-full bg-secondary border border-secondary rounded-md px-3 py-2 text-sm text-foreground focus:border-primary outline-none appearance-none"
                 >
                     <option value="low">Baixa</option>
                     <option value="medium">Média</option>
@@ -204,7 +204,7 @@ const TaskModal = ({
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mb-1.5 block">Status</label>
+            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block">Status</label>
             <div className="grid grid-cols-2 gap-2">
                 {Object.entries(STATUS_CONFIG).map(([key, config]) => (
                     <button
@@ -213,8 +213,8 @@ const TaskModal = ({
                         onClick={() => setFormData({...formData, status: key})}
                         className={`flex items-center gap-2 px-3 py-2 rounded-md border text-xs font-medium transition-all ${
                             formData.status === key 
-                            ? `bg-secondary border-[#E09B6B] text-[#D4D4D4]` 
-                            : 'bg-transparent border-[#404040] text-[#737373] hover:border-[#737373]'
+                            ? `bg-secondary border-primary text-foreground` 
+                            : 'bg-transparent border-secondary text-muted-foreground hover:border-muted-foreground'
                         }`}
                     >
                         <config.icon size={14} className={config.color} />
@@ -225,12 +225,12 @@ const TaskModal = ({
           </div>
 
           <div>
-            <label className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mb-1.5 block">Descrição / Obs</label>
+            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 block">Descrição / Obs</label>
             <textarea 
               rows={3}
               value={formData.description}
               onChange={e => setFormData({...formData, description: e.target.value})}
-              className="w-full bg-secondary border border-[#404040] rounded-md px-3 py-2 text-sm text-[#D4D4D4] focus:border-[#E09B6B] outline-none resize-none placeholder-[#5c5c5c]"
+              className="w-full bg-secondary border border-secondary rounded-md px-3 py-2 text-sm text-foreground focus:border-primary outline-none resize-none placeholder-muted-foreground"
               placeholder="Detalhes da tarefa..."
             />
           </div>
@@ -240,14 +240,14 @@ const TaskModal = ({
                 <button 
                     type="button" 
                     onClick={handleDelete}
-                    className="px-4 py-2 bg-[#3d1414] hover:bg-[#522020] text-red-400 rounded-md border border-red-900/30 transition-colors"
+                    className="px-4 py-2 bg-[hsl(var(--destructive))] hover:bg-[hsl(var(--destructive))] text-red-400 rounded-md border border-red-900/30 transition-colors"
                 >
                     <Trash2 size={16} />
                 </button>
             )}
             <button 
                 type="submit" 
-                className="flex-1 bg-[#5D4037] hover:bg-[#4E342E] text-[#FFFFFF] font-bold py-2.5 rounded-md transition-all shadow-sm flex items-center justify-center gap-2 text-sm border border-[#5D4037]"
+                className="flex-1 bg-[hsl(var(--spiritual))] hover:bg-[hsl(var(--spiritual-dark))] text-foreground font-bold py-2.5 rounded-md transition-all shadow-sm flex items-center justify-center gap-2 text-sm border border-[hsl(var(--spiritual))]"
             >
                 <Save size={16} />
                 Salvar
@@ -305,30 +305,30 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
   const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
   const goToToday = () => setCurrentDate(new Date());
 
-  if (isLoading) return <div className="text-[#737373] text-xs p-4">Carregando tarefas...</div>;
+  if (isLoading) return <div className="text-muted-foreground text-xs p-4">Carregando tarefas...</div>;
 
   return (
-    <div className="bg-card rounded-lg border border-[#404040] shadow-sm overflow-hidden flex flex-col h-[600px]">
+    <div className="bg-card rounded-lg border border-secondary shadow-sm overflow-hidden flex flex-col h-[600px]">
       
       {/* HEADER DA SEÇÃO */}
-      <div className="p-5 border-b border-[#404040] flex justify-between items-center shrink-0 bg-card">
+      <div className="p-5 border-b border-secondary flex justify-between items-center shrink-0 bg-card">
         <div className="flex items-center gap-4">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-[#E09B6B] flex items-center gap-2">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-primary flex items-center gap-2">
             <CheckCircle2 size={16} /> Gestão de Demandas
             </h3>
             
             {/* View Toggle */}
-            <div className="flex bg-background p-0.5 rounded-md border border-[#404040]">
+            <div className="flex bg-background p-0.5 rounded-md border border-secondary">
                 <button 
                     onClick={() => setViewMode('list')}
-                    className={`p-1.5 rounded-sm transition-all ${viewMode === 'list' ? 'bg-secondary text-[#D4D4D4] shadow-sm' : 'text-[#737373] hover:text-[#9ca3af]'}`}
+                    className={`p-1.5 rounded-sm transition-all ${viewMode === 'list' ? 'bg-secondary text-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}
                     title="Lista"
                 >
                     <List size={14} />
                 </button>
                 <button 
                     onClick={() => setViewMode('calendar')}
-                    className={`p-1.5 rounded-sm transition-all ${viewMode === 'calendar' ? 'bg-secondary text-[#D4D4D4] shadow-sm' : 'text-[#737373] hover:text-[#9ca3af]'}`}
+                    className={`p-1.5 rounded-sm transition-all ${viewMode === 'calendar' ? 'bg-secondary text-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}
                     title="Calendário"
                 >
                     <CalendarIcon size={14} />
@@ -338,7 +338,7 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
 
         <button 
             onClick={handleOpenNew}
-            className="flex items-center gap-2 text-xs font-bold bg-secondary text-[#D4D4D4] hover:text-[#FFFFFF] hover:bg-[#404040] px-3 py-1.5 rounded-md transition-colors border border-[#404040]"
+            className="flex items-center gap-2 text-xs font-bold bg-secondary text-foreground hover:text-foreground hover:bg-secondary px-3 py-1.5 rounded-md transition-colors border border-secondary"
         >
             <Plus size={14} /> Nova Demanda
         </button>
@@ -356,14 +356,14 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
                         <div 
                             key={task.id} 
                             onClick={() => handleOpenEdit(task)}
-                            className="group flex items-center justify-between p-3 rounded-md bg-secondary border border-[#404040] hover:border-[#737373] transition-all cursor-pointer"
+                            className="group flex items-center justify-between p-3 rounded-md bg-secondary border border-secondary hover:border-muted-foreground transition-all cursor-pointer"
                         >
                             <div className="flex items-center gap-3 min-w-0">
                                 <div className={`shrink-0 ${STATUS_CONFIG[task.status].color}`}>
                                     <StatusIcon size={18} />
                                 </div>
                                 <div className="min-w-0">
-                                    <span className={`text-sm font-medium truncate block ${task.status === 'posted' ? 'text-[#737373] line-through' : 'text-[#E5E5E5]'}`}>
+                                    <span className={`text-sm font-medium truncate block ${task.status === 'posted' ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
                                         {task.title}
                                     </span>
                                     <div className="flex items-center gap-2 mt-1">
@@ -379,18 +379,18 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
 
                             <div className="flex items-center gap-4">
                                 {task.due_date && (
-                                    <span className="text-[10px] font-mono text-[#9ca3af] bg-background px-2 py-1 rounded border border-[#404040]">
+                                    <span className="text-[10px] font-mono text-muted-foreground bg-background px-2 py-1 rounded border border-secondary">
                                         {formatDateBr(task.due_date)}
                                     </span>
                                 )}
-                                <div className="opacity-0 group-hover:opacity-100 transition-opacity text-[#737373]">
+                                <div className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground">
                                     <Edit2 size={14} />
                                 </div>
                             </div>
                         </div>
                     );
                 }) : (
-                    <div className="h-full flex flex-col items-center justify-center text-[#5c5c5c]">
+                    <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
                         <List size={32} className="mb-2 opacity-50" />
                         <p className="text-xs">Nenhuma demanda registrada.</p>
                     </div>
@@ -400,30 +400,30 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
             // --- CALENDAR VIEW ---
             <div className="h-full flex flex-col">
                 {/* Calendar Nav */}
-                <div className="flex items-center justify-between px-4 py-2 border-b border-[#404040] bg-card">
-                    <span className="text-sm font-bold text-[#E5E5E5] capitalize">
+                <div className="flex items-center justify-between px-4 py-2 border-b border-secondary bg-card">
+                    <span className="text-sm font-bold text-foreground capitalize">
                         {currentDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
                     </span>
                     <div className="flex items-center gap-1">
-                        <button onClick={prevMonth} className="p-1 hover:bg-secondary rounded text-[#9ca3af]"><ChevronLeft size={16} /></button>
-                        <button onClick={goToToday} className="text-[10px] font-bold uppercase text-[#9ca3af] hover:text-[#E09B6B] px-2">Hoje</button>
-                        <button onClick={nextMonth} className="p-1 hover:bg-secondary rounded text-[#9ca3af]"><ChevronRight size={16} /></button>
+                        <button onClick={prevMonth} className="p-1 hover:bg-secondary rounded text-muted-foreground"><ChevronLeft size={16} /></button>
+                        <button onClick={goToToday} className="text-[10px] font-bold uppercase text-muted-foreground hover:text-primary px-2">Hoje</button>
+                        <button onClick={nextMonth} className="p-1 hover:bg-secondary rounded text-muted-foreground"><ChevronRight size={16} /></button>
                     </div>
                 </div>
 
                 {/* Calendar Grid */}
                 <div className="flex-1 grid grid-rows-[auto_1fr] bg-card">
                     {/* Weekdays */}
-                    <div className="grid grid-cols-7 border-b border-[#404040]">
+                    <div className="grid grid-cols-7 border-b border-secondary">
                         {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((d, i) => (
-                            <div key={i} className="py-2 text-center text-[10px] font-bold text-[#737373] uppercase bg-[#252525]">
+                            <div key={i} className="py-2 text-center text-[10px] font-bold text-muted-foreground uppercase bg-card">
                                 {d}
                             </div>
                         ))}
                     </div>
                     
                     {/* Days */}
-                    <div className="grid grid-cols-7 grid-rows-5 bg-[#404040] gap-[1px]">
+                    <div className="grid grid-cols-7 grid-rows-5 bg-secondary gap-[1px]">
                         {calendarDays.map((day, idx) => {
                             const dateKey = formatDateKey(day);
                             const dayTasks = tasksByDate[dateKey] || [];
@@ -433,10 +433,10 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
                             return (
                                 <div 
                                     key={dateKey} 
-                                    className={`bg-background p-1 flex flex-col transition-colors hover:bg-card min-h-[80px] ${!isCurrentMonth ? 'opacity-30 bg-[#151515]' : ''}`}
+                                    className={`bg-background p-1 flex flex-col transition-colors hover:bg-card min-h-[80px] ${!isCurrentMonth ? 'opacity-30 bg-background' : ''}`}
                                     onClick={() => isCurrentMonth && handleOpenNew()} // Pode abrir para criar nova com data pré-setada futuramente
                                 >
-                                    <span className={`text-[10px] font-bold mb-1 w-5 h-5 flex items-center justify-center rounded-full ${isTodayDate ? 'bg-[#E09B6B] text-[#191919]' : 'text-[#737373]'}`}>
+                                    <span className={`text-[10px] font-bold mb-1 w-5 h-5 flex items-center justify-center rounded-full ${isTodayDate ? 'bg-primary text-background' : 'text-muted-foreground'}`}>
                                         {day.getDate()}
                                     </span>
                                     
@@ -447,8 +447,8 @@ export default function ClientTaskBoard({ clientId }: { clientId: string }) {
                                                 onClick={(e) => { e.stopPropagation(); handleOpenEdit(task); }}
                                                 className={`text-[9px] px-1.5 py-1 rounded border truncate cursor-pointer select-none ${
                                                     task.status === 'posted' 
-                                                    ? 'bg-primary/30 text-[#5c5c5c] border-transparent line-through' 
-                                                    : 'bg-secondary text-[#D4D4D4] border-[#404040] hover:border-[#E09B6B]'
+                                                    ? 'bg-primary/30 text-muted-foreground border-transparent line-through' 
+                                                    : 'bg-secondary text-foreground border-secondary hover:border-primary'
                                                 }`}
                                                 title={task.title}
                                             >

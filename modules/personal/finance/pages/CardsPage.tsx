@@ -68,7 +68,7 @@ const CardsPage: React.FC = () => {
               <div 
                 key={card.id} 
                 onClick={() => navigate(`/personal/finance/cards/${card.id}`)}
-                className="group relative h-64 bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-[2rem] p-8 shadow-xl overflow-hidden cursor-pointer hover:-translate-y-1 transition-transform border border-white/5"
+                className="group relative h-64 bg-gradient-to-br from-[hsl(var(--card))] to-background rounded-[2rem] p-8 shadow-xl overflow-hidden cursor-pointer hover:-translate-y-1 transition-transform border border-white/5"
               >
                 {/* Background Decor */}
                 <div className="absolute top-0 right-0 w-48 h-48 bg-card/5 rounded-full -mr-20 -mt-20 blur-3xl"></div>

@@ -17,9 +17,9 @@ export default function ClientFilesManager({ clientId }: { clientId: string }) {
   };
 
   const getFileIcon = (type: string) => {
-    if (type.includes('image')) return <ImageIcon className="text-[#D4D4D4]" size={24} />;
-    if (type.includes('pdf')) return <FileText className="text-[#E09B6B]" size={24} />;
-    return <File className="text-[#737373]" size={24} />;
+    if (type.includes('image')) return <ImageIcon className="text-foreground" size={24} />;
+    if (type.includes('pdf')) return <FileText className="text-primary" size={24} />;
+    return <File className="text-muted-foreground" size={24} />;
   };
 
   const formatSize = (bytes: number) => {
@@ -29,17 +29,17 @@ export default function ClientFilesManager({ clientId }: { clientId: string }) {
   };
 
   return (
-    <div className="bg-card p-6 rounded-lg border border-[#404040] shadow-sm">
+    <div className="bg-card p-6 rounded-lg border border-secondary shadow-sm">
       
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xs font-bold uppercase tracking-widest text-[#E09B6B] flex items-center gap-2">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-primary flex items-center gap-2">
           <FileText size={14} /> Arquivos
         </h3>
         <button 
           disabled={isUploading}
           onClick={() => fileInputRef.current?.click()}
-          className="bg-secondary hover:bg-[#404040] text-[#D4D4D4] text-[10px] font-bold px-3 py-1.5 rounded-md flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 border border-[#404040]"
+          className="bg-secondary hover:bg-secondary text-foreground text-[10px] font-bold px-3 py-1.5 rounded-md flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 border border-secondary"
         >
           {isUploading ? <Loader2 size={12} className="animate-spin" /> : <UploadCloud size={12} />}
           {isUploading ? '...' : 'Upload'}
@@ -55,16 +55,16 @@ export default function ClientFilesManager({ clientId }: { clientId: string }) {
       {/* Lista de Arquivos */}
       <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
         {files?.map(file => (
-          <div key={file.id} className="group relative bg-[#1A1A1A] p-3 rounded-md border border-[#404040] hover:border-[#737373] transition-all flex items-center gap-3">
+          <div key={file.id} className="group relative bg-background p-3 rounded-md border border-secondary hover:border-muted-foreground transition-all flex items-center gap-3">
             <div className="p-1.5 bg-secondary rounded-md shrink-0">
               {getFileIcon(file.file_type)}
             </div>
             
             <div className="flex-1 min-w-0">
-              <h4 className="text-xs font-bold text-[#E5E5E5] truncate" title={file.file_name}>
+              <h4 className="text-xs font-bold text-foreground truncate" title={file.file_name}>
                 {file.file_name}
               </h4>
-              <p className="text-[10px] text-[#9ca3af] mt-0.5">
+              <p className="text-[10px] text-muted-foreground mt-0.5">
                 {formatSize(file.file_size)} • {formatDateBr(file.created_at)}
               </p>
             </div>
@@ -75,14 +75,14 @@ export default function ClientFilesManager({ clientId }: { clientId: string }) {
                  href={file.file_url} 
                  target="_blank" 
                  rel="noopener noreferrer"
-                 className="p-1.5 text-[#737373] hover:text-[#E09B6B] transition-colors"
+                 className="p-1.5 text-muted-foreground hover:text-primary transition-colors"
                  title="Baixar"
                >
                  <Download size={14} />
                </a>
                <button 
                  onClick={() => deleteFile({ fileId: file.id, fileUrl: file.file_url })}
-                 className="p-1.5 text-[#737373] hover:text-red-400 transition-colors"
+                 className="p-1.5 text-muted-foreground hover:text-red-400 transition-colors"
                  title="Excluir"
                >
                  <Trash2 size={14} />
@@ -92,7 +92,7 @@ export default function ClientFilesManager({ clientId }: { clientId: string }) {
         ))}
 
         {(!files || files.length === 0) && !isLoading && (
-          <div className="py-6 text-center border border-dashed border-[#404040] rounded-lg text-[#5c5c5c]">
+          <div className="py-6 text-center border border-dashed border-secondary rounded-lg text-muted-foreground">
             <p className="text-xs">Nenhum arquivo.</p>
           </div>
         )}

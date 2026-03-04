@@ -18,12 +18,12 @@ const HubCard: React.FC<{
 
     <div className="relative z-10 flex justify-between items-start w-full">
        {/* Ícone Solto - Cor Marrom Couro -> Marrom Café */}
-       <div className="text-[#8D6E63] group-hover:text-[#5D4037] transition-colors duration-300">
+       <div className="text-[hsl(var(--spiritual-muted))] group-hover:text-[hsl(var(--spiritual))] transition-colors duration-300">
          {React.cloneElement(icon as React.ReactElement<any>, { size: 32, strokeWidth: 1.5 })}
        </div>
 
        {/* Seta indicativa discreta que aparece no hover */}
-       <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-500 text-[#8D6E63]">
+       <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-500 text-[hsl(var(--spiritual-muted))]">
          <ArrowRight size={20} />
        </div>
     </div>
@@ -45,8 +45,8 @@ export default function SpiritualHub() {
       {/* Header com Paleta Café */}
       <div className="w-full px-8 pt-10 pb-12">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-1 bg-[#5D4037] rounded-full"></div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#5D4037]">Vida Espiritual</p>
+          <div className="w-8 h-1 bg-[hsl(var(--spiritual))] rounded-full"></div>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[hsl(var(--spiritual))]">Vida Espiritual</p>
         </div>
         <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tighter mb-3">
           Edificação & <span className="text-muted-foreground font-serif italic">Propósito</span>

@@ -150,7 +150,7 @@ export default function PrayerEditor() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 bg-[#3E2723] hover:bg-black text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50"
+            className="flex items-center gap-2 bg-[hsl(var(--spiritual-darker))] hover:bg-black text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50"
           >
             {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             <span className="hidden sm:inline">Salvar</span>
@@ -163,7 +163,7 @@ export default function PrayerEditor() {
 
           <div className="flex-none bg-card p-6 rounded-[1.5rem] border border-border shadow-sm space-y-4">
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-secondary rounded-lg text-[#8D6E63]">
+              <div className="p-2 bg-secondary rounded-lg text-[hsl(var(--spiritual-muted))]">
                 <Feather size={20} />
               </div>
               <h2 className="text-lg font-bold text-foreground">Dados da Oração</h2>

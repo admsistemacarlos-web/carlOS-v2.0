@@ -126,7 +126,7 @@ export const WorkoutTemplateForm: React.FC<WorkoutTemplateFormProps> = ({
             <button 
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="w-full bg-primary hover:bg-[#0f2e22] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full bg-primary hover:bg-[hsl(var(--health-hover))] text-white py-4 rounded-xl font-bold text-sm uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
                 {isSubmitting ? 'Salvando...' : 'Salvar Modelo'} <Save size={18} />
             </button>

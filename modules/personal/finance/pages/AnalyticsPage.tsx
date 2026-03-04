@@ -220,17 +220,17 @@ export default function AnalyticsPage() {
                 <div className="h-[250px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={[...itemData.history].reverse()}> {/* Reverte para cronológico no gráfico */}
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f5f5f4" />
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--secondary))" />
                       <XAxis 
                         dataKey="date" 
                         tickFormatter={(str) => formatDateBr(str).slice(0, 5)} // Mostra apenas DD/MM
-                        tick={{fontSize: 10, fill: '#a8a29e'}}
+                        tick={{fontSize: 10, fill: 'hsl(var(--muted-foreground))'}}
                         axisLine={false}
                         tickLine={false}
                       />
                       <YAxis 
                         tickFormatter={(val) => `R$${val}`}
-                        tick={{fontSize: 10, fill: '#a8a29e'}}
+                        tick={{fontSize: 10, fill: 'hsl(var(--muted-foreground))'}}
                         axisLine={false}
                         tickLine={false}
                         domain={['auto', 'auto']}
@@ -243,9 +243,9 @@ export default function AnalyticsPage() {
                       <Line 
                         type="monotone" 
                         dataKey="price" 
-                        stroke="#5F6F52" 
+                        stroke="sl(var(--health-muted))" 
                         strokeWidth={3} 
-                        dot={{fill: '#5F6F52', strokeWidth: 0, r: 4}} 
+                        dot={{fill: 'sl(var(--health-muted))', strokeWidth: 0, r: 4}} 
                         activeDot={{r: 6}}
                       />
                     </LineChart>
@@ -301,22 +301,22 @@ export default function AnalyticsPage() {
                       data={macroData.locationData}
                       margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                     >
-                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f5f5f4" />
+                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="hsl(var(--secondary))" />
                       <XAxis type="number" hide />
                       <YAxis 
                         dataKey="name" 
                         type="category" 
                         width={100} 
-                        tick={{fontSize: 11, fill: '#57534e', fontWeight: 600}} 
+                        tick={{fontSize: 11, fill: 'hsl(var(--muted-foreground))', fontWeight: 600}} 
                         axisLine={false}
                         tickLine={false}
                       />
                       <RechartsTooltip 
-                        cursor={{fill: '#fafaf9'}}
+                        cursor={{fill: 'hsl(var(--background))'}}
                         contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                         formatter={(value: number) => [formatCurrency(value), 'Total Gasto']}
                       />
-                      <Bar dataKey="value" fill="#8D6E63" radius={[0, 4, 4, 0]} barSize={24} />
+                      <Bar dataKey="value" fill="hsl(var(--spiritual-muted))" radius={[0, 4, 4, 0]} barSize={24} />
                     </BarChart>
                  </ResponsiveContainer>
                </div>

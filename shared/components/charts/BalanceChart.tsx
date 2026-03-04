@@ -27,8 +27,8 @@ const BalanceChart: React.FC<BalanceChartProps> = ({ data = [] }) => {
           >
             <defs>
               <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#5F6F52" stopOpacity={0.1}/>
-                <stop offset="95%" stopColor="#5F6F52" stopOpacity={0}/>
+                <stop offset="5%" stopColor="sl(var(--health-muted))" stopOpacity={0.1}/>
+                <stop offset="95%" stopColor="sl(var(--health-muted))" stopOpacity={0}/>
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#f1f1f1" vertical={false} />
@@ -51,19 +51,19 @@ const BalanceChart: React.FC<BalanceChartProps> = ({ data = [] }) => {
             />
             <Tooltip 
               contentStyle={{ 
-                backgroundColor: '#fff', 
+                backgroundColor: 'hsl(var(--background))', 
                 borderRadius: '16px', 
                 border: '1px solid #f1f1f1', 
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.05)',
                 fontSize: '12px',
                 fontWeight: '600'
               }}
-              itemStyle={{ color: '#5F6F52' }}
+              itemStyle={{ color: 'sl(var(--health-muted))' }}
             />
             <Area 
               type="monotone" 
               dataKey="balance" 
-              stroke="#5F6F52" 
+              stroke="sl(var(--health-muted))" 
               strokeWidth={3}
               fillOpacity={1} 
               fill="url(#colorBalance)" 

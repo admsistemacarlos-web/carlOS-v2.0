@@ -251,7 +251,7 @@ export default function WellnessEditor() {
                         <input 
                             value={workoutType}
                             onChange={(e) => setWorkoutType(e.target.value)}
-                            className="w-full bg-secondary border border-border rounded-xl p-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-[#143d2d]/20 transition-all"
+                            className="w-full bg-secondary border border-border rounded-xl p-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-[hsl(var(--health))]/20 transition-all"
                             placeholder="Qual atividade?"
                         />
                     </div>

@@ -155,7 +155,7 @@ export default function TherapyEditor() {
           <button 
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 bg-primary hover:bg-[#0f2e22] text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-sm active:scale-95 transition-all disabled:opacity-50"
+            className="flex items-center gap-2 bg-primary hover:bg-[hsl(var(--health-hover))] text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-sm active:scale-95 transition-all disabled:opacity-50"
           >
             {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             <span className="hidden sm:inline">Salvar</span>

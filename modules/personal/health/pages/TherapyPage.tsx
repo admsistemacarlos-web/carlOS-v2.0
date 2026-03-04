@@ -180,7 +180,7 @@ export default function TherapyPage() {
             <Brain className="text-primary" /> Minhas Terapias
           </h1>
         </div>
-        <button onClick={() => navigate('/personal/health/therapy/new')} className="bg-primary hover:bg-[#0f2e22] text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-sm transition-all active:scale-95">
+        <button onClick={() => navigate('/personal/health/therapy/new')} className="bg-primary hover:bg-[hsl(var(--health-hover))] text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold shadow-sm transition-all active:scale-95">
           <Plus size={18} /> Nova Sessão
         </button>
       </div>
@@ -222,7 +222,7 @@ export default function TherapyPage() {
       {isDeleteOpen && createPortal(
         <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
           <div 
-            className="absolute inset-0 bg-[#1c1917]/20 backdrop-blur-sm transition-opacity" 
+            className="absolute inset-0 bg-[hsl(var(--background))]/20 backdrop-blur-sm transition-opacity" 
             onClick={() => setIsDeleteOpen(false)}
           />
           <div className="relative bg-card w-full max-w-sm rounded-[1.5rem] shadow-2xl p-6 animate-fade-in border border-border">

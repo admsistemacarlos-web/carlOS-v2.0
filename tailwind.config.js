@@ -60,17 +60,17 @@ export default {
         olive: 'hsl(var(--primary))',
         
         // Fundo aquecido (Stone-50)
-        cream: '#FAFAF9',
+        cream: 'hsl(var(--background))',
         
         // Tons de Café (Módulo Pessoal)
         coffee: '#3C3633',
         cappuccino: '#747264',
         
         // Acentos
-        terracotta: '#A34343',
+        terracotta: 'hsl(var(--destructive))',
         
         // Stone Profundo para sidebars
-        'deep-blue': '#1C1917',
+        'deep-blue': 'hsl(var(--background))',
         
         // Módulo Pessoal
         personal: {

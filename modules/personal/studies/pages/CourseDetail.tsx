@@ -649,7 +649,7 @@ export default function CourseDetail() {
                 />
                 <div className="flex gap-3 pt-2">
                     <button type="button" onClick={closeLessonModal} className="flex-1 py-3 rounded-xl bg-secondary text-muted-foreground font-bold text-xs uppercase tracking-widest hover:bg-accent">Cancelar</button>
-                    <button type="submit" disabled={saving} className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest hover:bg-[#4a5740] transition-colors disabled:opacity-50">
+                    <button type="submit" disabled={saving} className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest hover:bg-[hsl(var(--pets-hover))] transition-colors disabled:opacity-50">
                         {saving ? 'Salvando...' : 'Salvar'}
                     </button>
                 </div>

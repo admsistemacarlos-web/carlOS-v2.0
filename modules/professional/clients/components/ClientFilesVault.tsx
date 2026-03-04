@@ -34,7 +34,7 @@ export default function ClientFilesVault({ clientId }: { clientId: string }) {
   };
 
   return (
-    <div className="bg-[#0f172a] p-6 rounded-2xl border border-slate-700/50 shadow-sm h-full flex flex-col">
+    <div className="bg-background p-6 rounded-2xl border border-slate-700/50 shadow-sm h-full flex flex-col">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xs font-bold uppercase tracking-widest text-amber-400 flex items-center gap-2">
           <Paperclip size={14} /> Arquivos & Contratos
@@ -62,7 +62,7 @@ export default function ClientFilesVault({ clientId }: { clientId: string }) {
         {isLoading ? (
             <div className="flex justify-center py-4"><Loader2 className="animate-spin text-slate-600" /></div>
         ) : files?.map(file => (
-          <div key={file.id} className="group flex items-center justify-between p-3 rounded-xl bg-[#1e293b] border border-slate-800 hover:border-slate-600 transition-all">
+          <div key={file.id} className="group flex items-center justify-between p-3 rounded-xl bg-[hsl(var(--card))] border border-slate-800 hover:border-slate-600 transition-all">
             <div className="flex items-center gap-3 overflow-hidden">
               <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400 shrink-0">
                 {getFileIcon(file.file_type)}

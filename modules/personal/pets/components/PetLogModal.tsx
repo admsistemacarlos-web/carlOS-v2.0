@@ -327,7 +327,7 @@ export const PetLogModal: React.FC<PetLogModalProps> = ({
           <button 
             type="submit" 
             disabled={isSubmitting}
-            className="w-full bg-primary text-primary-foreground py-4 rounded-xl font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#4a5740] transition-all mt-6 shadow-lg active:scale-95"
+            className="w-full bg-primary text-primary-foreground py-4 rounded-xl font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[hsl(var(--pets-hover))] transition-all mt-6 shadow-lg active:scale-95"
           >
             {isSubmitting ? <Loader2 className="animate-spin" /> : <Save size={18} />}
             {logToEdit ? 'Atualizar Registro' : 'Salvar Registro'}

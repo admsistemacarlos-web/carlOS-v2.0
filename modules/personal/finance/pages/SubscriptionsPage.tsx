@@ -18,7 +18,7 @@ import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Legend, Toolti
 // ============================================
 
 const CATEGORIES = [
-  { value: 'streaming', label: 'Streaming', color: '#E09B6B' },
+  { value: 'streaming', label: 'Streaming', color: 'hsl(var(--primary))' },
   { value: 'music', label: 'Música', color: '#8B7355' },
   { value: 'gaming', label: 'Games', color: '#A0826D' },
   { value: 'productivity', label: 'Produtividade', color: '#6B8E23' },
@@ -32,7 +32,7 @@ const CATEGORIES = [
   { value: 'development', label: 'Desenvolvimento', color: '#4B0082' },
   { value: 'communication', label: 'Comunicação', color: '#00CED1' },
   { value: 'security', label: 'Segurança', color: '#B22222' },
-  { value: 'other', label: 'Outros', color: '#808080' },
+  { value: 'other', label: 'Outros', color: 'hsl(var(--muted-foreground))' },
 ];
 
 const BILLING_CYCLES: { value: Subscription['billing_cycle']; label: string; multiplier: number }[] = [
@@ -58,7 +58,7 @@ const PAYMENT_ICONS: Record<string, React.ReactNode> = {
 };
 
 const getCategoryLabel = (value: string) => CATEGORIES.find(c => c.value === value)?.label || value;
-const getCategoryColor = (value: string) => CATEGORIES.find(c => c.value === value)?.color || '#808080';
+const getCategoryColor = (value: string) => CATEGORIES.find(c => c.value === value)?.color || 'hsl(var(--muted-foreground))';
 const getCycleLabel = (value: string) => BILLING_CYCLES.find(c => c.value === value)?.label || value;
 const getCycleMultiplier = (value: string) => BILLING_CYCLES.find(c => c.value === value)?.multiplier || 1;
 
