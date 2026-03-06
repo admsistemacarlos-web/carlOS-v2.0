@@ -514,14 +514,20 @@ export default function HubPersonal() {
            <NavCard title="Espiritual" icon={<Church />} onClick={() => navigate('/personal/spiritual')} />
            <NavCard title="Estudos" icon={<BookOpen />} onClick={() => navigate('/personal/studies')} />
            
-           <div className="relative">
-             <NavCard title="Pet Care" icon={<PawPrint />} onClick={() => navigate('/personal/pet')} />
-             {urgentPetTasks > 0 && (
-               <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] font-bold shadow-lg animate-pulse">
-                 {urgentPetTasks}
-               </div>
-             )}
-           </div>
+           <button
+  onClick={() => navigate('/personal/pet')}
+  className="relative flex flex-col items-center justify-center p-4 bg-card border border-border rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group"
+>
+  <div className="text-muted-foreground group-hover:text-primary transition-colors mb-2">
+    <PawPrint size={24} />
+  </div>
+  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">PET CARE</span>
+  {urgentPetTasks > 0 && (
+    <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] font-bold shadow-lg animate-pulse">
+      {urgentPetTasks}
+    </div>
+  )}
+</button>
            
            <NavCard title="Sommelier" icon={<Wine size={24} />} onClick={() => navigate('/personal/sommelier')} />
         </div>
