@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Paperclip, FileText, Image as ImageIcon, Trash2, Download, Loader2, X, Eye } from 'lucide-react';
+import { Paperclip, FileText, Image as ImageIcon, Trash2, Download, Loader2, Eye } from 'lucide-react';
 import { useAttachments, Attachment } from '../hooks/useAttachments';
 import { supabase } from '../../../../integrations/supabase/client';
 
@@ -17,8 +17,6 @@ export default function AttachmentsManager({
   onAttachmentsChange 
 }: AttachmentsManagerProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [previewType, setPreviewType] = useState<'pdf' | 'image' | null>(null);
   const { uploadFile, deleteFile, getSignedUrl, uploading, uploadProgress } = useAttachments(lessonId, userId);
 
   // Garante que attachments seja sempre um array
@@ -71,14 +69,13 @@ export default function AttachmentsManager({
   };
 
   const handlePreview = async (attachment: Attachment) => {
-    try {
-      const url = await getSignedUrl(attachment.url);
-      setPreviewUrl(url);
-      setPreviewType(attachment.type);
-    } catch (error: any) {
-      alert('Erro ao carregar preview: ' + error.message);
-    }
-  };
+  try {
+    const url = await getSignedUrl(attachment.url);
+    window.open(url, '_blank'); // Abre em nova aba
+  } catch (error: any) {
+    alert('Erro ao carregar preview: ' + error.message);
+  }
+};
 
   const handleDownload = async (attachment: Attachment) => {
     try {
@@ -191,35 +188,7 @@ export default function AttachmentsManager({
           ))}
         </div>
       )}
-
-      {/* Modal de Preview */}
-      {previewUrl && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative bg-card rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <h3 className="text-sm font-bold text-foreground">Preview</h3>
-              <button
-                onClick={() => { setPreviewUrl(null); setPreviewType(null); }}
-                className="p-2 hover:bg-secondary rounded-lg text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            
-            <div className="p-4 overflow-auto max-h-[calc(90vh-5rem)]">
-              {previewType === 'image' ? (
-                <img src={previewUrl} alt="Preview" className="w-full h-auto rounded-lg" />
-              ) : (
-                <iframe
-                  src={previewUrl}
-                  className="w-full h-[70vh] rounded-lg border border-border"
-                  title="PDF Preview"
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+  
     </div>
   );
 }
