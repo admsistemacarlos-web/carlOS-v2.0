@@ -99,9 +99,9 @@ export default function AttachmentsManager({
     <div className="border-t border-border pt-6 mt-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-          <Paperclip size={16} className="text-muted-foreground" />
-          Anexos ({attachments.length})
-        </h3>
+  <Paperclip size={16} className="text-muted-foreground" />
+  Anexos ({attachments?.length || 0})
+</h3>
         
         <button
           onClick={() => fileInputRef.current?.click()}
@@ -131,7 +131,7 @@ export default function AttachmentsManager({
       </div>
 
       {/* Lista de Anexos */}
-      {attachments.length === 0 ? (
+{!attachments || attachments.length === 0 ? (
         <p className="text-xs text-muted-foreground text-center py-8">
           Nenhum anexo adicionado. Clique em "Adicionar Arquivo" para começar.
         </p>
