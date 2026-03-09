@@ -13,13 +13,16 @@ interface AttachmentsManagerProps {
 export default function AttachmentsManager({ 
   lessonId, 
   userId, 
-  attachments, 
+  attachments = [], // Default para array vazio
   onAttachmentsChange 
 }: AttachmentsManagerProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewType, setPreviewType] = useState<'pdf' | 'image' | null>(null);
   const { uploadFile, deleteFile, getSignedUrl, uploading, uploadProgress } = useAttachments(lessonId, userId);
+
+  // Garante que attachments seja sempre um array
+  const safeAttachments = Array.isArray(attachments) ? attachments : [];
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -29,7 +32,7 @@ export default function AttachmentsManager({
       const newAttachment = await uploadFile(file);
       if (!newAttachment) return;
 
-      const updatedAttachments = [...attachments, newAttachment];
+      const updatedAttachments = [...safeAttachments, newAttachment];
       
       // Atualiza no banco de dados
       await supabase
@@ -54,7 +57,7 @@ export default function AttachmentsManager({
     try {
       await deleteFile(attachment.url);
       
-      const updatedAttachments = attachments.filter(a => a.id !== attachment.id);
+      const updatedAttachments = safeAttachments.filter(a => a.id !== attachment.id);
       
       await supabase
         .from('lessons')
@@ -96,12 +99,12 @@ export default function AttachmentsManager({
   };
 
   return (
-    <div className="border-t border-border pt-6 mt-6">
-      <div className="flex items-center justify-between mb-4">
+<div>
+        <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-  <Paperclip size={16} className="text-muted-foreground" />
-  Anexos ({attachments?.length || 0})
-</h3>
+          <Paperclip size={16} className="text-muted-foreground" />
+          Anexos ({safeAttachments.length})
+        </h3>
         
         <button
           onClick={() => fileInputRef.current?.click()}
@@ -131,13 +134,13 @@ export default function AttachmentsManager({
       </div>
 
       {/* Lista de Anexos */}
-{!attachments || attachments.length === 0 ? (
+      {safeAttachments.length === 0 ? (
         <p className="text-xs text-muted-foreground text-center py-8">
           Nenhum anexo adicionado. Clique em "Adicionar Arquivo" para começar.
         </p>
       ) : (
         <div className="space-y-2">
-          {attachments.map((attachment) => (
+          {safeAttachments.map((attachment) => (
             <div
               key={attachment.id}
               className="flex items-center justify-between p-3 bg-secondary rounded-lg border border-border hover:border-gray-300 transition-colors group"

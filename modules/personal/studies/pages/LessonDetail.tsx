@@ -1,222 +1,508 @@
-import React, { useState, useRef } from 'react';
-import { Paperclip, FileText, Image as ImageIcon, Trash2, Download, Loader2, X, Eye } from 'lucide-react';
-import { useAttachments, Attachment } from '../hooks/useAttachments';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../../../integrations/supabase/client';
+import { 
+  ArrowLeft, CheckCircle2, ChevronDown, 
+  Menu, Save, Loader2, Circle,
+  Search, X, Plus
+} from 'lucide-react';
+import { createPortal } from 'react-dom';
+import RichTextEditor from '../../../../shared/components/ui/RichTextEditor';
+import { useAuth } from '../../../../contexts/AuthContext';
+import AttachmentsManager from '../components/AttachmentsManager';
+import { Attachment } from '../hooks/useAttachments';
 
-interface AttachmentsManagerProps {
-  lessonId: string;
-  userId: string;
-  attachments: Attachment[];
-  onAttachmentsChange: (attachments: Attachment[]) => void;
+// --- TYPES ---
+interface Lesson {
+  id: string;
+  title: string;
+  content: string | null;
+  is_completed: boolean;
+  module_id: string;
+  position: number;
+  attachments?: Attachment[];
 }
 
-export default function AttachmentsManager({ 
-  lessonId, 
-  userId, 
-  attachments, 
-  onAttachmentsChange 
-}: AttachmentsManagerProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [previewType, setPreviewType] = useState<'pdf' | 'image' | null>(null);
-  const { uploadFile, deleteFile, getSignedUrl, uploading, uploadProgress } = useAttachments(lessonId, userId);
+interface Module {
+  id: string;
+  title: string;
+  lessons: Lesson[];
+  position: number;
+}
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+export default function LessonDetail() {
+  const { lessonId } = useParams<{ lessonId: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  
+  // Data State
+  const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
+  const [modules, setModules] = useState<Module[]>([]);
+  const [courseTitle, setCourseTitle] = useState('');
+  const [courseId, setCourseId] = useState<string | null>(null);
+  const [attachments, setAttachments] = useState<Attachment[]>([]); // INICIALIZA COMO ARRAY VAZIO
+  
+  // UI State
+  const [loading, setLoading] = useState(true);
+  const [content, setContent] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
+  const [openModules, setOpenModules] = useState<Set<string>>(new Set());
+  
+  const [sidebarSearch, setSidebarSearch] = useState('');
 
-    try {
-      const newAttachment = await uploadFile(file);
-      if (!newAttachment) return;
+  // Create Lesson State
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newLessonTitle, setNewLessonTitle] = useState('');
+  const [targetModuleId, setTargetModuleId] = useState<string | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
-      const updatedAttachments = [...attachments, newAttachment];
-      
-      // Atualiza no banco de dados
-      await supabase
-        .from('lessons')
-        .update({ attachments: updatedAttachments })
-        .eq('id', lessonId);
+  // Refs for Auto-Save
+  const contentRef = useRef(content);
+  const saveTimeoutRef = useRef<any>(null);
 
-      onAttachmentsChange(updatedAttachments);
-      
-      // Limpa o input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+  // --- FETCHING ---
+  useEffect(() => {
+    if (!lessonId) return;
+    fetchLessonData();
+  }, [lessonId]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setIsSidebarOpen(false);
+      } else {
+        setIsSidebarOpen(true);
       }
-    } catch (error: any) {
-      alert(error.message || 'Erro ao fazer upload do arquivo');
-    }
-  };
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  const handleDelete = async (attachment: Attachment) => {
-    if (!confirm(`Tem certeza que deseja excluir "${attachment.name}"?`)) return;
-
+  const fetchLessonData = async () => {
+    setLoading(true);
     try {
-      await deleteFile(attachment.url);
-      
-      const updatedAttachments = attachments.filter(a => a.id !== attachment.id);
-      
-      await supabase
+      const { data: lessonData, error: lessonError } = await supabase
         .from('lessons')
-        .update({ attachments: updatedAttachments })
-        .eq('id', lessonId);
+        .select(`
+          *,
+          modules (
+            id,
+            course_id,
+            courses (
+              id,
+              title
+            )
+          )
+        `)
+        .eq('id', lessonId)
+        .single();
 
-      onAttachmentsChange(updatedAttachments);
-    } catch (error: any) {
-      alert('Erro ao excluir arquivo: ' + error.message);
+      if (lessonError || !lessonData) throw new Error('Aula não encontrada');
+
+      const lesson = {
+        id: lessonData.id,
+        title: lessonData.title,
+        content: lessonData.content || '',
+        is_completed: lessonData.is_completed,
+        module_id: lessonData.module_id,
+        position: lessonData.position,
+        attachments: Array.isArray(lessonData.attachments) ? lessonData.attachments : []
+      };
+      
+      const fetchedCourseId = lessonData.modules?.course_id;
+      const courseTitleVal = lessonData.modules?.courses?.title;
+
+      setCurrentLesson(lesson);
+      setContent(lesson.content || ''); 
+      contentRef.current = lesson.content || '';
+      setAttachments(lesson.attachments || []); // GARANTE ARRAY VAZIO SE NULL
+      setCourseTitle(courseTitleVal || 'Curso');
+      setCourseId(fetchedCourseId || null);
+
+      if (fetchedCourseId) {
+        const { data: modulesData } = await supabase
+          .from('modules')
+          .select(`
+            id,
+            title,
+            position,
+            lessons (
+              id,
+              title,
+              is_completed,
+              position
+            )
+          `)
+          .eq('course_id', fetchedCourseId)
+          .order('position', { ascending: true });
+
+        if (modulesData) {
+          const sortedModules = modulesData.map((m: any) => ({
+            ...m,
+            lessons: (m.lessons || []).sort((a: Lesson, b: Lesson) => a.position - b.position)
+          }));
+          
+          setModules(sortedModules);
+          
+          setOpenModules(prev => {
+            const newSet = new Set(prev);
+            newSet.add(lessonData.module_id);
+            return newSet;
+          });
+        }
+      }
+
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handlePreview = async (attachment: Attachment) => {
+  const filteredModules = useMemo(() => {
+    if (!sidebarSearch.trim()) return modules;
+
+    return modules.map(module => ({
+      ...module,
+      lessons: module.lessons.filter(l => 
+        l.title.toLowerCase().includes(sidebarSearch.toLowerCase())
+      )
+    })).filter(module => module.lessons.length > 0);
+  }, [modules, sidebarSearch]);
+
+  useEffect(() => {
+    if (sidebarSearch.trim()) {
+      setOpenModules(new Set(filteredModules.map(m => m.id)));
+    }
+  }, [sidebarSearch, filteredModules]);
+
+
+  // --- AUTO SAVE LOGIC ---
+  const handleContentChange = (newMarkdown: string) => {
+    setContent(newMarkdown);
+    contentRef.current = newMarkdown;
+    setIsSaving(true);
+
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+
+    saveTimeoutRef.current = setTimeout(async () => {
+      if (lessonId) {
+        await supabase
+          .from('lessons')
+          .update({ content: newMarkdown })
+          .eq('id', lessonId);
+        setIsSaving(false);
+      }
+    }, 1000);
+  };
+
+  const toggleModule = (moduleId: string) => {
+    setOpenModules(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(moduleId)) newSet.delete(moduleId);
+      else newSet.add(moduleId);
+      return newSet;
+    });
+  };
+
+  const toggleComplete = async () => {
+    if (!currentLesson) return;
+    const newState = !currentLesson.is_completed;
+    
+    setCurrentLesson({ ...currentLesson, is_completed: newState });
+    
+    setModules(prev => prev.map(m => ({
+        ...m,
+        lessons: m.lessons.map(l => l.id === currentLesson.id ? { ...l, is_completed: newState } : l)
+    })));
+
+    await supabase
+      .from('lessons')
+      .update({ is_completed: newState })
+      .eq('id', currentLesson.id);
+  };
+
+  // --- LESSON CREATION HANDLERS ---
+  const handleOpenCreateModal = (moduleId: string) => {
+    setTargetModuleId(moduleId);
+    setNewLessonTitle('');
+    setIsCreateModalOpen(true);
+  };
+
+  const handleCreateLesson = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!targetModuleId || !newLessonTitle.trim() || !user) return;
+
+    setIsCreating(true);
     try {
-      const url = await getSignedUrl(attachment.url);
-      setPreviewUrl(url);
-      setPreviewType(attachment.type);
-    } catch (error: any) {
-      alert('Erro ao carregar preview: ' + error.message);
+       const module = modules.find(m => m.id === targetModuleId);
+       const currentMaxPos = module?.lessons.length || 0;
+
+       const { data, error } = await supabase.from('lessons').insert({
+         module_id: targetModuleId,
+         title: newLessonTitle.trim(),
+         user_id: user.id,
+         position: currentMaxPos,
+         content: '',
+         attachments: []
+       }).select().single();
+
+       if (error) throw error;
+
+       // Recarregar para atualizar a lista
+       await fetchLessonData();
+       setIsCreateModalOpen(false);
+       
+       // Opcional: Navegar para a nova aula
+       if (data) {
+         navigate(`/personal/studies/lessons/${data.id}`);
+       }
+
+    } catch(err: any) {
+       alert('Erro ao criar aula: ' + err.message);
+    } finally {
+       setIsCreating(false);
     }
   };
 
-  const handleDownload = async (attachment: Attachment) => {
-    try {
-      const url = await getSignedUrl(attachment.url);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = attachment.name;
-      link.click();
-    } catch (error: any) {
-      alert('Erro ao baixar arquivo: ' + error.message);
+  const handleAttachmentsChange = (newAttachments: Attachment[]) => {
+    setAttachments(newAttachments);
+    if (currentLesson) {
+      setCurrentLesson({ ...currentLesson, attachments: newAttachments });
     }
   };
 
-  const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-  };
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-card">
+        <Loader2 className="animate-spin text-muted-foreground" size={32} />
+      </div>
+    );
+  }
 
   return (
-    <div className="border-t border-border pt-6 mt-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-          <Paperclip size={16} className="text-muted-foreground" />
-          Anexos ({attachments.length})
-        </h3>
-        
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          disabled={uploading}
-          className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-50"
-        >
-          {uploading ? (
-            <>
-              <Loader2 size={14} className="animate-spin" />
-              Enviando... {uploadProgress}%
-            </>
+    <div className="fixed inset-0 z-50 flex w-full h-full bg-card overflow-hidden font-sans text-muted-foreground">
+      
+      {/* --- SIDEBAR --- */}
+      <aside 
+        className={`
+          flex-shrink-0 bg-secondary border-r border-border flex flex-col transition-all duration-300 ease-in-out absolute lg:relative z-20 h-full
+          ${isSidebarOpen ? 'w-80 translate-x-0' : 'w-0 -translate-x-full lg:w-0 lg:translate-x-0 overflow-hidden opacity-0 lg:opacity-100'}
+        `}
+      >
+        <div className="w-80 flex flex-col h-full"> 
+            <div className="p-5 border-b border-border bg-secondary flex-shrink-0">
+            <button 
+                onClick={() => navigate(`/personal/studies/courses/${courseId || ''}`)}
+                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-muted-foreground transition-colors mb-3"
+            >
+                <ArrowLeft size={12} /> Voltar ao Curso
+            </button>
+            <h2 className="text-base font-bold text-foreground leading-tight line-clamp-2">
+                {courseTitle}
+            </h2>
+            </div>
+
+            <div className="p-4 border-b border-border bg-secondary flex-shrink-0">
+                <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
+                    <input 
+                    value={sidebarSearch}
+                    onChange={(e) => setSidebarSearch(e.target.value)}
+                    placeholder="Buscar aula..."
+                    className="w-full bg-card border border-border rounded-lg pl-9 pr-8 py-2.5 text-xs font-medium text-foreground outline-none focus:ring-1 focus:ring-gray-300 placeholder:text-muted-foreground transition-all shadow-sm"
+                    />
+                    {sidebarSearch && (
+                    <button 
+                        onClick={() => setSidebarSearch('')}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-secondary rounded-full text-muted-foreground transition-colors"
+                    >
+                        <X size={12} />
+                    </button>
+                    )}
+                </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-2 space-y-1">
+            {filteredModules.length === 0 ? (
+                <p className="text-center text-xs text-muted-foreground py-10">Nenhum resultado.</p>
+            ) : (
+                filteredModules.map(module => {
+                const isOpen = openModules.has(module.id);
+                return (
+                    <div key={module.id} className="space-y-0.5">
+                    <button 
+                        onClick={() => toggleModule(module.id)}
+                        className="w-full flex items-center justify-between text-left p-2.5 rounded-lg hover:bg-secondary/50 transition-colors group"
+                    >
+                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide truncate pr-2">{module.title}</span>
+                        <ChevronDown size={14} className={`text-muted-foreground transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    {isOpen && (
+                        <div className="space-y-0.5 ml-3 border-l border-border pl-1">
+                        {module.lessons.map(lesson => {
+                            const isActive = lesson.id === lessonId;
+                            return (
+                            <button
+                                key={lesson.id}
+                                onClick={() => {
+                                navigate(`/personal/studies/lessons/${lesson.id}`);
+                                if (window.innerWidth < 1024) setIsSidebarOpen(false);
+                                }}
+                                className={`
+                                w-full text-left px-3 py-2 rounded-md text-sm transition-all flex items-start gap-2 relative
+                                ${isActive 
+                                    ? 'bg-card text-muted-foreground font-semibold shadow-sm ring-1 ring-gray-200 z-10' 
+                                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                                }
+                                `}
+                            >
+                                <div className="mt-0.5 flex-shrink-0">
+                                {lesson.is_completed ? (
+                                    <CheckCircle2 size={14} className="text-emerald-600" />
+                                ) : (
+                                    <Circle size={12} className={isActive ? "text-muted-foreground" : "text-muted-foreground"} />
+                                )}
+                                </div>
+                                <span className="truncate leading-relaxed text-[13px]">{lesson.title}</span>
+                            </button>
+                            );
+                        })}
+                        
+                        {/* BOTÃO ADICIONAR AULA */}
+                        <button
+                            onClick={() => handleOpenCreateModal(module.id)}
+                            className="w-full text-left px-3 py-2 rounded-md text-[11px] font-bold uppercase tracking-wider text-blue-600 hover:bg-blue-50 transition-colors flex items-center gap-2 mt-1 opacity-70 hover:opacity-100"
+                        >
+                            <Plus size={12} /> Nova Aula
+                        </button>
+                        </div>
+                    )}
+                    </div>
+                );
+                })
+            )}
+            </div>
+        </div>
+      </aside>
+
+      {/* --- MOBILE OVERLAY --- */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 z-10 bg-stone-900/20 backdrop-blur-sm lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* --- MAIN AREA --- */}
+<main className="flex-1 flex flex-col h-full min-w-0 bg-card relative">
+  
+  {/* Editor Header */}
+  <header className="h-14 flex items-center justify-between px-4 md:px-6 border-b border-gray-100 bg-card z-10 shrink-0">
+    <div className="flex items-center gap-3 flex-1 min-w-0">
+      <button 
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="p-2 -ml-2 hover:bg-secondary rounded-full text-muted-foreground transition-colors"
+        title={isSidebarOpen ? "Fechar Sidebar" : "Abrir Sidebar"}
+      >
+        <Menu size={20} />
+      </button>
+      
+      <div className="flex flex-col min-w-0">
+        <h1 className="text-sm font-bold text-foreground truncate">
+          {currentLesson?.title}
+        </h1>
+        <span className="text-[10px] text-muted-foreground font-medium flex items-center gap-1.5">
+          {isSaving ? (
+            <><Loader2 size={10} className="animate-spin" /> Salvando...</>
           ) : (
-            <>
-              <Paperclip size={14} />
-              Adicionar Arquivo
-            </>
+            <><Save size={10} /> Salvo</>
           )}
-        </button>
-        
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="application/pdf,image/jpeg,image/jpg,image/png,image/webp,image/gif"
-          onChange={handleFileSelect}
-          className="hidden"
+        </span>
+      </div>
+    </div>
+
+    <button 
+      onClick={toggleComplete}
+      className={`
+        flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ml-4
+        ${currentLesson?.is_completed 
+          ? 'bg-stone-800 text-white' 
+          : 'bg-card border border-border text-muted-foreground hover:border-border hover:text-foreground'
+        }
+      `}
+    >
+      <CheckCircle2 size={14} />
+      <span className="hidden md:inline">{currentLesson?.is_completed ? 'Concluída' : 'Concluir'}</span>
+    </button>
+  </header>
+
+  {/* Content Area - Editor + Attachments Sidebar */}
+  <div className="flex-1 flex overflow-hidden">
+    
+    {/* Editor de Texto */}
+    <div className="flex-1 overflow-y-auto bg-card">
+      <div className="w-full max-w-4xl mx-auto px-8 md:px-12 py-8">
+        <RichTextEditor 
+            key={lessonId}
+            content={content}
+            onChange={handleContentChange}
+            placeholder="# Comece a escrever..."
         />
       </div>
+    </div>
 
-      {/* Lista de Anexos */}
-      {attachments.length === 0 ? (
-        <p className="text-xs text-muted-foreground text-center py-8">
-          Nenhum anexo adicionado. Clique em "Adicionar Arquivo" para começar.
-        </p>
-      ) : (
-        <div className="space-y-2">
-          {attachments.map((attachment) => (
-            <div
-              key={attachment.id}
-              className="flex items-center justify-between p-3 bg-secondary rounded-lg border border-border hover:border-gray-300 transition-colors group"
-            >
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                {attachment.type === 'pdf' ? (
-                  <FileText size={20} className="text-red-500 flex-shrink-0" />
-                ) : (
-                  <ImageIcon size={20} className="text-blue-500 flex-shrink-0" />
-                )}
-                
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-foreground truncate">
-                    {attachment.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatFileSize(attachment.size)}
-                  </p>
+    {/* Sidebar de Anexos - Direita */}
+    {user && lessonId && (
+      <aside className="w-80 border-l border-border bg-secondary overflow-y-auto flex-shrink-0 hidden lg:block">
+        <div className="p-4">
+          <AttachmentsManager
+            lessonId={lessonId}
+            userId={user.id}
+            attachments={attachments}
+            onAttachmentsChange={handleAttachmentsChange}
+          />
+        </div>
+      </aside>
+    )}
+
+  </div>
+</main>
+
+      {/* --- CREATE LESSON MODAL --- */}
+      {isCreateModalOpen && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={() => setIsCreateModalOpen(false)} />
+          <div className="relative bg-card w-full max-w-sm rounded-2xl shadow-xl p-6 animate-fade-in">
+             <h3 className="text-lg font-bold text-foreground mb-4">Nova Aula</h3>
+             <form onSubmit={handleCreateLesson} className="space-y-4">
+                <div>
+                    <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Título da Aula</label>
+                    <input 
+                        autoFocus
+                        value={newLessonTitle}
+                        onChange={e => setNewLessonTitle(e.target.value)}
+                        className="w-full bg-secondary border border-border rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                        placeholder="Ex: Introdução..."
+                    />
                 </div>
-              </div>
-
-              <div className="flex items-center gap-1 flex-shrink-0">
-                <button
-                  onClick={() => handlePreview(attachment)}
-                  className="p-2 hover:bg-card rounded-lg text-muted-foreground hover:text-foreground transition-colors"
-                  title="Visualizar"
-                >
-                  <Eye size={16} />
-                </button>
-                
-                <button
-                  onClick={() => handleDownload(attachment)}
-                  className="p-2 hover:bg-card rounded-lg text-muted-foreground hover:text-foreground transition-colors"
-                  title="Baixar"
-                >
-                  <Download size={16} />
-                </button>
-                
-                <button
-                  onClick={() => handleDelete(attachment)}
-                  className="p-2 hover:bg-red-50 rounded-lg text-muted-foreground hover:text-red-600 transition-colors"
-                  title="Excluir"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Modal de Preview */}
-      {previewUrl && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative bg-card rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <h3 className="text-sm font-bold text-foreground">Preview</h3>
-              <button
-                onClick={() => { setPreviewUrl(null); setPreviewType(null); }}
-                className="p-2 hover:bg-secondary rounded-lg text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            
-            <div className="p-4 overflow-auto max-h-[calc(90vh-5rem)]">
-              {previewType === 'image' ? (
-                <img src={previewUrl} alt="Preview" className="w-full h-auto rounded-lg" />
-              ) : (
-                <iframe
-                  src={previewUrl}
-                  className="w-full h-[70vh] rounded-lg border border-border"
-                  title="PDF Preview"
-                />
-              )}
-            </div>
+                <div className="flex gap-2 pt-2">
+                    <button type="button" onClick={() => setIsCreateModalOpen(false)} className="flex-1 py-2.5 bg-secondary text-muted-foreground font-bold text-xs rounded-xl hover:bg-accent transition-colors">Cancelar</button>
+                    <button type="submit" disabled={isCreating} className="flex-1 py-2.5 bg-blue-600 text-white font-bold text-xs rounded-xl hover:bg-blue-700 flex items-center justify-center gap-2 transition-colors">
+                        {isCreating ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />} Criar
+                    </button>
+                </div>
+             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
+
     </div>
   );
 }
