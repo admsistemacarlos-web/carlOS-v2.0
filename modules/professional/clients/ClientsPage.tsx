@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Plus, Search, MessageCircle, Instagram,
-  Folder, Edit, Users, Building2, MapPin, Trash2, X, AlertTriangle, Loader2 
+  Folder, Edit, Users, Building2, MapPin, Trash2, X, AlertTriangle, Loader2, Globe 
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useClients, useDeleteClient } from '../hooks/useClients'; // Adicionado useDeleteClient
@@ -216,6 +216,19 @@ export default function ClientsPage() {
                                 title="Instagram"
                             >
                                 <Instagram size={16} />
+                            </a>
+                        )}
+
+                        {client.website && (
+                            <a 
+                                href={client.website.startsWith('http') ? client.website : `https://${client.website}`}
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="p-1.5 rounded bg-secondary text-muted-foreground hover:text-primary transition-all"
+                                title="Website"
+                            >
+                                <Globe size={16} />
                             </a>
                         )}
                         
