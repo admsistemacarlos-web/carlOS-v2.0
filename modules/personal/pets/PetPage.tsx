@@ -5,14 +5,14 @@ import {
   Scissors, Pill, Scale, Stethoscope, DollarSign, 
   Trash2, History, ArrowRight, CheckCircle2,
   Cookie, Layers, Sparkles, Filter, X, Pencil, Loader2, AlertTriangle, Clock, CalendarDays, MapPin, ArrowDown,
-  ReceiptText, Check, Circle
+  ReceiptText, Check, Circle, Bell
 } from 'lucide-react';
 import { usePetData } from './hooks/usePetData';
 import { LogCategory, PetLog } from './types';
 import { PetFormModal } from './components/PetFormModal';
 import { PetLogModal } from './components/PetLogModal';
 import ModuleHeader from '../../../shared/components/Navigation/ModuleHeader';
-import { formatDateBr } from '../finance/utils/dateHelpers';
+import { formatDateBr, getDaysUntil } from '../finance/utils/dateHelpers';
 
 // --- DATE HELPERS ---
 export const getTodayString = () => {
@@ -105,7 +105,7 @@ export default function PetPage() {
   const [editingLog, setEditingLog] = useState<PetLog | null>(null);
   const [deleteConfirmationId, setDeleteConfirmationId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [updatingDoneId, setUpdatingDoneId] = useState<string | null>(null);
+  const [updatingTaskId, setUpdatingTaskId] = useState<string | null>(null);
 
   useEffect(() => {
     if (pets.length > 0 && !activePetId) {
@@ -130,6 +130,85 @@ export default function PetPage() {
     }
     return result;
   }, [logs, filterCategory, periodFilter]);
+
+  // NOVO: Tarefas Pet (Compromissos)
+  const petTasks = useMemo(() => {
+    const today = getTodayString();
+    return logs
+      .filter(l => l.next_due_date && l.next_due_date.split('T')[0] >= today)
+      .sort((a, b) => a.next_due_date!.localeCompare(b.next_due_date!))
+      .slice(0, 6);
+  }, [logs]);
+
+  // NOVO: Conta tarefas urgentes
+  const urgentPetTasks = useMemo(() => {
+    return petTasks.filter(task => !task.done && getDaysUntil(task.next_due_date!) <= 3).length;
+  }, [petTasks]);
+
+  // NOVO: Estilo do card baseado na urgência
+  const getPetTaskStyle = (task: PetLog) => {
+    if (task.done) {
+      return {
+        bg: 'bg-emerald-50',
+        border: 'border-emerald-200',
+        text: 'text-emerald-700',
+        icon: 'text-emerald-600',
+        badge: 'bg-emerald-100 text-emerald-700',
+        label: '✓ Feito'
+      };
+    }
+
+    const daysUntil = getDaysUntil(task.next_due_date!);
+    
+    if (daysUntil === 0) {
+      return {
+        bg: 'bg-red-50',
+        border: 'border-red-300',
+        text: 'text-red-700',
+        icon: 'text-red-600',
+        badge: 'bg-red-100 text-red-700 animate-pulse',
+        label: '🔴 HOJE!'
+      };
+    } else if (daysUntil <= 3) {
+      return {
+        bg: 'bg-amber-50',
+        border: 'border-amber-300',
+        text: 'text-amber-700',
+        icon: 'text-amber-600',
+        badge: 'bg-amber-100 text-amber-700',
+        label: `⚠️ Em ${daysUntil} dia${daysUntil > 1 ? 's' : ''}`
+      };
+    } else {
+      return {
+        bg: 'bg-card',
+        border: 'border-border',
+        text: 'text-foreground',
+        icon: 'text-primary',
+        badge: 'bg-secondary text-muted-foreground',
+        label: `Em ${daysUntil} dias`
+      };
+    }
+  };
+
+  // NOVO: Handler para toggle do status done
+  const handleTogglePetTask = async (taskId: string, currentDone: boolean) => {
+    if (!activePetId) return;
+    setUpdatingTaskId(taskId);
+    try {
+      const logToUpdate = logs.find(l => l.id === taskId);
+      if (!logToUpdate) return;
+      
+      await updateLog(taskId, {
+        ...logToUpdate,
+        done: !currentDone
+      });
+    } catch (err) {
+      console.error("Erro ao atualizar tarefa", err);
+      alert("Erro ao atualizar tarefa");
+    } finally {
+      setUpdatingTaskId(null);
+    }
+  };
 
   const stats = useMemo(() => {
     if (!activePet) return null;
@@ -158,17 +237,10 @@ export default function PetPage() {
         };
     }
 
-    const todayStr = getTodayString();
-    const upcomingTasks = logs
-      .filter(l => l.next_due_date && l.next_due_date.split('T')[0] >= todayStr)
-      .sort((a, b) => a.next_due_date!.localeCompare(b.next_due_date!))
-      .slice(0, 2);
-
     return {
       age: `${years}a ${months}m`,
       weight: weightLog ? weightLog.value : '--',
       periodCost,
-      upcomingTasks,
       categoryStats
     };
   }, [activePet, logs, filterCategory, periodFilter, filteredLogs]);
@@ -213,26 +285,6 @@ export default function PetPage() {
         alert('Erro ao excluir registro');
     } finally {
         setIsDeleting(false);
-    }
-  };
-
-  // Handler para toggle do status "done"
-  const handleToggleDone = async (logId: string, currentDone: boolean) => {
-    if (!activePetId) return;
-    setUpdatingDoneId(logId);
-    try {
-      const logToUpdate = logs.find(l => l.id === logId);
-      if (!logToUpdate) return;
-      
-      await updateLog(logId, {
-        ...logToUpdate,
-        done: !currentDone
-      });
-    } catch (error) {
-      console.error('Erro ao atualizar status:', error);
-      alert('Erro ao atualizar status');
-    } finally {
-      setUpdatingDoneId(null);
     }
   };
 
@@ -356,35 +408,76 @@ export default function PetPage() {
                  </div>
                  <p className="text-3xl font-bold text-foreground tracking-tighter">R$ {stats.periodCost.toFixed(2)}</p>
               </div>
-
-              {/* Próximas Tarefas */}
-              {stats.upcomingTasks.length > 0 && (
-                  <div className="col-span-2 bg-card p-6 rounded-[2rem] border border-border shadow-sm">
-                      <div className="flex justify-between items-center mb-4">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Próximos Cuidados</span>
-                          <Activity size={16} className="text-muted-foreground" />
-                      </div>
-                      <div className="space-y-3">
-                          {stats.upcomingTasks.map(task => {
-                              const style = getCategoryStyle(task.category);
-                              return (
-                                  <div key={task.id} className="flex items-center gap-3 bg-secondary p-3 rounded-xl border border-border">
-                                      <div className={`p-2 rounded-lg ${style.bg} ${style.color}`}>
-                                          {style.icon}
-                                      </div>
-                                      <div className="flex-1 min-w-0">
-                                          <p className="text-xs font-bold text-foreground truncate">{task.title}</p>
-                                          <p className="text-[10px] text-muted-foreground">
-                                          Vence em {formatDateBr(task.next_due_date)}
-                                          </p>
-                                      </div>
-                                  </div>
-                              );
-                          })}
-                      </div>
-                  </div>
-              )}
             </div>
+
+            {/* NOVA SEÇÃO: Compromissos Pet (substituindo Próximos Cuidados) */}
+            {petTasks.length > 0 && (
+              <div>
+                 <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
+                    <PawPrint size={16} /> Compromissos Pet
+                    {urgentPetTasks > 0 && (
+                      <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold rounded-full flex items-center gap-1">
+                        <Bell size={10} /> {urgentPetTasks} urgente{urgentPetTasks > 1 ? 's' : ''}
+                      </span>
+                    )}
+                 </h3>
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                   {petTasks.map(task => {
+                     const style = getPetTaskStyle(task);
+                     return (
+                      <div 
+                        key={task.id}
+                        className={`${style.bg} p-4 rounded-2xl border ${style.border} shadow-sm transition-all hover:shadow-md`}
+                      >
+                         <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center gap-3 flex-1">
+                              <div className={`w-10 h-10 rounded-full ${style.bg} flex items-center justify-center ${style.icon} border ${style.border}`}>
+                                <PawPrint size={20} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                 <h4 className={`font-bold ${style.text} text-sm truncate`}>{task.title}</h4>
+                                 <p className="text-xs text-muted-foreground font-medium">
+                                   {formatDateBr(task.next_due_date!)}
+                                 </p>
+                              </div>
+                            </div>
+                            
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleTogglePetTask(task.id, task.done || false);
+                              }}
+                              disabled={updatingTaskId === task.id}
+                              className={`w-8 h-8 rounded-full flex items-center justify-center transition-all flex-shrink-0 ${
+                                task.done 
+                                  ? 'bg-emerald-500 text-white shadow-sm' 
+                                  : 'bg-card border-2 border-border text-muted-foreground hover:border-emerald-400'
+                              } ${updatingTaskId === task.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-90'}`}
+                            >
+                              {updatingTaskId === task.id ? (
+                                <Loader2 size={16} className="animate-spin" />
+                              ) : task.done ? (
+                                <Check size={16} strokeWidth={3} />
+                              ) : (
+                                <Circle size={16} strokeWidth={2} />
+                              )}
+                            </button>
+                         </div>
+                         
+                         <div className="flex items-center justify-between">
+                            <span className={`text-[9px] font-bold uppercase tracking-wider ${style.badge} px-2 py-1 rounded`}>
+                              {task.category === 'medication' ? 'Remédio' : task.category === 'vaccine' ? 'Vacina' : task.category === 'hygiene' ? 'Higiene' : task.category}
+                            </span>
+                            <span className={`text-[10px] font-bold ${style.text}`}>
+                              {style.label}
+                            </span>
+                         </div>
+                      </div>
+                     );
+                   })}
+                 </div>
+              </div>
+            )}
 
             {/* Quick Actions Grid */}
             <div>
@@ -540,17 +633,17 @@ export default function PetPage() {
                                       <button
                                         onClick={(e) => {
                                           e.stopPropagation();
-                                          handleToggleDone(log.id, log.done || false);
+                                          handleTogglePetTask(log.id, log.done || false);
                                         }}
-                                        disabled={updatingDoneId === log.id}
+                                        disabled={updatingTaskId === log.id}
                                         className={`w-5 h-5 rounded-full flex items-center justify-center transition-all ${
                                           log.done 
                                             ? 'bg-emerald-500 text-white shadow-sm' 
                                             : 'bg-card border-2 border-border text-muted-foreground hover:border-emerald-400'
-                                        } ${updatingDoneId === log.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-90'}`}
+                                        } ${updatingTaskId === log.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-90'}`}
                                         title={log.done ? 'Marcar como não feito' : 'Marcar como feito'}
                                       >
-                                        {updatingDoneId === log.id ? (
+                                        {updatingTaskId === log.id ? (
                                           <Loader2 size={10} className="animate-spin" />
                                         ) : log.done ? (
                                           <Check size={12} strokeWidth={3} />
