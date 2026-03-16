@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../../integrations/supabase/client';
 
@@ -11,6 +10,15 @@ export interface ClientFile {
   file_size: number;
   created_at: string;
 }
+
+// Utilitário para sanitizar nomes de arquivos para nuvem
+const sanitizeFileName = (fileName: string) => {
+  return fileName
+    .normalize("NFD") // Separa os acentos das letras
+    .replace(/[\u0300-\u036f]/g, "") // Remove os acentos
+    .replace(/[^a-zA-Z0-9.-]/g, "_") // Substitui espaços e caracteres especiais por underscore
+    .toLowerCase(); // Padroniza tudo em minúsculo
+};
 
 export function useClientFiles(clientId: string | undefined) {
   return useQuery({
@@ -38,15 +46,18 @@ export function useUploadFile() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Usuário não logado");
 
-      // 1. Upload para o Storage
-      const fileExt = file.name.split('.').pop();
-      const filePath = `${clientId}/${Date.now()}_${file.name}`; // Organiza por pasta do cliente
+      // 1. Sanitização e Upload para o Storage
+      const sanitizedName = sanitizeFileName(file.name);
+      const filePath = `${clientId}/${Date.now()}_${sanitizedName}`; // Organiza por pasta do cliente com nome seguro
       
       const { error: uploadError } = await supabase.storage
         .from('client-files')
         .upload(filePath, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error("Erro no upload do Storage:", uploadError);
+        throw uploadError;
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('client-files')
@@ -58,7 +69,7 @@ export function useUploadFile() {
         .insert({
           client_id: clientId,
           user_id: user.id,
-          file_name: file.name,
+          file_name: file.name, // Mantemos o nome original de exibição pro cliente
           file_url: publicUrl,
           file_type: file.type,
           file_size: file.size
@@ -88,10 +99,11 @@ export function useDeleteFile() {
         
       if (dbError) throw dbError;
 
-      // 2. Tenta remover do Storage (Opcional, mas limpa espaço)
-      // Extrai o path da URL
-      const path = fileUrl.split('client-files/')[1];
-      if (path) {
+      // 2. Tenta remover do Storage
+      // Extrai o path da URL com segurança
+      const urlParts = fileUrl.split('client-files/');
+      if (urlParts.length > 1) {
+        const path = urlParts[1];
         await supabase.storage.from('client-files').remove([path]);
       }
     },
