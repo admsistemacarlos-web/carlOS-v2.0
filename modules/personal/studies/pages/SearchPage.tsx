@@ -92,9 +92,9 @@ export default function SearchPage() {
         .from('modules')
         .select(`
           id, title, course_id,
-          courses (title)
+          courses!inner (title, user_id)
         `)
-        .eq('user_id', user.id)
+        .eq('courses.user_id', user.id)
         .ilike('title', searchPattern)
         .limit(5);
 
@@ -103,12 +103,12 @@ export default function SearchPage() {
         .from('lessons')
         .select(`
           id, title, content, module_id,
-          modules (
+          modules!inner (
             title,
-            courses (title)
+            courses!inner (title, user_id)
           )
         `)
-        .eq('user_id', user.id)
+        .eq('modules.courses.user_id', user.id)
         .or(`title.ilike.${searchPattern},content.ilike.${searchPattern}`)
         .limit(20); // Mais limite para encontrar anotações
 

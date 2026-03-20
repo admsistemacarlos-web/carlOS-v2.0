@@ -131,6 +131,7 @@ export default function LessonDetail() {
             lessons (
               id,
               title,
+              content,
               is_completed,
               position
             )
@@ -168,7 +169,10 @@ export default function LessonDetail() {
     return modules.map(module => {
       const moduleMatch = module.title.toLowerCase().includes(query);
       if (moduleMatch) return module;
-      const matchingLessons = module.lessons.filter(l => l.title.toLowerCase().includes(query));
+      const matchingLessons = module.lessons.filter(l =>
+        l.title.toLowerCase().includes(query) ||
+        l.content?.toLowerCase().includes(query)
+      );
       if (matchingLessons.length > 0) return { ...module, lessons: matchingLessons };
       return null;
     }).filter((m): m is Module => m !== null);
