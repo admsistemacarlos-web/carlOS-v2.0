@@ -24,6 +24,7 @@ interface Lesson {
   id: string;
   title: string;
   description: string | null;
+  content: string | null;
   is_completed: boolean;
   position: number;
 }
@@ -131,10 +132,11 @@ export default function CourseDetail() {
         // Se o título ou descrição do módulo der match, mostra ele inteiro
         const moduleMatch = module.title.toLowerCase().includes(lowerTerm) ||
           module.description?.toLowerCase().includes(lowerTerm);
-        // Filtra as aulas que dão match por título ou descrição
+        // Filtra as aulas que dão match por título, descrição ou conteúdo
         const matchingLessons = module.lessons.filter(l =>
           l.title.toLowerCase().includes(lowerTerm) ||
-          l.description?.toLowerCase().includes(lowerTerm)
+          l.description?.toLowerCase().includes(lowerTerm) ||
+          l.content?.toLowerCase().includes(lowerTerm)
         );
 
         if (moduleMatch) return module; // Retorna módulo completo

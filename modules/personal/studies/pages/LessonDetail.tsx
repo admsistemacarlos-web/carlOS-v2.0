@@ -26,6 +26,7 @@ interface Lesson {
 interface Module {
   id: string;
   title: string;
+  description: string | null;
   lessons: Lesson[];
   position: number;
 }
@@ -127,6 +128,7 @@ export default function LessonDetail() {
           .select(`
             id,
             title,
+            description,
             position,
             lessons (
               id,
@@ -167,7 +169,8 @@ export default function LessonDetail() {
     const query = sidebarSearch.toLowerCase();
 
     return modules.map(module => {
-      const moduleMatch = module.title.toLowerCase().includes(query);
+      const moduleMatch = module.title.toLowerCase().includes(query) ||
+        module.description?.toLowerCase().includes(query);
       if (moduleMatch) return module;
       const matchingLessons = module.lessons.filter(l =>
         l.title.toLowerCase().includes(query) ||

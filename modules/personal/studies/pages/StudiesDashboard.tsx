@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../../../integrations/supabase/client';
@@ -32,6 +32,7 @@ export default function StudiesDashboard() {
   
   // UI State
   const [searchTerm, setSearchTerm] = useState('');
+  const [contentMatchIds, setContentMatchIds] = useState<Set<string>>(new Set());
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -77,6 +78,33 @@ export default function StudiesDashboard() {
     if (user) fetchCourses();
   }, [user]);
 
+  // --- CONTENT SEARCH (busca aulas por conteúdo e retorna IDs dos cursos pai) ---
+  useEffect(() => {
+    const query = searchTerm.toLowerCase().trim();
+    if (!query || !user) {
+      setContentMatchIds(new Set());
+      return;
+    }
+
+    const timeout = setTimeout(async () => {
+      const pattern = `%${query}%`;
+      const { data } = await supabase
+        .from('lessons')
+        .select(`modules!inner (courses!inner (id, user_id))`)
+        .eq('modules.courses.user_id', user.id)
+        .or(`title.ilike.${pattern},content.ilike.${pattern}`);
+
+      if (data) {
+        const ids = new Set<string>(
+          data.map((l: any) => l.modules?.courses?.id).filter(Boolean)
+        );
+        setContentMatchIds(ids);
+      }
+    }, 400);
+
+    return () => clearTimeout(timeout);
+  }, [searchTerm, user]);
+
   // --- GROUPING LOGIC ---
   const groupedCourses = useMemo(() => {
     const query = searchTerm.toLowerCase().trim();
@@ -85,7 +113,8 @@ export default function StudiesDashboard() {
       return (
         c.title.toLowerCase().includes(query) ||
         c.category?.toLowerCase().includes(query) ||
-        c.description?.toLowerCase().includes(query)
+        c.description?.toLowerCase().includes(query) ||
+        contentMatchIds.has(c.id)
       );
     });
 
@@ -100,7 +129,7 @@ export default function StudiesDashboard() {
     });
 
     return groups;
-  }, [courses, searchTerm]);
+  }, [courses, searchTerm, contentMatchIds]);
 
   // --- ACTIONS ---
   

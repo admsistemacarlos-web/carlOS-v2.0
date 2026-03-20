@@ -79,15 +79,15 @@ export default function SearchPage() {
     const searchPattern = `%${term}%`;
 
     try {
-      // 1. Search Courses (Title or Description)
+      // 1. Search Courses (Title, Description or Category)
       const coursesPromise = supabase
         .from('courses')
         .select('id, title, category')
         .eq('user_id', user.id)
-        .or(`title.ilike.${searchPattern},description.ilike.${searchPattern}`)
+        .or(`title.ilike.${searchPattern},description.ilike.${searchPattern},category.ilike.${searchPattern}`)
         .limit(5);
 
-      // 2. Search Modules (Title)
+      // 2. Search Modules (Title or Description)
       const modulesPromise = supabase
         .from('modules')
         .select(`
@@ -95,7 +95,7 @@ export default function SearchPage() {
           courses!inner (title, user_id)
         `)
         .eq('courses.user_id', user.id)
-        .ilike('title', searchPattern)
+        .or(`title.ilike.${searchPattern},description.ilike.${searchPattern}`)
         .limit(5);
 
       // 3. Search Lessons (Title OR Content)
