@@ -128,10 +128,14 @@ export default function CourseDetail() {
     const lowerTerm = searchTerm.toLowerCase();
 
     return modules.map(module => {
-        // Se o título do módulo der match, mostra ele inteiro
-        const moduleMatch = module.title.toLowerCase().includes(lowerTerm);
-        // Filtra as aulas que dão match
-        const matchingLessons = module.lessons.filter(l => l.title.toLowerCase().includes(lowerTerm));
+        // Se o título ou descrição do módulo der match, mostra ele inteiro
+        const moduleMatch = module.title.toLowerCase().includes(lowerTerm) ||
+          module.description?.toLowerCase().includes(lowerTerm);
+        // Filtra as aulas que dão match por título ou descrição
+        const matchingLessons = module.lessons.filter(l =>
+          l.title.toLowerCase().includes(lowerTerm) ||
+          l.description?.toLowerCase().includes(lowerTerm)
+        );
 
         if (moduleMatch) return module; // Retorna módulo completo
         if (matchingLessons.length > 0) return { ...module, lessons: matchingLessons }; // Retorna módulo com aulas filtradas
@@ -425,7 +429,7 @@ export default function CourseDetail() {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
           <input 
             type="text"
-            placeholder="Filtrar aulas ou módulos..."
+            placeholder="Buscar por nome ou descrição..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-card border border-border rounded-[1.5rem] py-4 pl-12 pr-12 text-foreground outline-none focus:ring-2 focus:ring-olive/10 transition-all shadow-sm"

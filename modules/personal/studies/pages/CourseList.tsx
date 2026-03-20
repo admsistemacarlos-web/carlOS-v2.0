@@ -199,7 +199,11 @@ const CourseList: React.FC = () => {
   // Filter Logic
   const filteredCourses = courses.filter(course => {
     const matchesCategory = selectedCategory === 'all' || (selectedCategory === 'sem_categoria' ? !course.category : course.category === selectedCategory);
-    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const query = searchTerm.toLowerCase().trim();
+    const matchesSearch = !query ||
+      course.title.toLowerCase().includes(query) ||
+      course.category?.toLowerCase().includes(query) ||
+      course.description?.toLowerCase().includes(query);
     return matchesCategory && matchesSearch;
   });
 
@@ -231,7 +235,7 @@ const CourseList: React.FC = () => {
              <input 
                value={searchTerm}
                onChange={(e) => setSearchTerm(e.target.value)}
-               placeholder="Buscar curso..." 
+               placeholder="Buscar por nome, categoria ou descrição..."
                className="w-full bg-card border border-border rounded-xl pl-9 pr-4 py-2.5 text-sm outline-none focus:border-primary/50 transition-colors"
              />
           </div>

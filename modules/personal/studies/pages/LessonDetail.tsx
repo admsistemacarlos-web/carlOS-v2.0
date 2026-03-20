@@ -163,13 +163,15 @@ export default function LessonDetail() {
 
   const filteredModules = useMemo(() => {
     if (!sidebarSearch.trim()) return modules;
+    const query = sidebarSearch.toLowerCase();
 
-    return modules.map(module => ({
-      ...module,
-      lessons: module.lessons.filter(l => 
-        l.title.toLowerCase().includes(sidebarSearch.toLowerCase())
-      )
-    })).filter(module => module.lessons.length > 0);
+    return modules.map(module => {
+      const moduleMatch = module.title.toLowerCase().includes(query);
+      if (moduleMatch) return module;
+      const matchingLessons = module.lessons.filter(l => l.title.toLowerCase().includes(query));
+      if (matchingLessons.length > 0) return { ...module, lessons: matchingLessons };
+      return null;
+    }).filter((m): m is Module => m !== null);
   }, [modules, sidebarSearch]);
 
   useEffect(() => {
@@ -313,7 +315,7 @@ export default function LessonDetail() {
                     <input 
                     value={sidebarSearch}
                     onChange={(e) => setSidebarSearch(e.target.value)}
-                    placeholder="Buscar aula..."
+                    placeholder="Buscar módulo ou aula..."
                     className="w-full bg-card border border-border rounded-lg pl-9 pr-8 py-2.5 text-xs font-medium text-foreground outline-none focus:ring-1 focus:ring-gray-300 placeholder:text-muted-foreground transition-all shadow-sm"
                     />
                     {sidebarSearch && (
