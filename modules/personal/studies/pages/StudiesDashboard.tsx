@@ -79,10 +79,15 @@ export default function StudiesDashboard() {
 
   // --- GROUPING LOGIC ---
   const groupedCourses = useMemo(() => {
-    const filtered = courses.filter(c => 
-      c.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.category?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const query = searchTerm.toLowerCase().trim();
+    const filtered = courses.filter(c => {
+      if (!query) return true;
+      return (
+        c.title.toLowerCase().includes(query) ||
+        c.category?.toLowerCase().includes(query) ||
+        c.description?.toLowerCase().includes(query)
+      );
+    });
 
     const groups: { [key: string]: Course[] } = {};
 
@@ -205,14 +210,19 @@ export default function StudiesDashboard() {
         </div>
 
         {/* Search Bar */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-          <input 
+        <div className="relative group">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-blue-600 transition-colors" size={18} />
+          <input
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Buscar por nome ou categoria..."
-            className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm placeholder:text-muted-foreground"
+            placeholder="Buscar por nome, categoria ou descrição..."
+            className="w-full bg-card border border-border rounded-xl pl-10 pr-10 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm placeholder:text-muted-foreground"
           />
+          {searchTerm && (
+            <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-secondary rounded-full text-muted-foreground transition-colors">
+              <X size={14} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -225,12 +235,22 @@ export default function StudiesDashboard() {
           </div>
         ) : Object.keys(groupedCourses).length === 0 ? (
           <div className="text-center py-20 bg-card rounded-2xl border border-border border-dashed">
-            <Book className="mx-auto h-12 w-12 text-muted-foreground/40 mb-3" />
-            <h3 className="text-lg font-medium text-foreground">Nenhum curso encontrado</h3>
-            <p className="text-muted-foreground text-sm mb-6">Comece adicionando seu primeiro material de estudo.</p>
-            <button onClick={handleOpenCreate} className="text-blue-600 hover:underline text-sm font-medium">
-              + Criar Curso
-            </button>
+            {searchTerm ? (
+              <>
+                <Search className="mx-auto text-muted-foreground mb-3" size={32} />
+                <p className="text-muted-foreground">Nenhum curso encontrado para "{searchTerm}".</p>
+                <button onClick={() => setSearchTerm('')} className="text-blue-600 font-bold text-xs uppercase tracking-widest mt-2 hover:underline">Limpar Busca</button>
+              </>
+            ) : (
+              <>
+                <Book className="mx-auto h-12 w-12 text-muted-foreground/40 mb-3" />
+                <h3 className="text-lg font-medium text-foreground">Nenhum curso encontrado</h3>
+                <p className="text-muted-foreground text-sm mb-6">Comece adicionando seu primeiro material de estudo.</p>
+                <button onClick={handleOpenCreate} className="text-blue-600 hover:underline text-sm font-medium">
+                  + Criar Curso
+                </button>
+              </>
+            )}
           </div>
         ) : (
           Object.keys(groupedCourses).map(category => (
