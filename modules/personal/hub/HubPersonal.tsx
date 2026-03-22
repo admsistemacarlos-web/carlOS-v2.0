@@ -14,7 +14,9 @@ import { CategoryFilters } from '../components/CategoryFilters';
 import type { CategoryFilter } from '../../../types/calendar';
 
 // Hooks Específicos
-import { useAccounts } from '../finance/hooks/useFinanceData';
+import { useAccounts, useBills } from '../finance/hooks/useFinanceData';
+import { useSubscriptions } from '../finance/hooks/useSubscriptions';
+import UpcomingAlerts from '../finance/components/UpcomingAlerts';
 import { useReadingProgress } from '../spiritual/hooks/useReadingProgress';
 import { bibleBooks } from '../spiritual/data/bibleBooks';
 import { DashboardCalendar } from '../components/DashboardCalendar';
@@ -165,6 +167,8 @@ export default function HubPersonal() {
   
   // 1. FINANCEIRO
   const { accounts } = useAccounts();
+  const { bills } = useBills();
+  const { subscriptions } = useSubscriptions();
   const totalBalance = useMemo(() => accounts.reduce((acc, curr) => acc + (curr.balance || 0), 0), [accounts]);
 
   // 2. PET (Berry's Reminders) - ATUALIZADO
@@ -553,7 +557,12 @@ export default function HubPersonal() {
         </div>
       </div>
 
-      {/* 3. LENDO AGORA */}
+      {/* 3. ALERTAS FINANCEIROS */}
+      <div className="mb-8">
+        <UpcomingAlerts bills={bills} subscriptions={subscriptions} />
+      </div>
+
+      {/* 4. LENDO AGORA */}
       {inProgressBooks.length > 0 && (
         <div className="mb-8">
            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2 px-1">

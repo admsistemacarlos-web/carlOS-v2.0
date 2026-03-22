@@ -65,21 +65,21 @@ const CardsPage: React.FC = () => {
             const progress = Math.min((currentSpend / card.limit_amount) * 100, 100);
 
             return (
-              <div 
-                key={card.id} 
+              <div
+                key={card.id}
                 onClick={() => navigate(`/personal/finance/cards/${card.id}`)}
-                className="group relative h-64 bg-gradient-to-br from-[hsl(var(--card))] to-background rounded-[2rem] p-8 shadow-xl overflow-hidden cursor-pointer hover:-translate-y-1 transition-transform border border-white/5"
+                className="group relative h-64 bg-gradient-to-br from-[#3C3633] to-[#1a1715] rounded-[2rem] p-8 shadow-xl overflow-hidden cursor-pointer hover:-translate-y-1 transition-transform"
               >
                 {/* Background Decor */}
-                <div className="absolute top-0 right-0 w-48 h-48 bg-card/5 rounded-full -mr-20 -mt-20 blur-3xl"></div>
-                
+                <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none" />
+
                 <div className="relative z-10 flex flex-col justify-between h-full text-white">
                   <div className="flex justify-between items-start">
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Cartão</span>
                       <h3 className="text-xl font-bold tracking-tight">{card.name}</h3>
                     </div>
-                    <CardIcon size={24} className="text-white/80" />
+                    <CardIcon size={24} className="text-white/50" />
                   </div>
 
                   <div className="space-y-4">
@@ -90,16 +90,16 @@ const CardsPage: React.FC = () => {
                       </div>
                       <div className="text-right">
                         <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">Disponível</p>
-                        <p className="text-sm font-medium text-white/80">R$ {available.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                        <p className="text-sm font-medium text-white/70">R$ {available.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                       </div>
                     </div>
 
                     {/* Progress Bar */}
-                    <div className="h-1.5 w-full bg-card/10 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full rounded-full transition-all duration-500 ${progress > 80 ? 'bg-terracotta' : 'bg-primary'}`}
+                    <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${progress > 80 ? 'bg-red-400' : 'bg-white/50'}`}
                         style={{ width: `${progress}%` }}
-                      ></div>
+                      />
                     </div>
 
                     <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest text-white/30">
@@ -115,7 +115,7 @@ const CardsPage: React.FC = () => {
                     e.stopPropagation();
                     handleOpenForm(card);
                   }}
-                  className="absolute top-4 right-4 p-2 bg-card/10 hover:bg-card/20 rounded-full opacity-0 group-hover:opacity-100 transition-all z-20"
+                  className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-all z-20"
                   title="Editar Cartão"
                 >
                   <Pencil size={16} className="text-white" />
