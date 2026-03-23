@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Wallet, PawPrint, BookOpen, Church, ChevronRight, Activity, 
+import {
+  Wallet, PawPrint, BookOpen, Church, ChevronRight, Activity,
   CheckCircle2, Dumbbell, Check,
   Zap, Frown,
-  Wine, Loader2, Scale, AlertCircle, Calendar, XCircle, Circle, Bell
+  Wine, Loader2, Scale, AlertCircle, Calendar, XCircle, Circle, Bell, ChevronDown
 } from 'lucide-react';
 import { supabase } from '../../../integrations/supabase/client';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -17,6 +17,8 @@ import type { CategoryFilter } from '../../../types/calendar';
 import { useAccounts, useBills } from '../finance/hooks/useFinanceData';
 import { useSubscriptions } from '../finance/hooks/useSubscriptions';
 import UpcomingAlerts from '../finance/components/UpcomingAlerts';
+import InvoicePaymentDialog from '../finance/components/modals/InvoicePaymentDialog';
+import { Bill } from '../finance/types/finance.types';
 import { useReadingProgress } from '../spiritual/hooks/useReadingProgress';
 import { bibleBooks } from '../spiritual/data/bibleBooks';
 import { DashboardCalendar } from '../components/DashboardCalendar';
@@ -161,15 +163,67 @@ const BioTrackerCard: React.FC<BioTrackerCardProps> = ({
   );
 };
 
+// --- ACCORDION SECTION ---
+interface AccordionSectionProps {
+  title: string;
+  icon: React.ReactNode;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+  preview?: React.ReactNode;
+  badge?: React.ReactNode;
+}
+
+const AccordionSection: React.FC<AccordionSectionProps> = ({ title, icon, isOpen, onToggle, children, preview, badge }) => (
+  <div className="mb-4">
+    <button
+      onClick={onToggle}
+      className="w-full flex items-center justify-between px-1 py-3 group"
+    >
+      <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+        {icon} {title} {badge}
+      </span>
+      <div className="flex items-center gap-3">
+        {!isOpen && preview && (
+          <span className="text-sm font-semibold text-foreground">{preview}</span>
+        )}
+        <ChevronDown
+          size={16}
+          className={`text-muted-foreground transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+        />
+      </div>
+    </button>
+    <div
+      className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-[2000px] opacity-100 mt-1' : 'max-h-0 opacity-0'}`}
+    >
+      {children}
+    </div>
+  </div>
+);
+
 export default function HubPersonal() {
   const navigate = useNavigate();
   const { user } = useAuth();
   
   // 1. FINANCEIRO
   const { accounts } = useAccounts();
-  const { bills } = useBills();
+  const { bills, refresh: refreshBills } = useBills();
   const { subscriptions } = useSubscriptions();
   const totalBalance = useMemo(() => accounts.reduce((acc, curr) => acc + (curr.balance || 0), 0), [accounts]);
+  const [payingBill, setPayingBill] = useState<Bill | null>(null);
+
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    financeiro: false,
+    espiritual: false,
+    tatica: false,
+    pet: false,
+    historico: false,
+    biodata: false,
+  });
+
+  const toggleSection = (key: string) => {
+    setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
   // 2. PET (Berry's Reminders) - ATUALIZADO
   const [petTasks, setPetTasks] = useState<PetTask[]>([]);
@@ -537,72 +591,100 @@ export default function HubPersonal() {
         </div>
       </div>
 
-      {/* 2. RESUMO FINANCEIRO */}
-      <div className="mb-8">
-        <div 
-          onClick={() => navigate('/personal/finance')}
-          className="bg-foreground rounded-[2rem] p-6 text-background shadow-lg cursor-pointer hover:scale-[1.01] transition-transform active:scale-95"
-        >
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-background/50 mb-1">Patrimônio Líquido</p>
-              <h2 className="text-3xl font-bold tracking-tighter">
-                R$ {totalBalance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-              </h2>
-            </div>
-            <div className="p-3 bg-background/10 rounded-full text-background/60">
-              <Wallet size={24} />
+      {/* 2+3. FINANCEIRO (accordion) */}
+      <AccordionSection
+        title="Financeiro"
+        icon={<Wallet size={16} />}
+        isOpen={openSections.financeiro}
+        onToggle={() => toggleSection('financeiro')}
+        preview={
+          <span className="text-foreground font-bold">
+            R$ {totalBalance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+          </span>
+        }
+      >
+        <div className="mb-4">
+          <div
+            onClick={() => navigate('/personal/finance/transactions')}
+            className="bg-foreground rounded-[2rem] p-6 text-background shadow-lg cursor-pointer hover:scale-[1.01] transition-transform active:scale-95"
+          >
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-background/50 mb-1">Saldo</p>
+                <h2 className="text-3xl font-bold tracking-tighter">
+                  R$ {totalBalance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </h2>
+              </div>
+              <div className="p-3 bg-background/10 rounded-full text-background/60">
+                <Wallet size={24} />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* 3. ALERTAS FINANCEIROS */}
-      <div className="mb-8">
-        <UpcomingAlerts bills={bills} subscriptions={subscriptions} />
-      </div>
-
-      {/* 4. LENDO AGORA */}
-      {inProgressBooks.length > 0 && (
-        <div className="mb-8">
-           <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
-              <BookOpen size={16} /> Lendo Agora
-           </h3>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-             {inProgressBooks.slice(0, 2).map(book => {
-               const stats = getBookProgress(book.name, book.chapters);
-               return (
-                 <div 
-                   key={book.name} 
-                   onClick={() => navigate('/personal/spiritual/reading')}
-                   className="bg-card p-4 rounded-2xl border border-border shadow-sm flex items-center justify-between cursor-pointer hover:border-blue-200 transition-colors group"
-                 >
-                    <div className="flex-1">
-                       <span className="text-[9px] font-bold text-blue-500 uppercase tracking-[0.15em] bg-blue-50 px-2 py-0.5 rounded mb-1.5 inline-block border border-blue-100/50">
-                          Vida Espiritual
-                       </span>
-                       <h4 className="font-bold text-foreground group-hover:text-blue-700 transition-colors">{book.name}</h4>
-                       <p className="text-xs text-muted-foreground">{stats.read} de {book.chapters} capítulos</p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                       <span className="text-xs font-bold text-blue-600">{stats.percentage}%</span>
-                       <div className="w-6 h-6 rounded-full border border-border flex items-center justify-center group-hover:bg-blue-50 group-hover:border-blue-200 transition-all">
-                          <ChevronRight size={14} className="text-muted-foreground group-hover:text-blue-500" />
-                       </div>
-                    </div>
-                 </div>
-               );
-             })}
-           </div>
+        <div className="mb-4">
+          <UpcomingAlerts bills={bills} subscriptions={subscriptions} onPayBill={setPayingBill} />
         </div>
+        {payingBill && (
+          <InvoicePaymentDialog
+            isOpen={true}
+            onClose={() => setPayingBill(null)}
+            onSuccess={() => { refreshBills(); setPayingBill(null); }}
+            bill={payingBill}
+          />
+        )}
+      </AccordionSection>
+
+      {/* 4. LENDO AGORA (accordion) */}
+      {inProgressBooks.length > 0 && (
+        <AccordionSection
+          title="Lendo Agora"
+          icon={<BookOpen size={16} />}
+          isOpen={openSections.espiritual}
+          onToggle={() => toggleSection('espiritual')}
+          preview={<span className="text-xs text-muted-foreground">{inProgressBooks.length} livro{inProgressBooks.length > 1 ? 's' : ''}</span>}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+            {inProgressBooks.slice(0, 2).map(book => {
+              const stats = getBookProgress(book.name, book.chapters);
+              return (
+                <div
+                  key={book.name}
+                  onClick={() => navigate('/personal/spiritual/reading')}
+                  className="bg-card p-4 rounded-2xl border border-border shadow-sm flex items-center justify-between cursor-pointer hover:border-blue-200 transition-colors group"
+                >
+                  <div className="flex-1">
+                    <span className="text-[9px] font-bold text-blue-500 uppercase tracking-[0.15em] bg-blue-50 px-2 py-0.5 rounded mb-1.5 inline-block border border-blue-100/50">
+                      Vida Espiritual
+                    </span>
+                    <h4 className="font-bold text-foreground group-hover:text-blue-700 transition-colors">{book.name}</h4>
+                    <p className="text-xs text-muted-foreground">{stats.read} de {book.chapters} capítulos</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold text-blue-600">{stats.percentage}%</span>
+                    <div className="w-6 h-6 rounded-full border border-border flex items-center justify-center group-hover:bg-blue-50 group-hover:border-blue-200 transition-all">
+                      <ChevronRight size={14} className="text-muted-foreground group-hover:text-blue-500" />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </AccordionSection>
       )}
 
-      {/* 4. TÁTICA DIÁRIA */}
-      <div className="mb-8">
-          <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
-            <CheckCircle2 size={16} /> Tática Diária (1-2-3)
-          </h3>
-          <div className="bg-card p-6 rounded-[2rem] border border-border shadow-sm space-y-4">
+      {/* 4. TÁTICA DIÁRIA (accordion) */}
+      <AccordionSection
+        title="Tática Diária (1-2-3)"
+        icon={<CheckCircle2 size={16} />}
+        isOpen={openSections.tatica}
+        onToggle={() => toggleSection('tatica')}
+        preview={(() => {
+          const done = dailyTasks.filter(t => t.completed).length;
+          const total = dailyTasks.length;
+          return <span className="text-xs text-muted-foreground">{done}/{total} concluídas</span>;
+        })()}
+      >
+        <div className="bg-card p-6 rounded-[2rem] border border-border shadow-sm space-y-4 mb-4">
             <div className="bg-secondary border-l-4 border-primary rounded-xl p-4 flex items-center gap-4">
               <button 
                   onClick={() => updateTask(focusTask.id, 'completed', !focusTask.completed)}
@@ -638,13 +720,13 @@ export default function HubPersonal() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
               {routineTasks.map(task => (
                 <div key={task.id} className="bg-secondary/50 rounded-xl p-2.5 flex items-center gap-3 border border-border">
-                    <button 
+                    <button
                       onClick={() => updateTask(task.id, 'completed', !task.completed)}
                       className={`w-4 h-4 rounded-full border flex items-center justify-center transition-all flex-shrink-0 ${task.completed ? 'bg-muted-foreground border-border text-white' : 'border-border'}`}
                     >
                       {task.completed && <Check size={8} strokeWidth={3} />}
                     </button>
-                    <input 
+                    <input
                       value={task.text}
                       onChange={(e) => updateTask(task.id, 'text', e.target.value)}
                       placeholder="Rotina..."
@@ -654,20 +736,23 @@ export default function HubPersonal() {
               ))}
             </div>
           </div>
-      </div>
+      </AccordionSection>
 
-      {/* 5. PET REMINDERS */}
+      {/* 5. PET REMINDERS (accordion) */}
       {petTasks.length > 0 && (
-        <div className="mb-8">
-           <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
-              <PawPrint size={16} /> Compromissos Pet
-              {urgentPetTasks > 0 && (
-                <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold rounded-full flex items-center gap-1">
-                  <Bell size={10} /> {urgentPetTasks} urgente{urgentPetTasks > 1 ? 's' : ''}
-                </span>
-              )}
-           </h3>
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <AccordionSection
+          title="Compromissos Pet"
+          icon={<PawPrint size={16} />}
+          isOpen={openSections.pet}
+          onToggle={() => toggleSection('pet')}
+          badge={urgentPetTasks > 0 ? (
+            <span className="ml-1 px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold rounded-full flex items-center gap-1">
+              <Bell size={10} /> {urgentPetTasks} urgente{urgentPetTasks > 1 ? 's' : ''}
+            </span>
+          ) : undefined}
+          preview={<span className="text-xs text-muted-foreground">{petTasks.length} compromisso{petTasks.length > 1 ? 's' : ''}</span>}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
              {petTasks.map(task => {
                const style = getPetTaskStyle(task);
                return (
@@ -722,59 +807,57 @@ export default function HubPersonal() {
                );
              })}
            </div>
-        </div>
+        </AccordionSection>
       )}
 
-      {/* 6. FILTROS DE EVENTOS */}
-      <div className="mb-8">
-         <CategoryFilters 
+      {/* 6+7. HISTÓRICO MENSAL (accordion) */}
+      <AccordionSection
+        title="Histórico Mensal"
+        icon={<Calendar size={16} />}
+        isOpen={openSections.historico}
+        onToggle={() => toggleSection('historico')}
+        preview={<span className="text-xs text-muted-foreground">{new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(calendarMonth)}</span>}
+      >
+        <div className="mb-4">
+          <CategoryFilters
             filters={categoryFilters}
             onToggle={handleToggleCategory}
-         />
-      </div>
-
-      {/* 7. CALENDÁRIO E EVENTOS */}
-      <div className="mb-8">
-         <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
-            <Calendar size={16} /> Histórico Mensal
-         </h3>
-         
-         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-<div className="lg:col-span-2 min-h-[450px]">
-               <DashboardCalendar 
-                  selectedDate={selectedDate}
-                  onSelectDate={setSelectedDate}
-                  currentMonth={calendarMonth}
-                  onMonthChange={setCalendarMonth}
-                  markers={combinedMarkers}
-                  enabledCategories={enabledCategories}
-               />
-            </div>
-            
-<div className="min-h-[450px]">
-               <DashboardEventsSidebar 
-                  selectedDate={selectedDate}
-                  events={filteredEvents}
-               />
-            </div>
-         </div>
-      </div>
-
-      {/* 8. BIO-DATA CHECK-IN */}
-      <div className="mb-8">
-        <div className="flex justify-between items-center mb-4 px-1">
-            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                <Activity size={16} /> Bio-Data • {formatShortDate(selectedDate)}
-            </h3>
-            
-            <div className="flex items-center gap-2">
-              {saveStatus === 'saving' && <span className="text-[10px] text-muted-foreground font-medium flex gap-1"><Loader2 size={12} className="animate-spin" /></span>}
-              {saveStatus === 'saved' && <span className="text-[10px] text-emerald-600 font-bold flex gap-1 animate-fade-in"><CheckCircle2 size={12} /></span>}
-              {saveStatus === 'error' && <span className="text-[10px] text-red-500 font-bold flex gap-1"><AlertCircle size={12} /></span>}
-            </div>
+          />
         </div>
-        
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+          <div className="lg:col-span-2 min-h-[450px]">
+            <DashboardCalendar
+              selectedDate={selectedDate}
+              onSelectDate={setSelectedDate}
+              currentMonth={calendarMonth}
+              onMonthChange={setCalendarMonth}
+              markers={combinedMarkers}
+              enabledCategories={enabledCategories}
+            />
+          </div>
+          <div className="min-h-[450px]">
+            <DashboardEventsSidebar
+              selectedDate={selectedDate}
+              events={filteredEvents}
+            />
+          </div>
+        </div>
+      </AccordionSection>
+
+      {/* 8. BIO-DATA CHECK-IN (accordion) */}
+      <AccordionSection
+        title={`Bio-Data • ${formatShortDate(selectedDate)}`}
+        icon={<Activity size={16} />}
+        isOpen={openSections.biodata}
+        onToggle={() => toggleSection('biodata')}
+        preview={wellnessData.weight ? <span className="text-xs text-muted-foreground">{wellnessData.weight} kg</span> : undefined}
+        badge={
+          saveStatus === 'saving' ? <Loader2 size={12} className="animate-spin text-muted-foreground ml-1" /> :
+          saveStatus === 'saved' ? <CheckCircle2 size={12} className="text-emerald-600 ml-1" /> :
+          saveStatus === 'error' ? <AlertCircle size={12} className="text-red-500 ml-1" /> : undefined
+        }
+      >
+        <div className="grid grid-cols-2 gap-3 mb-4">
           {/* Card 1: Peso (Input) */}
           <div className="bg-card p-4 rounded-2xl border border-border shadow-sm flex flex-col justify-between h-24">
                 <div className="flex items-center gap-2 text-muted-foreground">
@@ -847,16 +930,16 @@ export default function HubPersonal() {
           />
 
           {/* Card 4: Dor */}
-          <BioTrackerCard 
-            label="Dor" 
-            icon={<Frown size={18} />} 
-            value={wellnessData.headache} 
+          <BioTrackerCard
+            label="Dor"
+            icon={<Frown size={18} />}
+            value={wellnessData.headache}
             onChange={(val) => handleUpdateLog('headache', val)}
             activeColorClass="text-red-500 border-red-200 bg-red-50"
             variant="avoidance"
           />
         </div>
-      </div>
+      </AccordionSection>
 
     </div>
   );

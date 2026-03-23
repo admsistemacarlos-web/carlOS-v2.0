@@ -2,28 +2,18 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBills } from '../hooks/useFinanceData';
-import { 
-  Plus, Calendar, AlertCircle, CheckCircle2, ArrowLeft, 
-  Wallet, Trash2, Pencil, Filter, TrendingDown, Clock, Repeat,
-  ChevronLeft, ChevronRight, LayoutGrid, CalendarDays
+import {
+  Plus, AlertCircle, CheckCircle2, ArrowLeft,
+  Trash2, Pencil, Filter, Clock,
+  ChevronLeft, ChevronRight, CalendarDays
 } from 'lucide-react';
 import { Bill } from '../types/finance.types';
 import InvoicePaymentDialog from '../components/modals/InvoicePaymentDialog';
-import BillFormModal from '../components/modals/BillFormModal';
 import InstallmentDetailsModal from '../components/modals/InstallmentDetailsModal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { parseLocalDate, formatDateBr } from '../utils/dateHelpers';
 
 type PeriodType = 'month' | 'quarter' | 'semester' | 'year';
-
-const getTypeLabel = (type?: string) => {
-  const labels: Record<string, { label: string; color: string }> = {
-    'fixed': { label: 'Fixa', color: 'text-muted-foreground' }, 
-    'variable': { label: 'Variável', color: 'text-muted-foreground' },
-    'temporary': { label: 'Temp', color: 'text-muted-foreground' },
-  };
-  return labels[type || 'variable'];
-};
 
 const BillsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -33,12 +23,10 @@ const BillsPage: React.FC = () => {
   const [periodType, setPeriodType] = useState<PeriodType>('month');
   const [referenceDate, setReferenceDate] = useState(new Date());
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'paid' | 'overdue'>('all');
-  
+
   // --- ESTADOS DE MODAL ---
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [billToPay, setBillToPay] = useState<Bill | null>(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [billToEdit, setBillToEdit] = useState<Bill | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; billId: string | null }>({
     isOpen: false,
     billId: null
@@ -46,7 +34,7 @@ const BillsPage: React.FC = () => {
   const [installmentModalOpen, setInstallmentModalOpen] = useState(false);
   const [selectedInstallments, setSelectedInstallments] = useState<Bill[]>([]);
 
-  // --- LÓGICA DE DATAS (O Coração da Performance) ---
+  // --- LÓGICA DE DATAS ---
   const dateRange = useMemo(() => {
     const year = referenceDate.getFullYear();
     const month = referenceDate.getMonth();
@@ -74,10 +62,10 @@ const BillsPage: React.FC = () => {
         end = new Date(year, month + 1, 0);
         break;
     }
-    
+
     start.setHours(0, 0, 0, 0);
     end.setHours(23, 59, 59, 999);
-    
+
     return { start, end };
   }, [periodType, referenceDate]);
 
@@ -117,7 +105,6 @@ const BillsPage: React.FC = () => {
       .sort((a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime());
   }, [bills, dateRange, statusFilter]);
 
-  // Estatísticas do Período Selecionado
   const stats = useMemo(() => {
     const periodBills = bills.filter(b => {
       const dueDate = new Date(b.due_date.split('T')[0] + 'T12:00:00');
@@ -127,9 +114,8 @@ const BillsPage: React.FC = () => {
     const pending = periodBills.filter(b => b.status === 'pending').reduce((acc, b) => acc + b.amount, 0);
     const paid = periodBills.filter(b => b.status === 'paid').reduce((acc, b) => acc + b.amount, 0);
     const overdue = periodBills.filter(b => b.status === 'overdue').reduce((acc, b) => acc + b.amount, 0);
-    const overdueCount = periodBills.filter(b => b.status === 'overdue').length;
 
-    return { pending, paid, overdue, overdueCount };
+    return { pending, paid, overdue };
   }, [bills, dateRange]);
 
   const groupedBills = useMemo(() => {
@@ -143,9 +129,30 @@ const BillsPage: React.FC = () => {
   }, [filteredBills]);
 
   // --- HANDLERS ---
-  const handlePayClick = (bill: Bill) => { setBillToPay(bill); setIsPaymentOpen(true); };
-  const handleEditClick = (bill: Bill) => { setBillToEdit(bill); setIsFormOpen(true); };
-  const handleDeleteClick = (id: string) => { setDeleteConfirm({ isOpen: true, billId: id }); };
+  const handlePayClick = (bill: Bill, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setBillToPay(bill);
+    setIsPaymentOpen(true);
+  };
+
+  const handleEditClick = (bill: Bill, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    navigate(`/personal/finance/bills/edit/${bill.id}`);
+  };
+
+  const handleDeleteClick = (id: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setDeleteConfirm({ isOpen: true, billId: id });
+  };
+
+  const handleInstallmentClick = (bill: Bill, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!bill.installment_group_id) return;
+    const group = bills.filter(b => b.installment_group_id === bill.installment_group_id);
+    setSelectedInstallments(group);
+    setInstallmentModalOpen(true);
+  };
+
   const confirmDelete = async () => {
     if (deleteConfirm.billId) {
       await deleteBill(deleteConfirm.billId);
@@ -173,7 +180,7 @@ const BillsPage: React.FC = () => {
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-2xl font-semibold text-foreground tracking-tighter">Extrato de Contas</h1>
+            <h1 className="text-2xl font-semibold text-foreground tracking-tighter">Pendências</h1>
             <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">Gestão Cronológica</p>
           </div>
         </div>
@@ -208,7 +215,7 @@ const BillsPage: React.FC = () => {
             </button>
           </div>
 
-          <button 
+          <button
             onClick={() => navigate('/personal/finance/transactions/new')}
             className="bg-coffee hover:bg-black text-white px-5 py-2.5 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all ml-auto lg:ml-0"
           >
@@ -217,7 +224,7 @@ const BillsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Cards de Resumo Dinâmicos */}
+      {/* Cards de Resumo */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-card p-6 rounded-[2rem] border border-border shadow-sm group hover:shadow-md transition-shadow">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Pendente no Período</p>
@@ -256,8 +263,8 @@ const BillsPage: React.FC = () => {
                 key={filter.id}
                 onClick={() => setStatusFilter(filter.id as any)}
                 className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest border transition-all whitespace-nowrap ${
-                    statusFilter === filter.id 
-                    ? 'bg-stone-800 text-white border-stone-800 shadow-md scale-105' 
+                    statusFilter === filter.id
+                    ? 'bg-stone-800 text-white border-stone-800 shadow-md scale-105'
                     : 'bg-card text-muted-foreground border-border hover:bg-secondary'
                 }`}
             >
@@ -288,22 +295,28 @@ const BillsPage: React.FC = () => {
 
                 <div className="space-y-2">
                   {group.items.map((bill) => (
-                    <div 
-                      key={bill.id} 
-                      className={`group flex items-center justify-between py-3.5 px-5 rounded-2xl border transition-all hover:shadow-sm ${
-                        bill.status === 'paid' 
-                          ? 'bg-secondary/50 border-border opacity-60' 
+                    <div
+                      key={bill.id}
+                      onClick={() => handleEditClick(bill)}
+                      className={`group flex items-center justify-between py-3.5 px-5 rounded-2xl border transition-all hover:shadow-sm cursor-pointer ${
+                        bill.status === 'paid'
+                          ? 'bg-emerald-50/60 border-emerald-100'
+                          : bill.status === 'overdue'
+                          ? 'bg-card border-border hover:border-red-200'
                           : 'bg-card border-border hover:border-border'
                       }`}
                     >
                       <div className="flex items-center gap-4 min-w-0">
-                        <div className={`p-2 rounded-xl flex-shrink-0 ${
-                          bill.status === 'paid' ? 'bg-emerald-50 text-emerald-600' :
-                          bill.status === 'overdue' ? 'bg-red-50 text-red-600' :
-                          'bg-secondary text-muted-foreground'
-                        }`}>
-                          {bill.status === 'paid' ? <CheckCircle2 size={16} /> : <Clock size={16} />}
-                        </div>
+                        {/* Ícone esquerdo — só renderiza espaço se houver ícone */}
+                        {(bill.status === 'paid' || bill.status === 'overdue') && (
+                          <div className="flex-shrink-0">
+                            {bill.status === 'paid' ? (
+                              <CheckCircle2 size={15} className="text-emerald-500 opacity-60" />
+                            ) : (
+                              <AlertCircle size={15} className="text-red-400 opacity-50" />
+                            )}
+                          </div>
+                        )}
 
                         <div className="min-w-0">
                           <h3 className={`font-bold text-sm truncate ${bill.status === 'paid' ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
@@ -314,9 +327,12 @@ const BillsPage: React.FC = () => {
                               {bill.category}
                             </span>
                             {bill.is_installment && (
-                              <span className="text-[9px] font-bold text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">
+                              <button
+                                onClick={(e) => handleInstallmentClick(bill, e)}
+                                className="text-[9px] font-bold text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 hover:bg-blue-100 transition-colors"
+                              >
                                 {bill.installment_number}/{bill.total_installments}
-                              </span>
+                              </button>
                             )}
                           </div>
                         </div>
@@ -324,18 +340,18 @@ const BillsPage: React.FC = () => {
 
                       <div className="flex items-center gap-4">
                         <p className={`text-sm font-bold ${
-                          bill.status === 'paid' ? 'text-emerald-600' : 
-                          bill.status === 'overdue' ? 'text-red-600' : 
+                          bill.status === 'paid' ? 'text-emerald-600' :
+                          bill.status === 'overdue' ? 'text-red-600' :
                           'text-foreground'
                         }`}>
                           R$ {bill.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                         </p>
-                        
-                        <div className="hidden group-hover:flex gap-1">
-                          <button onClick={() => handleEditClick(bill)} className="p-2 hover:bg-secondary text-muted-foreground hover:text-muted-foreground rounded-lg transition-colors"><Pencil size={14} /></button>
-                          <button onClick={() => handleDeleteClick(bill.id)} className="p-2 hover:bg-red-50 text-muted-foreground hover:text-red-500 rounded-lg transition-colors"><Trash2 size={14} /></button>
+
+                        <div className="hidden group-hover:flex gap-1" onClick={e => e.stopPropagation()}>
+                          <button onClick={(e) => handleEditClick(bill, e)} className="p-2 hover:bg-secondary text-muted-foreground hover:text-foreground rounded-lg transition-colors"><Pencil size={14} /></button>
+                          <button onClick={(e) => handleDeleteClick(bill.id, e)} className="p-2 hover:bg-red-50 text-muted-foreground hover:text-red-500 rounded-lg transition-colors"><Trash2 size={14} /></button>
                           {bill.status !== 'paid' && (
-                            <button onClick={() => handlePayClick(bill)} className="px-3 py-1.5 bg-primary hover:bg-black text-white rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-sm transition-all active:scale-95">Pagar</button>
+                            <button onClick={(e) => handlePayClick(bill, e)} className="px-3 py-1.5 bg-primary hover:bg-black text-white rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-sm transition-all active:scale-95">Pagar</button>
                           )}
                         </div>
                       </div>
@@ -350,8 +366,15 @@ const BillsPage: React.FC = () => {
 
       {/* Modais */}
       {billToPay && <InvoicePaymentDialog isOpen={isPaymentOpen} bill={billToPay} onClose={() => setIsPaymentOpen(false)} onSuccess={() => { refresh(); setIsPaymentOpen(false); }} />}
-      {isFormOpen && <BillFormModal isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} onSuccess={() => { refresh(); setIsFormOpen(false); }} billToEdit={billToEdit} />}
-      <InstallmentDetailsModal isOpen={installmentModalOpen} onClose={() => setInstallmentModalOpen(false)} installments={selectedInstallments} onPayInstallment={(id) => { const billToPay = bills.find(b => b.id === id); if (billToPay) { setBillToPay(billToPay); setIsPaymentOpen(true); setInstallmentModalOpen(false); } }} />
+      <InstallmentDetailsModal
+        isOpen={installmentModalOpen}
+        onClose={() => setInstallmentModalOpen(false)}
+        installments={selectedInstallments}
+        onPayInstallment={(id) => {
+          const b = bills.find(x => x.id === id);
+          if (b) { setBillToPay(b); setIsPaymentOpen(true); setInstallmentModalOpen(false); }
+        }}
+      />
       <ConfirmDialog isOpen={deleteConfirm.isOpen} title="Excluir Conta?" message="Deseja realmente excluir este lançamento? Esta ação é irreversível." onConfirm={confirmDelete} onCancel={() => setDeleteConfirm({ isOpen: false, billId: null })} />
     </div>
   );

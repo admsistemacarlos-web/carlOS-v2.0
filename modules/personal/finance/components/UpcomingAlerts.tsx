@@ -201,7 +201,7 @@ const UpcomingAlerts: React.FC<UpcomingAlertsProps> = ({
                       </button>
                     )}
                     <button
-                      onClick={(e) => { e.stopPropagation(); navigate('/personal/finance/bills'); }}
+                      onClick={(e) => { e.stopPropagation(); navigate(`/personal/finance/bills/edit/${item.originalBill!.id}`); }}
                       className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
                       title="Editar conta"
                     >

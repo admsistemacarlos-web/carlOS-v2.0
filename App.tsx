@@ -31,6 +31,7 @@ import CardsPage from './modules/personal/finance/pages/CardsPage';
 import CardDetailsPage from './modules/personal/finance/pages/CardDetailsPage';
 import CardInvoicesPage from './modules/personal/finance/pages/CardInvoicesPage';
 import BillsPage from './modules/personal/finance/pages/BillsPage';
+import BillEditPage from './modules/personal/finance/pages/BillEditPage';
 import TransactionsPage from './modules/personal/finance/pages/TransactionsPage';
 import NewTransactionPage from './modules/personal/finance/pages/NewTransactionPage';
 import AvailableLimitsPage from './modules/personal/finance/pages/AvailableLimitsPage';
@@ -140,6 +141,7 @@ const App: React.FC = () => {
                       <Route path="finance/cards/:id" element={<CardDetailsPage />} />
                       <Route path="finance/cards/:id/invoices" element={<CardInvoicesPage />} />
                       <Route path="finance/bills" element={<BillsPage />} />
+                      <Route path="finance/bills/edit/:id" element={<BillEditPage />} />
                       <Route path="finance/transactions" element={<TransactionsPage />} />
                       <Route path="finance/transactions/new" element={<NewTransactionPage />} />
                       <Route path="finance/new" element={<NewTransactionPage />} />

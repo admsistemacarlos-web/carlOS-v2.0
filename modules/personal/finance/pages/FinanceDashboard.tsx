@@ -323,7 +323,7 @@ const FinanceDashboard: React.FC = () => {
         subtitle="em todas as contas"
         icon={<Wallet />}
         loading={loadingAccounts}
-        onClick={() => navigate('/personal/finance/accounts')}
+        onClick={() => navigate('/personal/finance/transactions')}
       />
 
       {/* CASH FLOW DO MÊS */}

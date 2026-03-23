@@ -295,7 +295,16 @@ export const useBills = () => {
   const fetchBills = useCallback(async () => {
     setLoading(true);
     const { data } = await supabase.from('bills').select('*').order('due_date', { ascending: true });
-    setBills(data || []);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const normalized = (data || []).map(b => {
+      if (b.status === 'pending') {
+        const due = new Date(b.due_date.split('T')[0] + 'T12:00:00');
+        if (due < today) return { ...b, status: 'overdue' };
+      }
+      return b;
+    });
+    setBills(normalized);
     setLoading(false);
   }, []);
 
