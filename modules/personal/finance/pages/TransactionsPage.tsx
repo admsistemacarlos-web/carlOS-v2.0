@@ -302,32 +302,36 @@ const TransactionsPage: React.FC = () => {
       {/* --- BARRA DE FILTROS --- */}
       <div className="bg-card p-5 rounded-[2rem] border border-border shadow-sm space-y-4">
         
-        <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex flex-col gap-2 shrink-0">
-                <div className="flex bg-secondary p-1 rounded-xl">
-                    <button
-                        onClick={() => setPeriodMode('month')}
-                        className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${periodMode === 'month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
-                    >
-                        Por Mês
-                    </button>
-                    <button
-                        onClick={() => setPeriodMode('custom')}
-                        className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all flex items-center gap-1.5 ${periodMode === 'custom' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
-                    >
-                        <Calendar size={11} /> Por Data
-                    </button>
-                </div>
+        <div className="flex flex-col lg:flex-row lg:items-center gap-3">
+            {/* Período: tudo em uma única linha para não quebrar o alinhamento dos ícones */}
+            <div className="flex items-center bg-secondary p-1 rounded-xl overflow-x-auto no-scrollbar shrink-0 gap-0.5">
+                {/* Toggle modo */}
+                <button
+                    onClick={() => setPeriodMode('month')}
+                    className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${periodMode === 'month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                >
+                    Mês
+                </button>
+                <button
+                    onClick={() => setPeriodMode('custom')}
+                    className={`px-2.5 py-2 rounded-lg transition-all flex items-center gap-1 ${periodMode === 'custom' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                    title="Por data"
+                >
+                    <Calendar size={12} />
+                </button>
 
+                <div className="w-px h-4 bg-border/60 shrink-0 mx-1" />
+
+                {/* Conteúdo condicional */}
                 {periodMode === 'month' ? (
-                    <div className="flex bg-secondary p-1 rounded-xl overflow-x-auto no-scrollbar">
-                        <button onClick={() => setPeriod('last_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'last_month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Mês Passado</button>
-                        <button onClick={() => setPeriod('this_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'this_month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Este Mês</button>
-                        <button onClick={() => setPeriod('next_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'next_month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Próximo</button>
-                        <button onClick={() => setPeriod('all')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Tudo</button>
-                    </div>
+                    <>
+                        <button onClick={() => setPeriod('last_month')} className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'last_month' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Passado</button>
+                        <button onClick={() => setPeriod('this_month')} className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'this_month' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Este Mês</button>
+                        <button onClick={() => setPeriod('next_month')} className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'next_month' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Próximo</button>
+                        <button onClick={() => setPeriod('all')} className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'all' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Tudo</button>
+                    </>
                 ) : (
-                    <div className="flex items-center gap-2 bg-secondary px-3 py-2 rounded-xl">
+                    <div className="flex items-center gap-1.5 px-1">
                         <input
                             type="date"
                             value={customStartDate}
@@ -345,9 +349,9 @@ const TransactionsPage: React.FC = () => {
                 )}
             </div>
 
-            <div className="relative flex-1">
+            <div className="relative flex-1 self-center">
                 <Landmark className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
-                <select 
+                <select
                     value={accountIdFilter}
                     onChange={(e) => {
                       const val = e.target.value;
@@ -364,9 +368,9 @@ const TransactionsPage: React.FC = () => {
                 </select>
             </div>
 
-            <div className="relative flex-1">
+            <div className="relative flex-1 self-center">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
-                <input 
+                <input
                     value={searchText}
                     onChange={e => setSearchText(e.target.value)}
                     placeholder="Descrição da compra..."
