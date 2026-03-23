@@ -8,9 +8,10 @@ import {
   ArrowUpRight, ArrowDownLeft, Lock, ShoppingBag, ShieldCheck,
   Filter, Pencil, Trash2, Receipt, ChevronLeft, ChevronRight, Calendar, Copy, Repeat
 } from 'lucide-react';
-import { Transaction, Account } from '../types/finance.types';
+import { Transaction, Account, Bill } from '../types/finance.types';
 import ConfirmDialog from '../components/ConfirmDialog';
 import UpcomingAlerts from '../components/UpcomingAlerts';
+import BillFormModal from '../components/modals/BillFormModal';
 import { formatDateBr } from '../utils/dateHelpers';
 
 // ─── Hero Card (Saldo Atual) ────────────────────────────────────────────────
@@ -149,6 +150,8 @@ const FinanceDashboard: React.FC = () => {
     isOpen: boolean;
     transactionId: string | null;
   }>({ isOpen: false, transactionId: null });
+
+  const [editingBill, setEditingBill] = useState<Bill | null>(null);
 
   const handleEdit = (t: Transaction) => {
     if (t.is_locked) {
@@ -364,7 +367,11 @@ const FinanceDashboard: React.FC = () => {
       </div>
 
       {/* ALERTAS DE VENCIMENTO */}
-      <UpcomingAlerts bills={bills} subscriptions={subscriptions} />
+      <UpcomingAlerts
+        bills={bills}
+        subscriptions={subscriptions}
+        onEditBill={setEditingBill}
+      />
 
       {/* EXTRATO */}
       <div className="space-y-4">
@@ -479,6 +486,13 @@ const FinanceDashboard: React.FC = () => {
         message="Esta ação não pode ser desfeita. Se o lançamento estiver pago, o saldo da conta será restaurado automaticamente."
         onConfirm={confirmDelete}
         onCancel={() => setDeleteConfirm({ isOpen: false, transactionId: null })}
+      />
+
+      <BillFormModal
+        isOpen={editingBill !== null}
+        onClose={() => setEditingBill(null)}
+        onSuccess={() => { refreshBills(); setEditingBill(null); }}
+        billToEdit={editingBill}
       />
 
       <button

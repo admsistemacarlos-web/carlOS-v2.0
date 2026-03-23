@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, Receipt, Repeat, ChevronRight } from 'lucide-react';
+import { Bell, Receipt, Repeat, ChevronRight, Pencil } from 'lucide-react';
 import { Bill, Subscription } from '../types/finance.types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -12,12 +12,14 @@ interface AlertItem {
   daysUntil: number;
   type: 'bill' | 'subscription';
   dateStr: string;
+  originalBill?: Bill;
 }
 
 interface UpcomingAlertsProps {
   bills: Bill[];
   subscriptions: Subscription[];
   daysAhead?: number;
+  onEditBill?: (bill: Bill) => void;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -76,6 +78,7 @@ const UpcomingAlerts: React.FC<UpcomingAlertsProps> = ({
   bills,
   subscriptions,
   daysAhead = 7,
+  onEditBill,
 }) => {
   const navigate = useNavigate();
 
@@ -94,6 +97,7 @@ const UpcomingAlerts: React.FC<UpcomingAlertsProps> = ({
           daysUntil: days,
           type: 'bill',
           dateStr: b.due_date,
+          originalBill: b,
         });
       }
     });
@@ -160,7 +164,7 @@ const UpcomingAlerts: React.FC<UpcomingAlertsProps> = ({
           {visible.map(item => (
             <div
               key={item.id}
-              className="flex items-center justify-between px-6 py-3.5 hover:bg-accent transition-colors"
+              className="group flex items-center justify-between px-6 py-3.5 hover:bg-accent transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div className="p-1.5 rounded-lg bg-secondary text-muted-foreground">
@@ -184,6 +188,15 @@ const UpcomingAlerts: React.FC<UpcomingAlertsProps> = ({
                 <span className={`text-sm font-bold tabular-nums ${item.daysUntil < 0 ? 'text-destructive' : 'text-foreground'}`}>
                   {fmt(item.amount)}
                 </span>
+                {onEditBill && item.type === 'bill' && item.originalBill && (
+                  <button
+                    onClick={() => onEditBill(item.originalBill!)}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
+                    title="Editar conta"
+                  >
+                    <Pencil size={12} />
+                  </button>
+                )}
               </div>
             </div>
           ))}
