@@ -11,7 +11,7 @@ import {
 import { Transaction, Account, Bill } from '../types/finance.types';
 import ConfirmDialog from '../components/ConfirmDialog';
 import UpcomingAlerts from '../components/UpcomingAlerts';
-import BillFormModal from '../components/modals/BillFormModal';
+import InvoicePaymentDialog from '../components/modals/InvoicePaymentDialog';
 import { formatDateBr } from '../utils/dateHelpers';
 
 // ─── Hero Card (Saldo Atual) ────────────────────────────────────────────────
@@ -151,7 +151,7 @@ const FinanceDashboard: React.FC = () => {
     transactionId: string | null;
   }>({ isOpen: false, transactionId: null });
 
-  const [editingBill, setEditingBill] = useState<Bill | null>(null);
+  const [payingBill, setPayingBill] = useState<Bill | null>(null);
 
   const handleEdit = (t: Transaction) => {
     if (t.is_locked) {
@@ -370,7 +370,7 @@ const FinanceDashboard: React.FC = () => {
       <UpcomingAlerts
         bills={bills}
         subscriptions={subscriptions}
-        onEditBill={setEditingBill}
+        onPayBill={setPayingBill}
       />
 
       {/* EXTRATO */}
@@ -488,12 +488,14 @@ const FinanceDashboard: React.FC = () => {
         onCancel={() => setDeleteConfirm({ isOpen: false, transactionId: null })}
       />
 
-      <BillFormModal
-        isOpen={editingBill !== null}
-        onClose={() => setEditingBill(null)}
-        onSuccess={() => { refreshBills(); setEditingBill(null); }}
-        billToEdit={editingBill}
-      />
+      {payingBill && (
+        <InvoicePaymentDialog
+          isOpen={true}
+          onClose={() => setPayingBill(null)}
+          onSuccess={() => { refreshBills(); setPayingBill(null); }}
+          bill={payingBill}
+        />
+      )}
 
       <button
         onClick={() => navigate('/personal/finance/transactions/new')}

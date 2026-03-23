@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, Receipt, Repeat, ChevronRight, Pencil } from 'lucide-react';
+import { Bell, Receipt, Repeat, ChevronRight, Pencil, CheckCircle2 } from 'lucide-react';
 import { Bill, Subscription } from '../types/finance.types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -19,7 +19,7 @@ interface UpcomingAlertsProps {
   bills: Bill[];
   subscriptions: Subscription[];
   daysAhead?: number;
-  onEditBill?: (bill: Bill) => void;
+  onPayBill?: (bill: Bill) => void;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -78,7 +78,7 @@ const UpcomingAlerts: React.FC<UpcomingAlertsProps> = ({
   bills,
   subscriptions,
   daysAhead = 7,
-  onEditBill,
+  onPayBill,
 }) => {
   const navigate = useNavigate();
 
@@ -183,19 +183,31 @@ const UpcomingAlerts: React.FC<UpcomingAlertsProps> = ({
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <UrgencyBadge daysUntil={item.daysUntil} />
                 <span className={`text-sm font-bold tabular-nums ${item.daysUntil < 0 ? 'text-destructive' : 'text-foreground'}`}>
                   {fmt(item.amount)}
                 </span>
-                {onEditBill && item.type === 'bill' && item.originalBill && (
-                  <button
-                    onClick={() => onEditBill(item.originalBill!)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
-                    title="Editar conta"
-                  >
-                    <Pencil size={12} />
-                  </button>
+                {item.type === 'bill' && item.originalBill && (
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                    {onPayBill && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onPayBill(item.originalBill!); }}
+                        className="flex items-center gap-1 px-2.5 py-1.5 bg-primary text-primary-foreground rounded-lg text-[9px] font-bold uppercase tracking-widest hover:opacity-80 transition-opacity"
+                        title="Pagar conta"
+                      >
+                        <CheckCircle2 size={11} />
+                        Pagar
+                      </button>
+                    )}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); navigate('/personal/finance/bills'); }}
+                      className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                      title="Editar conta"
+                    >
+                      <Pencil size={12} />
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
