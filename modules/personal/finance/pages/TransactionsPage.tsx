@@ -15,15 +15,19 @@ import { exportToCSV } from '../utils/exportHelper';
 
 // Definições de Período Predefinidos
 type PeriodType = 'this_month' | 'last_month' | 'next_month' | 'all';
+type PeriodMode = 'month' | 'custom';
 
 const TransactionsPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   // --- Estados de Filtro ---
+  const [periodMode, setPeriodMode] = useState<PeriodMode>('month');
   const [period, setPeriod] = useState<PeriodType>('this_month');
-  const [searchText, setSearchText] = useState(''); 
-  const [itemSearch, setItemSearch] = useState(''); 
+  const [customStartDate, setCustomStartDate] = useState('');
+  const [customEndDate, setCustomEndDate] = useState('');
+  const [searchText, setSearchText] = useState('');
+  const [itemSearch, setItemSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [tagFilter, setTagFilter] = useState('');
@@ -39,14 +43,27 @@ const TransactionsPage: React.FC = () => {
 
   // --- Controle de Datas para o Hook ---
   const { startDate, endDate, fetchAll } = useMemo(() => {
+    if (periodMode === 'custom') {
+      if (customStartDate && customEndDate) {
+        const start = new Date(customStartDate + 'T00:00:00');
+        const end = new Date(customEndDate + 'T23:59:59.999');
+        return { startDate: start.toISOString(), endDate: end.toISOString(), fetchAll: false };
+      }
+      if (customStartDate) {
+        const start = new Date(customStartDate + 'T00:00:00');
+        return { startDate: start.toISOString(), endDate: undefined, fetchAll: true };
+      }
+      return { startDate: undefined, endDate: undefined, fetchAll: true };
+    }
+
     const now = new Date();
     const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-    
+
     if (period === 'this_month') {
         const start = new Date(now.getFullYear(), now.getMonth(), 1);
         return { startDate: start.toISOString(), endDate: todayEnd.toISOString(), fetchAll: false };
     }
-    
+
     if (period === 'last_month') {
         const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
         return { startDate: start.toISOString(), endDate: todayEnd.toISOString(), fetchAll: false };
@@ -59,7 +76,7 @@ const TransactionsPage: React.FC = () => {
     }
 
     return { startDate: undefined, endDate: undefined, fetchAll: true };
-  }, [period]);
+  }, [period, periodMode, customStartDate, customEndDate]);
 
   const { transactions, loading, refresh, setTransactions } = useTransactions({ startDate, endDate, fetchAll });
   const { accounts, refresh: refreshAccounts } = useAccounts();
@@ -165,6 +182,10 @@ const TransactionsPage: React.FC = () => {
     setTagFilter('');
     setAccountIdFilter('');
     setSearchParams({});
+    setPeriodMode('month');
+    setPeriod('this_month');
+    setCustomStartDate('');
+    setCustomEndDate('');
   };
 
   const handleExport = () => {
@@ -282,11 +303,46 @@ const TransactionsPage: React.FC = () => {
       <div className="bg-card p-5 rounded-[2rem] border border-border shadow-sm space-y-4">
         
         <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex bg-secondary p-1 rounded-xl overflow-x-auto no-scrollbar shrink-0">
-                <button onClick={() => setPeriod('last_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'last_month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Mês Passado</button>
-                <button onClick={() => setPeriod('this_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'this_month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Este Mês</button>
-                <button onClick={() => setPeriod('next_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'next_month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Próximo</button>
-                <button onClick={() => setPeriod('all')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Tudo</button>
+            <div className="flex flex-col gap-2 shrink-0">
+                <div className="flex bg-secondary p-1 rounded-xl">
+                    <button
+                        onClick={() => setPeriodMode('month')}
+                        className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${periodMode === 'month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                    >
+                        Por Mês
+                    </button>
+                    <button
+                        onClick={() => setPeriodMode('custom')}
+                        className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all flex items-center gap-1.5 ${periodMode === 'custom' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                    >
+                        <Calendar size={11} /> Por Data
+                    </button>
+                </div>
+
+                {periodMode === 'month' ? (
+                    <div className="flex bg-secondary p-1 rounded-xl overflow-x-auto no-scrollbar">
+                        <button onClick={() => setPeriod('last_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'last_month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Mês Passado</button>
+                        <button onClick={() => setPeriod('this_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'this_month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Este Mês</button>
+                        <button onClick={() => setPeriod('next_month')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'next_month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Próximo</button>
+                        <button onClick={() => setPeriod('all')} className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'}`}>Tudo</button>
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-2 bg-secondary px-3 py-2 rounded-xl">
+                        <input
+                            type="date"
+                            value={customStartDate}
+                            onChange={e => setCustomStartDate(e.target.value)}
+                            className="bg-transparent text-xs font-medium text-foreground outline-none cursor-pointer"
+                        />
+                        <span className="text-muted-foreground text-[10px] font-bold shrink-0">→</span>
+                        <input
+                            type="date"
+                            value={customEndDate}
+                            onChange={e => setCustomEndDate(e.target.value)}
+                            className="bg-transparent text-xs font-medium text-foreground outline-none cursor-pointer"
+                        />
+                    </div>
+                )}
             </div>
 
             <div className="relative flex-1">
