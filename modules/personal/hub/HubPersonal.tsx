@@ -541,16 +541,16 @@ export default function HubPersonal() {
       <div className="mb-8">
         <div 
           onClick={() => navigate('/personal/finance')}
-          className="bg-foreground rounded-[2rem] p-6 text-white shadow-lg cursor-pointer hover:scale-[1.01] transition-transform active:scale-95"
+          className="bg-foreground rounded-[2rem] p-6 text-background shadow-lg cursor-pointer hover:scale-[1.01] transition-transform active:scale-95"
         >
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Patrimônio Líquido</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-background/50 mb-1">Patrimônio Líquido</p>
               <h2 className="text-3xl font-bold tracking-tighter">
                 R$ {totalBalance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </h2>
             </div>
-            <div className="p-3 bg-card/10 rounded-full text-muted-foreground">
+            <div className="p-3 bg-background/10 rounded-full text-background/60">
               <Wallet size={24} />
             </div>
           </div>
