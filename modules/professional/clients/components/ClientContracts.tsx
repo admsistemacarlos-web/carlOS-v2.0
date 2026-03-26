@@ -105,29 +105,38 @@ export default function ClientContracts({ clientId }: { clientId: string }) {
       {/* FORMULÁRIO INLINE */}
       {(isAdding || editingId) && (
         <div className="mb-5 p-4 rounded-lg bg-secondary/50 border border-secondary space-y-3">
-          <input
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            placeholder="Título do contrato *"
-            className={inputCls}
-          />
-
-          <div className="grid grid-cols-2 gap-3">
-            <select name="status" value={formData.status} onChange={handleChange} className={inputCls}>
-              <option value="rascunho">Rascunho</option>
-              <option value="enviado">Enviado</option>
-              <option value="assinado">Assinado</option>
-              <option value="vencido">Vencido</option>
-            </select>
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Título *</label>
             <input
-              name="value"
-              type="number"
-              value={formData.value}
+              name="title"
+              value={formData.title}
               onChange={handleChange}
-              placeholder="Valor (R$)"
+              placeholder="Ex: Contrato de Gestão de Tráfego"
               className={inputCls}
             />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Status</label>
+              <select name="status" value={formData.status} onChange={handleChange} className={inputCls}>
+                <option value="rascunho">Rascunho</option>
+                <option value="enviado">Enviado</option>
+                <option value="assinado">Assinado</option>
+                <option value="vencido">Vencido</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Valor (R$)</label>
+              <input
+                name="value"
+                type="number"
+                value={formData.value}
+                onChange={handleChange}
+                placeholder="0,00"
+                className={inputCls}
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -141,14 +150,17 @@ export default function ClientContracts({ clientId }: { clientId: string }) {
             </div>
           </div>
 
-          <textarea
-            name="notes"
-            value={formData.notes}
-            onChange={handleChange}
-            placeholder="Observações (opcional)"
-            rows={2}
-            className={`${inputCls} resize-none`}
-          />
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Observações</label>
+            <textarea
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+              placeholder="Cláusulas especiais, condições, etc."
+              rows={2}
+              className={`${inputCls} resize-none`}
+            />
+          </div>
 
           {/* Upload de arquivo */}
           <input ref={fileInputRef} type="file" accept=".pdf,.doc,.docx" className="hidden"
@@ -193,11 +205,11 @@ export default function ClientContracts({ clientId }: { clientId: string }) {
             return (
               <div key={c.id} className="group flex items-center justify-between p-3 rounded-lg bg-secondary border border-secondary hover:border-primary/30 transition-all">
                 <div className="min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <p className="text-sm font-semibold text-foreground truncate">{c.title}</p>
+                  <div className="flex items-center gap-2 mb-1">
                     <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full shrink-0 ${cfg.color}`}>
                       {cfg.label}
                     </span>
+                    <p className="text-sm font-semibold text-foreground truncate">{c.title}</p>
                   </div>
                   <p className="text-[10px] text-muted-foreground font-mono">
                     {c.value ? `R$ ${c.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : ''}

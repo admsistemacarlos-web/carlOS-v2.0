@@ -177,9 +177,6 @@ userId: user?.id || ''
 </div>
 
       {/* KPI ROW */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"></div>
-
-      {/* KPI ROW */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <KPICard 
             label="Projetos em Andamento" 
@@ -226,7 +223,10 @@ userId: user?.id || ''
                 
                 <div className="p-2">
                     {globalCalendar?.length === 0 ? (
-                        <div className="text-center py-10 text-muted-foreground text-xs">A agenda dos próximos dias está livre.</div>
+                        <div className="flex flex-col items-center justify-center py-10 gap-2 text-muted-foreground">
+                          <Calendar size={20} className="opacity-30" />
+                          <p className="text-xs">A agenda dos próximos dias está livre.</p>
+                        </div>
                     ) : (
                         <div className="space-y-1 max-h-[300px] overflow-y-auto custom-scrollbar pr-1">
                             {globalCalendar?.map((item: GlobalCalendarItem) => (

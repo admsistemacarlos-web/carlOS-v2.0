@@ -26,7 +26,7 @@ const HubCard: React.FC<{
   >
     {/* Background Pattern Sutil para o card Detox */}
     {variant === 'success' && (
-       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+       <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '16px 16px' }}></div>
     )}
 
     <div className="relative z-10 flex justify-between items-start w-full">

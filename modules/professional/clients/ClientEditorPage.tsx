@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Save, Loader2, User, MapPin, Globe, Upload, Image as ImageIcon, Layout, FolderOpen } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, User, MapPin, Globe, Mail, Phone, Instagram, Upload, Image as ImageIcon, Layout, FolderOpen, Hash, FolderOpen as DriveIcon } from 'lucide-react';
 import { useCreateClient, useUpdateClient, useClients } from '../hooks/useClients';
 import { AgencyStatus } from '../types/agency.types';
 import ClientCredentialsVault from './components/ClientCredentialsVault';
@@ -225,7 +225,7 @@ export default function ClientEditorPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <InputGroup label="Nome Completo *" name="name" value={formData.name} onChange={handleChange} icon={<User size={16}/>} />
                             <InputGroup label="Empresa" name="company_name" value={formData.company_name} onChange={handleChange} icon={<Globe size={16}/>} />
-                            <InputGroup label="CPF / CNPJ" name="cpf_cnpj" value={formData.cpf_cnpj} onChange={handleChange} icon={<User size={16}/>} />
+                            <InputGroup label="CPF / CNPJ" name="cpf_cnpj" value={formData.cpf_cnpj} onChange={handleChange} icon={<Hash size={16}/>} />
                             <div>
                                 <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Status</label>
                                 <div className="relative">
@@ -245,9 +245,9 @@ export default function ClientEditorPage() {
                             <Globe size={14} /> Contato Digital
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <InputGroup label="Email Principal" name="email" type="email" value={formData.email} onChange={handleChange} icon={<Globe size={16}/>} />
-                            <InputGroup label="WhatsApp / Celular" name="phone" value={formData.phone} onChange={handleChange} icon={<Globe size={16}/>} />
-                            <InputGroup label="Instagram" name="instagram" value={formData.instagram} onChange={handleChange} icon={<Globe size={16}/>} />
+                            <InputGroup label="Email Principal" name="email" type="email" value={formData.email} onChange={handleChange} icon={<Mail size={16}/>} />
+                            <InputGroup label="WhatsApp / Celular" name="phone" value={formData.phone} onChange={handleChange} icon={<Phone size={16}/>} />
+                            <InputGroup label="Instagram" name="instagram" value={formData.instagram} onChange={handleChange} icon={<Instagram size={16}/>} />
                             <InputGroup label="Website" name="website" value={formData.website} onChange={handleChange} icon={<Globe size={16}/>} />
                         </div>
                     </div>

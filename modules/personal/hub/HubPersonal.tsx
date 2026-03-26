@@ -114,7 +114,7 @@ const BioTrackerCard: React.FC<BioTrackerCardProps> = ({
 
   let cardStyle = "bg-card border-border text-muted-foreground";
   let iconStyle = "text-muted-foreground";
-  let statusIcon = <Circle size={18} className="text-stone-200" />;
+  let statusIcon = <Circle size={18} className="text-border" />;
   let statusText = "Registrar";
 
   if (value === true) {
@@ -124,8 +124,8 @@ const BioTrackerCard: React.FC<BioTrackerCardProps> = ({
     statusText = "Sim";
   } else if (value === false) {
     if (variant === 'avoidance') {
-      cardStyle = "bg-emerald-50 border-emerald-200 text-emerald-600 shadow-sm";
-      iconStyle = "text-emerald-600";
+      cardStyle = "bg-emerald-500/10 border-emerald-500/30 text-emerald-500 shadow-sm";
+      iconStyle = "text-emerald-500";
       statusIcon = <CheckCircle2 size={18} strokeWidth={2.5} />;
       statusText = "Não";
     } else {

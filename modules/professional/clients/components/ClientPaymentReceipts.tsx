@@ -93,34 +93,40 @@ export default function ClientPaymentReceipts({ clientId }: { clientId: string }
 
       {/* TOTAL RECEBIDO */}
       {receipts && receipts.length > 0 && (
-        <div className="flex items-center gap-2 mb-5 px-3 py-2.5 rounded-lg bg-green-400/10 border border-green-400/20">
-          <TrendingUp size={14} className="text-green-400 shrink-0" />
-          <span className="text-xs text-muted-foreground">Total recebido</span>
-          <span className="ml-auto text-sm font-bold text-green-400 font-mono">{formatCurrency(totalReceived)}</span>
+        <div className="flex items-center gap-3 mb-5 px-4 py-3 rounded-lg bg-green-500/15 border border-green-500/30">
+          <TrendingUp size={15} className="text-green-400 shrink-0" />
+          <span className="text-xs font-medium text-muted-foreground">Total recebido</span>
+          <span className="ml-auto text-base font-bold text-green-400 font-mono tabular-nums">{formatCurrency(totalReceived)}</span>
         </div>
       )}
 
       {/* FORMULÁRIO INLINE */}
       {isAdding && (
         <div className="mb-5 p-4 rounded-lg bg-secondary/50 border border-secondary space-y-3">
-          <input
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Descrição do pagamento *"
-            className={inputCls}
-          />
-
-          <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Descrição *</label>
             <input
-              name="amount"
-              type="number"
-              step="0.01"
-              value={formData.amount}
+              name="description"
+              value={formData.description}
               onChange={handleChange}
-              placeholder="Valor (R$) *"
+              placeholder="Ex: Mensalidade março/2026"
               className={inputCls}
             />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Valor (R$) *</label>
+              <input
+                name="amount"
+                type="number"
+                step="0.01"
+                value={formData.amount}
+                onChange={handleChange}
+                placeholder="0,00"
+                className={inputCls}
+              />
+            </div>
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Data *</label>
               <input name="payment_date" type="date" value={formData.payment_date} onChange={handleChange} className={inputCls} />
@@ -128,31 +134,40 @@ export default function ClientPaymentReceipts({ clientId }: { clientId: string }
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <select name="payment_method" value={formData.payment_method} onChange={handleChange} className={inputCls}>
-              <option value="">Forma de pagamento</option>
-              <option value="pix">PIX</option>
-              <option value="ted">TED</option>
-              <option value="boleto">Boleto</option>
-              <option value="cartão">Cartão</option>
-              <option value="dinheiro">Dinheiro</option>
-            </select>
-            <input
-              name="reference"
-              value={formData.reference}
-              onChange={handleChange}
-              placeholder="Referência / NF (opcional)"
-              className={inputCls}
-            />
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Forma de Pagamento</label>
+              <select name="payment_method" value={formData.payment_method} onChange={handleChange} className={inputCls}>
+                <option value="">Selecionar</option>
+                <option value="pix">PIX</option>
+                <option value="ted">TED</option>
+                <option value="boleto">Boleto</option>
+                <option value="cartão">Cartão</option>
+                <option value="dinheiro">Dinheiro</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Referência / NF</label>
+              <input
+                name="reference"
+                value={formData.reference}
+                onChange={handleChange}
+                placeholder="Opcional"
+                className={inputCls}
+              />
+            </div>
           </div>
 
-          <textarea
-            name="notes"
-            value={formData.notes}
-            onChange={handleChange}
-            placeholder="Observações (opcional)"
-            rows={2}
-            className={`${inputCls} resize-none`}
-          />
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Observações</label>
+            <textarea
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+              placeholder="Opcional"
+              rows={2}
+              className={`${inputCls} resize-none`}
+            />
+          </div>
 
           {/* Upload de comprovante */}
           <input ref={fileInputRef} type="file" accept=".pdf,.jpg,.jpeg,.png" className="hidden"
@@ -211,7 +226,7 @@ export default function ClientPaymentReceipts({ clientId }: { clientId: string }
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0 ml-3">
-                  <span className="text-sm font-bold text-green-400">{formatCurrency(r.amount)}</span>
+                  <span className="text-base font-bold text-green-400 tabular-nums">{formatCurrency(r.amount)}</span>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     {r.file_url && (
                       <a href={r.file_url} target="_blank" rel="noopener noreferrer"

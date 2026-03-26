@@ -41,8 +41,9 @@ export default function ClientProposals({ clientId }: { clientId: string }) {
           <Loader2 size={20} className="animate-spin text-muted-foreground" />
         </div>
       ) : quotes.length === 0 ? (
-        <div className="text-center py-8 text-muted-foreground text-xs italic border-2 border-dashed border-secondary rounded-lg">
-          Nenhuma proposta criada para este cliente.
+        <div className="flex flex-col items-center justify-center py-8 gap-2 border-2 border-dashed border-secondary rounded-lg">
+          <FileText size={20} className="text-muted-foreground/40" />
+          <p className="text-muted-foreground text-xs">Nenhuma proposta criada para este cliente.</p>
         </div>
       ) : (
         <div className="space-y-2">
