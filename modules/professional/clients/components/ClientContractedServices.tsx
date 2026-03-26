@@ -73,9 +73,9 @@ export default function ClientContractedServices({ clientId }: { clientId: strin
         </h3>
         
         {totalMonthly > 0 && (
-            <div className="bg-secondary border border-secondary px-3 py-1 rounded text-right">
-                <span className="text-[10px] uppercase font-bold text-muted-foreground block">MRR</span>
-                <span className="text-sm font-bold text-foreground font-mono">R$ {totalMonthly.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+            <div className="bg-primary/10 border border-primary/20 px-3 py-1.5 rounded text-right">
+                <span className="text-[10px] uppercase font-bold text-primary/70 block tracking-wider">MRR</span>
+                <span className="text-sm font-bold text-primary font-mono">R$ {totalMonthly.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
             </div>
         )}
       </div>
@@ -88,7 +88,7 @@ export default function ClientContractedServices({ clientId }: { clientId: strin
                 <RefreshCw size={12} /> Mensalidades
             </h4>
             {monthlyItems.length === 0 ? (
-                <p className="text-muted-foreground text-xs italic">Nenhuma recorrência.</p>
+                <p className="text-muted-foreground text-xs">Nenhuma recorrência.</p>
             ) : (
                 <div className="space-y-2">
                     {monthlyItems.map(item => (
@@ -113,14 +113,14 @@ export default function ClientContractedServices({ clientId }: { clientId: strin
                 <Box size={12} /> Projetos / Histórico
             </h4>
             {uniqueItems.length === 0 ? (
-                <p className="text-muted-foreground text-xs italic">Nenhum projeto pontual.</p>
+                <p className="text-muted-foreground text-xs">Nenhum projeto pontual.</p>
             ) : (
                 <div className="space-y-2">
                     {uniqueItems.slice(0, 3).map(item => (
-                        <div key={item.id} className="bg-background p-3 rounded-md border border-secondary flex justify-between items-center opacity-60 hover:opacity-100 transition-opacity">
+                        <div key={item.id} className="bg-background p-3 rounded-md border border-secondary flex justify-between items-center hover:border-muted-foreground transition-colors">
                             <div className="min-w-0 pr-2">
-                                <p className="text-xs font-medium text-foreground line-through decoration-muted-foreground truncate">{item.title}</p>
-                                <p className="text-[9px] text-muted-foreground mt-0.5">{new Date(item.approved_at).toLocaleDateString()}</p>
+                                <p className="text-xs font-medium text-muted-foreground truncate">{item.title}</p>
+                                <p className="text-[9px] text-muted-foreground/60 mt-0.5">{new Date(item.approved_at).toLocaleDateString()}</p>
                             </div>
                             <div className="text-right shrink-0">
                                 <p className="text-xs font-bold text-muted-foreground font-mono">R$ {item.unit_price.toLocaleString('pt-BR')}</p>

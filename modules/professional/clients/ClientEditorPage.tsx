@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Save, Loader2, User, MapPin, Globe, Upload, Image as ImageIcon, Layout } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, User, MapPin, Globe, Upload, Image as ImageIcon, Layout, FolderOpen } from 'lucide-react';
 import { useCreateClient, useUpdateClient, useClients } from '../hooks/useClients';
 import { AgencyStatus } from '../types/agency.types';
 import ClientCredentialsVault from './components/ClientCredentialsVault';
@@ -9,6 +9,7 @@ import ClientFilesManager from './components/ClientFilesManager';
 import ClientContractedServices from './components/ClientContractedServices';
 import ClientTaskBoard from './components/ClientTaskBoard';
 import ClientNotesLog from './components/ClientNotesLog';
+import ClientDocumentsTab from './components/ClientDocumentsTab';
 
 const InputGroup = ({ label, name, value, onChange, type = "text", icon }: any) => (
   <div>
@@ -51,7 +52,7 @@ export default function ClientEditorPage() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   
   // --- STATE DAS ABAS ---
-  const [activeTab, setActiveTab] = useState<'workspace' | 'data'>('workspace');
+  const [activeTab, setActiveTab] = useState<'workspace' | 'data' | 'documents'>('workspace');
 
   useEffect(() => {
     if (isEditing && clients) {
@@ -128,15 +129,26 @@ export default function ClientEditorPage() {
         >
             <Layout size={14} /> Workspace
         </button>
-        <button 
+        <button
             onClick={() => setActiveTab('data')}
             className={`px-6 py-3 text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 border-b-2 ${
-                activeTab === 'data' 
-                ? 'border-primary text-primary' 
+                activeTab === 'data'
+                ? 'border-primary text-primary'
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
         >
             <User size={14} /> Dados Cadastrais
+        </button>
+        <button
+            onClick={() => setActiveTab('documents')}
+            disabled={!isEditing}
+            className={`px-6 py-3 text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2 border-b-2 ${
+                activeTab === 'documents'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-muted-foreground hover:text-foreground disabled:opacity-30'
+            }`}
+        >
+            <FolderOpen size={14} /> Documentos
         </button>
       </div>
 
@@ -173,10 +185,15 @@ export default function ClientEditorPage() {
         </div>
       )}
 
+      {/* ABA 3: DOCUMENTOS */}
+      {activeTab === 'documents' && id && (
+        <ClientDocumentsTab clientId={id} />
+      )}
+
       {/* ABA 2: DADOS CADASTRAIS (Formulário Original) */}
       {activeTab === 'data' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in">
-            <div className="lg:col-span-2 space-y-6">
+        <div className="max-w-2xl animate-fade-in">
+            <div className="space-y-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
 
                     {/* Logo Upload */}

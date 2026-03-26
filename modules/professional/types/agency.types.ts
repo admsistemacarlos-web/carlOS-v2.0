@@ -117,6 +117,41 @@ export interface AgencyQuote {
   created_at?: string;
 }
 
+// --- CONTRATOS ---
+export type ContractStatus = 'rascunho' | 'enviado' | 'assinado' | 'vencido';
+
+export interface AgencyContract {
+  id: string;
+  user_id: string;
+  client_id: string;
+  title: string;
+  status: ContractStatus;
+  value?: number | null;
+  start_date?: string | null;
+  end_date?: string | null;
+  file_url?: string | null;
+  notes?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// --- RECIBOS DE PAGAMENTO ---
+export type PaymentMethodDoc = 'pix' | 'ted' | 'dinheiro' | 'cartão' | 'boleto';
+
+export interface AgencyPaymentReceipt {
+  id: string;
+  user_id: string;
+  client_id: string;
+  description: string;
+  amount: number;
+  payment_date: string;
+  payment_method?: PaymentMethodDoc | null;
+  reference?: string | null;
+  file_url?: string | null;
+  notes?: string | null;
+  created_at: string;
+}
+
 // --- PROJETOS (Mantido) ---
 export interface AgencyProject {
   id: string;
