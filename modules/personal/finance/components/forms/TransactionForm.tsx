@@ -44,11 +44,12 @@ interface TransactionFormData {
 
   items: {
     name: string;
-    item_category?: string;
+    item_category?: string[];
     specification?: string;
     unit?: string;
     quantity: number;
     unit_price: number;
+    discount?: number;
   }[];
 
   use_split_payment: boolean;
@@ -186,15 +187,15 @@ const SmartSubcategoryCombobox = ({
   value,
   onChange,
 }: {
-  value?: string;
-  onChange: (category: string) => void;
+  value?: string[];
+  onChange: (categories: string[]) => void;
 }) => {
   const { user } = useAuth();
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const selected: string[] = Array.isArray(value) ? value : (value ? [value] : []);
 
   useEffect(() => {
     if (!user) return;
@@ -203,12 +204,16 @@ const SmartSubcategoryCombobox = ({
         const { data } = await supabase
           .from('transaction_items')
           .select('item_category')
-          .not('item_category', 'is', null)
-          .order('item_category');
+          .not('item_category', 'is', null);
 
         if (data) {
-          const unique = [...new Set(data.map(d => d.item_category).filter(Boolean))];
-          setOptions(unique as string[]);
+          const all: string[] = [];
+          data.forEach(d => {
+            const cat = d.item_category;
+            if (Array.isArray(cat)) cat.forEach(c => c && all.push(c));
+            else if (typeof cat === 'string' && cat) all.push(cat);
+          });
+          setOptions([...new Set(all)].sort());
         }
       } catch (err) {
         console.error('Erro ao buscar subcategorias', err);
@@ -217,15 +222,18 @@ const SmartSubcategoryCombobox = ({
     fetchSubcategories();
   }, [user]);
 
-  const filtered = options.filter(o => o.toLowerCase().includes(query.toLowerCase()));
-  const selectedValue = value || '';
+  const filtered = options.filter(o =>
+    o.toLowerCase().includes(query.toLowerCase()) && !selected.includes(o)
+  );
 
-  const handleCreate = () => {
-    if (query.trim()) {
-      onChange(query.trim());
-      setIsOpen(false);
-      setQuery('');
-    }
+  const add = (cat: string) => {
+    if (!selected.includes(cat)) onChange([...selected, cat]);
+    setQuery('');
+    setIsOpen(false);
+  };
+
+  const remove = (cat: string) => {
+    onChange(selected.filter(s => s !== cat));
   };
 
   useEffect(() => {
@@ -240,47 +248,66 @@ const SmartSubcategoryCombobox = ({
 
   return (
     <div className="relative" ref={containerRef}>
-      <div className="relative">
-        <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+      {/* Tags selecionadas + input */}
+      <div
+        className="flex flex-wrap gap-1 bg-secondary border border-border rounded-lg px-2 py-1.5 min-h-[32px] cursor-text"
+        onClick={() => setIsOpen(true)}
+      >
+        {selected.map(cat => (
+          <span key={cat} className="inline-flex items-center gap-1 bg-primary/10 text-olive text-[10px] px-1.5 py-0.5 rounded-md font-medium">
+            {cat}
+            <button
+              type="button"
+              onMouseDown={e => { e.stopPropagation(); remove(cat); }}
+              className="hover:text-red-500"
+            >
+              <X size={10} />
+            </button>
+          </span>
+        ))}
         <input
-          className="w-full bg-secondary border border-border rounded-xl pl-10 pr-3 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-olive/20 cursor-text"
-          placeholder={selectedValue || "Subcategoria..."}
-          value={isOpen ? query : selectedValue}
+          className="flex-1 bg-transparent outline-none text-xs min-w-[60px] placeholder-stone-400"
+          placeholder={selected.length === 0 ? "Subcategoria..." : ""}
+          value={query}
           onChange={e => setQuery(e.target.value)}
           onFocus={() => setIsOpen(true)}
-          onClick={() => setIsOpen(true)}
+          onKeyDown={e => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              e.stopPropagation();
+              if (!query.trim()) return;
+              // Se tem opções filtradas, adicionar a primeira; senão criar nova
+              const toAdd = filtered.length > 0 ? filtered[0] : query.trim();
+              add(toAdd);
+            }
+            if (e.key === 'Backspace' && !query && selected.length > 0) {
+              remove(selected[selected.length - 1]);
+            }
+          }}
         />
       </div>
 
-      {isOpen && (
+      {isOpen && (query.trim() || filtered.length > 0) && (
         <div className="absolute z-[9999] bottom-full mb-1 w-full bg-card border border-border rounded-xl shadow-lg max-h-48 overflow-auto">
-          {filtered.length === 0 && query.trim() ? (
+          {query.trim() && !options.includes(query.trim()) && (
             <button
               type="button"
-              onClick={handleCreate}
-              disabled={loading}
+              onMouseDown={() => add(query.trim())}
               className="w-full px-3 py-2 text-left text-xs hover:bg-secondary flex items-center gap-2 text-olive font-medium"
             >
-              {loading ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />}
-              Criar "{query}"
+              <Plus size={12} /> Criar "{query}"
             </button>
-          ) : (
-            filtered.map(opt => (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => {
-                  onChange(opt);
-                  setIsOpen(false);
-                  setQuery('');
-                }}
-                className="w-full px-3 py-2 text-left text-xs hover:bg-secondary flex items-center gap-2"
-              >
-                {selectedValue === opt && <Check size={12} className="text-olive" />}
-                <span>{opt}</span>
-              </button>
-            ))
           )}
+          {filtered.map(opt => (
+            <button
+              key={opt}
+              type="button"
+              onMouseDown={() => add(opt)}
+              className="w-full px-3 py-2 text-left text-xs hover:bg-secondary flex items-center gap-2"
+            >
+              <span>{opt}</span>
+            </button>
+          ))}
         </div>
       )}
     </div>
@@ -465,6 +492,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
   const { cards } = useCards();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showItems, setShowItems] = useState(false);
+  // Subtotais fixos digitados pelo usuário (fonte da verdade quando preenchidos)
+  const [fixedSubtotals, setFixedSubtotals] = useState<{ [key: number]: number }>({});
+  // Valor temporário do input de subtotal enquanto digita
+  const [subtotalInputValue, setSubtotalInputValue] = useState<{ [key: number]: string }>({});
 
   const { register, control, handleSubmit, setValue, watch, reset } = useForm<TransactionFormData>({
     defaultValues: {
@@ -497,13 +528,19 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
   const isInstallment = watch('is_installment');
   const totalInstallments = watch('total_installments');
 
-  const { fields: itemFields, append: appendItem, remove: removeItem } = useFieldArray({ control, name: 'items' });
+  const { fields: itemFields, append: appendItem, remove: removeItem, replace: replaceItems } = useFieldArray({ control, name: 'items' });
   const { fields: splitFields, append: appendSplit, remove: removeSplit } = useFieldArray({ control, name: 'payments' });
 
   // Sincronizar total dos itens com o valor total
   const recalculateTotal = () => {
     if (items.length > 0) {
-      const total = items.reduce((acc, item) => acc + ((item.quantity || 1) * (item.unit_price || 0)), 0);
+      const total = items.reduce((acc, item, idx) => {
+        const subtotal = fixedSubtotals[idx] !== undefined
+          ? fixedSubtotals[idx]
+          : (item.quantity || 1) * (item.unit_price || 0);
+        const discount = item.discount || 0;
+        return acc + Math.max(0, subtotal - discount);
+      }, 0);
       if (total > 0) setValue('amount', parseFloat(total.toFixed(2)));
     }
   };
@@ -512,40 +549,64 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
     recalculateTotal();
   }, [items, setValue]);
 
-  // Carregar dados na edição
+  // Carregar dados na edição — executa apenas uma vez por transação
+  const loadedTransactionId = useRef<string | null>(null);
   useEffect(() => {
-    if (transactionToEdit) {
-      reset({
-        description: transactionToEdit.description,
-        amount: transactionToEdit.amount,
-        date: transactionToEdit.date.split('T')[0],
-        type: transactionToEdit.type as TransactionType,
-        category_id: transactionToEdit.category_id,
-        category_name: transactionToEdit.category,
-        location: transactionToEdit.location || '',
-        tags: transactionToEdit.tags || [],
-        status: transactionToEdit.status as StatusType,
-        account_id: transactionToEdit.account_id,
-        credit_card_id: transactionToEdit.credit_card_id,
-        origin_account_id: transactionToEdit.account_id,
-        destination_account_id: transactionToEdit.destination_account_id,
-        payment_method: transactionToEdit.credit_card_id ? 'credit_card' : 'account',
-        installments: 1,
-        is_installment: false,
-        total_installments: 2,
-        items: transactionToEdit.items || [],
-        payments: transactionToEdit.payments?.map(p => ({
-          method: p.payment_method,
-          account_id: p.account_id || undefined,
-          credit_card_id: p.credit_card_id || undefined,
-          amount: p.amount,
-          installments: p.installments || 1
-        })) || [],
-        use_split_payment: (transactionToEdit.payments && transactionToEdit.payments.length > 1) || false
-      });
-      if (transactionToEdit.items && transactionToEdit.items.length > 0) {
-        setShowItems(true);
-      }
+    if (!transactionToEdit) return;
+    // Evitar re-execução para a mesma transação
+    if (loadedTransactionId.current === transactionToEdit.id) return;
+    loadedTransactionId.current = transactionToEdit.id;
+
+    // Normalizar items para o formato do formulário
+    const normalizedItems = (transactionToEdit.items || []).map(item => {
+      const rawCat = (item as any).item_category;
+      const itemCategories: string[] = Array.isArray(rawCat)
+        ? rawCat
+        : (rawCat ? [rawCat] : []);
+      return {
+        name: item.name || '',
+        item_category: itemCategories,
+        specification: (item as any).specification || '',
+        unit: (item as any).unit || '',
+        quantity: item.quantity || 1,
+        unit_price: item.unit_price || 0,
+        discount: (item as any).discount || 0,
+      };
+    });
+
+    reset({
+      description: transactionToEdit.description,
+      amount: transactionToEdit.amount,
+      date: transactionToEdit.date.split('T')[0],
+      type: transactionToEdit.type as TransactionType,
+      category_id: transactionToEdit.category_id,
+      category_name: transactionToEdit.category,
+      location: transactionToEdit.location || '',
+      tags: transactionToEdit.tags || [],
+      status: transactionToEdit.status as StatusType,
+      account_id: transactionToEdit.account_id,
+      credit_card_id: transactionToEdit.credit_card_id,
+      origin_account_id: transactionToEdit.account_id,
+      destination_account_id: transactionToEdit.destination_account_id,
+      payment_method: transactionToEdit.credit_card_id ? 'credit_card' : 'account',
+      installments: 1,
+      is_installment: false,
+      total_installments: 2,
+      items: normalizedItems,
+      payments: transactionToEdit.payments?.map(p => ({
+        method: p.payment_method,
+        account_id: p.account_id || undefined,
+        credit_card_id: p.credit_card_id || undefined,
+        amount: p.amount,
+        installments: p.installments || 1
+      })) || [],
+      use_split_payment: (transactionToEdit.payments && transactionToEdit.payments.length > 1) || false
+    });
+
+    if (normalizedItems.length > 0) {
+      setShowItems(true);
+      setSubtotalInputValue({});
+      setFixedSubtotals({});
     }
   }, [transactionToEdit, reset]);
 
@@ -616,17 +677,25 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
         await supabase.from('transaction_items').delete().eq('transaction_id', transactionId);
 
         if (data.items && data.items.length > 0) {
-          const itemsPayload = data.items.map(item => ({
-            transaction_id: transactionId,
-            name: item.name,
-            item_category: item.item_category || null,
-            specification: item.specification || null,
-            unit: item.unit || null,
-            quantity: item.quantity,
-            unit_price: item.unit_price,
-            amount: item.quantity * item.unit_price,
-            user_id: currentUser.id
-          }));
+          const itemsPayload = data.items.map((item, idx) => {
+            const subtotalFixed = fixedSubtotals[idx];
+            const amount = subtotalFixed !== undefined ? subtotalFixed : item.quantity * item.unit_price;
+            const unitPrice = subtotalFixed !== undefined && item.quantity > 0
+              ? parseFloat((subtotalFixed / item.quantity).toFixed(4))
+              : item.unit_price;
+            return {
+              transaction_id: transactionId,
+              name: item.name,
+              item_category: (item.item_category && item.item_category.length > 0) ? item.item_category : null,
+              specification: item.specification || null,
+              unit: item.unit || null,
+              quantity: item.quantity,
+              unit_price: unitPrice,
+              discount: item.discount || 0,
+              amount: parseFloat(Math.max(0, amount - (item.discount || 0)).toFixed(2)),
+              user_id: currentUser.id
+            };
+          });
           await supabase.from('transaction_items').insert(itemsPayload);
         }
 
@@ -778,17 +847,25 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
           const transactionId = newTransaction.id;
 
           if (targetTable === 'transactions' && data.items && data.items.length > 0) {
-            const itemsPayload = data.items.map(item => ({
-              transaction_id: transactionId,
-              name: item.name,
-              item_category: item.item_category || null,
-              specification: item.specification || null,
-              unit: item.unit || null,
-              quantity: item.quantity,
-              unit_price: item.unit_price,
-              amount: item.quantity * item.unit_price,
-              user_id: currentUser.id
-            }));
+            const itemsPayload = data.items.map((item, idx) => {
+              const subtotalFixed = fixedSubtotals[idx];
+              const amount = subtotalFixed !== undefined ? subtotalFixed : item.quantity * item.unit_price;
+              const unitPrice = subtotalFixed !== undefined && item.quantity > 0
+                ? parseFloat((subtotalFixed / item.quantity).toFixed(4))
+                : item.unit_price;
+              return {
+                transaction_id: transactionId,
+                name: item.name,
+                item_category: (item.item_category && item.item_category.length > 0) ? item.item_category : null,
+                specification: item.specification || null,
+                unit: item.unit || null,
+                quantity: item.quantity,
+                unit_price: unitPrice,
+                discount: item.discount || 0,
+                amount: parseFloat(Math.max(0, amount - (item.discount || 0)).toFixed(2)),
+                user_id: currentUser.id
+              };
+            });
             await supabase.from('transaction_items').insert(itemsPayload);
           }
 
@@ -983,16 +1060,29 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
             <div className="space-y-3 bg-secondary p-4 rounded-xl border border-border">
               {itemFields.map((field, index) => {
                 const item = items[index];
-                const subtotal = (item?.quantity || 0) * (item?.unit_price || 0);
+                // Subtotal: usa o fixo (digitado pelo usuário) ou calcula de qty * unit_price
+                const calculatedSubtotal = (item?.quantity || 0) * (item?.unit_price || 0);
+                const displaySubtotal = fixedSubtotals[index] !== undefined ? fixedSubtotals[index] : calculatedSubtotal;
+                // Preço unitário para exibição: se tem subtotal fixo, derivar dele
+                const displayUnitPrice = fixedSubtotals[index] !== undefined && (item?.quantity || 0) > 0
+                  ? (fixedSubtotals[index] / (item?.quantity || 1))
+                  : (item?.unit_price || 0);
 
                 return (
                   <div key={field.id} className="space-y-2 p-3 bg-card rounded-lg border border-border">
-                    {/* Linha 1: Nome + Subcategoria + Especificação */}
+                    {/* Linha 1: Nome + Especificação + Subcategoria */}
                     <div className="grid grid-cols-[2fr_1.5fr_1.5fr] gap-2">
                       <div>
                         <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Nome do Item</label>
                         <input
                           {...register(`items.${index}.name`)}
+                          className="w-full bg-secondary rounded-lg p-2 text-xs outline-none border border-border focus:ring-1 focus:ring-olive/30"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Especificação</label>
+                        <input
+                          {...register(`items.${index}.specification`)}
                           className="w-full bg-secondary rounded-lg p-2 text-xs outline-none border border-border focus:ring-1 focus:ring-olive/30"
                         />
                       </div>
@@ -1009,17 +1099,25 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                           )}
                         />
                       </div>
-                      <div>
-                        <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Especificação</label>
-                        <input
-                          {...register(`items.${index}.specification`)}
-                          className="w-full bg-secondary rounded-lg p-2 text-xs outline-none border border-border focus:ring-1 focus:ring-olive/30"
-                        />
-                      </div>
                     </div>
 
-                    {/* Linha 2: Unidade + Qtd + Preço + Subtotal + Delete */}
-                    <div className="grid grid-cols-[70px_80px_90px_80px_1fr_40px] gap-2 items-end">
+                    {/* Linha 2: Qtd + Unidade + Preço/Un. + Subtotal + Desc. + Delete */}
+                    <div className="grid grid-cols-[80px_70px_90px_90px_80px_40px] gap-2 items-end">
+                      <div>
+                        <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Qtd</label>
+                        <input
+                          {...register(`items.${index}.quantity`)}
+                          type="number" min="0.01" step="0.01"
+                          onWheel={preventScroll}
+                          onChange={() => {
+                            // Se tem subtotal fixo e a qtd muda, manter o subtotal fixo
+                            // (o unit_price derivado vai se ajustar automaticamente na exibição)
+                            recalculateTotal();
+                          }}
+                          className="w-full bg-secondary rounded-lg p-2 text-xs text-center outline-none border border-border focus:ring-1 focus:ring-olive/30"
+                        />
+                      </div>
+
                       <div>
                         <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Unidade</label>
                         <Controller
@@ -1035,25 +1133,24 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
                       </div>
 
                       <div>
-                        <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Qtd</label>
-                        <input
-                          {...register(`items.${index}.quantity`)}
-                          type="number" min="0.01" step="0.01"
-                          onWheel={preventScroll}
-                          onChange={() => recalculateTotal()}
-                          className="w-full bg-secondary rounded-lg p-2 text-xs text-center outline-none border border-border focus:ring-1 focus:ring-olive/30"
-                        />
-                      </div>
-
-                      <div>
                         <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Preço/Un.</label>
                         <div className="relative">
                           <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[9px] text-muted-foreground">R$</span>
                           <input
-                            {...register(`items.${index}.unit_price`)}
                             type="number" step="0.01"
                             onWheel={preventScroll}
-                            onChange={() => recalculateTotal()}
+                            value={displayUnitPrice ? parseFloat(displayUnitPrice.toFixed(2)) : ''}
+                            onChange={(e) => {
+                              const newPrice = Number(e.target.value);
+                              setValue(`items.${index}.unit_price`, newPrice);
+                              // Ao editar preço unitário, limpar subtotal fixo (subtotal volta a ser calculado)
+                              setFixedSubtotals(prev => {
+                                const updated = { ...prev };
+                                delete updated[index];
+                                return updated;
+                              });
+                              recalculateTotal();
+                            }}
                             className="w-full bg-secondary rounded-lg p-2 pl-6 text-xs text-right outline-none border border-border focus:ring-1 focus:ring-olive/30"
                           />
                         </div>
@@ -1061,12 +1158,60 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
 
                       <div>
                         <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Subtotal</label>
-                        <div className="w-full text-right text-xs font-bold text-foreground bg-secondary rounded-lg p-2">
-                          {subtotal.toFixed(2)}
+                        <div className="relative">
+                          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[9px] text-muted-foreground">R$</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            onWheel={preventScroll}
+                            value={subtotalInputValue[index] !== undefined ? subtotalInputValue[index] : displaySubtotal.toFixed(2)}
+                            onFocus={() => {
+                              if (subtotalInputValue[index] === undefined) {
+                                setSubtotalInputValue(prev => ({ ...prev, [index]: displaySubtotal.toFixed(2) }));
+                              }
+                            }}
+                            onChange={(e) => {
+                              setSubtotalInputValue(prev => ({ ...prev, [index]: e.target.value }));
+                            }}
+                            onBlur={(e) => {
+                              const newSubtotal = Number(e.target.value);
+                              if (newSubtotal > 0) {
+                                // Fixar o subtotal como fonte da verdade
+                                setFixedSubtotals(prev => ({ ...prev, [index]: newSubtotal }));
+                              } else {
+                                // Se zerou, limpar o fixo
+                                setFixedSubtotals(prev => {
+                                  const updated = { ...prev };
+                                  delete updated[index];
+                                  return updated;
+                                });
+                              }
+                              setSubtotalInputValue(prev => {
+                                const updated = { ...prev };
+                                delete updated[index];
+                                return updated;
+                              });
+                              recalculateTotal();
+                            }}
+                            className="w-full bg-secondary rounded-lg p-2 pl-6 text-xs text-right outline-none border border-border focus:ring-1 focus:ring-olive/30"
+                          />
                         </div>
                       </div>
 
-                      <div></div>
+                      <div>
+                        <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Desc.</label>
+                        <div className="relative">
+                          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[9px] text-muted-foreground">R$</span>
+                          <input
+                            {...register(`items.${index}.discount`)}
+                            type="number" step="0.01" min="0"
+                            onWheel={preventScroll}
+                            onChange={() => recalculateTotal()}
+                            placeholder="0"
+                            className="w-full bg-secondary rounded-lg p-2 pl-6 text-xs text-right outline-none border border-border focus:ring-1 focus:ring-olive/30"
+                          />
+                        </div>
+                      </div>
 
                       <button
                         type="button"
@@ -1082,7 +1227,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
               })}
               <button
                 type="button"
-                onClick={() => appendItem({ name: '', item_category: '', specification: '', unit: '', quantity: 1, unit_price: 0 })}
+                onClick={() => appendItem({ name: '', item_category: [], specification: '', unit: '', quantity: 1, unit_price: 0, discount: 0 })}
                 className="w-full py-2 border border-dashed border-primary/30 rounded-xl text-[10px] font-bold text-olive uppercase tracking-widest hover:bg-primary/5 flex items-center justify-center gap-1 mt-2"
               >
                 <Plus size={12} /> Adicionar Item

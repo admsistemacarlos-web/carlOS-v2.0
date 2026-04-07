@@ -39,8 +39,11 @@ export interface TransactionItem {
   amount: number;
   quantity: number;
   unit_price?: number;
+  discount?: number;
   category_id?: string;
-  item_category?: string;
+  item_category?: string[] | string;
+  specification?: string;
+  unit?: string;
   category?: Category;
 }
 
