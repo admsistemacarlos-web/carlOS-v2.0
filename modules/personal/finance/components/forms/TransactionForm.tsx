@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
-import { 
-  ArrowRightLeft, ArrowUpCircle, ArrowDownCircle, 
-  Calendar, MapPin, Tag, Plus, X, Save, Loader2, 
+import {
+  ArrowRightLeft, ArrowUpCircle, ArrowDownCircle,
+  Calendar, MapPin, Tag, Plus, X, Save, Loader2,
   Wallet, CreditCard, ShoppingBag, Check, Search, AlertCircle, Repeat, Clock,
   AlignLeft, DollarSign, Split
 } from 'lucide-react';
@@ -26,7 +26,7 @@ interface TransactionFormData {
   category_name?: string;
   location: string;
   tags: string[];
-  
+
   is_recurring: boolean;
   status: StatusType;
 
@@ -42,10 +42,13 @@ interface TransactionFormData {
   is_installment: boolean;
   total_installments: number;
 
-  items: { 
-    name: string; 
-    quantity: number; 
-    unit_price: number; 
+  items: {
+    name: string;
+    item_category?: string;
+    specification?: string;
+    unit?: string;
+    quantity: number;
+    unit_price: number;
   }[];
 
   use_split_payment: boolean;
@@ -66,18 +69,18 @@ interface TransactionFormProps {
 
 // --- COMPONENTE 1: SMART COMBOBOX (Categorias On-The-Fly) ---
 
-const SmartCombobox = ({ 
-  value, 
-  onChange, 
-  type 
-}: { 
-  value: string | null, 
-  onChange: (id: string, name: string) => void, 
-  type: 'income' | 'expense' | 'transfer' 
+const SmartCombobox = ({
+  value,
+  onChange,
+  type
+}: {
+  value: string | null,
+  onChange: (id: string, name: string) => void,
+  type: 'income' | 'expense' | 'transfer'
 }) => {
   const { user } = useAuth();
   const [query, setQuery] = useState('');
-  const [options, setOptions] = useState<{id: string, name: string}[]>([]);
+  const [options, setOptions] = useState<{ id: string, name: string }[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -130,22 +133,20 @@ const SmartCombobox = ({
 
   return (
     <div className="relative" ref={containerRef}>
-      <div 
-        className="flex items-center gap-2 w-full bg-secondary border border-border rounded-xl px-3 py-3 cursor-text focus-within:ring-2 focus-within:ring-olive/20"
-        onClick={() => setIsOpen(true)}
-      >
-        <Tag size={16} className="text-muted-foreground shrink-0" />
-        <input 
-          className="bg-transparent outline-none w-full text-sm text-foreground placeholder-stone-400"
+      <div className="relative">
+        <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <input
+          className="w-full bg-secondary border border-border rounded-xl pl-10 pr-3 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-olive/20 cursor-text"
           placeholder={selectedName || "Selecione..."}
           value={isOpen ? query : selectedName}
           onChange={e => setQuery(e.target.value)}
           onFocus={() => setIsOpen(true)}
+          onClick={() => setIsOpen(true)}
         />
       </div>
 
       {isOpen && (
-        <div className="absolute z-50 mt-1 w-full bg-card border border-border rounded-xl shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-[9999] bottom-full mb-1 w-full bg-card border border-border rounded-xl shadow-lg max-h-60 overflow-auto">
           {filtered.length === 0 && query.trim() ? (
             <button
               type="button"
@@ -179,7 +180,244 @@ const SmartCombobox = ({
   );
 };
 
-// --- COMPONENTE 2: TAG INPUT ---
+// --- COMPONENTE 2: SMART SUBCATEGORY COMBOBOX ---
+
+const SmartSubcategoryCombobox = ({
+  value,
+  onChange,
+}: {
+  value?: string;
+  onChange: (category: string) => void;
+}) => {
+  const { user } = useAuth();
+  const [query, setQuery] = useState('');
+  const [options, setOptions] = useState<string[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchSubcategories = async () => {
+      try {
+        const { data } = await supabase
+          .from('transaction_items')
+          .select('item_category')
+          .not('item_category', 'is', null)
+          .order('item_category');
+
+        if (data) {
+          const unique = [...new Set(data.map(d => d.item_category).filter(Boolean))];
+          setOptions(unique as string[]);
+        }
+      } catch (err) {
+        console.error('Erro ao buscar subcategorias', err);
+      }
+    };
+    fetchSubcategories();
+  }, [user]);
+
+  const filtered = options.filter(o => o.toLowerCase().includes(query.toLowerCase()));
+  const selectedValue = value || '';
+
+  const handleCreate = () => {
+    if (query.trim()) {
+      onChange(query.trim());
+      setIsOpen(false);
+      setQuery('');
+    }
+  };
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <div className="relative">
+        <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <input
+          className="w-full bg-secondary border border-border rounded-xl pl-10 pr-3 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-olive/20 cursor-text"
+          placeholder={selectedValue || "Subcategoria..."}
+          value={isOpen ? query : selectedValue}
+          onChange={e => setQuery(e.target.value)}
+          onFocus={() => setIsOpen(true)}
+          onClick={() => setIsOpen(true)}
+        />
+      </div>
+
+      {isOpen && (
+        <div className="absolute z-[9999] bottom-full mb-1 w-full bg-card border border-border rounded-xl shadow-lg max-h-48 overflow-auto">
+          {filtered.length === 0 && query.trim() ? (
+            <button
+              type="button"
+              onClick={handleCreate}
+              disabled={loading}
+              className="w-full px-3 py-2 text-left text-xs hover:bg-secondary flex items-center gap-2 text-olive font-medium"
+            >
+              {loading ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />}
+              Criar "{query}"
+            </button>
+          ) : (
+            filtered.map(opt => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => {
+                  onChange(opt);
+                  setIsOpen(false);
+                  setQuery('');
+                }}
+                className="w-full px-3 py-2 text-left text-xs hover:bg-secondary flex items-center gap-2"
+              >
+                {selectedValue === opt && <Check size={12} className="text-olive" />}
+                <span>{opt}</span>
+              </button>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// --- COMPONENTE 2B: UNIT SELECTOR ---
+
+const UnitSelector = ({
+  value,
+  onChange,
+}: {
+  value?: string;
+  onChange: (unit: string) => void;
+}) => {
+  const commonUnits = ['kg', 'g', 'L', 'ml', 'un', 'dz', 'pac'];
+
+  return (
+    <select
+      value={value || ''}
+      onChange={(e) => onChange(e.target.value)}
+      className="w-full bg-secondary border border-border rounded-lg px-2 py-2 text-xs outline-none focus:ring-1 focus:ring-olive/30 cursor-pointer"
+    >
+      <option value="">Unidade</option>
+      {commonUnits.map(unit => (
+        <option key={unit} value={unit}>{unit}</option>
+      ))}
+    </select>
+  );
+};
+
+// --- COMPONENTE 2C: SMART LOCATION COMBOBOX ---
+
+const SmartLocationCombobox = ({
+  value,
+  onChange,
+}: {
+  value?: string;
+  onChange: (location: string) => void;
+}) => {
+  const { user } = useAuth();
+  const [query, setQuery] = useState('');
+  const [options, setOptions] = useState<string[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchLocations = async () => {
+      try {
+        const { data } = await supabase
+          .from('transactions')
+          .select('location')
+          .not('location', 'is', null)
+          .eq('user_id', user.id)
+          .order('location');
+
+        if (data) {
+          const unique = [...new Set(data.map(d => d.location).filter(Boolean))];
+          setOptions(unique as string[]);
+        }
+      } catch (err) {
+        console.error('Erro ao buscar locais', err);
+      }
+    };
+    fetchLocations();
+  }, [user]);
+
+  const filtered = options.filter(o => o.toLowerCase().includes(query.toLowerCase()));
+  const selectedValue = value || '';
+
+  const handleCreate = () => {
+    if (query.trim()) {
+      onChange(query.trim());
+      setIsOpen(false);
+      setQuery('');
+    }
+  };
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <div className="relative">
+        <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <input
+          className="w-full bg-secondary border border-border rounded-xl pl-10 pr-3 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-olive/20 cursor-text"
+          placeholder={selectedValue || "Local..."}
+          value={isOpen ? query : selectedValue}
+          onChange={e => setQuery(e.target.value)}
+          onFocus={() => setIsOpen(true)}
+          onClick={() => setIsOpen(true)}
+        />
+      </div>
+
+      {isOpen && (
+        <div className="absolute z-[9999] bottom-full mb-1 w-full bg-card border border-border rounded-xl shadow-lg max-h-48 overflow-auto">
+          {filtered.length === 0 && query.trim() ? (
+            <button
+              type="button"
+              onClick={handleCreate}
+              className="w-full px-3 py-2 text-left text-xs hover:bg-secondary flex items-center gap-2 text-olive font-medium"
+            >
+              <Plus size={12} /> Usar "{query}"
+            </button>
+          ) : (
+            filtered.map(opt => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => {
+                  onChange(opt);
+                  setIsOpen(false);
+                  setQuery('');
+                }}
+                className="w-full px-3 py-2 text-left text-xs hover:bg-secondary flex items-center gap-2"
+              >
+                {selectedValue === opt && <Check size={12} className="text-olive" />}
+                <span>{opt}</span>
+              </button>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// --- COMPONENTE 3: TAG INPUT ---
 
 const TagInput = ({ value, onChange }: { value: string[], onChange: (tags: string[]) => void }) => {
   const [input, setInput] = useState('');
@@ -208,7 +446,7 @@ const TagInput = ({ value, onChange }: { value: string[], onChange: (tags: strin
           </button>
         </span>
       ))}
-      <input 
+      <input
         className="flex-1 bg-transparent outline-none text-sm min-w-[120px] placeholder-stone-400"
         placeholder={value.length === 0 ? "Tags..." : ""}
         value={input}
@@ -263,11 +501,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
   const { fields: splitFields, append: appendSplit, remove: removeSplit } = useFieldArray({ control, name: 'payments' });
 
   // Sincronizar total dos itens com o valor total
-  useEffect(() => {
+  const recalculateTotal = () => {
     if (items.length > 0) {
       const total = items.reduce((acc, item) => acc + ((item.quantity || 1) * (item.unit_price || 0)), 0);
       if (total > 0) setValue('amount', parseFloat(total.toFixed(2)));
     }
+  };
+
+  useEffect(() => {
+    recalculateTotal();
   }, [items, setValue]);
 
   // Carregar dados na edição
@@ -293,11 +535,11 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
         total_installments: 2,
         items: transactionToEdit.items || [],
         payments: transactionToEdit.payments?.map(p => ({
-            method: p.payment_method,
-            account_id: p.account_id || undefined,
-            credit_card_id: p.credit_card_id || undefined,
-            amount: p.amount,
-            installments: p.installments || 1
+          method: p.payment_method,
+          account_id: p.account_id || undefined,
+          credit_card_id: p.credit_card_id || undefined,
+          amount: p.amount,
+          installments: p.installments || 1
         })) || [],
         use_split_payment: (transactionToEdit.payments && transactionToEdit.payments.length > 1) || false
       });
@@ -314,277 +556,283 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
   const onSubmit = async (data: TransactionFormData) => {
     setIsSubmitting(true);
     try {
-        const { data: userData } = await supabase.auth.getUser();
-        const currentUser = userData.user;
-        
-        if (!currentUser) throw new Error("Usuário não autenticado");
+      const { data: userData } = await supabase.auth.getUser();
+      const currentUser = userData.user;
 
-        const sanitizeUUID = (id: string | null | undefined) => (id && id.trim() !== "") ? id : null;
+      if (!currentUser) throw new Error("Usuário não autenticado");
 
-        const amountVal = Number(data.amount);
-        if (data.use_split_payment && data.type === 'expense' && data.status === 'paid') {
-            const splitTotal = data.payments.reduce((acc, p) => acc + Number(p.amount), 0);
-            if (Math.abs(splitTotal - amountVal) > 0.05) {
-                throw new Error(`A soma dos pagamentos (R$ ${splitTotal.toFixed(2)}) difere do total (R$ ${amountVal.toFixed(2)}).`);
-            }
+      const sanitizeUUID = (id: string | null | undefined) => (id && id.trim() !== "") ? id : null;
+
+      const amountVal = Number(data.amount);
+      if (data.use_split_payment && data.type === 'expense' && data.status === 'paid') {
+        const splitTotal = data.payments.reduce((acc, p) => acc + Number(p.amount), 0);
+        if (Math.abs(splitTotal - amountVal) > 0.05) {
+          throw new Error(`A soma dos pagamentos (R$ ${splitTotal.toFixed(2)}) difere do total (R$ ${amountVal.toFixed(2)}).`);
+        }
+      }
+
+      const dateISO = toISOWithNoon(data.date);
+
+      const payload: any = {
+        description: data.description,
+        amount: amountVal,
+        type: data.type,
+        date: dateISO,
+        category: data.category_name || 'Outros',
+        category_id: sanitizeUUID(data.category_id),
+        account_id: data.type === 'transfer' ? sanitizeUUID(data.origin_account_id) : sanitizeUUID(data.account_id),
+        destination_account_id: data.type === 'transfer' ? sanitizeUUID(data.destination_account_id) : null,
+        status: data.status,
+        tags: data.tags || [],
+        user_id: currentUser.id,
+        location: data.location || null
+      };
+
+      if (!data.use_split_payment && data.type !== 'transfer') {
+        if (data.payment_method === 'credit_card') {
+          payload.credit_card_id = sanitizeUUID(data.credit_card_id);
+          payload.account_id = null;
+          payload.is_locked = false;
+        } else {
+          payload.credit_card_id = null;
+        }
+      } else if (data.type === 'transfer') {
+        payload.credit_card_id = null;
+      }
+
+      const isEditMode = transactionToEdit && transactionToEdit.id && !isDuplicate;
+
+      if (isEditMode) {
+        // MODO EDIÇÃO
+        const transactionId = transactionToEdit.id;
+
+        const { error: updateError } = await supabase
+          .from('transactions')
+          .update(payload)
+          .eq('id', transactionId);
+
+        if (updateError) throw updateError;
+
+        await supabase.from('transaction_items').delete().eq('transaction_id', transactionId);
+
+        if (data.items && data.items.length > 0) {
+          const itemsPayload = data.items.map(item => ({
+            transaction_id: transactionId,
+            name: item.name,
+            item_category: item.item_category || null,
+            specification: item.specification || null,
+            unit: item.unit || null,
+            quantity: item.quantity,
+            unit_price: item.unit_price,
+            amount: item.quantity * item.unit_price,
+            user_id: currentUser.id
+          }));
+          await supabase.from('transaction_items').insert(itemsPayload);
         }
 
-        const dateISO = toISOWithNoon(data.date);
-        
-        const payload: any = {
-            description: data.description,
-            amount: amountVal,
-            type: data.type,
-            date: dateISO, 
-            category: data.category_name || 'Outros',
-            category_id: sanitizeUUID(data.category_id), 
-            account_id: data.type === 'transfer' ? sanitizeUUID(data.origin_account_id) : sanitizeUUID(data.account_id), 
-            destination_account_id: data.type === 'transfer' ? sanitizeUUID(data.destination_account_id) : null, 
-            status: data.status, 
-            tags: data.tags || [], 
-            user_id: currentUser.id,
-            location: data.location || null
-        };
+        await supabase.from('transaction_payments').delete().eq('transaction_id', transactionId);
 
-        if (!data.use_split_payment && data.type !== 'transfer') {
-            if (data.payment_method === 'credit_card') {
-                payload.credit_card_id = sanitizeUUID(data.credit_card_id);
-                payload.account_id = null;
-                payload.is_locked = false;
-            } else {
-                payload.credit_card_id = null;
-            }
-        } else if (data.type === 'transfer') {
-            payload.credit_card_id = null;
+        if (data.use_split_payment && data.payments && data.payments.length > 0) {
+          const paymentsPayload = data.payments.map(p => ({
+            transaction_id: transactionId,
+            amount: p.amount,
+            payment_method: p.method,
+            account_id: p.method === 'account' ? sanitizeUUID(p.account_id) : null,
+            credit_card_id: p.method === 'credit_card' ? sanitizeUUID(p.credit_card_id) : null,
+            installments: p.method === 'credit_card' ? (Number(p.installments) || 1) : 1,
+            user_id: currentUser.id
+          }));
+          await supabase.from('transaction_payments').insert(paymentsPayload);
         }
 
-        const isEditMode = transactionToEdit && transactionToEdit.id && !isDuplicate;
+      } else {
+        // MODO CRIAÇÃO
+        const targetTable = data.status === 'pending' && data.type !== 'transfer' ? 'bills' : 'transactions';
 
-        if (isEditMode) {
-            // MODO EDIÇÃO
-            const transactionId = transactionToEdit.id;
+        // ╔══════════════════════════════════════════════════════════════╗
+        // ║  PARCELAMENTO EM CARTÃO (Transactions)                       ║
+        // ╚══════════════════════════════════════════════════════════════╝
 
-            const { error: updateError } = await supabase
-                .from('transactions')
-                .update(payload)
-                .eq('id', transactionId);
+        const installmentsNum = Number(data.installments) || 1;
+        const shouldParcelCard = (
+          targetTable === 'transactions' &&
+          data.payment_method === 'credit_card' &&
+          installmentsNum > 1
+        );
 
-            if (updateError) throw updateError;
+        // ╔══════════════════════════════════════════════════════════════╗
+        // ║  PARCELAMENTO EM BILLS (Contas Pendentes)                    ║
+        // ╚══════════════════════════════════════════════════════════════╝
 
-            await supabase.from('transaction_items').delete().eq('transaction_id', transactionId);
-            
-            if (data.items && data.items.length > 0) {
-                const itemsPayload = data.items.map(item => ({
-                    transaction_id: transactionId,
-                    name: item.name,
-                    quantity: item.quantity,
-                    unit_price: item.unit_price,
-                    amount: item.quantity * item.unit_price,
-                    user_id: currentUser.id
-                }));
-                await supabase.from('transaction_items').insert(itemsPayload);
-            }
+        const billInstallments = Number(data.total_installments) || 1;
+        const shouldParcelBill = (
+          targetTable === 'bills' &&
+          data.is_installment &&
+          billInstallments > 1
+        );
 
-            await supabase.from('transaction_payments').delete().eq('transaction_id', transactionId);
-            
-            if (data.use_split_payment && data.payments && data.payments.length > 0) {
-                const paymentsPayload = data.payments.map(p => ({
-                    transaction_id: transactionId,
-                    amount: p.amount,
-                    payment_method: p.method,
-                    account_id: p.method === 'account' ? sanitizeUUID(p.account_id) : null,
-                    credit_card_id: p.method === 'credit_card' ? sanitizeUUID(p.credit_card_id) : null,
-                    installments: p.method === 'credit_card' ? (Number(p.installments) || 1) : 1,
-                    user_id: currentUser.id
-                }));
-                await supabase.from('transaction_payments').insert(paymentsPayload);
-            }
+        if (shouldParcelCard) {
+          // CRIAR MÚLTIPLAS PARCELAS NO CARTÃO
+          const [year, month, day] = data.date.split('-').map(Number);
+          const baseDate = new Date(year, month - 1, day, 12, 0, 0);
+
+          const rawInstallmentValue = amountVal / installmentsNum;
+          const installmentValue = Math.floor(rawInstallmentValue * 100) / 100;
+          const remainder = Number((amountVal - (installmentValue * installmentsNum)).toFixed(2));
+
+          const installmentsToCreate = [];
+
+          for (let i = 0; i < installmentsNum; i++) {
+            const installmentDate = new Date(baseDate);
+            installmentDate.setMonth(baseDate.getMonth() + i);
+
+            const currentAmount = i === 0
+              ? Number((installmentValue + remainder).toFixed(2))
+              : Number(installmentValue.toFixed(2));
+
+            const installmentPayload = {
+              ...payload,
+              description: `${data.description} (${i + 1}/${installmentsNum})`,
+              amount: currentAmount,
+              date: installmentDate.toISOString(),
+              payment_date: installmentDate.toISOString(),
+              is_installment: true,
+              installment_current: i + 1,
+              installment_total: installmentsNum,
+              created_at: new Date().toISOString()
+            };
+
+            installmentsToCreate.push(installmentPayload);
+          }
+
+          const { error: installmentsError } = await supabase
+            .from('transactions')
+            .insert(installmentsToCreate);
+
+          if (installmentsError) throw installmentsError;
+
+        } else if (shouldParcelBill) {
+          // CRIAR MÚLTIPLAS BILLS (Contas Parceladas)
+          const [year, month, day] = data.date.split('-').map(Number);
+          const baseDate = new Date(year, month - 1, day, 12, 0, 0);
+
+          const rawInstallmentValue = amountVal / billInstallments;
+          const installmentValue = Math.floor(rawInstallmentValue * 100) / 100;
+          const remainder = Number((amountVal - (installmentValue * billInstallments)).toFixed(2));
+
+          const installmentGroupId = crypto.randomUUID();
+          const billsToCreate = [];
+
+          for (let i = 0; i < billInstallments; i++) {
+            const installmentDate = new Date(baseDate);
+            installmentDate.setMonth(baseDate.getMonth() + i);
+
+            const currentAmount = i === 0
+              ? Number((installmentValue + remainder).toFixed(2))
+              : Number(installmentValue.toFixed(2));
+
+            const billPayload = {
+              description: `${data.description} (${i + 1}/${billInstallments})`,
+              amount: currentAmount,
+              due_date: installmentDate.toISOString(),
+              category: data.category_name || 'Outros',
+              type: 'variable',
+              status: 'pending',
+              user_id: currentUser.id,
+              is_installment: true,
+              installment_number: i + 1,
+              total_installments: billInstallments,
+              installment_group_id: installmentGroupId,
+              parent_installment_id: i === 0 ? null : undefined,
+              created_at: new Date().toISOString()
+            };
+
+            billsToCreate.push(billPayload);
+          }
+
+          const { error: billsError } = await supabase
+            .from('bills')
+            .insert(billsToCreate);
+
+          if (billsError) throw billsError;
 
         } else {
-            // MODO CRIAÇÃO
-            const targetTable = data.status === 'pending' && data.type !== 'transfer' ? 'bills' : 'transactions';
+          // TRANSAÇÃO/BILL ÚNICA (sem parcelamento)
 
-            // ╔══════════════════════════════════════════════════════════════╗
-            // ║  PARCELAMENTO EM CARTÃO (Transactions)                       ║
-            // ╚══════════════════════════════════════════════════════════════╝
-            
-            const installmentsNum = Number(data.installments) || 1;
-            const shouldParcelCard = (
-                targetTable === 'transactions' && 
-                data.payment_method === 'credit_card' && 
-                installmentsNum > 1
-            );
+          if (targetTable === 'bills') {
+            payload.due_date = dateISO;
+            payload.type = 'variable';
+            delete payload.date;
+          }
 
-            // ╔══════════════════════════════════════════════════════════════╗
-            // ║  PARCELAMENTO EM BILLS (Contas Pendentes)                    ║
-            // ╚══════════════════════════════════════════════════════════════╝
-            
-            const billInstallments = Number(data.total_installments) || 1;
-            const shouldParcelBill = (
-                targetTable === 'bills' && 
-                data.is_installment && 
-                billInstallments > 1
-            );
+          payload.created_at = new Date().toISOString();
 
-            if (shouldParcelCard) {
-                // CRIAR MÚLTIPLAS PARCELAS NO CARTÃO
-                const [year, month, day] = data.date.split('-').map(Number);
-                const baseDate = new Date(year, month - 1, day, 12, 0, 0);
-                
-                const rawInstallmentValue = amountVal / installmentsNum;
-                const installmentValue = Math.floor(rawInstallmentValue * 100) / 100;
-                const remainder = Number((amountVal - (installmentValue * installmentsNum)).toFixed(2));
+          const { data: newTransaction, error: insertError } = await supabase
+            .from(targetTable)
+            .insert([payload])
+            .select()
+            .single();
 
-                const installmentsToCreate = [];
+          if (insertError) throw insertError;
 
-                for (let i = 0; i < installmentsNum; i++) {
-                    const installmentDate = new Date(baseDate);
-                    installmentDate.setMonth(baseDate.getMonth() + i);
+          const transactionId = newTransaction.id;
 
-                    const currentAmount = i === 0 
-                        ? Number((installmentValue + remainder).toFixed(2)) 
-                        : Number(installmentValue.toFixed(2));
+          if (targetTable === 'transactions' && data.items && data.items.length > 0) {
+            const itemsPayload = data.items.map(item => ({
+              transaction_id: transactionId,
+              name: item.name,
+              item_category: item.item_category || null,
+              specification: item.specification || null,
+              unit: item.unit || null,
+              quantity: item.quantity,
+              unit_price: item.unit_price,
+              amount: item.quantity * item.unit_price,
+              user_id: currentUser.id
+            }));
+            await supabase.from('transaction_items').insert(itemsPayload);
+          }
 
-                    const installmentPayload = {
-                        ...payload,
-                        description: `${data.description} (${i + 1}/${installmentsNum})`,
-                        amount: currentAmount,
-                        date: installmentDate.toISOString(),
-                        payment_date: installmentDate.toISOString(),
-                        is_installment: true,
-                        installment_current: i + 1,
-                        installment_total: installmentsNum,
-                        created_at: new Date().toISOString()
-                    };
+          if (targetTable === 'transactions' && data.use_split_payment && data.payments && data.payments.length > 0) {
+            const paymentsPayload = data.payments.map(p => ({
+              transaction_id: transactionId,
+              amount: p.amount,
+              payment_method: p.method,
+              account_id: p.method === 'account' ? sanitizeUUID(p.account_id) : null,
+              credit_card_id: p.method === 'credit_card' ? sanitizeUUID(p.credit_card_id) : null,
+              installments: p.method === 'credit_card' ? (Number(p.installments) || 1) : 1,
+              user_id: currentUser.id
+            }));
+            await supabase.from('transaction_payments').insert(paymentsPayload);
+          }
 
-                    installmentsToCreate.push(installmentPayload);
-                }
-
-                const { error: installmentsError } = await supabase
-                    .from('transactions')
-                    .insert(installmentsToCreate);
-
-                if (installmentsError) throw installmentsError;
-
-            } else if (shouldParcelBill) {
-                // CRIAR MÚLTIPLAS BILLS (Contas Parceladas)
-                const [year, month, day] = data.date.split('-').map(Number);
-                const baseDate = new Date(year, month - 1, day, 12, 0, 0);
-                
-                const rawInstallmentValue = amountVal / billInstallments;
-                const installmentValue = Math.floor(rawInstallmentValue * 100) / 100;
-                const remainder = Number((amountVal - (installmentValue * billInstallments)).toFixed(2));
-
-                const installmentGroupId = crypto.randomUUID();
-                const billsToCreate = [];
-
-                for (let i = 0; i < billInstallments; i++) {
-                    const installmentDate = new Date(baseDate);
-                    installmentDate.setMonth(baseDate.getMonth() + i);
-
-                    const currentAmount = i === 0 
-                        ? Number((installmentValue + remainder).toFixed(2)) 
-                        : Number(installmentValue.toFixed(2));
-
-                    const billPayload = {
-                        description: `${data.description} (${i + 1}/${billInstallments})`,
-                        amount: currentAmount,
-                        due_date: installmentDate.toISOString(),
-                        category: data.category_name || 'Outros',
-                        type: 'variable',
-                        status: 'pending',
-                        user_id: currentUser.id,
-                        is_installment: true,
-                        installment_number: i + 1,
-                        total_installments: billInstallments,
-                        installment_group_id: installmentGroupId,
-                        parent_installment_id: i === 0 ? null : undefined,
-                        created_at: new Date().toISOString()
-                    };
-
-                    billsToCreate.push(billPayload);
-                }
-
-                const { error: billsError } = await supabase
-                    .from('bills')
-                    .insert(billsToCreate);
-
-                if (billsError) throw billsError;
-
-            } else {
-                // TRANSAÇÃO/BILL ÚNICA (sem parcelamento)
-                
-                if (targetTable === 'bills') {
-                    payload.due_date = dateISO;
-                    payload.type = 'variable';
-                    delete payload.date;
-                }
-
-                payload.created_at = new Date().toISOString();
-
-                const { data: newTransaction, error: insertError } = await supabase
-                    .from(targetTable)
-                    .insert([payload])
-                    .select()
-                    .single();
-
-                if (insertError) throw insertError;
-                
-                const transactionId = newTransaction.id;
-
-                if (targetTable === 'transactions' && data.items && data.items.length > 0) {
-                    const itemsPayload = data.items.map(item => ({
-                        transaction_id: transactionId,
-                        name: item.name,
-                        quantity: item.quantity,
-                        unit_price: item.unit_price,
-                        amount: item.quantity * item.unit_price,
-                        user_id: currentUser.id
-                    }));
-                    await supabase.from('transaction_items').insert(itemsPayload);
-                }
-
-                if (targetTable === 'transactions' && data.use_split_payment && data.payments && data.payments.length > 0) {
-                    const paymentsPayload = data.payments.map(p => ({
-                        transaction_id: transactionId,
-                        amount: p.amount,
-                        payment_method: p.method,
-                        account_id: p.method === 'account' ? sanitizeUUID(p.account_id) : null,
-                        credit_card_id: p.method === 'credit_card' ? sanitizeUUID(p.credit_card_id) : null,
-                        installments: p.method === 'credit_card' ? (Number(p.installments) || 1) : 1,
-                        user_id: currentUser.id
-                    }));
-                    await supabase.from('transaction_payments').insert(paymentsPayload);
-                }
-
-                if (data.is_recurring) {
-                    await supabase.from('recurrence_rules').insert([{
-                        user_id: currentUser.id,
-                        description: data.description,
-                        amount: amountVal,
-                        type: data.type,
-                        day_of_month: new Date(dateISO).getDate(),
-                        category_id: sanitizeUUID(data.category_id),
-                        account_id: sanitizeUUID(data.account_id),
-                        credit_card_id: sanitizeUUID(data.credit_card_id)
-                    }]);
-                }
-            }
+          if (data.is_recurring) {
+            await supabase.from('recurrence_rules').insert([{
+              user_id: currentUser.id,
+              description: data.description,
+              amount: amountVal,
+              type: data.type,
+              day_of_month: new Date(dateISO).getDate(),
+              category_id: sanitizeUUID(data.category_id),
+              account_id: sanitizeUUID(data.account_id),
+              credit_card_id: sanitizeUUID(data.credit_card_id)
+            }]);
+          }
         }
+      }
 
-        if (onSuccess) onSuccess();
+      if (onSuccess) onSuccess();
 
     } catch (error: any) {
-        console.error('Erro ao salvar:', error);
-        alert('Erro ao salvar: ' + error.message);
+      console.error('Erro ao salvar:', error);
+      alert('Erro ao salvar: ' + error.message);
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      
+
       {/* 1. SELETOR DE TIPO */}
       <div className="flex bg-secondary p-1 rounded-xl">
         <button type="button" onClick={() => setValue('type', 'expense')} className={`flex-1 py-3 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${type === 'expense' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground'}`}>
@@ -602,188 +850,245 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
       <div className="space-y-1">
         <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Descrição</label>
         <div className="relative">
-            <AlignLeft className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-            <input 
-              {...register('description')}
-              className="w-full bg-secondary border border-border rounded-xl pl-10 pr-4 py-3 text-base font-medium text-foreground outline-none focus:ring-2 focus:ring-olive/20 placeholder-stone-400"
-              placeholder={type === 'transfer' ? "Motivo da transferência..." : "Ex: Supermercado Semanal"}
-              autoFocus
-            />
+          <AlignLeft className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+          <input
+            {...register('description')}
+            className="w-full bg-secondary border border-border rounded-xl pl-10 pr-4 py-3 text-base font-medium text-foreground outline-none focus:ring-2 focus:ring-olive/20 placeholder-stone-400"
+            placeholder={type === 'transfer' ? "Motivo da transferência..." : "Ex: Supermercado Semanal"}
+            autoFocus
+          />
         </div>
       </div>
 
       {/* 3. CAMPOS ESPECÍFICOS POR TIPO */}
-      
+
       {/* MODO TRANSFERÊNCIA */}
       {type === 'transfer' ? (
-          <div className="space-y-4 animate-fade-in">
-            {/* LINHA 1: Data e Valor */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Data da Transferência</label>
-                <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-                    <input 
-                      type="date" 
-                      {...register('date')} 
-                      className="w-full bg-secondary border border-border rounded-xl pl-10 pr-3 py-3 text-sm text-foreground outline-none focus:border-blue-500"
-                    />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Valor Total</label>
-                <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-                    <input 
-                      type="number" 
-                      step="0.01" 
-                      onWheel={preventScroll}
-                      {...register('amount')}
-                      className="w-full bg-secondary border border-border rounded-xl pl-10 pr-3 py-3 text-sm font-semibold text-foreground outline-none focus:border-blue-500 placeholder-stone-300"
-                      placeholder="0.00"
-                    />
-                </div>
-              </div>
-            </div>
-
-            {/* LINHA 2: Origem e Destino */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-secondary p-4 rounded-2xl border border-border">
-              <div>
-                <label className="text-xs font-bold text-red-400 uppercase block mb-2">Sai de (Origem)</label>
-                <div className="relative">
-                  <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300" size={16} />
-                  <select {...register('origin_account_id')} className="w-full bg-card border border-red-200 rounded-xl pl-9 pr-3 py-3 text-sm outline-none">
-                    <option value="">Selecione...</option>
-                    {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance.toFixed(2)})</option>)}
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label className="text-xs font-bold text-emerald-500 uppercase block mb-2">Entra em (Destino)</label>
-                <div className="relative">
-                  <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-300" size={16} />
-                  <select {...register('destination_account_id')} className="w-full bg-card border border-emerald-200 rounded-xl pl-9 pr-3 py-3 text-sm outline-none">
-                    <option value="">Selecione...</option>
-                    {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance.toFixed(2)})</option>)}
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-      ) : (
-          // MODO PADRÃO (DESPESA/RECEITA)
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in">
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Data</label>
-                <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-                    <input 
-                      type="date" 
-                      {...register('date')} 
-                      className="w-full bg-secondary border border-border rounded-xl pl-10 pr-3 py-3 text-sm text-foreground outline-none focus:border-primary"
-                    />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Categoria</label>
-                <Controller 
-                  name="category_id" 
-                  control={control}
-                  render={({ field }) => (
-                    <SmartCombobox 
-                      value={field.value} 
-                      onChange={(id, name) => {
-                        field.onChange(id);
-                        setValue('category_name', name);
-                      }} 
-                      type={type} 
-                    />
-                  )}
+        <div className="space-y-4 animate-fade-in">
+          {/* LINHA 1: Data e Valor */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Data da Transferência</label>
+              <div className="relative">
+                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+                <input
+                  type="date"
+                  {...register('date')}
+                  className="w-full bg-secondary border border-border rounded-xl pl-10 pr-3 py-3 text-sm text-foreground outline-none focus:border-blue-500"
                 />
               </div>
+            </div>
 
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Local / Tags</label>
-                <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-                    <input 
-                      {...register('location')}
-                      placeholder="Local (Opcional)"
-                      className="w-full bg-secondary border border-border rounded-xl pl-10 pr-4 py-3 text-sm text-foreground outline-none focus:border-primary placeholder-stone-400"
-                    />
-                </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Valor Total</label>
+              <div className="relative">
+                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+                <input
+                  type="number"
+                  step="0.01"
+                  onWheel={preventScroll}
+                  {...register('amount')}
+                  className="w-full bg-secondary border border-border rounded-xl pl-10 pr-3 py-3 text-sm font-semibold text-foreground outline-none focus:border-blue-500 placeholder-stone-300"
+                  placeholder="0.00"
+                />
               </div>
+            </div>
           </div>
+
+          {/* LINHA 2: Origem e Destino */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-secondary p-4 rounded-2xl border border-border">
+            <div>
+              <label className="text-xs font-bold text-red-400 uppercase block mb-2">Sai de (Origem)</label>
+              <div className="relative">
+                <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-red-300" size={16} />
+                <select {...register('origin_account_id')} className="w-full bg-card border border-red-200 rounded-xl pl-9 pr-3 py-3 text-sm outline-none">
+                  <option value="">Selecione...</option>
+                  {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance.toFixed(2)})</option>)}
+                </select>
+              </div>
+            </div>
+            <div>
+              <label className="text-xs font-bold text-emerald-500 uppercase block mb-2">Entra em (Destino)</label>
+              <div className="relative">
+                <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-300" size={16} />
+                <select {...register('destination_account_id')} className="w-full bg-card border border-emerald-200 rounded-xl pl-9 pr-3 py-3 text-sm outline-none">
+                  <option value="">Selecione...</option>
+                  {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance.toFixed(2)})</option>)}
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        // MODO PADRÃO (DESPESA/RECEITA)
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in">
+          <div className="space-y-1">
+            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Data</label>
+            <div className="relative">
+              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+              <input
+                type="date"
+                {...register('date')}
+                className="w-full bg-secondary border border-border rounded-xl pl-10 pr-3 py-3 text-sm text-foreground outline-none focus:border-primary"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Categoria</label>
+            <Controller
+              name="category_id"
+              control={control}
+              render={({ field }) => (
+                <SmartCombobox
+                  value={field.value}
+                  onChange={(id, name) => {
+                    field.onChange(id);
+                    setValue('category_name', name);
+                  }}
+                  type={type}
+                />
+              )}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Local</label>
+            <Controller
+              name="location"
+              control={control}
+              render={({ field }) => (
+                <SmartLocationCombobox
+                  value={field.value}
+                  onChange={(location) => field.onChange(location)}
+                />
+              )}
+            />
+          </div>
+        </div>
       )}
 
       {/* 4. ITENS DA COMPRA (Apenas Despesa) */}
       {type === 'expense' && (
         <div className="border-t border-border pt-4">
-            <button 
-                type="button" 
-                onClick={() => setShowItems(!showItems)}
-                className="flex items-center gap-2 text-xs font-bold text-olive uppercase tracking-widest hover:underline transition-colors mb-4"
-            >
-                <ShoppingBag size={14} /> {showItems ? 'Ocultar Itens' : 'Detalhar Itens da Compra'}
-            </button>
+          <button
+            type="button"
+            onClick={() => setShowItems(!showItems)}
+            className="flex items-center gap-2 text-xs font-bold text-olive uppercase tracking-widest hover:underline transition-colors mb-4"
+          >
+            <ShoppingBag size={14} /> {showItems ? 'Ocultar Itens' : 'Detalhar Itens da Compra'}
+          </button>
 
-            {showItems && (
-                <div className="space-y-2 bg-secondary p-4 rounded-xl border border-border">
-                    <div className="grid grid-cols-[1fr_80px_100px_80px_40px] gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
-                        <div>Item</div>
-                        <div className="text-center">Qtd</div>
-                        <div className="text-right pr-2">Preço Unit.</div>
-                        <div className="text-right pr-2">Subtotal</div>
-                        <div></div>
+          {showItems && (
+            <div className="space-y-3 bg-secondary p-4 rounded-xl border border-border">
+              {itemFields.map((field, index) => {
+                const item = items[index];
+                const subtotal = (item?.quantity || 0) * (item?.unit_price || 0);
+
+                return (
+                  <div key={field.id} className="space-y-2 p-3 bg-card rounded-lg border border-border">
+                    {/* Linha 1: Nome + Subcategoria + Especificação */}
+                    <div className="grid grid-cols-[2fr_1.5fr_1.5fr] gap-2">
+                      <div>
+                        <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Nome do Item</label>
+                        <input
+                          {...register(`items.${index}.name`)}
+                          className="w-full bg-secondary rounded-lg p-2 text-xs outline-none border border-border focus:ring-1 focus:ring-olive/30"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Subcategoria</label>
+                        <Controller
+                          name={`items.${index}.item_category`}
+                          control={control}
+                          render={({ field }) => (
+                            <SmartSubcategoryCombobox
+                              value={field.value}
+                              onChange={(value) => field.onChange(value)}
+                            />
+                          )}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Especificação</label>
+                        <input
+                          {...register(`items.${index}.specification`)}
+                          className="w-full bg-secondary rounded-lg p-2 text-xs outline-none border border-border focus:ring-1 focus:ring-olive/30"
+                        />
+                      </div>
                     </div>
-                    {itemFields.map((field, index) => {
-                        const item = items[index];
-                        const subtotal = (item?.quantity || 0) * (item?.unit_price || 0);
-                        
-                        return (
-                            <div key={field.id} className="grid grid-cols-[1fr_80px_100px_80px_40px] gap-2 items-center">
-                                <input 
-                                    {...register(`items.${index}.name`)}
-                                    placeholder="Nome do item"
-                                    className="w-full bg-card rounded-lg p-2 text-xs outline-none border border-border"
-                                />
 
-                                <input 
-                                    {...register(`items.${index}.quantity`)}
-                                    type="number" min="1" step="1"
-                                    onWheel={preventScroll}
-                                    className="w-full bg-card rounded-lg p-2 text-xs text-center outline-none border border-border"
-                                />
+                    {/* Linha 2: Unidade + Qtd + Preço + Subtotal + Delete */}
+                    <div className="grid grid-cols-[70px_80px_90px_80px_1fr_40px] gap-2 items-end">
+                      <div>
+                        <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Unidade</label>
+                        <Controller
+                          name={`items.${index}.unit`}
+                          control={control}
+                          render={({ field }) => (
+                            <UnitSelector
+                              value={field.value}
+                              onChange={(value) => field.onChange(value)}
+                            />
+                          )}
+                        />
+                      </div>
 
-                                <div className="relative">
-                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground">R$</span>
-                                    <input 
-                                        {...register(`items.${index}.unit_price`)}
-                                        type="number" step="0.01"
-                                        onWheel={preventScroll}
-                                        className="w-full bg-card rounded-lg p-2 pl-6 text-xs text-right outline-none border border-border"
-                                    />
-                                </div>
+                      <div>
+                        <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Qtd</label>
+                        <input
+                          {...register(`items.${index}.quantity`)}
+                          type="number" min="0.01" step="0.01"
+                          onWheel={preventScroll}
+                          onChange={() => recalculateTotal()}
+                          className="w-full bg-secondary rounded-lg p-2 text-xs text-center outline-none border border-border focus:ring-1 focus:ring-olive/30"
+                        />
+                      </div>
 
-                                <div className="w-20 text-right text-xs font-bold text-muted-foreground pr-2">
-                                    {subtotal.toFixed(2)}
-                                </div>
+                      <div>
+                        <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Preço/Un.</label>
+                        <div className="relative">
+                          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[9px] text-muted-foreground">R$</span>
+                          <input
+                            {...register(`items.${index}.unit_price`)}
+                            type="number" step="0.01"
+                            onWheel={preventScroll}
+                            onChange={() => recalculateTotal()}
+                            className="w-full bg-secondary rounded-lg p-2 pl-6 text-xs text-right outline-none border border-border focus:ring-1 focus:ring-olive/30"
+                          />
+                        </div>
+                      </div>
 
-                                <button type="button" onClick={() => removeItem(index)} className="p-2 text-muted-foreground hover:text-red-500"><X size={14} /></button>
-                            </div>
-                        );
-                    })}
-                    <button 
+                      <div>
+                        <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Subtotal</label>
+                        <div className="w-full text-right text-xs font-bold text-foreground bg-secondary rounded-lg p-2">
+                          {subtotal.toFixed(2)}
+                        </div>
+                      </div>
+
+                      <div></div>
+
+                      <button
                         type="button"
-                        onClick={() => appendItem({ name: '', quantity: 1, unit_price: 0 })}
-                        className="w-full py-2 border border-dashed border-primary/30 rounded-xl text-[10px] font-bold text-olive uppercase tracking-widest hover:bg-primary/5 flex items-center justify-center gap-1"
-                    >
-                        <Plus size={12} /> Adicionar Item
-                    </button>
-                </div>
-            )}
+                        onClick={() => removeItem(index)}
+                        className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Remover item"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+              <button
+                type="button"
+                onClick={() => appendItem({ name: '', item_category: '', specification: '', unit: '', quantity: 1, unit_price: 0 })}
+                className="w-full py-2 border border-dashed border-primary/30 rounded-xl text-[10px] font-bold text-olive uppercase tracking-widest hover:bg-primary/5 flex items-center justify-center gap-1 mt-2"
+              >
+                <Plus size={12} /> Adicionar Item
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -792,295 +1097,295 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
         <div className="bg-card p-6 rounded-[2rem] border border-border shadow-sm text-center">
           <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1 block">Valor Total</label>
           <div className="relative inline-block w-full max-w-xs">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-muted-foreground">R$</span>
-              <input 
-                type="number" 
-                step="0.01" 
-                onWheel={preventScroll}
-                {...register('amount')}
-                className="w-full bg-secondary border border-border rounded-2xl py-4 pl-12 pr-4 text-3xl font-bold text-foreground text-center outline-none focus:ring-2 focus:ring-olive/20 placeholder-stone-200"
-                placeholder="0.00"
-              />
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-bold text-muted-foreground">R$</span>
+            <input
+              type="number"
+              step="0.01"
+              onWheel={preventScroll}
+              {...register('amount')}
+              className="w-full bg-secondary border border-border rounded-2xl py-4 pl-12 pr-4 text-3xl font-bold text-foreground text-center outline-none focus:ring-2 focus:ring-olive/20 placeholder-stone-200"
+              placeholder="0.00"
+            />
           </div>
         </div>
       )}
 
       {/* 6. FORMA DE PAGAMENTO (Apenas para Despesa/Receita) */}
       {type !== 'transfer' && (
-          <div className="bg-secondary p-6 rounded-2xl border border-border space-y-4">
-              <div className="flex justify-between items-center">
-                  <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                    {type === 'income' ? 'Destino do Recurso' : 'Forma de Pagamento'}
-                  </label>
-                  
-                  <div className="flex gap-2">
-                    <button 
-                        type="button" 
-                        onClick={() => setValue('status', status === 'pending' ? 'paid' : 'pending')}
-                        className={`text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full transition-all ${status === 'paid' ? 'bg-primary/20 text-olive' : 'bg-yellow-100 text-yellow-700'}`}
-                    >
-                        {status === 'paid' ? 'Pago' : 'Pendente'}
-                    </button>
-                  </div>
+        <div className="bg-secondary p-6 rounded-2xl border border-border space-y-4">
+          <div className="flex justify-between items-center">
+            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              {type === 'income' ? 'Destino do Recurso' : 'Forma de Pagamento'}
+            </label>
+
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setValue('status', status === 'pending' ? 'paid' : 'pending')}
+                className={`text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full transition-all ${status === 'paid' ? 'bg-primary/20 text-olive' : 'bg-yellow-100 text-yellow-700'}`}
+              >
+                {status === 'paid' ? 'Pago' : 'Pendente'}
+              </button>
+            </div>
+          </div>
+
+          {status === 'paid' && (
+            <>
+              <div className="flex bg-card p-1 rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setValue('payment_method', 'account');
+                    setValue('use_split_payment', false);
+                  }}
+                  className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${paymentMethod === 'account' && !useSplitPayment ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
+                >
+                  <Wallet size={14} /> Conta
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setValue('payment_method', 'credit_card');
+                    setValue('use_split_payment', false);
+                  }}
+                  className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${paymentMethod === 'credit_card' && !useSplitPayment ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
+                >
+                  <CreditCard size={14} /> Cartão
+                </button>
+                {type === 'expense' && (
+                  <button
+                    type="button"
+                    onClick={() => setValue('use_split_payment', true)}
+                    className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${useSplitPayment ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
+                  >
+                    <Split size={14} /> Dividir
+                  </button>
+                )}
               </div>
 
-              {status === 'paid' && (
-                  <>
-                      <div className="flex bg-card p-1 rounded-xl">
-                          <button
-                            type="button"
-                            onClick={() => {
-                                setValue('payment_method', 'account');
-                                setValue('use_split_payment', false);
-                            }}
-                            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${paymentMethod === 'account' && !useSplitPayment ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
-                          >
-                            <Wallet size={14} /> Conta
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                                setValue('payment_method', 'credit_card');
-                                setValue('use_split_payment', false);
-                            }}
-                            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${paymentMethod === 'credit_card' && !useSplitPayment ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
-                          >
-                            <CreditCard size={14} /> Cartão
-                          </button>
-                          {type === 'expense' && (
-                            <button
-                              type="button"
-                              onClick={() => setValue('use_split_payment', true)}
-                              className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all flex items-center justify-center gap-2 ${useSplitPayment ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
-                            >
-                              <Split size={14} /> Dividir
-                            </button>
-                          )}
-                      </div>
-
-                      {!useSplitPayment ? (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              {paymentMethod === 'account' ? (
-                                  <div className="space-y-1 md:col-span-2">
-                                      <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Conta</label>
-                                      <select {...register('account_id')} className="w-full bg-card border border-border rounded-xl p-3 text-sm outline-none">
-                                          <option value="">Selecione...</option>
-                                          {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
-                                      </select>
-                                  </div>
-                              ) : (
-                                  <>
-                                      <div className="space-y-1">
-                                          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Cartão</label>
-                                          <select {...register('credit_card_id')} className="w-full bg-card border border-border rounded-xl p-3 text-sm outline-none">
-                                              <option value="">Selecione...</option>
-                                              {cards.map(card => <option key={card.id} value={card.id}>{card.name}</option>)}
-                                          </select>
-                                      </div>
-                                      <div className="space-y-1">
-                                          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Parcelas</label>
-                                          <select {...register('installments')} className="w-full bg-card border border-border rounded-xl p-3 text-sm outline-none">
-                                              <option value="1">À vista (1x)</option>
-                                              {[...Array(23)].map((_, i) => (
-                                                  <option key={i} value={i + 2}>{i + 2}x</option>
-                                              ))}
-                                          </select>
-                                      </div>
-                                      
-                                      {/* PREVIEW DO PARCELAMENTO CARTÃO */}
-                                      {Number(installments) > 1 && Number(watchedAmount) > 0 && (
-                                          <div className="md:col-span-2 bg-blue-50 border border-blue-200 rounded-xl p-4">
-                                              <p className="text-xs font-bold text-blue-700 mb-2">💳 Resumo do Parcelamento no Cartão</p>
-                                              <div className="flex justify-between items-center">
-                                                  <span className="text-xs text-blue-600">Valor Total:</span>
-                                                  <span className="text-sm font-bold text-blue-700">
-                                                      R$ {Number(watchedAmount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                                  </span>
-                                              </div>
-                                              <div className="flex justify-between items-center mt-1">
-                                                  <span className="text-xs text-blue-600">{installments}x de:</span>
-                                                  <span className="text-lg font-bold text-blue-700">
-                                                      R$ {(Number(watchedAmount) / Number(installments)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                                  </span>
-                                              </div>
-                                              <p className="text-[10px] text-blue-600 mt-2">
-                                                  ✓ Serão criadas {installments} transações mensais automaticamente
-                                              </p>
-                                          </div>
-                                      )}
-                                  </>
-                              )}
-                          </div>
-                      ) : (
-                          <div className="space-y-3">
-                              {splitFields.map((field, index) => (
-                                  <div key={field.id} className="grid grid-cols-[1fr_2fr_1fr_40px] gap-2 items-end bg-card p-3 rounded-xl border border-border">
-                                      <select {...register(`payments.${index}.method`)} className="bg-secondary border border-border rounded-lg p-2 text-xs">
-                                          <option value="account">Conta</option>
-                                          <option value="credit_card">Cartão</option>
-                                      </select>
-
-                                      {watch(`payments.${index}.method`) === 'account' ? (
-                                          <select {...register(`payments.${index}.account_id`)} className="bg-secondary border border-border rounded-lg p-2 text-xs">
-                                              <option value="">Selecione...</option>
-                                              {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
-                                          </select>
-                                      ) : (
-                                          <select {...register(`payments.${index}.credit_card_id`)} className="bg-secondary border border-border rounded-lg p-2 text-xs">
-                                              <option value="">Selecione...</option>
-                                              {cards.map(card => <option key={card.id} value={card.id}>{card.name}</option>)}
-                                          </select>
-                                      )}
-
-                                      <input 
-                                          {...register(`payments.${index}.amount`)}
-                                          type="number" step="0.01"
-                                          onWheel={preventScroll}
-                                          placeholder="R$ 0.00"
-                                          className="bg-secondary border border-border rounded-lg p-2 text-xs text-right"
-                                      />
-
-                                      <button type="button" onClick={() => removeSplit(index)} className="p-2 text-muted-foreground hover:text-red-500">
-                                          <X size={14} />
-                                      </button>
-                                  </div>
-                              ))}
-                              <button 
-                                  type="button"
-                                  onClick={() => appendSplit({ method: 'account', amount: 0 })}
-                                  className="w-full py-2 border border-dashed border-primary/30 rounded-xl text-[10px] font-bold text-olive uppercase tracking-widest hover:bg-primary/5"
-                              >
-                                  <Plus size={12} className="inline mr-1" /> Adicionar Meio de Pagamento
-                              </button>
-                          </div>
-                      )}
-                  </>
-              )}
-
-              {/* PENDENTE - Opção de Parcelamento em Bills */}
-              {status === 'pending' && (
-                  <div className="space-y-4">
+              {!useSplitPayment ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {paymentMethod === 'account' ? (
+                    <div className="space-y-1 md:col-span-2">
+                      <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Conta</label>
+                      <select {...register('account_id')} className="w-full bg-card border border-border rounded-xl p-3 text-sm outline-none">
+                        <option value="">Selecione...</option>
+                        {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
+                      </select>
+                    </div>
+                  ) : (
+                    <>
                       <div className="space-y-1">
-                          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">
-                              {type === 'income' ? 'Conta Destino' : 'Conta para Débito Futuro'}
-                          </label>
-                          <select {...register('account_id')} className="w-full bg-card border border-border rounded-xl p-3 text-sm outline-none">
-                              <option value="">Selecione...</option>
-                              {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
-                          </select>
+                        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Cartão</label>
+                        <select {...register('credit_card_id')} className="w-full bg-card border border-border rounded-xl p-3 text-sm outline-none">
+                          <option value="">Selecione...</option>
+                          {cards.map(card => <option key={card.id} value={card.id}>{card.name}</option>)}
+                        </select>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Parcelas</label>
+                        <select {...register('installments')} className="w-full bg-card border border-border rounded-xl p-3 text-sm outline-none">
+                          <option value="1">À vista (1x)</option>
+                          {[...Array(23)].map((_, i) => (
+                            <option key={i} value={i + 2}>{i + 2}x</option>
+                          ))}
+                        </select>
                       </div>
 
-                      {/* CHECKBOX PARCELAR */}
-                      <div 
-                          onClick={() => setValue('is_installment', !isInstallment)}
-                          className={`flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all ${isInstallment ? 'bg-blue-50 border-2 border-blue-300' : 'bg-card border-2 border-border'}`}
-                      >
-                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${isInstallment ? 'bg-blue-500 border-blue-500' : 'border-border'}`}>
-                              {isInstallment && <Check size={14} className="text-white" />}
+                      {/* PREVIEW DO PARCELAMENTO CARTÃO */}
+                      {Number(installments) > 1 && Number(watchedAmount) > 0 && (
+                        <div className="md:col-span-2 bg-blue-50 border border-blue-200 rounded-xl p-4">
+                          <p className="text-xs font-bold text-blue-700 mb-2">💳 Resumo do Parcelamento no Cartão</p>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-blue-600">Valor Total:</span>
+                            <span className="text-sm font-bold text-blue-700">
+                              R$ {Number(watchedAmount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            </span>
                           </div>
-                          <div className="flex-1">
-                              <p className="text-xs font-bold text-foreground">Parcelar este Compromisso</p>
-                              <p className="text-[10px] text-muted-foreground">Dividir em múltiplas contas mensais</p>
+                          <div className="flex justify-between items-center mt-1">
+                            <span className="text-xs text-blue-600">{installments}x de:</span>
+                            <span className="text-lg font-bold text-blue-700">
+                              R$ {(Number(watchedAmount) / Number(installments)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            </span>
                           </div>
-                          <input type="checkbox" {...register('is_installment')} className="hidden" />
-                      </div>
-
-                      {/* CAMPO DE PARCELAS */}
-                      {isInstallment && (
-                          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-3 animate-fade-in">
-                              <div>
-                                  <label className="text-[10px] font-bold text-blue-700 uppercase tracking-widest ml-1 block mb-2">
-                                      Número de Parcelas
-                                  </label>
-                                  <input
-                                      type="number"
-                                      min="2"
-                                      max="120"
-                                      {...register('total_installments', { 
-                                          required: isInstallment,
-                                          min: 2,
-                                          max: 120 
-                                      })}
-                                      onWheel={preventScroll}
-                                      className="w-full bg-card border border-blue-200 rounded-xl py-3 px-4 text-foreground font-semibold text-sm focus:ring-2 focus:ring-blue-500/10 outline-none transition-all"
-                                      placeholder="Ex: 12"
-                                  />
-                                  <p className="text-[9px] text-blue-600 mt-1 ml-1">
-                                      Entre 2 e 120 parcelas
-                                  </p>
-                              </div>
-                              
-                              {/* PREVIEW DO PARCELAMENTO BILLS */}
-                              {Number(totalInstallments) >= 2 && Number(watchedAmount) > 0 && (
-                                  <div className="bg-card p-3 rounded-lg border border-blue-200">
-                                      <p className="text-[9px] text-blue-600 uppercase tracking-wider mb-1">📊 Resumo</p>
-                                      <div className="flex justify-between items-center">
-                                          <span className="text-xs text-foreground">Valor Total:</span>
-                                          <span className="text-sm font-bold text-foreground">
-                                              R$ {Number(watchedAmount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                          </span>
-                                      </div>
-                                      <div className="flex justify-between items-center mt-1">
-                                          <span className="text-xs text-foreground">{totalInstallments}x de:</span>
-                                          <span className="text-lg font-bold text-blue-600">
-                                              R$ {(Number(watchedAmount) / Number(totalInstallments)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                          </span>
-                                      </div>
-                                      <p className="text-[9px] text-blue-600 mt-2">
-                                          ✓ Serão criadas {totalInstallments} contas mensais automaticamente
-                                      </p>
-                                  </div>
-                              )}
-                          </div>
+                          <p className="text-[10px] text-blue-600 mt-2">
+                            ✓ Serão criadas {installments} transações mensais automaticamente
+                          </p>
+                        </div>
                       )}
-                  </div>
+                    </>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {splitFields.map((field, index) => (
+                    <div key={field.id} className="grid grid-cols-[1fr_2fr_1fr_40px] gap-2 items-end bg-card p-3 rounded-xl border border-border">
+                      <select {...register(`payments.${index}.method`)} className="bg-secondary border border-border rounded-lg p-2 text-xs">
+                        <option value="account">Conta</option>
+                        <option value="credit_card">Cartão</option>
+                      </select>
+
+                      {watch(`payments.${index}.method`) === 'account' ? (
+                        <select {...register(`payments.${index}.account_id`)} className="bg-secondary border border-border rounded-lg p-2 text-xs">
+                          <option value="">Selecione...</option>
+                          {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
+                        </select>
+                      ) : (
+                        <select {...register(`payments.${index}.credit_card_id`)} className="bg-secondary border border-border rounded-lg p-2 text-xs">
+                          <option value="">Selecione...</option>
+                          {cards.map(card => <option key={card.id} value={card.id}>{card.name}</option>)}
+                        </select>
+                      )}
+
+                      <input
+                        {...register(`payments.${index}.amount`)}
+                        type="number" step="0.01"
+                        onWheel={preventScroll}
+                        placeholder="R$ 0.00"
+                        className="bg-secondary border border-border rounded-lg p-2 text-xs text-right"
+                      />
+
+                      <button type="button" onClick={() => removeSplit(index)} className="p-2 text-muted-foreground hover:text-red-500">
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => appendSplit({ method: 'account', amount: 0 })}
+                    className="w-full py-2 border border-dashed border-primary/30 rounded-xl text-[10px] font-bold text-olive uppercase tracking-widest hover:bg-primary/5"
+                  >
+                    <Plus size={12} className="inline mr-1" /> Adicionar Meio de Pagamento
+                  </button>
+                </div>
               )}
-          </div>
+            </>
+          )}
+
+          {/* PENDENTE - Opção de Parcelamento em Bills */}
+          {status === 'pending' && (
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">
+                  {type === 'income' ? 'Conta Destino' : 'Conta para Débito Futuro'}
+                </label>
+                <select {...register('account_id')} className="w-full bg-card border border-border rounded-xl p-3 text-sm outline-none">
+                  <option value="">Selecione...</option>
+                  {accounts.map(acc => <option key={acc.id} value={acc.id}>{acc.name}</option>)}
+                </select>
+              </div>
+
+              {/* CHECKBOX PARCELAR */}
+              <div
+                onClick={() => setValue('is_installment', !isInstallment)}
+                className={`flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all ${isInstallment ? 'bg-blue-50 border-2 border-blue-300' : 'bg-card border-2 border-border'}`}
+              >
+                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${isInstallment ? 'bg-blue-500 border-blue-500' : 'border-border'}`}>
+                  {isInstallment && <Check size={14} className="text-white" />}
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-bold text-foreground">Parcelar este Compromisso</p>
+                  <p className="text-[10px] text-muted-foreground">Dividir em múltiplas contas mensais</p>
+                </div>
+                <input type="checkbox" {...register('is_installment')} className="hidden" />
+              </div>
+
+              {/* CAMPO DE PARCELAS */}
+              {isInstallment && (
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-3 animate-fade-in">
+                  <div>
+                    <label className="text-[10px] font-bold text-blue-700 uppercase tracking-widest ml-1 block mb-2">
+                      Número de Parcelas
+                    </label>
+                    <input
+                      type="number"
+                      min="2"
+                      max="120"
+                      {...register('total_installments', {
+                        required: isInstallment,
+                        min: 2,
+                        max: 120
+                      })}
+                      onWheel={preventScroll}
+                      className="w-full bg-card border border-blue-200 rounded-xl py-3 px-4 text-foreground font-semibold text-sm focus:ring-2 focus:ring-blue-500/10 outline-none transition-all"
+                      placeholder="Ex: 12"
+                    />
+                    <p className="text-[9px] text-blue-600 mt-1 ml-1">
+                      Entre 2 e 120 parcelas
+                    </p>
+                  </div>
+
+                  {/* PREVIEW DO PARCELAMENTO BILLS */}
+                  {Number(totalInstallments) >= 2 && Number(watchedAmount) > 0 && (
+                    <div className="bg-card p-3 rounded-lg border border-blue-200">
+                      <p className="text-[9px] text-blue-600 uppercase tracking-wider mb-1">📊 Resumo</p>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-foreground">Valor Total:</span>
+                        <span className="text-sm font-bold text-foreground">
+                          R$ {Number(watchedAmount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center mt-1">
+                        <span className="text-xs text-foreground">{totalInstallments}x de:</span>
+                        <span className="text-lg font-bold text-blue-600">
+                          R$ {(Number(watchedAmount) / Number(totalInstallments)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                      <p className="text-[9px] text-blue-600 mt-2">
+                        ✓ Serão criadas {totalInstallments} contas mensais automaticamente
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       )}
 
       {/* 7. TAGS */}
       <div className="space-y-1">
-          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Tags (Opcional)</label>
-          <Controller 
-              name="tags"
-              control={control}
-              render={({ field }) => <TagInput value={field.value} onChange={field.onChange} />}
-          />
+        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Tags (Opcional)</label>
+        <Controller
+          name="tags"
+          control={control}
+          render={({ field }) => <TagInput value={field.value} onChange={field.onChange} />}
+        />
       </div>
 
       {/* 8. RECORRÊNCIA */}
       {type !== 'transfer' && !isInstallment && (
         <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 p-4 rounded-xl">
-            <input 
-                type="checkbox" 
-                {...register('is_recurring')}
-                id="is_recurring"
-                className="w-5 h-5 accent-amber-600"
-            />
-            <label htmlFor="is_recurring" className="flex items-center gap-2 text-sm font-medium text-amber-900 cursor-pointer">
-                <Repeat size={16} />
-                Marcar como recorrente (mensal)
-            </label>
+          <input
+            type="checkbox"
+            {...register('is_recurring')}
+            id="is_recurring"
+            className="w-5 h-5 accent-amber-600"
+          />
+          <label htmlFor="is_recurring" className="flex items-center gap-2 text-sm font-medium text-amber-900 cursor-pointer">
+            <Repeat size={16} />
+            Marcar como recorrente (mensal)
+          </label>
         </div>
       )}
 
       {/* 9. BOTÃO SUBMIT */}
-      <button 
-          type="submit" 
-          disabled={isSubmitting}
-          className="w-full bg-coffee text-white py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-black transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full bg-coffee text-white py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-black transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
-          {isSubmitting ? (
-              <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Processando...
-              </>
-          ) : (
-              <>
-                  <Save size={18} />
-                  {transactionToEdit && !isDuplicate ? 'Salvar Alterações' : 'Salvar Transação'}
-              </>
-          )}
+        {isSubmitting ? (
+          <>
+            <Loader2 size={18} className="animate-spin" />
+            Processando...
+          </>
+        ) : (
+          <>
+            <Save size={18} />
+            {transactionToEdit && !isDuplicate ? 'Salvar Alterações' : 'Salvar Transação'}
+          </>
+        )}
       </button>
 
     </form>

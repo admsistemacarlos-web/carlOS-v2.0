@@ -39,9 +39,11 @@ export interface TransactionItem {
   amount: number;      // Valor total do item
   quantity: number;
   unit_price?: number; // Preço unitário (opcional)
+  unit?: string;       // Unidade de medida (kg, L, un, etc)
+  specification?: string; // Especificação do item (ex: Xadrez, Peito para Frango)
   category_id?: string;
   item_category?: string; // Categoria específica do item (ex: Limpeza, Alimentação)
-  
+
   // Relacionamento Opcional (Join)
   category?: Category;
 }
