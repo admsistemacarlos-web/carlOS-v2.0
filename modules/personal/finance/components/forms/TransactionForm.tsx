@@ -562,14 +562,16 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
       const rawCat = (item as any).item_category;
       const itemCategories: string[] = Array.isArray(rawCat)
         ? rawCat
-        : (rawCat ? [rawCat] : []);
+        : typeof rawCat === 'string' && rawCat
+          ? [rawCat]
+          : [];
       return {
         name: item.name || '',
         item_category: itemCategories,
         specification: (item as any).specification || '',
         unit: (item as any).unit || '',
         quantity: item.quantity || 1,
-        unit_price: item.unit_price || 0,
+        unit_price: item.unit_price ?? item.amount / Math.max(item.quantity || 1, 1),
         discount: (item as any).discount || 0,
       };
     });
@@ -603,10 +605,17 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onSuccess, transactio
       use_split_payment: (transactionToEdit.payments && transactionToEdit.payments.length > 1) || false
     });
 
+    // replaceItems é necessário porque `reset` do RHF tem uma race condition
+    // conhecida com useFieldArray: os valores do form são atualizados mas
+    // `fields` do useFieldArray pode não refletir isso antes do render.
+    // Chamar replaceItems explicitamente força a sincronização.
     if (normalizedItems.length > 0) {
+      replaceItems(normalizedItems);
       setShowItems(true);
       setSubtotalInputValue({});
       setFixedSubtotals({});
+    } else {
+      replaceItems([]);
     }
   }, [transactionToEdit, reset]);
 

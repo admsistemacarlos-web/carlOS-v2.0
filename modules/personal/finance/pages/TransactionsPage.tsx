@@ -13,17 +13,22 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { formatDateBr } from '../utils/dateHelpers';
 import { exportToCSV } from '../utils/exportHelper';
 
-// Definições de Período Predefinidos
-type PeriodType = 'this_month' | 'last_month' | 'next_month' | 'all';
-type PeriodMode = 'month' | 'custom';
+// Modo de filtragem: por meses (multi-select) ou por data customizada
+type PeriodMode = 'months' | 'custom';
+
+const MONTH_NAMES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
 
 const TransactionsPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+
   // --- Estados de Filtro ---
-  const [periodMode, setPeriodMode] = useState<PeriodMode>('month');
-  const [period, setPeriod] = useState<PeriodType>('this_month');
+  const [periodMode, setPeriodMode] = useState<PeriodMode>('months');
+  // Meses selecionados (índice 0-11). Default: mês atual.
+  const [selectedMonths, setSelectedMonths] = useState<number[]>([currentMonth]);
   const [customStartDate, setCustomStartDate] = useState('');
   const [customEndDate, setCustomEndDate] = useState('');
   const [searchText, setSearchText] = useState('');
@@ -41,7 +46,19 @@ const TransactionsPage: React.FC = () => {
     }
   }, [searchParams]);
 
+  const toggleMonth = (monthIndex: number) => {
+    setSelectedMonths(prev => {
+      if (prev.includes(monthIndex)) {
+        // Nunca desseleciona tudo — mantém ao menos 1
+        if (prev.length === 1) return prev;
+        return prev.filter(m => m !== monthIndex);
+      }
+      return [...prev, monthIndex].sort((a, b) => a - b);
+    });
+  };
+
   // --- Controle de Datas para o Hook ---
+  // Os meses selecionados controlam diretamente a query — sem conflito.
   const { startDate, endDate, fetchAll } = useMemo(() => {
     if (periodMode === 'custom') {
       if (customStartDate && customEndDate) {
@@ -56,27 +73,14 @@ const TransactionsPage: React.FC = () => {
       return { startDate: undefined, endDate: undefined, fetchAll: true };
     }
 
-    const now = new Date();
-    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-
-    if (period === 'this_month') {
-        const start = new Date(now.getFullYear(), now.getMonth(), 1);
-        return { startDate: start.toISOString(), endDate: todayEnd.toISOString(), fetchAll: false };
-    }
-
-    if (period === 'last_month') {
-        const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        return { startDate: start.toISOString(), endDate: todayEnd.toISOString(), fetchAll: false };
-    }
-
-    if (period === 'next_month') {
-        const start = new Date(now.getFullYear(), now.getMonth(), 1);
-        const end = new Date(now.getFullYear(), now.getMonth() + 2, 0);
-        return { startDate: start.toISOString(), endDate: end.toISOString(), fetchAll: false };
-    }
-
-    return { startDate: undefined, endDate: undefined, fetchAll: true };
-  }, [period, periodMode, customStartDate, customEndDate]);
+    // Modo 'months': calcula range do início do mês mais cedo ao fim do mais tarde
+    const months = selectedMonths.length > 0 ? selectedMonths : [currentMonth];
+    const minMonth = Math.min(...months);
+    const maxMonth = Math.max(...months);
+    const start = new Date(currentYear, minMonth, 1);
+    const end = new Date(currentYear, maxMonth + 1, 0, 23, 59, 59, 999);
+    return { startDate: start.toISOString(), endDate: end.toISOString(), fetchAll: false };
+  }, [periodMode, customStartDate, customEndDate, selectedMonths, currentMonth, currentYear]);
 
   const { transactions, loading, refresh, setTransactions } = useTransactions({ startDate, endDate, fetchAll });
   const { accounts, refresh: refreshAccounts } = useAccounts();
@@ -91,24 +95,31 @@ const TransactionsPage: React.FC = () => {
       // 1. Filtro de Conta (Origem)
       if (accountIdFilter && t.account_id !== accountIdFilter) return false;
 
-      // 2. Texto (Descrição Principal)
+      // 2. Filtro de Meses — necessário quando múltiplos meses são selecionados, pois a
+      //    query traz um range contínuo (ex: jan→mar) mas o usuário pode querer jan+mar sem fev.
+      if (periodMode === 'months' && selectedMonths.length > 1) {
+        const transactionMonth = new Date(t.date).getMonth();
+        if (!selectedMonths.includes(transactionMonth)) return false;
+      }
+
+      // 3. Texto (Descrição Principal)
       if (searchText && !t.description.toLowerCase().includes(searchText.toLowerCase())) return false;
-      
-      // 3. NOVO: Filtro por Item Específico (Busca dentro da Nota Fiscal)
+
+      // 4. Filtro por Item Específico (Busca dentro da Nota Fiscal)
       if (itemSearch) {
-        const hasItem = t.items?.some(item => 
+        const hasItem = t.items?.some(item =>
           item.name.toLowerCase().includes(itemSearch.toLowerCase())
         );
         if (!hasItem) return false;
       }
 
-      // 4. Categoria
+      // 5. Categoria
       if (categoryFilter && !t.category.toLowerCase().includes(categoryFilter.toLowerCase())) return false;
 
-      // 5. Local
+      // 6. Local
       if (locationFilter && (!t.location || !t.location.toLowerCase().includes(locationFilter.toLowerCase()))) return false;
 
-      // 6. Tag
+      // 7. Tag
       if (tagFilter) {
           if (!t.tags || t.tags.length === 0) return false;
           const hasTag = t.tags.some(tag => tag.toLowerCase().includes(tagFilter.toLowerCase()));
@@ -117,7 +128,7 @@ const TransactionsPage: React.FC = () => {
 
       return true;
     });
-  }, [transactions, searchText, itemSearch, categoryFilter, locationFilter, tagFilter, accountIdFilter]);
+  }, [transactions, searchText, itemSearch, categoryFilter, locationFilter, tagFilter, accountIdFilter, selectedMonths, periodMode]);
 
   // --- LÓGICA DE SALDO DIÁRIO ---
   const groupedWithBalance = useMemo(() => {
@@ -154,25 +165,8 @@ const TransactionsPage: React.FC = () => {
       }
     });
 
-    return groups.filter(group => {
-       if (period === 'all') return true;
-       const groupDate = new Date(group.date + 'T12:00:00');
-       const now = new Date();
-       
-       if (period === 'this_month') {
-         return groupDate.getMonth() === now.getMonth() && groupDate.getFullYear() === now.getFullYear();
-       }
-       if (period === 'last_month') {
-         const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-         return groupDate.getMonth() === lastMonth.getMonth() && groupDate.getFullYear() === lastMonth.getFullYear();
-       }
-       if (period === 'next_month') {
-         const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-         return groupDate.getMonth() === nextMonth.getMonth() && groupDate.getFullYear() === nextMonth.getFullYear();
-       }
-       return true;
-    });
-  }, [filteredTransactions, accounts, accountIdFilter, period]);
+    return groups;
+  }, [filteredTransactions, accounts, accountIdFilter]);
 
   const clearFilters = () => {
     setSearchText('');
@@ -181,9 +175,9 @@ const TransactionsPage: React.FC = () => {
     setLocationFilter('');
     setTagFilter('');
     setAccountIdFilter('');
+    setSelectedMonths([currentMonth]);
     setSearchParams({});
-    setPeriodMode('month');
-    setPeriod('this_month');
+    setPeriodMode('months');
     setCustomStartDate('');
     setCustomEndDate('');
   };
@@ -301,83 +295,99 @@ const TransactionsPage: React.FC = () => {
 
       {/* --- BARRA DE FILTROS --- */}
       <div className="bg-card p-5 rounded-[2rem] border border-border shadow-sm space-y-4">
-        
+
+        {/* LINHA 1: Modo de período + Contas + Busca */}
         <div className="flex flex-col lg:flex-row lg:items-center gap-3">
-            {/* Período: tudo em uma única linha para não quebrar o alinhamento dos ícones */}
-            <div className="flex items-center bg-secondary p-1 rounded-xl overflow-x-auto no-scrollbar shrink-0 gap-0.5">
-                {/* Toggle modo */}
-                <button
-                    onClick={() => setPeriodMode('month')}
-                    className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${periodMode === 'month' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
-                >
-                    Mês
-                </button>
-                <button
-                    onClick={() => setPeriodMode('custom')}
-                    className={`px-2.5 py-2 rounded-lg transition-all flex items-center gap-1 ${periodMode === 'custom' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
-                    title="Por data"
-                >
-                    <Calendar size={12} />
-                </button>
 
-                <div className="w-px h-4 bg-border/60 shrink-0 mx-1" />
+          {/* Toggle modo: Meses | Data */}
+          <div className="flex items-center bg-secondary p-1 rounded-xl shrink-0 gap-0.5">
+            <button
+              onClick={() => setPeriodMode('months')}
+              className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${periodMode === 'months' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              Meses
+            </button>
+            <button
+              onClick={() => setPeriodMode('custom')}
+              className={`px-2.5 py-2 rounded-lg transition-all flex items-center gap-1.5 text-[10px] font-bold uppercase whitespace-nowrap ${periodMode === 'custom' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              <Calendar size={12} /> Data
+            </button>
+          </div>
 
-                {/* Conteúdo condicional */}
-                {periodMode === 'month' ? (
-                    <>
-                        <button onClick={() => setPeriod('last_month')} className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'last_month' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Passado</button>
-                        <button onClick={() => setPeriod('this_month')} className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'this_month' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Este Mês</button>
-                        <button onClick={() => setPeriod('next_month')} className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'next_month' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Próximo</button>
-                        <button onClick={() => setPeriod('all')} className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${period === 'all' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Tudo</button>
-                    </>
-                ) : (
-                    <div className="flex items-center gap-1.5 px-1">
-                        <input
-                            type="date"
-                            value={customStartDate}
-                            onChange={e => setCustomStartDate(e.target.value)}
-                            className="bg-transparent text-xs font-medium text-foreground outline-none cursor-pointer"
-                        />
-                        <span className="text-muted-foreground text-[10px] font-bold shrink-0">→</span>
-                        <input
-                            type="date"
-                            value={customEndDate}
-                            onChange={e => setCustomEndDate(e.target.value)}
-                            className="bg-transparent text-xs font-medium text-foreground outline-none cursor-pointer"
-                        />
-                    </div>
-                )}
+          {/* Conteúdo condicional do modo custom */}
+          {periodMode === 'custom' && (
+            <div className="flex items-center gap-2 bg-secondary border border-border rounded-xl px-3 py-2 shrink-0">
+              <input
+                type="date"
+                value={customStartDate}
+                onChange={e => setCustomStartDate(e.target.value)}
+                className="bg-transparent text-xs font-medium text-foreground outline-none cursor-pointer"
+              />
+              <span className="text-muted-foreground text-[10px] font-bold shrink-0">→</span>
+              <input
+                type="date"
+                value={customEndDate}
+                onChange={e => setCustomEndDate(e.target.value)}
+                className="bg-transparent text-xs font-medium text-foreground outline-none cursor-pointer"
+              />
             </div>
+          )}
 
-            <div className="relative flex-1 self-center">
-                <Landmark className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
-                <select
-                    value={accountIdFilter}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setAccountIdFilter(val);
-                      if (val) setSearchParams({ accountId: val });
-                      else setSearchParams({});
-                    }}
-                    className="w-full bg-secondary border border-border rounded-xl pl-9 pr-4 py-2.5 text-xs font-bold text-foreground outline-none focus:border-primary appearance-none cursor-pointer"
-                >
-                    <option value="">Todas as Contas (Origem)</option>
-                    {accounts.map(acc => (
-                      <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance.toLocaleString('pt-BR')})</option>
-                    ))}
-                </select>
-            </div>
+          <div className="relative flex-1 self-center">
+            <Landmark className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
+            <select
+              value={accountIdFilter}
+              onChange={(e) => {
+                const val = e.target.value;
+                setAccountIdFilter(val);
+                if (val) setSearchParams({ accountId: val });
+                else setSearchParams({});
+              }}
+              className="w-full bg-secondary border border-border rounded-xl pl-9 pr-4 py-2.5 text-xs font-bold text-foreground outline-none focus:border-primary appearance-none cursor-pointer"
+            >
+              <option value="">Todas as Contas (Origem)</option>
+              {accounts.map(acc => (
+                <option key={acc.id} value={acc.id}>{acc.name} (R$ {acc.balance.toLocaleString('pt-BR')})</option>
+              ))}
+            </select>
+          </div>
 
-            <div className="relative flex-1 self-center">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
-                <input
-                    value={searchText}
-                    onChange={e => setSearchText(e.target.value)}
-                    placeholder="Descrição da compra..."
-                    className="w-full bg-secondary border border-border rounded-xl pl-9 pr-4 py-2.5 text-xs font-medium text-foreground outline-none focus:border-primary transition-colors"
-                />
-            </div>
+          <div className="relative flex-1 self-center">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={14} />
+            <input
+              value={searchText}
+              onChange={e => setSearchText(e.target.value)}
+              placeholder="Descrição da compra..."
+              className="w-full bg-secondary border border-border rounded-xl pl-9 pr-4 py-2.5 text-xs font-medium text-foreground outline-none focus:border-primary transition-colors"
+            />
+          </div>
         </div>
+
+        {/* LINHA 2: Cards de Meses (só visível no modo 'months') */}
+        {periodMode === 'months' && (
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+            {MONTH_NAMES.map((monthName, index) => {
+              const isActive = selectedMonths.includes(index);
+              const isCurrentMonth = index === currentMonth;
+              return (
+                <button
+                  key={index}
+                  onClick={() => toggleMonth(index)}
+                  className={`flex-shrink-0 px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all border ${
+                    isActive
+                      ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                      : isCurrentMonth
+                        ? 'bg-secondary border-primary/40 text-foreground'
+                        : 'bg-secondary border-border text-muted-foreground hover:text-foreground hover:border-primary/30'
+                  }`}
+                >
+                  {monthName}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div className="relative">
