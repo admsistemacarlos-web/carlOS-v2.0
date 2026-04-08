@@ -628,6 +628,32 @@ const QuoteItemsBuilder: React.FC<{
 
   const [globalFixedDisc, setGlobalFixedDisc] = useState<string>('');
   const [globalPercentDisc, setGlobalPercentDisc] = useState<string>('');
+  const [activeDiscountType, setActiveDiscountType] = useState<'fixed' | 'percent' | null>(null);
+
+  // Sincroniza os campos de desconto quando há alteração nos itens
+  useEffect(() => {
+    const discountItem = items.find(i => i.title === DISCOUNT_ITEM_TITLE);
+    if (!discountItem) {
+      setGlobalFixedDisc('');
+      setGlobalPercentDisc('');
+      setActiveDiscountType(null);
+      return;
+    }
+
+    const discountAmount = Math.abs(discountItem.unit_price);
+    const subtotal = items
+      .filter(i => i.unit_price > 0)
+      .reduce((acc, i) => acc + (i.unit_price * i.quantity), 0);
+
+    if (discountItem.description?.includes('%')) {
+      const percent = subtotal > 0 ? (discountAmount / subtotal) * 100 : 0;
+      setGlobalPercentDisc(Number(percent.toFixed(2)).toString());
+      setActiveDiscountType('percent');
+    } else {
+      setGlobalFixedDisc(Number(discountAmount.toFixed(2)).toString());
+      setActiveDiscountType('fixed');
+    }
+  }, [items]);
 
   // --- CALCULA TOTAIS ---
   const subTotal = items
@@ -651,16 +677,28 @@ const QuoteItemsBuilder: React.FC<{
 
   const onFixedDiscountChange = (val: string) => {
     setGlobalFixedDisc(val);
-    setGlobalPercentDisc(''); 
-    const numVal = val === '' ? 0 : Number(val);
-    onApplyGlobalDiscount(numVal, 'fixed');
+    setActiveDiscountType('fixed');
+
+    if (val !== '') {
+      setGlobalPercentDisc('');
+      const numVal = Number(val);
+      onApplyGlobalDiscount(numVal, 'fixed');
+    } else {
+      onApplyGlobalDiscount(0, 'fixed');
+    }
   };
 
   const onPercentDiscountChange = (val: string) => {
     setGlobalPercentDisc(val);
-    setGlobalFixedDisc('');
-    const numVal = val === '' ? 0 : Number(val);
-    onApplyGlobalDiscount(numVal, 'percent');
+    setActiveDiscountType('percent');
+
+    if (val !== '') {
+      setGlobalFixedDisc('');
+      const numVal = Number(val);
+      onApplyGlobalDiscount(numVal, 'percent');
+    } else {
+      onApplyGlobalDiscount(0, 'percent');
+    }
   };
 
   return (
@@ -811,21 +849,36 @@ const QuoteItemsBuilder: React.FC<{
                 </div>
                 <div className="flex gap-3">
                     <div className="relative">
-                        <DollarSign size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                        <input 
-                            type="number" placeholder="R$ Desconto" value={globalFixedDisc}
-                            className="w-32 h-10 bg-background border border-secondary rounded-lg text-sm pl-8 pr-3 text-foreground outline-none focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        <DollarSign size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                        <input
+                            type="number"
+                            placeholder="R$ Desconto"
+                            value={globalFixedDisc}
+                            disabled={activeDiscountType === 'percent' && globalPercentDisc !== ''}
+                            className={`w-32 h-10 bg-background border rounded-lg text-sm pl-8 pr-3 text-foreground outline-none focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none transition-all ${
+                              activeDiscountType === 'fixed' ? 'border-primary' : 'border-secondary'
+                            } disabled:opacity-50 disabled:cursor-not-allowed`}
                             onChange={(e) => onFixedDiscountChange(e.target.value)}
                             onWheel={(e) => e.currentTarget.blur()}
+                            min="0"
+                            step="0.01"
                         />
                     </div>
                     <div className="relative">
-                        <Percent size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                        <input 
-                            type="number" placeholder="% Desconto" value={globalPercentDisc}
-                            className="w-32 h-10 bg-background border border-secondary rounded-lg text-sm pl-8 pr-3 text-foreground outline-none focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        <Percent size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                        <input
+                            type="number"
+                            placeholder="% Desconto"
+                            value={globalPercentDisc}
+                            disabled={activeDiscountType === 'fixed' && globalFixedDisc !== ''}
+                            className={`w-32 h-10 bg-background border rounded-lg text-sm pl-8 pr-3 text-foreground outline-none focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none transition-all ${
+                              activeDiscountType === 'percent' ? 'border-primary' : 'border-secondary'
+                            } disabled:opacity-50 disabled:cursor-not-allowed`}
                             onChange={(e) => onPercentDiscountChange(e.target.value)}
                             onWheel={(e) => e.currentTarget.blur()}
+                            min="0"
+                            max="100"
+                            step="0.01"
                         />
                     </div>
                 </div>
