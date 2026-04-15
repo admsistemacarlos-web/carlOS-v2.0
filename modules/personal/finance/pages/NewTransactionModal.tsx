@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useForm } from 'react-hook-form';
-import { 
-  X, Check, Calendar, CreditCard, Wallet, ArrowUpCircle, ArrowDownCircle, 
+import {
+  X, Check, Calendar, CreditCard, Wallet, ArrowUpCircle, ArrowDownCircle,
   Plus, Trash2, Save, Loader2, ListPlus, DollarSign
 } from 'lucide-react';
 import { useAccounts, useCards } from '../hooks/useFinanceData';
@@ -36,9 +36,9 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState<'simple' | 'items'>('simple');
-  
+
   const [items, setItems] = useState<Partial<TransactionItem>[]>([]);
-  
+
   const [newItemName, setNewItemName] = useState('');
   const [newItemQty, setNewItemQty] = useState(1);
   const [newItemPrice, setNewItemPrice] = useState(0);
@@ -72,15 +72,15 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
           account_id: transactionToEdit.account_id || '',
           credit_card_id: transactionToEdit.credit_card_id || '',
           status: transactionToEdit.status,
-          installments: 1 
+          installments: 1
         });
-        
+
         if (transactionToEdit.items && transactionToEdit.items.length > 0) {
-           setItems(transactionToEdit.items);
-           setActiveTab('items');
+          setItems(transactionToEdit.items);
+          setActiveTab('items');
         } else {
-           setItems([]);
-           setActiveTab('simple');
+          setItems([]);
+          setActiveTab('simple');
         }
 
       } else {
@@ -127,24 +127,24 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
 
   const handleAddItem = () => {
     if (!newItemName || newItemPrice <= 0) return;
-    
-    const totalItem = newItemQty * newItemPrice;
+
+    const totalItem = Math.round((newItemQty * newItemPrice) * 100) / 100;
     const newItem: Partial<TransactionItem> = {
-      id: crypto.randomUUID(), 
+      id: crypto.randomUUID(),
       name: newItemName,
       quantity: newItemQty,
       unit_price: newItemPrice,
-      amount: totalItem, 
+      amount: totalItem,
     };
 
     // Atualiza o array de itens
     const updatedItems = [...items, newItem];
     setItems(updatedItems);
-    
+
     // ✅ CORREÇÃO: Calcula e atualiza o total IMEDIATAMENTE
     const newTotal = updatedItems.reduce((acc, item) => acc + (item.amount || 0), 0);
     setValue('amount', parseFloat(newTotal.toFixed(2)));
-    
+
     // Limpa os campos
     setNewItemName('');
     setNewItemQty(1);
@@ -155,7 +155,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
     // Remove o item
     const updatedItems = items.filter(i => i.id !== id);
     setItems(updatedItems);
-    
+
     // ✅ CORREÇÃO: Recalcula o total IMEDIATAMENTE após remover
     const newTotal = updatedItems.reduce((acc, item) => acc + (item.amount || 0), 0);
     setValue('amount', parseFloat(newTotal.toFixed(2)));
@@ -166,7 +166,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
     const amountVal = Number(data.amount);
     if (isNaN(amountVal) || amountVal <= 0) return alert("Valor inválido.");
     if (!data.category) return alert("Informe uma categoria.");
-    
+
     if (data.originType === 'account' && !data.account_id) return alert("Selecione uma conta.");
     if (data.originType === 'card' && !data.credit_card_id) return alert("Selecione um cartão.");
 
@@ -210,14 +210,14 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
           .insert([transactionPayload])
           .select()
           .single();
-        
+
         if (error) throw error;
         transactionId = newTrans.id;
       }
 
       if (activeTab === 'items' && items.length > 0 && transactionId) {
         if (transactionToEdit) {
-           await supabase.from('transaction_items').delete().eq('transaction_id', transactionId);
+          await supabase.from('transaction_items').delete().eq('transaction_id', transactionId);
         }
 
         const itemsPayload = items.map(item => ({
@@ -254,15 +254,15 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* OVERLAY: Full Screen, Fixed, Dark */}
-      <div 
-        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity" 
-        onClick={onClose} 
+      <div
+        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity"
+        onClick={onClose}
       />
 
       {/* CONTENT: Centered Absoluted */}
       <div className="fixed left-[50%] top-[50%] z-50 w-full max-w-2xl translate-x-[-50%] translate-y-[-50%] p-4">
         <div className="bg-card w-full rounded-[2rem] shadow-2xl border border-border flex flex-col max-h-[90vh] overflow-hidden animate-fade-in">
-          
+
           <div className="flex justify-between items-center p-6 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground tracking-tight">
               {transactionToEdit ? 'Editar Movimentação' : 'Nova Movimentação'}
@@ -273,7 +273,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-y-auto p-6 space-y-6">
-            
+
             <div className="flex gap-4">
               <div className="flex bg-secondary p-1 rounded-xl flex-1">
                 <button
@@ -291,10 +291,10 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                   <ArrowUpCircle size={14} /> Receita
                 </button>
               </div>
-              
+
               <div className="flex-1 relative">
                 <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-                <input 
+                <input
                   type="date"
                   {...register('date')}
                   className="w-full h-full bg-secondary border border-border rounded-xl pl-10 pr-4 text-sm text-foreground outline-none focus:ring-2 focus:ring-black/5 font-medium"
@@ -326,7 +326,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                 <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Valor da Transação</label>
                 <div className="relative inline-block w-full max-w-[200px]">
                   <span className={`absolute left-0 top-1/2 -translate-y-1/2 text-2xl font-medium opacity-40`} style={{ color: themeHex }}>R$</span>
-                  <input 
+                  <input
                     type="number"
                     step="0.01"
                     {...register('amount')}
@@ -342,7 +342,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                 <div className="flex gap-2 items-end">
                   <div className="flex-1">
                     <label className="text-[9px] font-bold text-muted-foreground uppercase ml-1">Produto</label>
-                    <input 
+                    <input
                       value={newItemName}
                       onChange={e => setNewItemName(e.target.value)}
                       placeholder="Ex: Gasolina..."
@@ -352,8 +352,9 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                   </div>
                   <div className="w-16">
                     <label className="text-[9px] font-bold text-muted-foreground uppercase ml-1">Qtd</label>
-                    <input 
+                    <input
                       type="number"
+                      step="any"
                       value={newItemQty}
                       onChange={e => setNewItemQty(Number(e.target.value))}
                       className="w-full p-2 rounded-lg border border-border text-sm text-center outline-none"
@@ -362,9 +363,9 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                   </div>
                   <div className="w-24">
                     <label className="text-[9px] font-bold text-muted-foreground uppercase ml-1">Unitário</label>
-                    <input 
+                    <input
                       type="number"
-                      step="0.01"
+                      step="any"
                       value={newItemPrice}
                       onChange={e => setNewItemPrice(Number(e.target.value))}
                       className="w-full p-2 rounded-lg border border-border text-sm outline-none"
@@ -372,8 +373,8 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                       onWheel={(e) => e.currentTarget.blur()}
                     />
                   </div>
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={handleAddItem}
                     className="bg-coffee text-white p-2.5 rounded-lg hover:bg-black transition-colors"
                   >
@@ -390,9 +391,9 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                       </div>
                       <div className="flex items-center gap-3 flex-shrink-0">
                         <span className="text-sm font-bold text-olive">R$ {(item.amount || 0).toFixed(2)}</span>
-                        <button 
+                        <button
                           type="button"
-                          onClick={() => handleRemoveItem(item.id!)} 
+                          onClick={() => handleRemoveItem(item.id!)}
                           className="text-muted-foreground hover:text-terracotta"
                         >
                           <Trash2 size={14} />
@@ -404,7 +405,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                     <p className="text-center text-xs text-muted-foreground py-4 italic border-2 border-dashed border-border rounded-lg">Adicione itens.</p>
                   )}
                 </div>
-                
+
                 <div className="flex justify-between items-center pt-3 border-t border-border">
                   <span className="text-xs font-bold uppercase text-muted-foreground">Total</span>
                   <span className="text-xl font-bold text-foreground">R$ {formAmount || '0.00'}</span>
@@ -415,7 +416,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-[10px] font-bold text-foreground uppercase tracking-widest ml-1">Descrição</label>
-                <input 
+                <input
                   {...register('description')}
                   placeholder="Ex: Supermercado..."
                   className="w-full bg-secondary border border-border rounded-xl p-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-black/5"
@@ -423,7 +424,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-bold text-foreground uppercase tracking-widest ml-1">Categoria</label>
-                <input 
+                <input
                   {...register('category')}
                   placeholder="Ex: Alimentação..."
                   className="w-full bg-secondary border border-border rounded-xl p-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-black/5"
@@ -434,7 +435,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
             <div className="space-y-4 pt-2">
               <div className="flex items-center justify-between">
                 <label className="text-[10px] font-bold text-foreground uppercase tracking-widest ml-1">Origem</label>
-                
+
                 {type === 'expense' && (
                   <div className="flex bg-secondary rounded-lg p-0.5">
                     <button
@@ -460,7 +461,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                   {originType === 'account' ? (
                     <div className="relative">
                       <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-                      <select 
+                      <select
                         {...register('account_id')}
                         className="w-full bg-secondary border border-border rounded-xl pl-10 pr-4 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-black/5 appearance-none"
                       >
@@ -473,7 +474,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
                   ) : (
                     <div className="relative">
                       <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-                      <select 
+                      <select
                         {...register('credit_card_id')}
                         className="w-full bg-secondary border border-border rounded-xl pl-10 pr-4 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-black/5 appearance-none"
                       >
@@ -491,7 +492,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onClo
           </form>
 
           <div className="p-6 border-t border-border bg-card">
-            <button 
+            <button
               onClick={handleSubmit(onSubmit)}
               disabled={isSubmitting}
               className={`w-full py-4 rounded-xl text-white font-bold uppercase tracking-widest shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50`}
