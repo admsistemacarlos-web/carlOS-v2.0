@@ -11,36 +11,6 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', '"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
-          },
-          colors: {
-            // Aliases legados — apontam para os tokens semânticos
-            olive: 'hsl(var(--primary))',
-            primary: 'hsl(var(--primary))',
-
-            // Tons de Café (mantidos para compatibilidade com código legado)
-            coffee: '#3C3633',
-            cappuccino: '#747264',
-            cream: 'hsl(var(--background))',
-
-            // Acentos
-            terracotta: 'hsl(var(--destructive))',
-            'deep-blue': 'hsl(var(--background))',
-          },
-          boxShadow: {
-            'premium': '0 20px 50px -12px rgba(0, 0, 0, 0.05)',
-          }
-        },
-      },
-    };
-  </script>
   <style>
     /* Animações globais */
     @keyframes fade-in {

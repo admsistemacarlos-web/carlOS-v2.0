@@ -2,13 +2,18 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const SUPABASE_URL =
+  import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY =
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  import.meta.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 const INVALID_SUPABASE_URL_MESSAGE =
-  '❌ Erro: VITE_SUPABASE_URL precisa ser uma URL HTTP(S) válida do Supabase.';
+  '❌ Erro: defina uma URL HTTP(S) válida em VITE_SUPABASE_URL ou NEXT_PUBLIC_SUPABASE_URL.';
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  throw new Error('❌ Erro: Credenciais do Supabase não configuradas no .env.local!');
+  throw new Error(
+    '❌ Erro: credenciais do Supabase não configuradas. Use VITE_SUPABASE_* ou NEXT_PUBLIC_SUPABASE_* no .env.local.'
+  );
 }
 
 let supabaseOrigin: URL;
@@ -40,7 +45,7 @@ export const getSupabaseConnectionErrorMessage = (error: unknown) => {
     return null;
   }
 
-  return `Nao foi possivel conectar ao Supabase (${SUPABASE_HOST}). Verifique se a URL do projeto em VITE_SUPABASE_URL ainda existe e reinicie/rebuild o app apos corrigir o .env.local.`;
+  return `Nao foi possivel conectar ao Supabase (${SUPABASE_HOST}). Verifique se esse hostname do projeto realmente existe no painel do Supabase e reinicie/rebuild o app apos corrigir o .env.local.`;
 };
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {

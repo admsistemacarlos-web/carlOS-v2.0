@@ -33,6 +33,7 @@ carlOS é uma plataforma completa para organizar sua vida pessoal e profissional
 npm install
 
 # Configurar .env.local com suas credenciais do Supabase
+# Pode usar VITE_SUPABASE_* (Vite) ou NEXT_PUBLIC_SUPABASE_* (snippet do dashboard)
 # VITE_SUPABASE_URL=...
 # VITE_SUPABASE_ANON_KEY=...
 
