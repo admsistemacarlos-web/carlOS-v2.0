@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../integrations/supabase/client';
+import { getSupabaseConnectionErrorMessage, supabase } from '../integrations/supabase/client';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -92,6 +92,10 @@ const Login: React.FC = () => {
       else if (msg.includes('User already registered')) msg = 'Este email já está cadastrado.';
       else if (msg.includes('Email not confirmed')) msg = 'Email não confirmado. Verifique sua caixa de entrada.';
       else if (msg.includes('Password should be at least')) msg = 'A senha deve ter pelo menos 6 caracteres.';
+      else {
+        const connectionErrorMessage = getSupabaseConnectionErrorMessage(err);
+        if (connectionErrorMessage) msg = connectionErrorMessage;
+      }
       
       setError(msg);
       // Log discreto para debug se necessário, mas não como erro principal

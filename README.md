@@ -38,6 +38,10 @@ npm install
 
 # Rodar projeto
 npm run dev
+
+# Se alterar o .env.local, reinicie o dev server
+# Se gerar build estatico, rode o build novamente
+npm run build
 ```
 
 ## 📂 Estrutura

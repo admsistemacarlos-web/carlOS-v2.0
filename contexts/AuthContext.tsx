@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '../integrations/supabase/client';
+import { getSupabaseConnectionErrorMessage, supabase } from '../integrations/supabase/client';
 
 interface AuthContextType {
   user: User | null;
@@ -17,23 +17,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Busca sessão inicial
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    let active = true;
 
-    // Monitora mudanças na autenticação
+    const loadSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (!active) return;
+
+        setSession(session);
+        setUser(session?.user ?? null);
+      } catch (error) {
+        if (!active) return;
+
+        setSession(null);
+        setUser(null);
+
+        const connectionMessage = getSupabaseConnectionErrorMessage(error);
+        if (connectionMessage) {
+          console.warn(connectionMessage);
+        } else {
+          console.error('Erro ao carregar sessao do Supabase.', error);
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadSession();
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
+        if (!active) return;
+
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signOut = async () => {
